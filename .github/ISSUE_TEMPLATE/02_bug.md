@@ -6,14 +6,10 @@ labels: bug
 
 <!-- Please replace all placeholders such as this below -->
 
-**What happened?**
+**What's wrong?**
 
-<!-- Describe the problem and how to reproduce it. Add screenshots or a link to your repository if possible and helpful -->
+<!-- Describe the problem with the existing schema -->
 
-**What did you expect to happen?**
+**What did you expect?**
 
-<!-- Describe what you expected to happen instead -->
-
-**What the problem might be**
-
-<!-- If you have an idea where the bug might lie, please share here. Otherwise remove the whole section -->
+<!-- Describe what you expected instead -->
