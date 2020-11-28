@@ -31,6 +31,10 @@ for (const file of schemaFileNames) {
   // overwrite version to "0.0.0-development", will be updated
   // right before publish via semantic-release
   schema.info.version = "0.0.0-development";
+  schema.info.title = "GitHub's official OpenAPI spec + Octokit extension";
+  schema.info.description =
+    "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs";
+  schema.info.contact.url = "https://github.com/octokit/openapi";
 
   writeFileSync(
     `generated/${file}`,
