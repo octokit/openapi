@@ -18,6 +18,25 @@ const version = schemas["api.github.com"].info.version;
 const paths = Object.keys(schemas["api.github.com"].paths.sort());
 ```
 
+## GitHub Actions usage
+
+1. Install [Octokit Release Notifier app](https://github.com/apps/octokit-release-notifier/)
+2. Create a new workflow file:
+
+```yml
+name: Update OpenAPI
+on:
+  repository_dispatch:
+    types: [octokit/openapi-release]
+
+jobs:
+  published:
+    runs-on: ubuntu-latest
+    if: github.event.client_payload.action == 'published'
+    steps:
+      - run: "echo: 'new release: ${{ github.event.release.tag_name }}'"
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
