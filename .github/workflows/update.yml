@@ -1,0 +1,41 @@
+on:
+  schedule:
+    # https://crontab.guru/every-hour
+    - cron: 0 * * * *
+  # manual trigger
+  workflow_dispatch: {}
+name: Update
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2.1.2
+      - run: npm ci
+      - run: npm run download
+      - run: npm run build
+      - name: update cache
+        uses: gr2m/create-or-update-pull-request-action@v1.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          title: "🤖📯 GitHub OpenAPI Update"
+          body: |
+            I found new changes on github.com/github/rest-api-description/ and thought I'd let you know about it 👋🤖
+
+            I can't tell if the changes include fixes, features, breaking changes or just cache updates, you'll have to figure that out on yourself and adapt the commit messages accordingly to trigger the right release, see [our commit message conventions](https://github.com/octokit/routes/blob/master/CONTRIBUTING.md#merging-the-pull-request--releasing-a-new-version).
+          branch: "update"
+          author: "Octokit Bot <octokitbot@martynus.net>"
+          path: "cache/"
+          commit-message: "build: cache"
+          labels: "maintenance"
+      - name: update generated app permissions
+        uses: gr2m/create-or-update-pull-request-action@v1.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: "update"
+          author: "Octokit Bot <octokitbot@martynus.net>"
+          path: "generated/"
+          commit-message: "WIP: schema updates"
+          labels: "maintenance"

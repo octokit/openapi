@@ -7,15 +7,6 @@ We appreciate you taking the time to contribute to `@octokit/openapi`. Especiall
 
 Thank you 💖
 
-## Creating an Issue
-
-Before you create a new Issue:
-
-1. Please make sure there is no [open issue](https://github.com/octokit/openapi/issues?utf8=%E2%9C%93&q=is%3Aissue) yet.
-2. If it is a bug report, include the steps to reproduce the issue and please create a reproducible test case on [runkit.com](https://runkit.com/). Example: https://runkit.com/gr2m/octokit-rest-js-1808
-3. If it is a feature request, please share the motivation for the new feature, what alternatives you tried, and how you would implement it.
-4. Please include links to the corresponding github documentation.
-
 ## Setup the repository locally
 
 First, fork the repository.
@@ -28,10 +19,16 @@ cd openapi
 npm install
 ```
 
-Run the tests before making changes to make sure the local setup is working as expected
+Download the latest official OpenAPI specifications from GitHub
 
 ```shell
-npm test
+npm run download
+```
+
+Generated the schemas with the `x-octokit` extension
+
+```shell
+npm run build
 ```
 
 ## Submitting the Pull Request
