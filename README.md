@@ -3,7 +3,6 @@
 > GitHub's official OpenAPI spec with Octokit extensions
 
 [![@latest](https://img.shields.io/npm/v/@octokit/openapi.svg)](https://www.npmjs.com/package/@octokit/openapi)
-[![Build Status](https://github.com/octokit/openapi/workflows/Test/badge.svg)](https://github.com/octokit/openapi/actions?query=workflow%3ATest+branch%3Amain)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=octokit/openapi)](https://dependabot.com/)
 
 Amends operations from [GitHub's official OpenAPI specification](https://github.com/github/rest-api-description/) with an `x-octokit` extension that includes the following keys
