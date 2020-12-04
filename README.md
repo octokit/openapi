@@ -30,12 +30,11 @@ const paths = Object.keys(schemas["api.github.com"].paths.sort());
 name: Update OpenAPI
 on:
   repository_dispatch:
-    types: [octokit/openapi-release]
+    types: [octokit/openapi release]
 
 jobs:
   published:
     runs-on: ubuntu-latest
-    if: github.event.client_payload.action == 'published'
     steps:
       - run: "echo: 'new release: ${{ github.event.release.tag_name }}'"
 ```
