@@ -10,13 +10,43 @@ async function run() {
     auth: process.env.GITHUB_TOKEN,
   });
 
-  const { data } = await octokit.request(
-    "GET /repos/:owner/:repo/contents/:path",
-    {
+  const {
+    data: {
+      items: [mostRecentPr],
+    },
+  } = await octokit.request("GET /search/issues", {
+    q: "is:open is:pr author:github-openapi-bot",
+  });
+
+  const getDescriptionsOptions = {
+    owner: "github",
+    repo: "rest-api-description",
+    path: "descriptions",
+  };
+
+  if (mostRecentPr) {
+    const {
+      data: {
+        head: { ref },
+      },
+    } = await octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
       owner: "github",
       repo: "rest-api-description",
-      path: "descriptions",
-    }
+      pull_number: mostRecentPr.number,
+    });
+    getDescriptionsOptions.ref = ref;
+    console.log(
+      `Open pull requests found by @github-openapi-bot: ${mostRecentPr.html_url}.\nLoading descriptions from "${ref}" branch`
+    );
+  } else {
+    console.log(
+      "No open pull requests found by @github-openapi-bot. Loading descriptions from default branch"
+    );
+  }
+
+  const { data } = await octokit.request(
+    "GET /repos/{owner}/{repo}/contents/{path}",
+    getDescriptionsOptions
   );
 
   if (!Array.isArray(data)) {
