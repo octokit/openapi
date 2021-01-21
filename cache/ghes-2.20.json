@@ -7298,7 +7298,14 @@
                   },
                   "members_can_create_pages": {
                     "type": "boolean",
-                    "description": "Toggles whether organization members can create GitHub Pages sites. Can be one of:  \n\\* `true` - all organization members can create GitHub Pages sites.  \n\\* `false` - no organization members can create GitHub Pages sites. Existing published sites will not be impacted.  \nDefault: `true`. "
+                    "description": "Toggles whether organization members can create GitHub Pages sites. Can be one of:  \n\\* `true` - all organization members can create GitHub Pages sites.  \n\\* `false` - no organization members can create GitHub Pages sites. Existing published sites will not be impacted.  \nDefault: `true`. ",
+                    "default": true
+                  },
+                  "members_can_create_public_pages": {
+                    "type": "boolean"
+                  },
+                  "members_can_create_private_pages": {
+                    "type": "boolean"
                   },
                   "blog": {
                     "type": "string",
@@ -14391,15 +14398,18 @@
                       },
                       "summary": {
                         "type": "string",
+                        "maxLength": 65535,
                         "description": "The summary of the check run. This parameter supports Markdown."
                       },
                       "text": {
                         "type": "string",
+                        "maxLength": 65535,
                         "description": "The details of the check run. This parameter supports Markdown."
                       },
                       "annotations": {
                         "type": "array",
                         "description": "Adds information from your analysis to specific lines of code. Annotations are visible on GitHub in the **Checks** and **Files changed** tab of the pull request. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. For details about how you can view annotations on GitHub, see \"[About status checks](https://help.github.com/articles/about-status-checks#checks)\". See the [`annotations` object](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#annotations-object) description for details about how to use this parameter.",
+                        "maxItems": 50,
                         "items": {
                           "type": "object",
                           "properties": {
@@ -14488,19 +14498,23 @@
                   "actions": {
                     "type": "array",
                     "description": "Displays a button on GitHub that can be clicked to alert your app to do additional tasks. For example, a code linting app can display a button that automatically fixes detected errors. The button created in this object is displayed after the check run completes. When a user clicks the button, GitHub sends the [`check_run.requested_action` webhook](https://docs.github.com/enterprise-server@2.20/webhooks/event-payloads/#check_run) to your app. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. See the [`actions` object](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#actions-object) description. To learn more about check runs and requested actions, see \"[Check runs and requested actions](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#check-runs-and-requested-actions).\" To learn more about check runs and requested actions, see \"[Check runs and requested actions](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#check-runs-and-requested-actions).\"",
+                    "maxItems": 3,
                     "items": {
                       "type": "object",
                       "properties": {
                         "label": {
                           "type": "string",
+                          "maxLength": 20,
                           "description": "The text to be displayed on a button in the web UI. The maximum size is 20 characters."
                         },
                         "description": {
                           "type": "string",
+                          "maxLength": 40,
                           "description": "A short explanation of what this action would do. The maximum size is 40 characters."
                         },
                         "identifier": {
                           "type": "string",
+                          "maxLength": 20,
                           "description": "A reference for the action on the integrator's system. The maximum size is 20 characters."
                         }
                       },
@@ -14515,6 +14529,32 @@
                 "required": [
                   "name",
                   "head_sha"
+                ],
+                "anyOf": [
+                  {
+                    "properties": {
+                      "status": {
+                        "enum": [
+                          "completed"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "conclusion"
+                    ],
+                    "additionalProperties": true
+                  },
+                  {
+                    "properties": {
+                      "status": {
+                        "enum": [
+                          "queued",
+                          "in_progress"
+                        ]
+                      }
+                    },
+                    "additionalProperties": true
+                  }
                 ]
               },
               "examples": {
@@ -14755,15 +14795,18 @@
                       },
                       "summary": {
                         "type": "string",
-                        "description": "Can contain Markdown."
+                        "description": "Can contain Markdown.",
+                        "maxLength": 65535
                       },
                       "text": {
                         "type": "string",
-                        "description": "Can contain Markdown."
+                        "description": "Can contain Markdown.",
+                        "maxLength": 65535
                       },
                       "annotations": {
                         "type": "array",
                         "description": "Adds information from your analysis to specific lines of code. Annotations are visible in GitHub's pull request UI. Annotations are visible in GitHub's pull request UI. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. For details about annotations in the UI, see \"[About status checks](https://help.github.com/articles/about-status-checks#checks)\". See the [`annotations` object](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#annotations-object-1) description for details.",
+                        "maxItems": 50,
                         "items": {
                           "type": "object",
                           "properties": {
@@ -14851,19 +14894,23 @@
                   "actions": {
                     "type": "array",
                     "description": "Possible further actions the integrator can perform, which a user may trigger. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. See the [`actions` object](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#actions-object) description. To learn more about check runs and requested actions, see \"[Check runs and requested actions](https://docs.github.com/enterprise-server@2.20/rest/reference/checks#check-runs-and-requested-actions).\"",
+                    "maxItems": 3,
                     "items": {
                       "type": "object",
                       "properties": {
                         "label": {
                           "type": "string",
+                          "maxLength": 20,
                           "description": "The text to be displayed on a button in the web UI. The maximum size is 20 characters."
                         },
                         "description": {
                           "type": "string",
+                          "maxLength": 40,
                           "description": "A short explanation of what this action would do. The maximum size is 40 characters."
                         },
                         "identifier": {
                           "type": "string",
+                          "maxLength": 20,
                           "description": "A reference for the action on the integrator's system. The maximum size is 20 characters."
                         }
                       },
@@ -14874,7 +14921,33 @@
                       ]
                     }
                   }
-                }
+                },
+                "anyOf": [
+                  {
+                    "properties": {
+                      "status": {
+                        "enum": [
+                          "completed"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "conclusion"
+                    ],
+                    "additionalProperties": true
+                  },
+                  {
+                    "properties": {
+                      "status": {
+                        "enum": [
+                          "queued",
+                          "in_progress"
+                        ]
+                      }
+                    },
+                    "additionalProperties": true
+                  }
+                ]
               },
               "example": {
                 "name": "mighty_readme",
@@ -26345,6 +26418,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "nullable": true,
                 "properties": {
                   "commit_title": {
                     "type": "string",
@@ -27352,6 +27426,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "nullable": true,
                 "properties": {
                   "expected_head_sha": {
                     "type": "string",
@@ -40686,6 +40761,22 @@
           "updated_at"
         ]
       },
+      "author_association": {
+        "title": "author_association",
+        "type": "string",
+        "example": "OWNER",
+        "description": "How the author is associated with the repository.",
+        "enum": [
+          "COLLABORATOR",
+          "CONTRIBUTOR",
+          "FIRST_TIMER",
+          "FIRST_TIME_CONTRIBUTOR",
+          "MANNEQUIN",
+          "MEMBER",
+          "NONE",
+          "OWNER"
+        ]
+      },
       "issue-simple": {
         "title": "Issue Simple",
         "description": "Issue Simple",
@@ -40846,7 +40937,7 @@
             "example": "2011-04-22T13:33:48Z"
           },
           "author_association": {
-            "type": "string"
+            "$ref": "#/components/schemas/author_association"
           },
           "body_html": {
             "type": "string"
@@ -41000,17 +41091,7 @@
             "format": "uri"
           },
           "author_association": {
-            "type": "string",
-            "enum": [
-              "collaborator",
-              "contributor",
-              "first_timer",
-              "first_time_contributor",
-              "mannequin",
-              "member",
-              "none",
-              "owner"
-            ]
+            "$ref": "#/components/schemas/author_association"
           },
           "performed_via_github_app": {
             "nullable": true,
@@ -41498,7 +41579,7 @@
             "example": "2011-04-18T23:23:56Z"
           },
           "author_association": {
-            "type": "string"
+            "$ref": "#/components/schemas/author_association"
           }
         },
         "required": [
@@ -41801,7 +41882,7 @@
             ]
           },
           "author_association": {
-            "type": "string"
+            "$ref": "#/components/schemas/author_association"
           },
           "reactions": {
             "$ref": "#/components/schemas/reaction-rollup"
@@ -45710,7 +45791,7 @@
             "format": "date-time"
           },
           "author_association": {
-            "type": "string"
+            "$ref": "#/components/schemas/author_association"
           },
           "reactions": {
             "$ref": "#/components/schemas/reaction-rollup"
@@ -46153,8 +46234,7 @@
             ]
           },
           "author_association": {
-            "type": "string",
-            "example": "OWNER"
+            "$ref": "#/components/schemas/author_association"
           },
           "draft": {
             "description": "Indicates whether or not the pull request is a draft.",
@@ -48260,7 +48340,7 @@
             "$ref": "#/components/schemas/issue-event-rename"
           },
           "author_association": {
-            "type": "string"
+            "$ref": "#/components/schemas/author_association"
           },
           "lock_reason": {
             "type": "string",
@@ -48330,8 +48410,7 @@
             "example": "\"2020-07-09T00:17:36Z\""
           },
           "author_association": {
-            "type": "string",
-            "example": "\"COLLABORATOR\""
+            "$ref": "#/components/schemas/author_association"
           },
           "body": {
             "type": "string",
@@ -50056,8 +50135,7 @@
             ]
           },
           "author_association": {
-            "type": "string",
-            "example": "OWNER"
+            "$ref": "#/components/schemas/author_association"
           },
           "draft": {
             "description": "Indicates whether or not the pull request is a draft.",
@@ -50255,9 +50333,7 @@
             "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1"
           },
           "author_association": {
-            "description": "How the author of the comment is associated with the pull request.",
-            "type": "string",
-            "example": "OWNER"
+            "$ref": "#/components/schemas/author_association"
           },
           "_links": {
             "type": "object",
@@ -50514,7 +50590,7 @@
             "type": "string"
           },
           "author_association": {
-            "type": "string"
+            "$ref": "#/components/schemas/author_association"
           }
         },
         "required": [
@@ -50615,7 +50691,7 @@
             "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1"
           },
           "author_association": {
-            "type": "string"
+            "$ref": "#/components/schemas/author_association"
           },
           "_links": {
             "type": "object",
@@ -51568,7 +51644,7 @@
             "type": "integer"
           },
           "author_association": {
-            "type": "string"
+            "$ref": "#/components/schemas/author_association"
           },
           "draft": {
             "type": "boolean"
@@ -55099,7 +55175,7 @@
             },
             "created_at": "2011-04-18T23:23:56Z",
             "updated_at": "2011-04-18T23:23:56Z",
-            "author_association": "collaborator"
+            "author_association": "COLLABORATOR"
           }
         ]
       },
@@ -55131,7 +55207,7 @@
           },
           "created_at": "2011-04-18T23:23:56Z",
           "updated_at": "2011-04-18T23:23:56Z",
-          "author_association": "collaborator"
+          "author_association": "COLLABORATOR"
         }
       },
       "gist-commit-items": {
@@ -59705,7 +59781,7 @@
             },
             "created_at": "2011-04-14T16:00:49Z",
             "updated_at": "2011-04-14T16:00:49Z",
-            "author_association": "collaborator"
+            "author_association": "COLLABORATOR"
           }
         ]
       },
@@ -59720,7 +59796,7 @@
           "position": 4,
           "line": 14,
           "commit_id": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
-          "author_association": "collaborator",
+          "author_association": "COLLABORATOR",
           "user": {
             "login": "octocat",
             "id": 1,
@@ -59756,7 +59832,7 @@
           "position": 4,
           "line": 14,
           "commit_id": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
-          "author_association": "collaborator",
+          "author_association": "COLLABORATOR",
           "user": {
             "login": "octocat",
             "id": 1,
@@ -62386,7 +62462,7 @@
             "closed_at": null,
             "created_at": "2011-04-22T13:33:48Z",
             "updated_at": "2011-04-22T13:33:48Z",
-            "author_association": "collaborator"
+            "author_association": "COLLABORATOR"
           }
         ]
       },
@@ -62546,7 +62622,7 @@
             "type": "User",
             "site_admin": false
           },
-          "author_association": "collaborator"
+          "author_association": "COLLABORATOR"
         }
       },
       "issue-comment-items": {
@@ -62580,7 +62656,7 @@
             "created_at": "2011-04-14T16:00:49Z",
             "updated_at": "2011-04-14T16:00:49Z",
             "issue_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
-            "author_association": "collaborator"
+            "author_association": "COLLABORATOR"
           }
         ]
       },
@@ -62614,7 +62690,7 @@
           "created_at": "2011-04-14T16:00:49Z",
           "updated_at": "2011-04-14T16:00:49Z",
           "issue_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
-          "author_association": "collaborator"
+          "author_association": "COLLABORATOR"
         }
       },
       "issue-event-items": {
@@ -62782,7 +62858,7 @@
               "closed_at": null,
               "created_at": "2011-04-22T13:33:48Z",
               "updated_at": "2011-04-22T13:33:48Z",
-              "author_association": "collaborator"
+              "author_association": "COLLABORATOR"
             }
           }
         ]
@@ -62951,7 +63027,7 @@
             "closed_at": null,
             "created_at": "2011-04-22T13:33:48Z",
             "updated_at": "2011-04-22T13:33:48Z",
-            "author_association": "collaborator"
+            "author_association": "COLLABORATOR"
           }
         }
       },
@@ -63131,7 +63207,7 @@
           "closed_at": null,
           "created_at": "2011-04-22T13:33:48Z",
           "updated_at": "2011-04-22T13:33:48Z",
-          "author_association": "collaborator"
+          "author_association": "COLLABORATOR"
         }
       },
       "issue-event-for-issue-items": {
@@ -64931,7 +65007,7 @@
             },
             "submitted_at": "2019-11-17T17:43:43Z",
             "commit_id": "ecdd80bb57125d7ba9641ffaa4d7d2c19d3f3091",
-            "author_association": "collaborator"
+            "author_association": "COLLABORATOR"
           }
         ]
       },
@@ -64973,7 +65049,7 @@
           },
           "submitted_at": "2019-11-17T17:43:43Z",
           "commit_id": "ecdd80bb57125d7ba9641ffaa4d7d2c19d3f3091",
-          "author_association": "collaborator"
+          "author_association": "COLLABORATOR"
         }
       },
       "pull-request-review-4": {
@@ -65014,7 +65090,7 @@
           },
           "submitted_at": "2019-11-17T17:43:43Z",
           "commit_id": "ecdd80bb57125d7ba9641ffaa4d7d2c19d3f3091",
-          "author_association": "collaborator"
+          "author_association": "COLLABORATOR"
         }
       },
       "pull-request-review-5": {
@@ -65055,7 +65131,7 @@
           },
           "submitted_at": "2019-11-17T17:43:43Z",
           "commit_id": "ecdd80bb57125d7ba9641ffaa4d7d2c19d3f3091",
-          "author_association": "collaborator"
+          "author_association": "COLLABORATOR"
         }
       },
       "review-comment-items": {
@@ -65150,7 +65226,7 @@
           },
           "submitted_at": "2019-11-17T17:43:43Z",
           "commit_id": "ecdd80bb57125d7ba9641ffaa4d7d2c19d3f3091",
-          "author_association": "collaborator"
+          "author_association": "COLLABORATOR"
         }
       },
       "content-file": {
@@ -66265,7 +66341,7 @@
               "body": "...",
               "score": 1,
               "locked": true,
-              "author_association": "collaborator"
+              "author_association": "COLLABORATOR"
             }
           ]
         }
