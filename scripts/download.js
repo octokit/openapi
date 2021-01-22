@@ -22,6 +22,7 @@ async function run() {
     owner: "github",
     repo: "rest-api-description",
     path: "descriptions",
+    ref: "main",
   };
 
   if (mostRecentPr) {
@@ -57,11 +58,12 @@ async function run() {
 
   for (const folder of data) {
     const { name } = folder;
+    const ref = getDescriptionsOptions.ref;
 
-    await download(name, `descriptions/${name}/${name}.json`);
+    await download(name, `${ref}/descriptions/${name}/${name}.json`);
     await download(
       `${name}.deref`,
-      `descriptions/${name}/dereferenced/${name}.deref.json`
+      `${ref}/descriptions/${name}/dereferenced/${name}.deref.json`
     );
   }
 }
@@ -70,7 +72,7 @@ function download(name, remotePath) {
   const path = `cache/${name}.json`;
 
   const file = fs.createWriteStream(path);
-  const url = `https://raw.githubusercontent.com/github/rest-api-description/main/${remotePath}`;
+  const url = `https://raw.githubusercontent.com/github/rest-api-description/${remotePath}`;
 
   console.log("Downloading %s", url);
 
