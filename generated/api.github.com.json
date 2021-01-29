@@ -2963,7 +2963,7 @@
     "/enterprises/{enterprise}/audit-log": {
       "get": {
         "summary": "Get the audit log for an enterprise",
-        "description": "**Note:** The audit log REST API is currently in beta and is subject to change. To join the beta, talk to your services or sales contact at GitHub.\n\nGets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.",
+        "description": "**Note:** The audit log REST API is currently in beta and is subject to change.\n\nGets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.",
         "operationId": "audit-log/get-audit-log",
         "tags": ["audit-log"],
         "externalDocs": {
@@ -2976,6 +2976,7 @@
           { "$ref": "#/components/parameters/audit-log-include" },
           { "$ref": "#/components/parameters/audit-log-after" },
           { "$ref": "#/components/parameters/audit-log-before" },
+          { "$ref": "#/components/parameters/audit-log-order" },
           { "$ref": "#/components/parameters/per_page" }
         ],
         "responses": {
@@ -6925,7 +6926,7 @@
     "/orgs/{org}/audit-log": {
       "get": {
         "summary": "Get the audit log for an organization",
-        "description": "**Note:** The audit log REST API is currently in beta and is subject to change. To join the beta, talk to your services or sales contact at GitHub.\n\nGets the audit log for an organization. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization).\"\n\nTo use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.",
+        "description": "**Note:** The audit log REST API is currently in beta and is subject to change.\n\nGets the audit log for an organization. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization).\"\n\nTo use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.",
         "operationId": "orgs/get-audit-log",
         "tags": ["orgs"],
         "externalDocs": {
@@ -6938,6 +6939,7 @@
           { "$ref": "#/components/parameters/audit-log-include" },
           { "$ref": "#/components/parameters/audit-log-after" },
           { "$ref": "#/components/parameters/audit-log-before" },
+          { "$ref": "#/components/parameters/audit-log-order" },
           { "$ref": "#/components/parameters/per_page" }
         ],
         "responses": {
@@ -67081,6 +67083,13 @@
         "in": "query",
         "required": false,
         "schema": { "type": "string" }
+      },
+      "audit-log-order": {
+        "name": "order",
+        "description": "The order of audit log events. To list newest events first, specify `desc`. To list oldest events first, specify `asc`.\n\nThe default is `desc`.",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string", "enum": ["desc", "asc"] }
       },
       "gist_id": {
         "name": "gist_id",
