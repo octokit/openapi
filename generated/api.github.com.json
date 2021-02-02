@@ -2642,7 +2642,7 @@
       },
       "put": {
         "summary": "Set self-hosted runners in a group for an enterprise",
-        "description": "Replaces the list of self-hosted runners that that are part of an enterprise runner group.\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+        "description": "Replaces the list of self-hosted runners that are part of an enterprise runner group.\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
         "operationId": "enterprise-admin/set-self-hosted-runners-in-group-for-enterprise",
         "tags": ["enterprise-admin"],
         "externalDocs": {
@@ -4491,7 +4491,8 @@
               "X-CommonMarker-Version": {
                 "$ref": "#/components/headers/x-common-marker-version"
               }
-            }
+            },
+            "content": { "text/html": { "schema": { "type": "string" } } }
           },
           "304": { "$ref": "#/components/responses/not_modified" }
         },
@@ -30318,7 +30319,7 @@
           },
           {
             "name": "filter",
-            "description": "Filters results using the equals query parameter operator (`eq`). You can filter results that are equal to `id`, `userName`, `emails`, and `external_id`. For example, to search for an identity with the `userName` Octocat, you would use this query:\n\n`?filter=userName%20eq%20\\\"Octocat\\\"`.\n\nTo filter results for for the identity with the email `octocat@github.com`, you would use this query:\n\n`?filter=emails%20eq%20\\\"octocat@github.com\\\"`.",
+            "description": "Filters results using the equals query parameter operator (`eq`). You can filter results that are equal to `id`, `userName`, `emails`, and `external_id`. For example, to search for an identity with the `userName` Octocat, you would use this query:\n\n`?filter=userName%20eq%20\\\"Octocat\\\"`.\n\nTo filter results for the identity with the email `octocat@github.com`, you would use this query:\n\n`?filter=emails%20eq%20\\\"octocat@github.com\\\"`.",
             "in": "query",
             "required": false,
             "schema": { "type": "string" }
@@ -34267,7 +34268,7 @@
         "summary": "Get interaction restrictions for your public repositories",
         "description": "Shows which type of GitHub user can interact with your public repositories and when the restriction expires. If there are no restrictions, you will see an empty response.",
         "tags": ["interactions"],
-        "operationId": "interactions/get-restrictions-for-your-public-repos",
+        "operationId": "interactions/get-restrictions-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/interactions#get-interaction-restrictions-for-your-public-repositories"
@@ -34296,13 +34297,23 @@
           "category": "interactions",
           "subcategory": "user"
         },
-        "x-octokit": {}
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-02-02",
+              "before": {
+                "operationId": "interactions/get-restrictions-for-your-public-repos"
+              }
+            }
+          ]
+        }
       },
       "put": {
         "summary": "Set interaction restrictions for your public repositories",
         "description": "Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user.",
         "tags": ["interactions"],
-        "operationId": "interactions/set-restrictions-for-your-public-repos",
+        "operationId": "interactions/set-restrictions-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/interactions#set-interaction-restrictions-for-your-public-repositories"
@@ -34339,13 +34350,23 @@
           "category": "interactions",
           "subcategory": "user"
         },
-        "x-octokit": {}
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-02-02",
+              "before": {
+                "operationId": "interactions/set-restrictions-for-your-public-repos"
+              }
+            }
+          ]
+        }
       },
       "delete": {
         "summary": "Remove interaction restrictions from your public repositories",
         "description": "Removes any interaction restrictions from your public repositories.",
         "tags": ["interactions"],
-        "operationId": "interactions/remove-restrictions-for-your-public-repos",
+        "operationId": "interactions/remove-restrictions-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-from-your-public-repositories"
@@ -34358,7 +34379,17 @@
           "category": "interactions",
           "subcategory": "user"
         },
-        "x-octokit": {}
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-02-02",
+              "before": {
+                "operationId": "interactions/remove-restrictions-for-your-public-repos"
+              }
+            }
+          ]
+        }
       }
     },
     "/user/issues": {
@@ -49358,27 +49389,22 @@
       "email": {
         "title": "Email",
         "description": "Email",
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "format": "email",
-                "example": "octocat@github.com"
-              },
-              "primary": { "type": "boolean", "example": true },
-              "verified": { "type": "boolean", "example": true },
-              "visibility": {
-                "type": "string",
-                "example": "public",
-                "nullable": true
-              }
-            },
-            "required": ["email", "primary", "verified", "visibility"]
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "octocat@github.com"
           },
-          { "type": "string" }
-        ]
+          "primary": { "type": "boolean", "example": true },
+          "verified": { "type": "boolean", "example": true },
+          "visibility": {
+            "type": "string",
+            "example": "public",
+            "nullable": true
+          }
+        },
+        "required": ["email", "primary", "verified", "visibility"]
       },
       "gpg-key": {
         "title": "GPG Key",
