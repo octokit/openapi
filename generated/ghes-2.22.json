@@ -9488,10 +9488,10 @@
                   },
                   "parent_team_id": {
                     "type": "integer",
-                    "description": "The ID of a team to set as the parent team."
+                    "description": "The ID of a team to set as the parent team.",
+                    "nullable": true
                   }
-                },
-                "required": ["name"]
+                }
               },
               "example": {
                 "name": "new team name",
@@ -10755,7 +10755,8 @@
                     "description": "The permission to grant to the team for this project. Can be one of:  \n\\* `read` - team members can read, but not write to or administer this project.  \n\\* `write` - team members can read and write, but not administer this project.  \n\\* `admin` - team members can read, write and administer this project.  \nDefault: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs).\"",
                     "enum": ["read", "write", "admin"]
                   }
-                }
+                },
+                "nullable": true
               }
             }
           }
@@ -21542,11 +21543,13 @@
                 "properties": {
                   "title": {
                     "oneOf": [{ "type": "string" }, { "type": "integer" }],
-                    "description": "The title of the issue."
+                    "description": "The title of the issue.",
+                    "nullable": true
                   },
                   "body": {
                     "type": "string",
-                    "description": "The contents of the issue."
+                    "description": "The contents of the issue.",
+                    "nullable": true
                   },
                   "assignee": {
                     "type": "string",
@@ -25066,7 +25069,7 @@
                   },
                   "in_reply_to": { "type": "integer", "example": 2 }
                 },
-                "required": ["body", "path"]
+                "required": ["body"]
               },
               "examples": {
                 "example-for-a-single-line-comment": {
@@ -25515,7 +25518,11 @@
                     "description": "An array of team `slug`s that will be requested.",
                     "items": { "type": "string" }
                   }
-                }
+                },
+                "anyOf": [
+                  { "required": ["reviewers"] },
+                  { "required": ["team_reviewers"] }
+                ]
               },
               "example": {
                 "reviewers": ["octocat", "hubot", "other_user"],
@@ -25583,7 +25590,8 @@
                     "description": "An array of team `slug`s that will be removed.",
                     "items": { "type": "string" }
                   }
-                }
+                },
+                "required": ["reviewers"]
               },
               "example": {
                 "reviewers": ["octocat", "hubot", "other_user"],
