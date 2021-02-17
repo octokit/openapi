@@ -17716,16 +17716,21 @@
     "/repos/{owner}/{repo}/code-scanning/alerts": {
       "get": {
         "summary": "List code scanning alerts for a repository",
-        "description": "Lists all open code scanning alerts for the default branch (usually `main` or `master`). You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.",
+        "description": "Lists all open code scanning alerts for the default branch (usually `main`\nor `master`). You must use an access token with the `security_events` scope to use\nthis endpoint. GitHub Apps must have the `security_events` read permission to use\nthis endpoint.\n\nThe response includes a `most_recent_instance` object.\nThis provides details of the most recent instance of this alert\nfor the the default branch or for the specified Git reference\n(if you used `ref` in the request).",
         "tags": ["code-scanning"],
         "operationId": "code-scanning/list-alerts-for-repo",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.0/v3/code-scanning/#list-code-scanning-alerts-for-a-repository"
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository"
         },
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
           { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/tool_name" },
+          { "$ref": "#/components/parameters/tool_guid" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per_page" },
+          { "$ref": "#/components/parameters/git_ref" },
           {
             "name": "state",
             "description": "Set to `open`, `fixed`, or `dismissed` to list code scanning alerts in a specific state.",
@@ -17734,13 +17739,6 @@
             "schema": {
               "$ref": "#/components/schemas/code-scanning-alert-state"
             }
-          },
-          {
-            "name": "ref",
-            "in": "query",
-            "description": "Set a full Git reference to list alerts for a specific branch. The `ref` must be formatted as `refs/heads/<branch name>`.",
-            "required": false,
-            "schema": { "$ref": "#/components/schemas/code-scanning-alert-ref" }
           }
         ],
         "responses": {
@@ -17751,20 +17749,21 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/code-scanning-alert-code-scanning-alert-items"
+                    "$ref": "#/components/schemas/code-scanning-alert-items"
                   }
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/code-scanning-alert-code-scanning-alert-items"
+                    "$ref": "#/components/examples/code-scanning-alert-items"
                   }
                 }
               }
             }
           },
-          "404": {
-            "description": "Response if the ref does not match an existing ref"
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
           },
+          "404": { "$ref": "#/components/responses/not_found" },
           "503": { "$ref": "#/components/responses/service_unavailable" }
         },
         "x-github": {
@@ -17780,22 +17779,17 @@
     "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}": {
       "get": {
         "summary": "Get a code scanning alert",
-        "description": "Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.\n\nThe security `alert_number` is found at the end of the security alert's URL. For example, the security alert ID for `https://github.com/Octo-org/octo-repo/security/code-scanning/88` is `88`.",
+        "description": "Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.",
         "tags": ["code-scanning"],
         "operationId": "code-scanning/get-alert",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.0/v3/code-scanning/#get-a-code-scanning-alert"
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/code-scanning#get-a-code-scanning-alert"
         },
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
           { "$ref": "#/components/parameters/repo" },
-          {
-            "name": "alert_number",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "integer" }
-          }
+          { "$ref": "#/components/parameters/alert_number" }
         ],
         "responses": {
           "200": {
@@ -17803,15 +17797,18 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/code-scanning-alert-code-scanning-alert"
+                  "$ref": "#/components/schemas/code-scanning-alert"
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/code-scanning-alert-code-scanning-alert"
+                    "$ref": "#/components/examples/code-scanning-alert"
                   }
                 }
               }
             }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
           },
           "404": { "$ref": "#/components/responses/not_found" },
           "503": { "$ref": "#/components/responses/service_unavailable" }
@@ -17841,7 +17838,7 @@
         "tags": ["code-scanning"],
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.0/v3/code-scanning/#upload-a-code-scanning-alert"
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/code-scanning#update-a-code-scanning-alert"
         },
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
@@ -17876,20 +17873,21 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/code-scanning-alert-code-scanning-alert"
+                  "$ref": "#/components/schemas/code-scanning-alert"
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/code-scanning-alert-code-scanning-alert-dismissed"
+                    "$ref": "#/components/examples/code-scanning-alert-dismissed"
                   }
                 }
               }
             }
           },
-          "403": { "description": "Response if the repository is archived" },
-          "503": {
-            "description": "Response when code scanning is not available and you should try again at a later time"
-          }
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_write"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
         },
         "x-github": {
           "enabledForGitHubApps": true,
@@ -17902,33 +17900,35 @@
     },
     "/repos/{owner}/{repo}/code-scanning/analyses": {
       "get": {
-        "summary": "List recent code scanning analyses for a repository",
-        "description": "List the details of recent code scanning analyses for a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.",
+        "summary": "List code scanning analyses for a repository",
+        "description": "Lists the details of all code scanning analyses for a repository,\nstarting with the most recent.\nThe response is paginated and you can use the `page` and `per_page` parameters\nto list the analyses you're interested in.\nBy default 30 analyses are listed per page.\n\nThe `rules_count` field in the response give the number of rules\nthat were run in the analysis.\nFor very old analyses this data is not available,\nand `0` is returned in this field.\n\nYou must use an access token with the `security_events` scope to use this endpoint.\nGitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.",
         "operationId": "code-scanning/list-recent-analyses",
         "tags": ["code-scanning"],
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.0/v3/code-scanning/#list-recent-analyses"
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository"
         },
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
           { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/tool_name" },
+          { "$ref": "#/components/parameters/tool_guid" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per_page" },
           {
             "name": "ref",
             "in": "query",
-            "description": "Set a full Git reference to list alerts for a specific branch. The `ref` must be formatted as `refs/heads/<branch name>`.",
+            "description": "The Git reference for the analyses you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`.",
             "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/code-scanning-analysis-ref"
-            }
+            "schema": { "$ref": "#/components/schemas/code-scanning-ref" }
           },
           {
-            "name": "tool_name",
+            "name": "sarif_id",
             "in": "query",
-            "description": "Set a single code scanning tool name to filter alerts by tool.",
+            "description": "Filter analyses belonging to the same SARIF upload.",
             "required": false,
             "schema": {
-              "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+              "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
             }
           }
         ],
@@ -17940,17 +17940,22 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/code-scanning-analysis-code-scanning-analysis"
+                    "$ref": "#/components/schemas/code-scanning-analysis"
                   }
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/code-scanning-analysis-code-scanning-analysis-items"
+                    "$ref": "#/components/examples/code-scanning-analysis-items"
                   }
                 }
               }
             }
-          }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
         },
         "x-github": {
           "enabledForGitHubApps": true,
@@ -17963,13 +17968,13 @@
     },
     "/repos/{owner}/{repo}/code-scanning/sarifs": {
       "post": {
-        "summary": "Upload a SARIF file",
-        "description": "Upload a SARIF file containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.",
+        "summary": "Upload an analysis as SARIF data",
+        "description": "Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.\n\nYou must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:\n\n```\ngzip -c analysis-data.sarif | base64\n```\n\nSARIF upload supports a maximum of 1000 results per analysis run. Any results over this limit are ignored. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.\n\nThe `202 Accepted`, response includes an `id` value.\nYou can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.\nFor more information, see \"[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload).\"",
         "operationId": "code-scanning/upload-sarif",
         "tags": ["code-scanning"],
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.0/v3/code-scanning/#upload-a-sarif-analysis"
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/code-scanning#upload-an-analysis-as-sarif-data"
         },
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
@@ -17984,9 +17989,7 @@
                   "commit_sha": {
                     "$ref": "#/components/schemas/code-scanning-analysis-commit-sha"
                   },
-                  "ref": {
-                    "$ref": "#/components/schemas/code-scanning-analysis-ref"
-                  },
+                  "ref": { "$ref": "#/components/schemas/code-scanning-ref" },
                   "sarif": {
                     "$ref": "#/components/schemas/code-scanning-analysis-sarif-file"
                   },
@@ -18002,28 +18005,38 @@
                     "type": "string"
                   },
                   "tool_name": {
-                    "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+                    "description": "The name of the tool used to generate the code scanning analysis. If this parameter is not used, the tool name defaults to \"API\". If the uploaded SARIF contains a tool GUID, this will be available for filtering using the `tool_guid` parameter of operations such as `GET /repos/{owner}/{repo}/code-scanning/alerts`.",
+                    "type": "string"
                   }
                 },
-                "required": ["commit_sha", "ref", "sarif", "tool_name"]
-              },
-              "example": {
-                "commit_sha": "9a450a043b9038ba86722926570d2312cff6aba8",
-                "ref": "refs/heads/main",
-                "sarif": "REPLACE_ME",
-                "tool_name": "codeql"
+                "required": ["commit_sha", "ref", "sarif"]
               }
             }
           }
         },
         "responses": {
-          "202": { "description": "response" },
-          "400": { "description": "Response if the `sarif` field is invalid" },
-          "403": { "description": "Response if the repository is archived" },
-          "404": {
-            "description": "Response if `commit_sha` or `ref` cannot be found"
+          "202": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-sarifs-receipt"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-sarif-upload"
+                  }
+                }
+              }
+            }
           },
-          "413": { "description": "Response if the `sarif` field is too large" }
+          "400": { "description": "Response if the sarif field is invalid" },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_write"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "413": { "description": "Response if the sarif field is too large" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
         },
         "x-github": {
           "enabledForGitHubApps": true,
@@ -34919,7 +34932,7 @@
       },
       "per_page": {
         "name": "per_page",
-        "description": "Results per page (max 100)",
+        "description": "Results per page (max 100).",
         "in": "query",
         "schema": { "type": "integer", "default": 30 }
       },
@@ -35246,10 +35259,35 @@
           "enum": ["queued", "in_progress", "completed"]
         }
       },
+      "tool_name": {
+        "name": "tool_name",
+        "description": "The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+        }
+      },
+      "tool_guid": {
+        "name": "tool_guid",
+        "description": "The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/code-scanning-analysis-tool-guid"
+        }
+      },
+      "git_ref": {
+        "name": "ref",
+        "description": "The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`.",
+        "in": "query",
+        "required": false,
+        "schema": { "$ref": "#/components/schemas/code-scanning-ref" }
+      },
       "alert_number": {
         "name": "alert_number",
         "in": "path",
-        "description": "The security alert number, found at the end of the security alert's URL.",
+        "description": "The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation.",
         "required": true,
         "schema": { "$ref": "#/components/schemas/alert-number" }
       },
@@ -42005,14 +42043,23 @@
           "repository": { "$ref": "#/components/schemas/repository" }
         }
       },
+      "code-scanning-analysis-tool-name": {
+        "type": "string",
+        "description": "The name of the tool used to generate the code scanning analysis."
+      },
+      "code-scanning-analysis-tool-guid": {
+        "nullable": true,
+        "type": "string",
+        "description": "The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data."
+      },
+      "code-scanning-ref": {
+        "type": "string",
+        "description": "The full Git reference, formatted as `refs/heads/<branch name>`."
+      },
       "code-scanning-alert-state": {
         "type": "string",
         "description": "State of a code scanning alert.",
         "enum": ["open", "dismissed", "fixed"]
-      },
-      "code-scanning-alert-ref": {
-        "type": "string",
-        "description": "The full Git reference, formatted as `refs/heads/<branch name>`."
       },
       "alert-number": {
         "type": "integer",
@@ -42041,6 +42088,13 @@
         "readOnly": true,
         "nullable": false
       },
+      "alert-instances-url": {
+        "type": "string",
+        "description": "The REST API URL for fetching the list of instances for an alert.",
+        "format": "uri",
+        "readOnly": true,
+        "nullable": false
+      },
       "code-scanning-alert-dismissed-at": {
         "type": "string",
         "description": "The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
@@ -42057,13 +42111,17 @@
           { "enum": [null] }
         ]
       },
-      "code-scanning-alert-rule": {
+      "code-scanning-alert-rule-summary": {
         "type": "object",
         "properties": {
           "id": {
             "nullable": true,
             "type": "string",
             "description": "A unique identifier for the rule used to detect the alert."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the rule used to detect the alert."
           },
           "severity": {
             "nullable": true,
@@ -42077,9 +42135,10 @@
           }
         }
       },
-      "code-scanning-analysis-tool-name": {
+      "code-scanning-analysis-tool-version": {
+        "nullable": true,
         "type": "string",
-        "description": "The name of the tool used to generate the code scanning analysis alert."
+        "description": "The version of the tool used to generate the code scanning analysis."
       },
       "code-scanning-analysis-tool": {
         "type": "object",
@@ -42088,42 +42147,12 @@
             "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
           },
           "version": {
-            "nullable": true,
-            "type": "string",
-            "description": "The version of the tool used to detect the alert."
+            "$ref": "#/components/schemas/code-scanning-analysis-tool-version"
+          },
+          "guid": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool-guid"
           }
         }
-      },
-      "code-scanning-alert-code-scanning-alert-items": {
-        "type": "object",
-        "properties": {
-          "number": { "$ref": "#/components/schemas/alert-number" },
-          "created_at": { "$ref": "#/components/schemas/alert-created-at" },
-          "url": { "$ref": "#/components/schemas/alert-url" },
-          "html_url": { "$ref": "#/components/schemas/alert-html-url" },
-          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
-          "dismissed_by": { "$ref": "#/components/schemas/simple-user" },
-          "dismissed_at": {
-            "$ref": "#/components/schemas/code-scanning-alert-dismissed-at"
-          },
-          "dismissed_reason": {
-            "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
-          },
-          "rule": { "$ref": "#/components/schemas/code-scanning-alert-rule" },
-          "tool": { "$ref": "#/components/schemas/code-scanning-analysis-tool" }
-        },
-        "required": [
-          "number",
-          "created_at",
-          "url",
-          "html_url",
-          "state",
-          "dismissed_by",
-          "dismissed_at",
-          "dismissed_reason",
-          "rule",
-          "tool"
-        ]
       },
       "code-scanning-analysis-analysis-key": {
         "type": "string",
@@ -42133,34 +42162,141 @@
         "type": "string",
         "description": "Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed."
       },
-      "code-scanning-alert-instances": {
+      "code-scanning-alert-location": {
+        "type": "object",
+        "description": "Describe a region within a file for the alert.",
+        "properties": {
+          "path": { "type": "string" },
+          "start_line": { "type": "integer" },
+          "end_line": { "type": "integer" },
+          "start_column": { "type": "integer" },
+          "end_column": { "type": "integer" }
+        }
+      },
+      "code-scanning-alert-classification": {
+        "type": "string",
+        "description": "A classification of the file. For example to identify it as generated.",
         "nullable": true,
-        "type": "array",
-        "items": {
-          "properties": {
-            "ref": { "$ref": "#/components/schemas/code-scanning-alert-ref" },
-            "analysis_key": {
-              "$ref": "#/components/schemas/code-scanning-analysis-analysis-key"
-            },
-            "environment": {
-              "$ref": "#/components/schemas/code-scanning-alert-environment"
-            },
-            "matrix_vars": { "nullable": true, "type": "string" },
-            "state": {
-              "$ref": "#/components/schemas/code-scanning-alert-state"
+        "enum": ["source", "generated", "test", "library"]
+      },
+      "code-scanning-alert-instance": {
+        "type": "object",
+        "properties": {
+          "ref": { "$ref": "#/components/schemas/code-scanning-ref" },
+          "analysis_key": {
+            "$ref": "#/components/schemas/code-scanning-analysis-analysis-key"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/code-scanning-alert-environment"
+          },
+          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
+          "commit_sha": { "type": "string" },
+          "message": {
+            "type": "object",
+            "properties": { "text": { "type": "string" } }
+          },
+          "location": {
+            "$ref": "#/components/schemas/code-scanning-alert-location"
+          },
+          "html_url": { "type": "string" },
+          "classifications": {
+            "type": "array",
+            "description": "Classifications that have been applied to the file that triggered the alert.\nFor example identifying it as documentation, or a generated file.",
+            "items": {
+              "$ref": "#/components/schemas/code-scanning-alert-classification"
             }
           }
         }
       },
-      "code-scanning-alert-code-scanning-alert": {
+      "code-scanning-alert-items": {
         "type": "object",
         "properties": {
           "number": { "$ref": "#/components/schemas/alert-number" },
           "created_at": { "$ref": "#/components/schemas/alert-created-at" },
           "url": { "$ref": "#/components/schemas/alert-url" },
           "html_url": { "$ref": "#/components/schemas/alert-html-url" },
-          "instances": {
-            "$ref": "#/components/schemas/code-scanning-alert-instances"
+          "instances_url": {
+            "$ref": "#/components/schemas/alert-instances-url"
+          },
+          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
+          "dismissed_by": { "$ref": "#/components/schemas/simple-user" },
+          "dismissed_at": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-at"
+          },
+          "dismissed_reason": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
+          },
+          "rule": {
+            "$ref": "#/components/schemas/code-scanning-alert-rule-summary"
+          },
+          "tool": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool"
+          },
+          "most_recent_instance": {
+            "$ref": "#/components/schemas/code-scanning-alert-instance"
+          }
+        },
+        "required": [
+          "number",
+          "created_at",
+          "url",
+          "html_url",
+          "instances_url",
+          "state",
+          "dismissed_by",
+          "dismissed_at",
+          "dismissed_reason",
+          "rule",
+          "tool",
+          "most_recent_instance"
+        ]
+      },
+      "code-scanning-alert-rule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": true,
+            "type": "string",
+            "description": "A unique identifier for the rule used to detect the alert."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the rule used to detect the alert."
+          },
+          "severity": {
+            "nullable": true,
+            "type": "string",
+            "description": "The severity of the alert.",
+            "enum": ["none", "note", "warning", "error"]
+          },
+          "description": {
+            "type": "string",
+            "description": "A short description of the rule used to detect the alert."
+          },
+          "full_description": {
+            "type": "string",
+            "description": "description of the rule used to detect the alert."
+          },
+          "tags": {
+            "type": "array",
+            "description": "A set of tags applicable for the rule.",
+            "items": { "type": "string" }
+          },
+          "help": {
+            "type": "string",
+            "description": "Detailed documentation for the rule as GitHub Flavored Markdown."
+          }
+        }
+      },
+      "code-scanning-alert": {
+        "type": "object",
+        "properties": {
+          "number": { "$ref": "#/components/schemas/alert-number" },
+          "created_at": { "$ref": "#/components/schemas/alert-created-at" },
+          "url": { "$ref": "#/components/schemas/alert-url" },
+          "html_url": { "$ref": "#/components/schemas/alert-html-url" },
+          "instances_url": {
+            "$ref": "#/components/schemas/alert-instances-url"
           },
           "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
           "dismissed_by": { "$ref": "#/components/schemas/simple-user" },
@@ -42171,20 +42307,26 @@
             "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
           },
           "rule": { "$ref": "#/components/schemas/code-scanning-alert-rule" },
-          "tool": { "$ref": "#/components/schemas/code-scanning-analysis-tool" }
+          "tool": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool"
+          },
+          "most_recent_instance": {
+            "$ref": "#/components/schemas/code-scanning-alert-instance"
+          }
         },
         "required": [
-          "instances",
           "number",
           "created_at",
           "url",
           "html_url",
+          "instances_url",
           "state",
           "dismissed_by",
           "dismissed_at",
           "dismissed_reason",
           "rule",
-          "tool"
+          "tool",
+          "most_recent_instance"
         ]
       },
       "code-scanning-alert-set-state": {
@@ -42192,16 +42334,22 @@
         "type": "string",
         "enum": ["open", "dismissed"]
       },
-      "code-scanning-analysis-ref": {
+      "code-scanning-analysis-sarif-id": {
         "type": "string",
-        "description": "The full Git reference of the code scanning analysis file, formatted as `refs/heads/<branch name>`."
+        "description": "An identifier for the upload.",
+        "example": "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53",
+        "nullable": false
       },
       "code-scanning-analysis-commit-sha": {
-        "description": "The commit SHA of the code scanning analysis file.",
+        "description": "The SHA of the commit to which the analysis you are uploading relates.",
         "type": "string",
         "minLength": 40,
         "maxLength": 40,
         "pattern": "^[0-9a-fA-F]+$"
+      },
+      "code-scanning-analysis-environment": {
+        "type": "string",
+        "description": "Identifies the variable values associated with the environment in which this analysis was performed."
       },
       "code-scanning-analysis-created-at": {
         "type": "string",
@@ -42210,44 +42358,85 @@
         "readOnly": true,
         "nullable": false
       },
-      "code-scanning-analysis-environment": {
+      "code-scanning-analysis-url": {
         "type": "string",
-        "description": "Identifies the variable values associated with the environment in which this analysis was performed."
+        "description": "The REST API URL of the analysis resource.",
+        "format": "uri",
+        "readOnly": true,
+        "nullable": false
       },
-      "code-scanning-analysis-code-scanning-analysis": {
+      "code-scanning-analysis": {
         "type": "object",
         "properties": {
+          "ref": { "$ref": "#/components/schemas/code-scanning-ref" },
           "commit_sha": {
             "$ref": "#/components/schemas/code-scanning-analysis-commit-sha"
           },
-          "ref": { "$ref": "#/components/schemas/code-scanning-analysis-ref" },
           "analysis_key": {
             "$ref": "#/components/schemas/code-scanning-analysis-analysis-key"
           },
+          "environment": {
+            "$ref": "#/components/schemas/code-scanning-analysis-environment"
+          },
+          "error": { "type": "string", "example": "error reading field xyz" },
           "created_at": {
             "$ref": "#/components/schemas/code-scanning-analysis-created-at"
           },
-          "tool_name": {
-            "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+          "results_count": {
+            "type": "integer",
+            "description": "The total number of results in the analysis."
           },
-          "error": { "type": "string", "example": "error reading field xyz" },
-          "environment": {
-            "$ref": "#/components/schemas/code-scanning-analysis-environment"
-          }
+          "rules_count": {
+            "type": "integer",
+            "description": "The total number of rules used in the analysis."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for this analysis."
+          },
+          "url": { "$ref": "#/components/schemas/code-scanning-analysis-url" },
+          "sarif_id": {
+            "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+          },
+          "tool": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool"
+          },
+          "deletable": { "type": "boolean" }
         },
         "required": [
           "ref",
           "commit_sha",
           "analysis_key",
-          "tool_name",
           "environment",
           "error",
-          "created_at"
+          "created_at",
+          "results_count",
+          "rules_count",
+          "id",
+          "url",
+          "sarif_id",
+          "tool",
+          "deletable"
         ]
       },
       "code-scanning-analysis-sarif-file": {
-        "description": "A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string.",
+        "description": "A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see \"[SARIF support for code scanning](https://docs.github.com/enterprise-server@3.0/github/finding-security-vulnerabilities-and-errors-in-your-code/sarif-support-for-code-scanning).\"",
         "type": "string"
+      },
+      "code-scanning-sarifs-receipt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+          },
+          "url": {
+            "type": "string",
+            "description": "The REST API URL for checking the status of the upload.",
+            "format": "uri",
+            "readOnly": true,
+            "nullable": false
+          }
+        }
       },
       "collaborator": {
         "title": "Collaborator",
@@ -54838,13 +55027,13 @@
           ]
         }
       },
-      "code-scanning-alert-code-scanning-alert-items": {
+      "code-scanning-alert-items": {
         "value": [
           {
             "number": 4,
             "created_at": "2020-02-13T12:29:18Z",
-            "url": "https://api.github.com/repos/github/hello-world/code-scanning/alerts/4",
-            "html_url": "https://github.com/github/hello-world/code-scanning/4",
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/4",
+            "html_url": "https://github.com/octocat/hello-world/code-scanning/4",
             "state": "open",
             "dismissed_by": null,
             "dismissed_at": null,
@@ -54852,15 +55041,35 @@
             "rule": {
               "id": "js/zipslip",
               "severity": "error",
-              "description": "Arbitrary file write during zip extraction"
+              "description": "Arbitrary file write during zip extraction",
+              "name": "js/zipslip"
             },
-            "tool": { "name": "CodeQL command-line toolchain", "version": null }
+            "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+            "most_recent_instance": {
+              "ref": "refs/heads/main",
+              "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "environment": "{}",
+              "state": "open",
+              "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+              "message": {
+                "text": "This path depends on a user-provided value."
+              },
+              "location": {
+                "path": "spec-main/api-session-spec.ts",
+                "start_line": 917,
+                "end_line": 917,
+                "start_column": 7,
+                "end_column": 18
+              },
+              "classifications": ["test"]
+            },
+            "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/4/instances"
           },
           {
             "number": 3,
             "created_at": "2020-02-13T12:29:18Z",
-            "url": "https://api.github.com/repos/github/hello-world/code-scanning/alerts/3",
-            "html_url": "https://github.com/github/hello-world/code-scanning/3",
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/3",
+            "html_url": "https://github.com/octocat/hello-world/code-scanning/3",
             "state": "dismissed",
             "dismissed_by": {
               "login": "octocat",
@@ -54887,36 +55096,42 @@
             "rule": {
               "id": "js/zipslip",
               "severity": "error",
-              "description": "Arbitrary file write during zip extraction"
+              "description": "Arbitrary file write during zip extraction",
+              "name": "js/zipslip"
             },
-            "tool": { "name": "CodeQL command-line toolchain", "version": null }
+            "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+            "most_recent_instance": {
+              "ref": "refs/heads/main",
+              "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "environment": "{}",
+              "state": "open",
+              "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+              "message": {
+                "text": "This path depends on a user-provided value."
+              },
+              "location": {
+                "path": "lib/ab12-gen.js",
+                "start_line": 917,
+                "end_line": 917,
+                "start_column": 7,
+                "end_column": 18
+              },
+              "classifications": []
+            },
+            "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/3/instances"
           }
         ]
       },
-      "code-scanning-alert-code-scanning-alert": {
+      "code-scanning-alert": {
         "value": {
           "number": 42,
           "created_at": "2020-06-19T11:21:34Z",
-          "url": "https://api.github.com/repos/github/hello-world/code-scanning/alerts/42",
-          "html_url": "https://github.com/github/hello-world/code-scanning/42",
-          "instances": [
-            {
-              "ref": "refs/heads/main",
-              "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-              "environment": "",
-              "state": "fixed"
-            },
-            {
-              "ref": "refs/pull/3740/head",
-              "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-              "environment": "",
-              "state": "dismissed"
-            }
-          ],
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42",
+          "html_url": "https://github.com/octocat/hello-world/code-scanning/42",
           "state": "dismissed",
           "dismissed_by": {
             "login": "octocat",
-            "id": 1,
+            "id": 54933897,
             "node_id": "MDQ6VXNlcjE=",
             "avatar_url": "https://github.com/images/error/octocat_happy.gif",
             "gravatar_id": "",
@@ -54937,33 +55152,42 @@
           "dismissed_at": "2020-02-14T12:29:18Z",
           "dismissed_reason": "false positive",
           "rule": {
-            "id": "js/polynomial-redos",
-            "severity": "warning",
-            "description": "Polynomial regular expression used on uncontrolled data"
+            "id": "js/zipslip",
+            "severity": "error",
+            "description": "Arbitrary file write during zip extraction (\"Zip Slip\")",
+            "name": "js/zipslip",
+            "full_description": "Extracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten.",
+            "tags": ["security", "external/cwe/cwe-022"],
+            "help": "# Arbitrary file write during zip extraction (\"Zip Slip\")\\nExtracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten ..."
           },
-          "tool": { "name": "CodeQL command-line toolchain", "version": null }
+          "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+          "most_recent_instance": {
+            "ref": "refs/heads/main",
+            "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "environment": "{}",
+            "state": "dismissed",
+            "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+            "message": {
+              "text": "This path depends on a user-provided value."
+            },
+            "location": {
+              "path": "spec-main/api-session-spec.ts",
+              "start_line": 917,
+              "end_line": 917,
+              "start_column": 7,
+              "end_column": 18
+            },
+            "classifications": ["test"]
+          },
+          "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42/instances"
         }
       },
-      "code-scanning-alert-code-scanning-alert-dismissed": {
+      "code-scanning-alert-dismissed": {
         "value": {
           "number": 42,
           "created_at": "2020-08-25T21:28:36Z",
-          "url": "https://api.github.com/repos/github/hello-world/code-scanning/alerts/42",
-          "html_url": "https://github.com/github/hello-world/code-scanning/42",
-          "instances": [
-            {
-              "ref": "refs/heads/codeql-analysis-yml",
-              "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-              "environment": "",
-              "state": "dismissed"
-            },
-            {
-              "ref": "refs/pull/3740/head",
-              "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-              "environment": "",
-              "state": "dismissed"
-            }
-          ],
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42",
+          "html_url": "https://github.com/octocat/hello-world/code-scanning/42",
           "state": "dismissed",
           "dismissed_by": {
             "login": "octocat",
@@ -54988,34 +55212,80 @@
           "dismissed_at": "2020-09-02T22:34:56Z",
           "dismissed_reason": "false positive",
           "rule": {
-            "id": "js/polynomial-redos",
-            "severity": "warning",
-            "description": "Polynomial regular expression used on uncontrolled data"
+            "id": "js/zipslip",
+            "severity": "error",
+            "description": "Arbitrary file write during zip extraction (\"Zip Slip\")",
+            "name": "js/zipslip",
+            "full_description": "Extracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten.",
+            "tags": ["security", "external/cwe/cwe-022"],
+            "help": "# Arbitrary file write during zip extraction (\"Zip Slip\")\\nExtracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten ..."
           },
-          "tool": { "name": "CodeQL command-line toolchain", "version": null }
+          "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+          "most_recent_instance": {
+            "ref": "refs/heads/main",
+            "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "environment": "{}",
+            "state": "dismissed",
+            "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+            "message": {
+              "text": "This path depends on a user-provided value."
+            },
+            "location": {
+              "path": "spec-main/api-session-spec.ts",
+              "start_line": 917,
+              "end_line": 917,
+              "start_column": 7,
+              "end_column": 18
+            },
+            "classifications": ["test"]
+          },
+          "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42/instances"
         }
       },
-      "code-scanning-analysis-code-scanning-analysis-items": {
+      "code-scanning-analysis-items": {
         "value": [
           {
-            "ref": "refs/heads/master",
+            "ref": "refs/heads/main",
             "commit_sha": "d99612c3e1f2970085cfbaeadf8f010ef69bad83",
             "analysis_key": ".github/workflows/codeql-analysis.yml:analyze",
-            "tool_name": "CodeQL command-line toolchain",
-            "environment": "{}",
+            "environment": "{\"language\":\"python\"}",
             "error": "",
-            "created_at": "2020-08-27T15:05:21Z"
+            "created_at": "2020-08-27T15:05:21Z",
+            "results_count": 17,
+            "rules_count": 49,
+            "id": 201,
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/201",
+            "sarif_id": "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53",
+            "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+            "deletable": true
           },
           {
             "ref": "refs/heads/my-branch",
             "commit_sha": "c8cff6510d4d084fb1b4aa13b64b97ca12b07321",
             "analysis_key": ".github/workflows/shiftleft.yml:build",
-            "tool_name": "Python Security Analysis",
             "environment": "{}",
             "error": "",
-            "created_at": "2020-08-31T22:46:44Z"
+            "created_at": "2020-08-31T22:46:44Z",
+            "results_count": 17,
+            "rules_count": 32,
+            "id": 200,
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/200",
+            "sarif_id": "8981cd8e-b078-4ac3-a3be-1dad7dbd0b582",
+            "tool": {
+              "name": "Python Security Analysis",
+              "guid": null,
+              "version": "1.2.0"
+            },
+            "deletable": true
           }
         ]
+      },
+      "code-scanning-sarif-upload": {
+        "summary": "Default response",
+        "value": {
+          "id": "47177e22-5596-11eb-80a1-c1e54ef945c6",
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/sarifs/47177e22-5596-11eb-80a1-c1e54ef945c6"
+        }
       },
       "collaborator-items": {
         "value": [
@@ -63361,6 +63631,22 @@
       "moved_permanently": { "description": "Moved Permanently" },
       "conflict": {
         "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "code_scanning_forbidden_read": {
+        "description": "Response if github advanced security is not enabled for this repository",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "code_scanning_forbidden_write": {
+        "description": "Response if the repository is archived or if github advanced security is not enabled for this repository",
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/basic-error" }
