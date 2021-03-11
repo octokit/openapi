@@ -633,7 +633,25 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/direction" },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "accessed"],
+              "default": "created"
+            }
+          },
+          {
+            "name": "since",
+            "description": "Only show public keys accessed after the given time.",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -1006,7 +1024,18 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/direction" },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "name"],
+              "default": "created"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -1466,7 +1495,19 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/direction" },
+          {
+            "name": "sort",
+            "description": "One of `created` (when the repository was starred) or `updated` (when it was last pushed to) or `name`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "name"],
+              "default": "created"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -2359,7 +2400,14 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/per_page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": false,
+            "description": "The client ID of your GitHub app.",
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -2846,7 +2894,14 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/per_page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": false,
+            "description": "The client ID of your GitHub app.",
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -5533,7 +5588,14 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["assigned", "created", "mentioned", "subscribed", "all"],
+              "enum": [
+                "assigned",
+                "created",
+                "mentioned",
+                "subscribed",
+                "repos",
+                "all"
+              ],
               "default": "assigned"
             }
           },
@@ -5644,7 +5706,8 @@
             "required": false,
             "schema": { "type": "boolean" }
           },
-          { "$ref": "#/components/parameters/per_page" }
+          { "$ref": "#/components/parameters/per_page" },
+          { "$ref": "#/components/parameters/page" }
         ],
         "responses": {
           "200": {
@@ -6724,7 +6787,9 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/org" },
-          { "$ref": "#/components/parameters/runner_group_id" }
+          { "$ref": "#/components/parameters/runner_group_id" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per_page" }
         ],
         "responses": {
           "200": {
@@ -7460,7 +7525,9 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/org" },
-          { "$ref": "#/components/parameters/secret_name" }
+          { "$ref": "#/components/parameters/secret_name" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per_page" }
         ],
         "responses": {
           "200": {
@@ -8079,7 +8146,14 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["assigned", "created", "mentioned", "subscribed", "all"],
+              "enum": [
+                "assigned",
+                "created",
+                "mentioned",
+                "subscribed",
+                "repos",
+                "all"
+              ],
               "default": "assigned"
             }
           },
@@ -8597,7 +8671,19 @@
         "parameters": [
           { "$ref": "#/components/parameters/org" },
           { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/direction" },
+          {
+            "name": "sort",
+            "description": "The sort order for the response collection.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "name"],
+              "default": "created"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -9564,7 +9650,14 @@
           { "$ref": "#/components/parameters/team_slug" },
           { "$ref": "#/components/parameters/direction" },
           { "$ref": "#/components/parameters/per_page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          {
+            "name": "pinned",
+            "in": "query",
+            "required": false,
+            "description": "Pinned discussions only filter",
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -17591,7 +17684,23 @@
             "schema": { "type": "string" }
           },
           { "$ref": "#/components/parameters/per_page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          {
+            "name": "top",
+            "description": "legacy parameter for pagination.",
+            "in": "query",
+            "deprecated": true,
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "last_sha",
+            "description": "legacy parameter for pagination.",
+            "in": "query",
+            "deprecated": true,
+            "required": false,
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -17874,9 +17983,11 @@
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
           { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per_page" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -17924,7 +18035,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -17944,7 +18055,13 @@
             }
           },
           { "$ref": "#/components/parameters/per_page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          {
+            "name": "app_id",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer" }
+          }
         ],
         "responses": {
           "200": {
@@ -18003,7 +18120,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -18078,12 +18195,14 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
             "x-multi-segment": true
-          }
+          },
+          { "$ref": "#/components/parameters/per_page" },
+          { "$ref": "#/components/parameters/page" }
         ],
         "responses": {
           "200": {
@@ -18128,7 +18247,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -18233,7 +18352,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "path",
-            "description": "path+ parameter",
+            "description": "path parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -18307,7 +18426,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "path",
-            "description": "path+ parameter",
+            "description": "path parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -18459,7 +18578,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "path",
-            "description": "path+ parameter",
+            "description": "path parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -18647,7 +18766,7 @@
             "description": "The name of the environment that was deployed to (e.g., `staging` or `production`).",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "none" }
+            "schema": { "type": "string", "default": "none", "nullable": true }
           },
           { "$ref": "#/components/parameters/per_page" },
           { "$ref": "#/components/parameters/page" }
@@ -19286,12 +19405,28 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["newest", "oldest", "stargazers"],
+              "enum": ["newest", "oldest", "stargazers", "watchers"],
               "default": "newest"
             }
           },
           { "$ref": "#/components/parameters/per_page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          {
+            "name": "org",
+            "description": "legacy query parameter for specifying the org.",
+            "in": "query",
+            "deprecated": true,
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "organization",
+            "description": "legacy query parameter for specifying the org.",
+            "in": "query",
+            "deprecated": true,
+            "required": false,
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -19333,13 +19468,30 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
-          { "$ref": "#/components/parameters/repo" }
+          { "$ref": "#/components/parameters/repo" },
+          {
+            "name": "org",
+            "description": "legacy query parameter for specifying the org.",
+            "in": "query",
+            "deprecated": true,
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "organization",
+            "description": "legacy query parameter for specifying the org.",
+            "in": "query",
+            "deprecated": true,
+            "required": false,
+            "schema": { "type": "string" }
+          }
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "nullable": true,
                 "properties": {
                   "organization": {
                     "type": "string",
@@ -19670,7 +19822,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -19721,7 +19873,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -19839,7 +19991,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -19908,7 +20060,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "ref",
-            "description": "ref+ parameter",
+            "description": "ref parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -20203,7 +20355,8 @@
             "name": "tree_sha",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": { "type": "string" },
+            "x-multi-segment": true
           },
           {
             "name": "recursive",
@@ -23930,7 +24083,18 @@
           { "$ref": "#/components/parameters/owner" },
           { "$ref": "#/components/parameters/repo" },
           { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/direction" },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "name"],
+              "default": "created"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -24451,7 +24615,15 @@
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
           { "$ref": "#/components/parameters/repo" },
-          { "$ref": "#/components/parameters/sort" },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "created_at"]
+            }
+          },
           {
             "name": "direction",
             "description": "Can be either `asc` or `desc`. Ignored without `sort` parameter.",
@@ -26217,6 +26389,60 @@
         "x-octokit": {}
       }
     },
+    "/repos/{owner}/{repo}/readme/{dir}": {
+      "get": {
+        "summary": "Get a repository README",
+        "description": "Gets the preferred README for a repository.\n\nREADMEs support [custom media types](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.",
+        "tags": ["repos"],
+        "operationId": "repos/get-readme-from-alt-path",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/repos#get-a-repository-readme"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          {
+            "name": "dir",
+            "description": "The alternate path to look for a README file",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "x-multi-segment": true
+          },
+          {
+            "name": "ref",
+            "description": "The name of the commit/branch/tag. Default: the repository’s default branch (usually `master`)",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/content-file" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/content-file" }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "repos",
+          "subcategory": "contents"
+        },
+        "x-octokit": {}
+      }
+    },
     "/repos/{owner}/{repo}/releases": {
       "get": {
         "summary": "List releases",
@@ -26524,7 +26750,7 @@
           { "$ref": "#/components/parameters/repo" },
           {
             "name": "tag",
-            "description": "tag+ parameter",
+            "description": "tag parameter",
             "in": "path",
             "required": true,
             "schema": { "type": "string" },
@@ -27478,7 +27704,9 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
-          { "$ref": "#/components/parameters/repo" }
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per_page" }
         ],
         "responses": {
           "200": {
@@ -31503,7 +31731,14 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["assigned", "created", "mentioned", "subscribed", "all"],
+              "enum": [
+                "assigned",
+                "created",
+                "mentioned",
+                "subscribed",
+                "repos",
+                "all"
+              ],
               "default": "assigned"
             }
           },
@@ -33728,6 +33963,17 @@
         "required": true,
         "schema": { "type": "integer" }
       },
+      "direction": {
+        "name": "direction",
+        "description": "One of `asc` (ascending) or `desc` (descending).",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
+      },
       "key-ids": {
         "name": "key_ids",
         "in": "path",
@@ -33871,17 +34117,6 @@
         "in": "query",
         "required": false,
         "schema": { "type": "string" }
-      },
-      "direction": {
-        "name": "direction",
-        "description": "One of `asc` (ascending) or `desc` (descending).",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": ["asc", "desc"],
-          "default": "desc"
-        }
       },
       "owner": {
         "name": "owner",
@@ -40812,7 +41047,7 @@
       "code-scanning-alert-state": {
         "type": "string",
         "description": "State of a code scanning alert.",
-        "enum": ["open", "dismissed", "fixed"]
+        "enum": ["open", "closed", "dismissed", "fixed"]
       },
       "alert-number": {
         "type": "integer",
