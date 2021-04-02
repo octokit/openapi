@@ -405,6 +405,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Response",
@@ -11446,7 +11456,10 @@
                   "exclude": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "enum": [
+                        "repositories"
+                      ]
                     }
                   }
                 },
@@ -11997,7 +12010,7 @@
       },
       "delete": {
         "summary": "Delete a package for an organization",
-        "description": "Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
+        "description": "Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
         "tags": [
           "packages"
         ],
@@ -12237,7 +12250,7 @@
       },
       "delete": {
         "summary": "Delete package version for an organization",
-        "description": "Deletes a specific package version in an organization. If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
+        "description": "Deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
         "tags": [
           "packages"
         ],
@@ -28109,7 +28122,11 @@
                         "type": "string",
                         "description": "Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`."
                       }
-                    }
+                    },
+                    "required": [
+                      "name",
+                      "email"
+                    ]
                   },
                   "committer": {
                     "type": "object",
@@ -28672,7 +28689,11 @@
                         "type": "string",
                         "description": "When this object was tagged. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`."
                       }
-                    }
+                    },
+                    "required": [
+                      "name",
+                      "email"
+                    ]
                   }
                 },
                 "required": [
@@ -32240,18 +32261,65 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "labels": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  {
                     "type": "array",
-                    "description": "The name of the label to add to the issue. Must contain at least one label. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.",
+                    "minItems": 1,
                     "items": {
                       "type": "string"
                     }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "string"
                   }
-                },
-                "required": [
-                  "labels"
                 ]
               },
               "example": {
@@ -32325,16 +32393,62 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "labels": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "array",
+                        "description": "The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  {
                     "type": "array",
-                    "description": "The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.",
                     "items": {
                       "type": "string"
                     }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "string"
                   }
-                }
+                ]
               },
               "example": {
                 "labels": [
@@ -33841,6 +33955,7 @@
                   },
                   "due_on": {
                     "type": "string",
+                    "format": "date-time",
                     "description": "The milestone due date. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`."
                   }
                 },
@@ -33999,6 +34114,7 @@
                   },
                   "due_on": {
                     "type": "string",
+                    "format": "date-time",
                     "description": "The milestone due date. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`."
                   }
                 }
@@ -48207,7 +48323,7 @@
       },
       "delete": {
         "summary": "Delete a package for the authenticated user",
-        "description": "Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
+        "description": "Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
         "tags": [
           "packages"
         ],
@@ -48435,7 +48551,7 @@
       },
       "delete": {
         "summary": "Delete a package version for the authenticated user",
-        "description": "Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
+        "description": "Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
         "tags": [
           "packages"
         ],

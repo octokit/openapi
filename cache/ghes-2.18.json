@@ -2593,6 +2593,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Response",
@@ -18102,7 +18112,11 @@
                         "type": "string",
                         "description": "Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`."
                       }
-                    }
+                    },
+                    "required": [
+                      "name",
+                      "email"
+                    ]
                   },
                   "committer": {
                     "type": "object",
@@ -18584,7 +18598,11 @@
                         "type": "string",
                         "description": "When this object was tagged. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`."
                       }
-                    }
+                    },
+                    "required": [
+                      "name",
+                      "email"
+                    ]
                   }
                 },
                 "required": [
@@ -21314,18 +21332,65 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "labels": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  {
                     "type": "array",
-                    "description": "The name of the label to add to the issue. Must contain at least one label. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.",
+                    "minItems": 1,
                     "items": {
                       "type": "string"
                     }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "string"
                   }
-                },
-                "required": [
-                  "labels"
                 ]
               },
               "example": {
@@ -21399,16 +21464,62 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "labels": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "array",
+                        "description": "The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  {
                     "type": "array",
-                    "description": "The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key.",
                     "items": {
                       "type": "string"
                     }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "string"
                   }
-                }
+                ]
               },
               "example": {
                 "labels": [
@@ -22790,6 +22901,7 @@
                   },
                   "due_on": {
                     "type": "string",
+                    "format": "date-time",
                     "description": "The milestone due date. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`."
                   }
                 },
@@ -22948,6 +23060,7 @@
                   },
                   "due_on": {
                     "type": "string",
+                    "format": "date-time",
                     "description": "The milestone due date. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`."
                   }
                 }
