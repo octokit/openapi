@@ -39,7 +39,6 @@ for (const file of schemaFileNames) {
   // revert breaking changes
 
   // "/repos/{owner}/{repo}/compare/{base}...{head}" -> "/repos/{owner}/{repo}/compare/{basehead}"
-
   delete schema.paths["/repos/{owner}/{repo}/compare/{basehead}"];
   schema.paths[
     "/repos/{owner}/{repo}/compare/{base}...{head}"
