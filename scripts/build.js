@@ -1,6 +1,8 @@
 const { readdirSync, writeFileSync } = require("fs");
 const prettier = require("prettier");
 
+const overrides = require("./overrides");
+
 const schemaFileNames = readdirSync("cache");
 const changeFileNames = readdirSync("changes");
 
@@ -11,7 +13,8 @@ const changes = changeFileNames.reduce((map, file) => {
   return map;
 }, {});
 
-for (const file of schemaFileNames) {
+// for (const file of schemaFileNames) {
+for (const file of ["api.github.com.json"]) {
   const schema = require(`../cache/${file}`);
 
   for (const [path, methods] of Object.entries(schema.paths)) {
@@ -35,6 +38,8 @@ for (const file of schemaFileNames) {
   schema.info.description =
     "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs";
   schema.info.contact.url = "https://github.com/octokit/openapi";
+
+  overrides(schema);
 
   writeFileSync(
     `generated/${file}`,
