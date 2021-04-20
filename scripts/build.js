@@ -1,6 +1,8 @@
 const { readdirSync, writeFileSync } = require("fs");
 const prettier = require("prettier");
 
+const overrides = require("./overrides");
+
 const schemaFileNames = readdirSync("cache");
 const changeFileNames = readdirSync("changes");
 
@@ -11,7 +13,8 @@ const changes = changeFileNames.reduce((map, file) => {
   return map;
 }, {});
 
-for (const file of schemaFileNames) {
+// for (const file of schemaFileNames) {
+for (const file of ["api.github.com.json"]) {
   const schema = require(`../cache/${file}`);
 
   for (const [path, methods] of Object.entries(schema.paths)) {
@@ -36,26 +39,7 @@ for (const file of schemaFileNames) {
     "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs";
   schema.info.contact.url = "https://github.com/octokit/openapi";
 
-  // revert breaking changes
-
-  // "/repos/{owner}/{repo}/compare/{base}...{head}" -> "/repos/{owner}/{repo}/compare/{basehead}"
-  delete schema.paths["/repos/{owner}/{repo}/compare/{basehead}"];
-  schema.paths[
-    "/repos/{owner}/{repo}/compare/{base}...{head}"
-  ] = require("./overrides/repos-compare-commits.json");
-
-  // operationId: `actions/actions-policies/get-github-actions-permissions-organization` -> `actions/get-github-actions-permissions-organization`
-  if (schema.paths["/orgs/{org}/actions/permissions"]) {
-    if (
-      schema.paths["/orgs/{org}/actions/permissions"].get.operationId !==
-      "actions/actions-policies/get-github-actions-permissions-organization"
-    ) {
-      throw new Error("Workaround for operationId can be removed");
-    }
-
-    schema.paths["/orgs/{org}/actions/permissions"].get.operationId =
-      "actions/get-github-actions-permissions-organization";
-  }
+  overrides(schema);
 
   writeFileSync(
     `generated/${file}`,
