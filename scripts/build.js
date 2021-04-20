@@ -36,6 +36,15 @@ for (const file of schemaFileNames) {
     "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs";
   schema.info.contact.url = "https://github.com/octokit/openapi";
 
+  // revert breaking changes
+
+  // "/repos/{owner}/{repo}/compare/{base}...{head}" -> "/repos/{owner}/{repo}/compare/{basehead}"
+
+  delete schema.paths["/repos/{owner}/{repo}/compare/{basehead}"];
+  schema.paths[
+    "/repos/{owner}/{repo}/compare/{base}...{head}"
+  ] = require("./overrides/repos-compare-commits.json");
+
   writeFileSync(
     `generated/${file}`,
     prettier.format(JSON.stringify(schema), { parser: "json" })
