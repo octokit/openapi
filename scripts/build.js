@@ -13,8 +13,7 @@ const changes = changeFileNames.reduce((map, file) => {
   return map;
 }, {});
 
-// for (const file of schemaFileNames) {
-for (const file of ["api.github.com.json"]) {
+for (const file of schemaFileNames) {
   const schema = require(`../cache/${file}`);
 
   for (const [path, methods] of Object.entries(schema.paths)) {
@@ -39,7 +38,7 @@ for (const file of ["api.github.com.json"]) {
     "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs";
   schema.info.contact.url = "https://github.com/octokit/openapi";
 
-  overrides(schema);
+  overrides(file, schema);
 
   writeFileSync(
     `generated/${file}`,

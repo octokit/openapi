@@ -1,6 +1,6 @@
 module.exports = overrides;
 
-function overrides(schema) {
+function overrides(file, schema) {
   // remove `{ "type": "array", ...}` entries from `requestBody.content["aplication/json"].schema.anyOf
   // Octokit requires the request body to be set to an object in order to derive the variable name
   for (const [path, methods] of Object.entries(schema.paths)) {
@@ -27,9 +27,11 @@ function overrides(schema) {
 
   // "/repos/{owner}/{repo}/compare/{base}...{head}" -> "/repos/{owner}/{repo}/compare/{basehead}"
   delete schema.paths["/repos/{owner}/{repo}/compare/{basehead}"];
-  schema.paths[
-    "/repos/{owner}/{repo}/compare/{base}...{head}"
-  ] = require("./repos-compare-commits.json");
+  schema.paths["/repos/{owner}/{repo}/compare/{base}...{head}"] = /deref/.test(
+    file
+  )
+    ? require("./repos-compare-commits.deref.json")
+    : require("./repos-compare-commits.json");
 
   // operationId: `actions/actions-policies/get-github-actions-permissions-organization` -> `actions/get-github-actions-permissions-organization`
   if (schema.paths["/orgs/{org}/actions/permissions"]) {
