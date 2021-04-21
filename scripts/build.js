@@ -16,6 +16,9 @@ const changes = changeFileNames.reduce((map, file) => {
 for (const file of schemaFileNames) {
   const schema = require(`../cache/${file}`);
 
+  // apply overrides to the unaltered schemas from GitHub
+  overrides(file, schema);
+
   for (const [path, methods] of Object.entries(schema.paths)) {
     for (const [method, operation] of Object.entries(methods)) {
       const route = `${method.toUpperCase()} ${path}`;
@@ -37,8 +40,6 @@ for (const file of schemaFileNames) {
   schema.info.description =
     "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs";
   schema.info.contact.url = "https://github.com/octokit/openapi";
-
-  overrides(file, schema);
 
   writeFileSync(
     `generated/${file}`,
