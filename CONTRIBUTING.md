@@ -7,6 +7,14 @@ We appreciate you taking the time to contribute to `@octokit/openapi`. Especiall
 
 Thank you 💖
 
+## How it all works
+
+I've recorded a video where I work through an update coming from GitHub's official OpenAPI spec.
+
+<a href="https://youtu.be/xDTHbL5qcvQ"><img width="1281" alt="Screenshot of YouTube's video player" src="https://user-images.githubusercontent.com/39992/116304358-567da400-a757-11eb-8f8e-3634e754f672.png"></a>
+
+Find more details or ask questions at https://github.com/gr2m/helpdesk/issues/5
+
 ## Setup the repository locally
 
 First, fork the repository.
