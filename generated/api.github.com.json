@@ -53,7 +53,7 @@
     { "name": "gitignore", "description": "View gitignore templates" },
     {
       "name": "interactions",
-      "description": "Owner or admin management of users interactons."
+      "description": "Owner or admin management of users interactions."
     },
     { "name": "issues", "description": "Interact with GitHub Issues." },
     { "name": "licenses", "description": "View various OSS licenses." },
@@ -6830,11 +6830,7 @@
             "description": "Response when creating a secret",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": false
-                }
+                "schema": { "$ref": "#/components/schemas/empty-object" }
               }
             }
           },
@@ -20450,7 +20446,7 @@
                   },
                   "transient_environment": {
                     "type": "boolean",
-                    "description": "Specifies if the given environment is specific to the deployment and will no longer exist at some point in the future. Default: `false`  \n**Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type. **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.",
+                    "description": "Specifies if the given environment is specific to the deployment and will no longer exist at some point in the future. Default: `false`  \n**Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.",
                     "default": false
                   },
                   "production_environment": {
@@ -20706,7 +20702,7 @@
                   },
                   "log_url": {
                     "type": "string",
-                    "description": "The full URL of the deployment's output. This parameter replaces `target_url`. We will continue to accept `target_url` to support legacy uses, but we recommend replacing `target_url` with `log_url`. Setting `log_url` will automatically set `target_url` to the same value. Default: `\"\"`  \n**Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type. **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.",
+                    "description": "The full URL of the deployment's output. This parameter replaces `target_url`. We will continue to accept `target_url` to support legacy uses, but we recommend replacing `target_url` with `log_url`. Setting `log_url` will automatically set `target_url` to the same value. Default: `\"\"`  \n**Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.",
                     "default": ""
                   },
                   "description": {
@@ -20721,7 +20717,7 @@
                   },
                   "environment_url": {
                     "type": "string",
-                    "description": "Sets the URL for accessing your environment. Default: `\"\"`  \n**Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type. **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.",
+                    "description": "Sets the URL for accessing your environment. Default: `\"\"`  \n**Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.",
                     "default": ""
                   },
                   "auto_inactive": {
@@ -26492,7 +26488,14 @@
               }
             }
           },
-          "202": { "description": "Empty response" },
+          "202": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/empty-object" }
+              }
+            }
+          },
           "400": {
             "description": "Custom domains are not available for GitHub Pages"
           },
@@ -30911,7 +30914,14 @@
           }
         },
         "responses": {
-          "201": { "description": "Response when creating a secret" },
+          "201": {
+            "description": "Response when creating a secret",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/empty-object" }
+              }
+            }
+          },
           "204": { "description": "Response when updating a secret" }
         },
         "x-github": {
@@ -42568,6 +42578,13 @@
         },
         "required": ["key_id", "key"]
       },
+      "empty-object": {
+        "title": "Empty Object",
+        "description": "An object without any properties.",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
       "credential-authorization": {
         "title": "Credential Authorization",
         "description": "Credential Authorization",
@@ -44304,10 +44321,7 @@
           },
           "name": { "type": "string", "example": "Hello-World" },
           "full_name": { "type": "string", "example": "octocat/Hello-World" },
-          "owner": {
-            "nullable": true,
-            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
-          },
+          "owner": { "$ref": "#/components/schemas/simple-user" },
           "private": { "type": "boolean" },
           "html_url": {
             "type": "string",
