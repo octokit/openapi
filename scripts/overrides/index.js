@@ -32,17 +32,4 @@ function overrides(file, schema) {
   )
     ? require("./repos-compare-commits.deref.json")
     : require("./repos-compare-commits.json");
-
-  // operationId: `actions/actions-policies/get-github-actions-permissions-organization` -> `actions/get-github-actions-permissions-organization`
-  if (schema.paths["/orgs/{org}/actions/permissions"]) {
-    if (
-      schema.paths["/orgs/{org}/actions/permissions"].get.operationId !==
-      "actions/actions-policies/get-github-actions-permissions-organization"
-    ) {
-      throw new Error("Workaround for operationId can be removed");
-    }
-
-    schema.paths["/orgs/{org}/actions/permissions"].get.operationId =
-      "actions/get-github-actions-permissions-organization";
-  }
 }
