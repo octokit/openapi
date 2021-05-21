@@ -32,4 +32,18 @@ function overrides(file, schema) {
   )
     ? require("./repos-compare-commits.deref.json")
     : require("./repos-compare-commits.json");
+
+  // remove empty `"/user/tokens/reset"` path key
+  if (file === "generated/api.github.com.deref.json") {
+    if (
+      !schema.paths["/user/tokens/reset"] ||
+      Object.keys(schema.paths["/user/tokens/reset"]).length
+    ) {
+      throw new Error(
+        `Workaround for "/user/tokens/reset" is no longer needed`
+      );
+    }
+
+    delete schema.paths["/user/tokens/reset"];
+  }
 }
