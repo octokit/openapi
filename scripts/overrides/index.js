@@ -26,10 +26,79 @@ function overrides(file, schema) {
   }
 
   // "/repos/{owner}/{repo}/compare/{base}...{head}" -> "/repos/{owner}/{repo}/compare/{basehead}"
-  delete schema.paths["/repos/{owner}/{repo}/compare/{basehead}"];
-  schema.paths["/repos/{owner}/{repo}/compare/{base}...{head}"] = /deref/.test(
-    file
-  )
-    ? require("./repos-compare-commits.deref.json")
-    : require("./repos-compare-commits.json");
+  if (schema.paths["/repos/{owner}/{repo}/compare/{basehead}"]) {
+    // update operation ID for new endpoint
+    schema.paths["/repos/{owner}/{repo}/compare/{basehead}"].get.operationId =
+      "repos/compare-commits-with-basehead";
+
+    // recove all endpoints
+    schema.paths["/repos/{owner}/{repo}/compare/{base}...{head}"] = {
+      get: /deref/.test(file)
+        ? require("./repos-compare-commits.deref.json")
+        : require("./repos-compare-commits.json"),
+    };
+  }
+
+  // remove empty `"/user/tokens/reset"` path key
+  if (file === "generated/api.github.com.deref.json") {
+    if (
+      !schema.paths["/user/tokens/reset"] ||
+      Object.keys(schema.paths["/user/tokens/reset"]).length
+    ) {
+      throw new Error(
+        `Workaround for "/user/tokens/reset" is no longer needed`
+      );
+    }
+
+    delete schema.paths["/user/tokens/reset"];
+  }
+
+  // https://github.com/github/rest-api-description/issues/350
+  if (
+    !schema.paths[
+      "/{owner}/{repo}/content_references/{content_reference_id}/attachments"
+    ] &&
+    schema.paths[
+      "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments"
+    ]
+  ) {
+    throw new Error(
+      `Workaround for "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments" can be removed`
+    );
+  }
+
+  if (
+    schema.paths[
+      "/{owner}/{repo}/content_references/{content_reference_id}/attachments"
+    ]
+  ) {
+    schema.paths[
+      "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments"
+    ] =
+      schema.paths[
+        "/{owner}/{repo}/content_references/{content_reference_id}/attachments"
+      ];
+    delete schema.paths[
+      "/{owner}/{repo}/content_references/{content_reference_id}/attachments"
+    ];
+  }
+
+  // "POST /content_references/{content_reference_id}/attachments" -> "POST /{owner}/{repo}/content_references/{content_reference_id}/attachments"
+  if (
+    schema.paths[
+      "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments"
+    ]
+  ) {
+    // update operation ID for new endpoint
+    schema.paths[
+      "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments"
+    ].post.operationId = "apps/create-content-attachment-for-repo";
+
+    // recove all endpoints
+    schema.paths["/content_references/{content_reference_id}/attachments"] = {
+      post: /deref/.test(file)
+        ? require("./apps-create-content-attachment.deref.json")
+        : require("./apps-create-content-attachment.json"),
+    };
+  }
 }
