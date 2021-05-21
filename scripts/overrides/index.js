@@ -50,9 +50,7 @@ function overrides(file, schema) {
       );
     }
 
-    delete schema.paths[
-      "/repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}"
-    ];
+    delete schema.paths["/user/tokens/reset"];
 
     if (
       !schema.paths[
