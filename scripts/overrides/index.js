@@ -72,20 +72,6 @@ function overrides(file, schema) {
     ];
   }
 
-  // https://github.com/github/rest-api-description/issues/350
-  if (
-    !schema.paths[
-      "/{owner}/{repo}/content_references/{content_reference_id}/attachments"
-    ] &&
-    schema.paths[
-      "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments"
-    ]
-  ) {
-    throw new Error(
-      `Workaround for "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments" can be removed`
-    );
-  }
-
   if (
     schema.paths[
       "/{owner}/{repo}/content_references/{content_reference_id}/attachments"
