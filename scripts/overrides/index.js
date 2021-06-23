@@ -39,39 +39,6 @@ function overrides(file, schema) {
     };
   }
 
-  // remove empty `"/user/tokens/reset"` path key
-  if (/api.github.com/.test(file)) {
-    if (
-      !schema.paths["/user/tokens/reset"] ||
-      Object.keys(schema.paths["/user/tokens/reset"]).length
-    ) {
-      throw new Error(
-        `Workaround for "/user/tokens/reset" is no longer needed`
-      );
-    }
-
-    delete schema.paths["/user/tokens/reset"];
-
-    if (
-      !schema.paths[
-        "/repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}"
-      ] ||
-      Object.keys(
-        schema.paths[
-          "/repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}"
-        ]
-      ).length
-    ) {
-      throw new Error(
-        `Workaround for "/repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}" is no longer needed`
-      );
-    }
-
-    delete schema.paths[
-      "/repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}"
-    ];
-  }
-
   if (
     schema.paths[
       "/{owner}/{repo}/content_references/{content_reference_id}/attachments"
