@@ -15,7 +15,8 @@ async function run() {
       items: [mostRecentPr],
     },
   } = await octokit.request("GET /search/issues", {
-    q: "is:open is:pr author:github-openapi-bot",
+    q:
+      "is:open is:pr author:github-openapi-bot repo:github/rest-api-description",
   });
 
   const getDescriptionsOptions = {
