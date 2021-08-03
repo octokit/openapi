@@ -9214,7 +9214,7 @@
       },
       "delete": {
         "summary": "Delete a package for an organization",
-        "description": "Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
+        "description": "Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
         "tags": ["packages"],
         "operationId": "packages/delete-package-for-org",
         "externalDocs": {
@@ -9245,7 +9245,7 @@
     "/orgs/{org}/packages/{package_type}/{package_name}/restore": {
       "post": {
         "summary": "Restore a package for an organization",
-        "description": "Restores an entire package in an organization.\n\nYou can restore a deleted package under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scope. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.",
+        "description": "Restores an entire package in an organization.\n\nYou can restore a deleted package under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.",
         "tags": ["packages"],
         "operationId": "packages/restore-package-for-org",
         "externalDocs": {
@@ -9391,7 +9391,7 @@
       },
       "delete": {
         "summary": "Delete package version for an organization",
-        "description": "Deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
+        "description": "Deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
         "tags": ["packages"],
         "operationId": "packages/delete-package-version-for-org",
         "externalDocs": {
@@ -9423,7 +9423,7 @@
     "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
       "post": {
         "summary": "Restore package version for an organization",
-        "description": "Restores a specific package version in an organization.\n\nYou can restore a deleted package under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scope. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.",
+        "description": "Restores a specific package version in an organization.\n\nYou can restore a deleted package under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.",
         "tags": ["packages"],
         "operationId": "packages/restore-package-version-for-org",
         "externalDocs": {
@@ -9879,6 +9879,11 @@
                     "type": "boolean",
                     "description": "Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.",
                     "default": true
+                  },
+                  "allow_auto_merge": {
+                    "type": "boolean",
+                    "description": "Either `true` to allow auto-merge on pull requests, or `false to disallow auto-merge.",
+                    "default": false
                   },
                   "delete_branch_on_merge": {
                     "type": "boolean",
@@ -13424,6 +13429,11 @@
                     "type": "boolean",
                     "description": "Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.",
                     "default": true
+                  },
+                  "allow_auto_merge": {
+                    "type": "boolean",
+                    "description": "Either `true` to allow auto-merge on pull requests, or `false to disallow auto-merge.",
+                    "default": false
                   },
                   "delete_branch_on_merge": {
                     "type": "boolean",
@@ -30055,7 +30065,7 @@
           {
             "name": "secret_type",
             "in": "query",
-            "description": "A comma separated list of secret types to return. By default all secret types are returned.",
+            "description": "A comma separated list of secret types to return. By default all secret types are returned. See \"[About secret scanning for private repositories](https://docs.github.com/code-security/secret-security/about-secret-scanning#about-secret-scanning-for-private-repositories)\" for a complete list of secret types (API slug).",
             "required": false,
             "schema": { "type": "string" }
           },
@@ -37445,7 +37455,7 @@
       },
       "delete": {
         "summary": "Delete a package for the authenticated user",
-        "description": "Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
+        "description": "Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scopes.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
         "tags": ["packages"],
         "operationId": "packages/delete-package-for-authenticated-user",
         "externalDocs": {
@@ -37475,7 +37485,7 @@
     "/user/packages/{package_type}/{package_name}/restore": {
       "post": {
         "summary": "Restore a package for the authenticated user",
-        "description": "Restores a package owned by the authenticated user.\n\nYou can restore a deleted package under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scope. If `package_type` is not `container`, your token must also include the `repo` scope.",
+        "description": "Restores a package owned by the authenticated user.\n\nYou can restore a deleted package under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. If `package_type` is not `container`, your token must also include the `repo` scope.",
         "tags": ["packages"],
         "operationId": "packages/restore-package-for-authenticated-user",
         "externalDocs": {
@@ -37618,7 +37628,7 @@
       },
       "delete": {
         "summary": "Delete a package version for the authenticated user",
-        "description": "Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
+        "description": "Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:delete` scopes.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
         "tags": ["packages"],
         "operationId": "packages/delete-package-version-for-authenticated-user",
         "externalDocs": {
@@ -37649,7 +37659,7 @@
     "/user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
       "post": {
         "summary": "Restore a package version for the authenticated user",
-        "description": "Restores a package version owned by the authenticated user.\n\nYou can restore a deleted package version under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scope. If `package_type` is not `container`, your token must also include the `repo` scope.",
+        "description": "Restores a package version owned by the authenticated user.\n\nYou can restore a deleted package version under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. If `package_type` is not `container`, your token must also include the `repo` scope.",
         "tags": ["packages"],
         "operationId": "packages/restore-package-version-for-authenticated-user",
         "externalDocs": {
@@ -37974,6 +37984,12 @@
                     "default": true,
                     "type": "boolean",
                     "example": true
+                  },
+                  "allow_auto_merge": {
+                    "description": "Whether to allow Auto-merge to be used on pull requests.",
+                    "default": false,
+                    "type": "boolean",
+                    "example": false
                   },
                   "delete_branch_on_merge": {
                     "description": "Whether to delete head branches when pull requests are merged",
@@ -41013,6 +41029,7 @@
               "allow_rebase_merge": { "type": "boolean" },
               "temp_clone_token": { "type": "string" },
               "allow_squash_merge": { "type": "boolean" },
+              "allow_auto_merge": { "type": "boolean" },
               "delete_branch_on_merge": { "type": "boolean" },
               "allow_merge_commit": { "type": "boolean" },
               "subscribers_count": { "type": "integer" },
@@ -41025,6 +41042,12 @@
             "default": true,
             "type": "boolean",
             "example": true
+          },
+          "allow_auto_merge": {
+            "description": "Whether to allow Auto-merge to be used on pull requests.",
+            "default": false,
+            "type": "boolean",
+            "example": false
           },
           "delete_branch_on_merge": {
             "description": "Whether to delete head branches when pull requests are merged",
@@ -45172,6 +45195,12 @@
             "type": "boolean",
             "example": true
           },
+          "allow_auto_merge": {
+            "description": "Whether to allow Auto-merge to be used on pull requests.",
+            "default": false,
+            "type": "boolean",
+            "example": false
+          },
           "delete_branch_on_merge": {
             "description": "Whether to delete head branches when pull requests are merged",
             "default": false,
@@ -45741,6 +45770,7 @@
           },
           "temp_clone_token": { "type": "string", "nullable": true },
           "allow_squash_merge": { "type": "boolean", "example": true },
+          "allow_auto_merge": { "type": "boolean", "example": false },
           "delete_branch_on_merge": { "type": "boolean", "example": false },
           "allow_merge_commit": { "type": "boolean", "example": true },
           "subscribers_count": { "type": "integer", "example": 42 },
@@ -53932,6 +53962,7 @@
           "allow_merge_commit": { "type": "boolean" },
           "allow_squash_merge": { "type": "boolean" },
           "allow_rebase_merge": { "type": "boolean" },
+          "allow_auto_merge": { "type": "boolean" },
           "delete_branch_on_merge": { "type": "boolean" }
         },
         "required": [
@@ -54931,6 +54962,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -55893,6 +55925,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -56146,6 +56179,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -56813,6 +56847,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -57097,6 +57132,7 @@
                 "template_repository": null,
                 "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
                 "allow_squash_merge": true,
+                "allow_auto_merge": false,
                 "delete_branch_on_merge": true,
                 "allow_merge_commit": true,
                 "subscribers_count": 42,
@@ -57688,6 +57724,7 @@
                 "template_repository": null,
                 "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
                 "allow_squash_merge": true,
+                "allow_auto_merge": false,
                 "delete_branch_on_merge": true,
                 "allow_merge_commit": true,
                 "subscribers_count": 42,
@@ -57838,6 +57875,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -57986,6 +58024,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -58210,6 +58249,7 @@
               "allow_rebase_merge": true,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -58474,6 +58514,7 @@
           "template_repository": null,
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -59203,6 +59244,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -59210,6 +59252,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -59678,6 +59721,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -59685,6 +59729,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -59812,6 +59857,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -59924,6 +59970,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -60148,6 +60195,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -60155,6 +60203,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -60282,6 +60331,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -60394,6 +60444,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -60631,6 +60682,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -60638,6 +60690,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -60758,6 +60811,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -60870,6 +60924,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -62545,6 +62600,7 @@
               "allow_rebase_merge": true,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -62866,6 +62922,7 @@
               "allow_rebase_merge": true,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -63995,6 +64052,7 @@
                 "template_repository": null,
                 "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
                 "allow_squash_merge": true,
+                "allow_auto_merge": false,
                 "delete_branch_on_merge": true,
                 "allow_merge_commit": true,
                 "subscribers_count": 42,
@@ -64133,6 +64191,7 @@
                 "template_repository": null,
                 "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
                 "allow_squash_merge": true,
+                "allow_auto_merge": false,
                 "delete_branch_on_merge": true,
                 "allow_merge_commit": true,
                 "subscribers_count": 42,
@@ -68772,6 +68831,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -68910,6 +68970,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -70154,6 +70215,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -70259,6 +70321,7 @@
           "updated_at": "2011-01-26T19:14:43Z",
           "permissions": { "admin": false, "push": false, "pull": true },
           "allow_rebase_merge": true,
+          "allow_auto_merge": false,
           "license": {
             "key": "mit",
             "name": "MIT License",
@@ -71426,6 +71489,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -71433,6 +71497,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -72178,6 +72243,7 @@
                 "template_repository": null,
                 "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
                 "allow_squash_merge": true,
+                "allow_auto_merge": false,
                 "delete_branch_on_merge": true,
                 "allow_merge_commit": true,
                 "subscribers_count": 42,
@@ -72328,6 +72394,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -72476,6 +72543,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -72779,6 +72847,7 @@
             "template_repository": null,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -72899,6 +72968,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
