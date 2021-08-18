@@ -15,7 +15,22 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run download
+
+      # setup runst & anicca
+      - uses: actions/checkout@v2
+        with:
+          repository: "xuorig/anicca"
+          path: anicca
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: cargo build
+        working-directory: anicca
+
+      # build
       - run: npm run build
+        env:
+          ANICCA_REPOSITORY_PATH: "${{ env.GITHUB_WORKSPACE }}/anicca"
       - name: update cache
         uses: gr2m/create-or-update-pull-request-action@v1.x
         env:
