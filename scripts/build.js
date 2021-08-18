@@ -3,6 +3,7 @@ const { resolve } = require("path");
 
 const prettier = require("prettier");
 const execa = require("execa");
+const sortKeys = require("sort-keys");
 
 const overrides = require("./overrides");
 
@@ -65,7 +66,7 @@ async function run() {
 
     const fromPath = `generated/${toFromFilename(file)}`;
     const toPath = `generated/${file}`;
-    const diffPath = `generated/${file.replace(".deref.", ".diff.")}`;
+    const diffPath = `generated/${toDiffFilename(file)}`;
 
     const cmd = `cargo run --bin cli diff ${resolve(fromPath)} ${resolve(
       toPath
@@ -86,6 +87,16 @@ async function run() {
     await command;
 
     console.log(`${diffPath} written`);
+
+    const json = require(`../${diffPath}`);
+    writeFileSync(
+      diffPath,
+      prettier.format(JSON.stringify(sortKeys(json, { deep: true })), {
+        parser: "json",
+      })
+    );
+
+    console.log(`${diffPath} re-formatted and keys sorted`);
   }
 
   let schemasCode = "";
@@ -138,4 +149,9 @@ function toFromFilename(filename) {
   }
 
   throw new Error(`Cannot calculate base version for ${filename}`);
+}
+
+function toDiffFilename(filename) {
+  const fromFilename = toFromFilename(filename);
+  return filename.replace(".deref.json", `.diff-to-${fromFilename}`);
 }
