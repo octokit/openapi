@@ -6,8 +6,8 @@ const execa = require("execa");
 
 const overrides = require("./overrides");
 
-if (!process.env.ANICCA_REPOSITORY_PATH) {
-  throw new Error("Please set ANICCA_REPOSITORY_PATH environment variable");
+if (!process.env.ANICCA_REPOSITORY_PATH && !process.env.GITHUB_WORKSPACE) {
+  throw new Error("Please set ANICCA_REPOSITORY_PATH or GITHUB_WORKSPACE");
 }
 
 run();
@@ -75,7 +75,11 @@ async function run() {
     // generate diff files using `anicca`
     // cargo run --bin cli diff /Users/gregor/Projects/octokit/openapi/generated/api.github.com.deref.json /Users/gregor/Projects/octokit/openapi/generated/ghes-3.1.deref.json --format json > diff.json
     const command = execa.command(cmd, {
-      cwd: process.env.ANICCA_REPOSITORY_PATH,
+      cwd:
+        // local
+        process.env.ANICCA_REPOSITORY_PATH ||
+        // github actions
+        process.env.GITHUB_WORKSPACE + "/anicca",
     });
     command.stderr.pipe(process.stderr);
     command.stdout.pipe(createWriteStream(resolve(diffPath)));
