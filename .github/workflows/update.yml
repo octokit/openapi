@@ -27,16 +27,12 @@ jobs:
       - run: cargo build
         working-directory: anicca
       # tests
-      - run: cargo run --bin cli diff fixtures/pet-store.json fixtures/pet-store-changed.json --format json
-        working-directory: anicca
-      - run: |
-          node -p 'require("execa").command("cargo run --bin cli diff fixtures/pet-store.json fixtures/pet-store-changed.json --format json").then(({ stdout, stderr }) => console.log({ stdout, stderr }), console.log)'
-        working-directory: anicca
+      - name: Set env
+        run: echo ::set-env name=ANICCA_REPOSITORY_PATH::$GITHUB_WORKSPACE/anicca
+      - run: echo $ANICCA_REPOSITORY_PATH
 
       # build
       - run: npm run build
-        env:
-          ANICCA_REPOSITORY_PATH: "${{ env.GITHUB_WORKSPACE }}/anicca"
       - name: update cache
         uses: gr2m/create-or-update-pull-request-action@v1.x
         env:
