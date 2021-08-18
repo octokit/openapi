@@ -989,34 +989,6 @@
         "x-octokit": {}
       }
     },
-    "/applications/{client_id}/grants/{access_token}": {
-      "delete": {
-        "summary": "Revoke a grant for an application",
-        "description": "**Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).\n\nOAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid token as `:access_token` and the grant for the token's owner will be deleted.\n\nDeleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the Applications settings page under \"Authorized OAuth Apps\" on GitHub](https://github.com/settings/applications#authorized).",
-        "tags": ["apps"],
-        "operationId": "apps/revoke-grant-for-application",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/apps#revoke-a-grant-for-an-application"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/client-id" },
-          { "$ref": "#/components/parameters/access-token" }
-        ],
-        "responses": { "204": { "description": "Response" } },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "previews": [],
-          "removalDate": "2021-05-05",
-          "deprecationDate": "2020-02-14",
-          "category": "apps",
-          "subcategory": "oauth-applications"
-        },
-        "deprecated": true,
-        "x-octokit": {}
-      }
-    },
     "/applications/{client_id}/token": {
       "post": {
         "summary": "Check a token",
@@ -1240,118 +1212,6 @@
           "category": "apps",
           "subcategory": "oauth-applications"
         },
-        "x-octokit": {}
-      }
-    },
-    "/applications/{client_id}/tokens/{access_token}": {
-      "get": {
-        "summary": "Check an authorization",
-        "description": "**Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).\n\nOAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.",
-        "tags": ["apps"],
-        "operationId": "apps/check-authorization",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/apps#check-an-authorization"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/client-id" },
-          { "$ref": "#/components/parameters/access-token" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "nullable": true,
-                  "allOf": [{ "$ref": "#/components/schemas/authorization" }]
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/authorization-with-user"
-                  }
-                }
-              }
-            }
-          },
-          "404": { "$ref": "#/components/responses/not_found" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "previews": [],
-          "removalDate": "2021-05-05",
-          "deprecationDate": "2020-02-14",
-          "category": "apps",
-          "subcategory": "oauth-applications"
-        },
-        "deprecated": true,
-        "x-octokit": {}
-      },
-      "post": {
-        "summary": "Reset an authorization",
-        "description": "**Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).\n\nOAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the \"token\" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.",
-        "tags": ["apps"],
-        "operationId": "apps/reset-authorization",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/apps#reset-an-authorization"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/client-id" },
-          { "$ref": "#/components/parameters/access-token" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/authorization" },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/authorization-with-user"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "previews": [],
-          "removalDate": "2021-05-05",
-          "deprecationDate": "2020-02-14",
-          "category": "apps",
-          "subcategory": "oauth-applications"
-        },
-        "deprecated": true,
-        "x-octokit": {}
-      },
-      "delete": {
-        "summary": "Revoke an authorization for an application",
-        "description": "**Deprecation Notice:** GitHub will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).\n\nOAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.",
-        "tags": ["apps"],
-        "operationId": "apps/revoke-authorization-for-application",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/apps#revoke-an-authorization-for-an-application"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/client-id" },
-          { "$ref": "#/components/parameters/access-token" }
-        ],
-        "responses": { "204": { "description": "Response" } },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "previews": [],
-          "removalDate": "2021-05-05",
-          "deprecationDate": "2020-02-14",
-          "category": "apps",
-          "subcategory": "oauth-applications"
-        },
-        "deprecated": true,
         "x-octokit": {}
       }
     },
@@ -73633,12 +73493,6 @@
         "in": "path",
         "required": true,
         "description": "The client ID of your GitHub app.",
-        "schema": { "type": "string" }
-      },
-      "access-token": {
-        "name": "access_token",
-        "in": "path",
-        "required": true,
         "schema": { "type": "string" }
       },
       "app-slug": {
