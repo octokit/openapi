@@ -17612,6 +17612,346 @@
         }
       ],
       [
+        "/organizations/:organization_id/secret-scanning/alerts",
+        {
+          "get": {
+            "deprecated": null,
+            "description": "Lists all secret scanning alerts for all eligible repositories in an organization, from newest to oldest.\nTo use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.\n\nGitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.",
+            "externalDocs": {
+              "description": "API method documentation",
+              "url": "https://docs.github.com/rest/reference/secret-scanning#list-secret-scanning-alerts-by-organization"
+            },
+            "operationId": "secret-scanning/list-alerts-for-org",
+            "parameters": [
+              {
+                "in": "path",
+                "name": "owner",
+                "required": true,
+                "schema": { "type": "string" },
+                "style": "simple"
+              },
+              {
+                "allowReserved": null,
+                "description": "Set to `open` or `resolved` to only list secret scanning alerts in a specific state.",
+                "in": "query",
+                "name": "state",
+                "required": false,
+                "schema": { "enum": ["open", "resolved"], "type": "string" },
+                "style": "form"
+              },
+              {
+                "allowReserved": null,
+                "description": "A comma separated list of secret types to return. By default all secret types are returned.",
+                "in": "query",
+                "name": "secret_type",
+                "required": false,
+                "schema": { "type": "string" },
+                "style": "form"
+              },
+              {
+                "allowReserved": null,
+                "description": "Page number of the results to fetch.",
+                "in": "query",
+                "name": "page",
+                "required": false,
+                "schema": { "default": 1, "type": "integer" },
+                "style": "form"
+              },
+              {
+                "allowReserved": null,
+                "description": "Results per page (max 100)",
+                "in": "query",
+                "name": "per_page",
+                "required": false,
+                "schema": { "default": 30, "type": "integer" },
+                "style": "form"
+              }
+            ],
+            "responses": {
+              "200": {
+                "content": {
+                  "application/json": {
+                    "examples": {
+                      "default": {
+                        "value": [
+                          {
+                            "created_at": "2020-11-06T18:48:51Z",
+                            "html_url": "https://github.com/owner/private-repo/security/secret-scanning/2",
+                            "number": 2,
+                            "resolution": "false_positive",
+                            "resolved_at": "2020-11-07T02:47:13Z",
+                            "resolved_by": {
+                              "avatar_url": "https://alambic.github.com/avatars/u/2?",
+                              "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
+                              "followers_url": "https://api.github.com/users/monalisa/followers",
+                              "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
+                              "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
+                              "gravatar_id": "",
+                              "html_url": "https://github.com/monalisa",
+                              "id": 2,
+                              "login": "monalisa",
+                              "node_id": "MDQ6VXNlcjI=",
+                              "organizations_url": "https://api.github.com/users/monalisa/orgs",
+                              "received_events_url": "https://api.github.com/users/monalisa/received_events",
+                              "repos_url": "https://api.github.com/users/monalisa/repos",
+                              "site_admin": true,
+                              "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
+                              "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
+                              "type": "User",
+                              "url": "https://api.github.com/users/monalisa"
+                            },
+                            "secret": "aio_XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                            "secret_type": "adafruit_io_key",
+                            "state": "resolved",
+                            "url": "https://api.github.com/repos/owner/private-repo/secret-scanning/alerts/2"
+                          },
+                          {
+                            "created_at": "2020-11-06T18:18:30Z",
+                            "html_url": "https://github.com/owner/repo/security/secret-scanning/1",
+                            "number": 1,
+                            "resolution": null,
+                            "resolved_at": null,
+                            "resolved_by": null,
+                            "secret": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us2",
+                            "secret_type": "mailchimp_api_key",
+                            "state": "open",
+                            "url": "https://api.github.com/repos/owner/repo/secret-scanning/alerts/1"
+                          }
+                        ]
+                      }
+                    },
+                    "schema": {
+                      "items": {
+                        "properties": {
+                          "created_at": {
+                            "description": "The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+                            "format": "date-time",
+                            "nullable": false,
+                            "readOnly": true,
+                            "type": "string"
+                          },
+                          "html_url": {
+                            "description": "The GitHub URL of the alert resource.",
+                            "format": "uri",
+                            "nullable": false,
+                            "readOnly": true,
+                            "type": "string"
+                          },
+                          "number": {
+                            "description": "The security alert number.",
+                            "nullable": false,
+                            "readOnly": true,
+                            "type": "integer"
+                          },
+                          "resolution": {
+                            "description": "**Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`.",
+                            "enum": [
+                              null,
+                              "false_positive",
+                              "wont_fix",
+                              "revoked",
+                              "used_in_tests"
+                            ],
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "resolved_at": {
+                            "description": "The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+                            "format": "date-time",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "resolved_by": {
+                            "description": "Simple User",
+                            "nullable": true,
+                            "properties": {
+                              "avatar_url": {
+                                "example": "https://github.com/images/error/octocat_happy.gif",
+                                "format": "uri",
+                                "type": "string"
+                              },
+                              "email": { "nullable": true, "type": "string" },
+                              "events_url": {
+                                "example": "https://api.github.com/users/octocat/events{/privacy}",
+                                "type": "string"
+                              },
+                              "followers_url": {
+                                "example": "https://api.github.com/users/octocat/followers",
+                                "format": "uri",
+                                "type": "string"
+                              },
+                              "following_url": {
+                                "example": "https://api.github.com/users/octocat/following{/other_user}",
+                                "type": "string"
+                              },
+                              "gists_url": {
+                                "example": "https://api.github.com/users/octocat/gists{/gist_id}",
+                                "type": "string"
+                              },
+                              "gravatar_id": {
+                                "example": "41d064eb2195891e12d0413f63227ea7",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "html_url": {
+                                "example": "https://github.com/octocat",
+                                "format": "uri",
+                                "type": "string"
+                              },
+                              "id": { "example": 1, "type": "integer" },
+                              "login": {
+                                "example": "octocat",
+                                "type": "string"
+                              },
+                              "name": { "nullable": true, "type": "string" },
+                              "node_id": {
+                                "example": "MDQ6VXNlcjE=",
+                                "type": "string"
+                              },
+                              "organizations_url": {
+                                "example": "https://api.github.com/users/octocat/orgs",
+                                "format": "uri",
+                                "type": "string"
+                              },
+                              "received_events_url": {
+                                "example": "https://api.github.com/users/octocat/received_events",
+                                "format": "uri",
+                                "type": "string"
+                              },
+                              "repos_url": {
+                                "example": "https://api.github.com/users/octocat/repos",
+                                "format": "uri",
+                                "type": "string"
+                              },
+                              "site_admin": { "type": "boolean" },
+                              "starred_at": {
+                                "example": "\"2020-07-09T00:17:55Z\"",
+                                "type": "string"
+                              },
+                              "starred_url": {
+                                "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                                "type": "string"
+                              },
+                              "subscriptions_url": {
+                                "example": "https://api.github.com/users/octocat/subscriptions",
+                                "format": "uri",
+                                "type": "string"
+                              },
+                              "type": { "example": "User", "type": "string" },
+                              "url": {
+                                "example": "https://api.github.com/users/octocat",
+                                "format": "uri",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "avatar_url",
+                              "events_url",
+                              "followers_url",
+                              "following_url",
+                              "gists_url",
+                              "gravatar_id",
+                              "html_url",
+                              "id",
+                              "node_id",
+                              "login",
+                              "organizations_url",
+                              "received_events_url",
+                              "repos_url",
+                              "site_admin",
+                              "starred_url",
+                              "subscriptions_url",
+                              "type",
+                              "url"
+                            ],
+                            "title": "Simple User",
+                            "type": "object"
+                          },
+                          "secret": {
+                            "description": "The secret that was detected.",
+                            "type": "string"
+                          },
+                          "secret_type": {
+                            "description": "The type of secret that secret scanning detected.",
+                            "type": "string"
+                          },
+                          "state": {
+                            "description": "Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.",
+                            "enum": ["open", "resolved"],
+                            "type": "string"
+                          },
+                          "url": {
+                            "description": "The REST API URL of the alert resource.",
+                            "format": "uri",
+                            "nullable": false,
+                            "readOnly": true,
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  }
+                },
+                "description": "Response",
+                "headers": {
+                  "Link": {
+                    "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
+                    "required": null,
+                    "schema": { "type": "string" },
+                    "style": "simple"
+                  }
+                }
+              },
+              "404": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "description": "Basic Error",
+                      "properties": {
+                        "documentation_url": { "type": "string" },
+                        "message": { "type": "string" },
+                        "status": { "type": "string" },
+                        "url": { "type": "string" }
+                      },
+                      "title": "Basic Error",
+                      "type": "object"
+                    }
+                  }
+                },
+                "description": "Resource not found"
+              },
+              "503": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "properties": {
+                        "code": { "type": "string" },
+                        "documentation_url": { "type": "string" },
+                        "message": { "type": "string" }
+                      },
+                      "type": "object"
+                    }
+                  }
+                },
+                "description": "Service unavailable"
+              }
+            },
+            "summary": "Lists secret scanning alerts by organization",
+            "tags": ["secret-scanning"],
+            "x-github": {
+              "category": "secret-scanning",
+              "enabledForGitHubApps": true,
+              "githubCloudOnly": false,
+              "previews": [],
+              "subcategory": null
+            },
+            "x-octokit": {}
+          }
+        }
+      ],
+      [
         "/orgs/{org}/blocks",
         {
           "get": {
