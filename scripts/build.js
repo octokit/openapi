@@ -153,5 +153,5 @@ function toFromFilename(filename) {
 
 function toDiffFilename(filename) {
   const fromFilename = toFromFilename(filename);
-  return filename.replace(".deref.json", `.diff-to-${fromFilename}`);
+  return filename.replace(".deref.json", `.anicca-diff-to-${fromFilename}`);
 }
