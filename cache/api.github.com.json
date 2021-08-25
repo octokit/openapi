@@ -7064,6 +7064,93 @@
         }
       }
     },
+    "/organizations/:organization_id/secret-scanning/alerts": {
+      "get": {
+        "summary": "Lists secret scanning alerts by organization",
+        "description": "Lists all secret scanning alerts for all eligible repositories in an organization, from newest to oldest.\nTo use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.\n\nGitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.",
+        "tags": [
+          "secret-scanning"
+        ],
+        "operationId": "secret-scanning/list-alerts-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/secret-scanning#list-secret-scanning-alerts-by-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Set to `open` or `resolved` to only list secret scanning alerts in a specific state.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "resolved"
+              ]
+            }
+          },
+          {
+            "name": "secret_type",
+            "in": "query",
+            "description": "A comma separated list of secret types to return. By default all secret types are returned.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/secret-scanning-alert"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/secret-scanning-alert-list"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "503": {
+            "$ref": "#/components/responses/service_unavailable"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [
+
+          ],
+          "category": "secret-scanning",
+          "subcategory": null
+        }
+      }
+    },
     "/orgs/{org}": {
       "get": {
         "summary": "Get an organization",
@@ -58299,6 +58386,93 @@
           "subscribed"
         ]
       },
+      "alert-number": {
+        "type": "integer",
+        "description": "The security alert number.",
+        "readOnly": true,
+        "nullable": false
+      },
+      "alert-created-at": {
+        "type": "string",
+        "description": "The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "format": "date-time",
+        "readOnly": true,
+        "nullable": false
+      },
+      "alert-url": {
+        "type": "string",
+        "description": "The REST API URL of the alert resource.",
+        "format": "uri",
+        "readOnly": true,
+        "nullable": false
+      },
+      "alert-html-url": {
+        "type": "string",
+        "description": "The GitHub URL of the alert resource.",
+        "format": "uri",
+        "readOnly": true,
+        "nullable": false
+      },
+      "secret-scanning-alert-state": {
+        "description": "Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.",
+        "type": "string",
+        "enum": [
+          "open",
+          "resolved"
+        ]
+      },
+      "secret-scanning-alert-resolution": {
+        "type": "string",
+        "description": "**Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`.",
+        "nullable": true,
+        "enum": [
+          null,
+          "false_positive",
+          "wont_fix",
+          "revoked",
+          "used_in_tests"
+        ]
+      },
+      "secret-scanning-alert": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "$ref": "#/components/schemas/alert-number"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/alert-created-at"
+          },
+          "url": {
+            "$ref": "#/components/schemas/alert-url"
+          },
+          "html_url": {
+            "$ref": "#/components/schemas/alert-html-url"
+          },
+          "state": {
+            "$ref": "#/components/schemas/secret-scanning-alert-state"
+          },
+          "resolution": {
+            "$ref": "#/components/schemas/secret-scanning-alert-resolution"
+          },
+          "resolved_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+            "nullable": true
+          },
+          "resolved_by": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "secret_type": {
+            "type": "string",
+            "description": "The type of secret that secret scanning detected."
+          },
+          "secret": {
+            "type": "string",
+            "description": "The secret that was detected."
+          }
+        }
+      },
       "organization-full": {
         "title": "Organization Full",
         "description": "Organization Full",
@@ -64017,33 +64191,6 @@
           "dismissed",
           "fixed"
         ]
-      },
-      "alert-number": {
-        "type": "integer",
-        "description": "The security alert number.",
-        "readOnly": true,
-        "nullable": false
-      },
-      "alert-created-at": {
-        "type": "string",
-        "description": "The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
-        "format": "date-time",
-        "readOnly": true,
-        "nullable": false
-      },
-      "alert-url": {
-        "type": "string",
-        "description": "The REST API URL of the alert resource.",
-        "format": "uri",
-        "readOnly": true,
-        "nullable": false
-      },
-      "alert-html-url": {
-        "type": "string",
-        "description": "The GitHub URL of the alert resource.",
-        "format": "uri",
-        "readOnly": true,
-        "nullable": false
       },
       "alert-instances-url": {
         "type": "string",
@@ -72209,66 +72356,6 @@
           "url"
         ]
       },
-      "secret-scanning-alert-state": {
-        "description": "Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.",
-        "type": "string",
-        "enum": [
-          "open",
-          "resolved"
-        ]
-      },
-      "secret-scanning-alert-resolution": {
-        "type": "string",
-        "description": "**Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`.",
-        "nullable": true,
-        "enum": [
-          null,
-          "false_positive",
-          "wont_fix",
-          "revoked",
-          "used_in_tests"
-        ]
-      },
-      "secret-scanning-alert": {
-        "type": "object",
-        "properties": {
-          "number": {
-            "$ref": "#/components/schemas/alert-number"
-          },
-          "created_at": {
-            "$ref": "#/components/schemas/alert-created-at"
-          },
-          "url": {
-            "$ref": "#/components/schemas/alert-url"
-          },
-          "html_url": {
-            "$ref": "#/components/schemas/alert-html-url"
-          },
-          "state": {
-            "$ref": "#/components/schemas/secret-scanning-alert-state"
-          },
-          "resolution": {
-            "$ref": "#/components/schemas/secret-scanning-alert-resolution"
-          },
-          "resolved_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
-            "nullable": true
-          },
-          "resolved_by": {
-            "$ref": "#/components/schemas/simple-user"
-          },
-          "secret_type": {
-            "type": "string",
-            "description": "The type of secret that secret scanning detected."
-          },
-          "secret": {
-            "type": "string",
-            "description": "The secret that was detected."
-          }
-        }
-      },
       "stargazer": {
         "title": "Stargazer",
         "description": "Stargazer",
@@ -77242,6 +77329,53 @@
             "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
             "avatar_url": "https://github.com/images/error/octocat_happy.gif",
             "description": "A great organization"
+          }
+        ]
+      },
+      "secret-scanning-alert-list": {
+        "value": [
+          {
+            "number": 2,
+            "created_at": "2020-11-06T18:48:51Z",
+            "url": "https://api.github.com/repos/owner/private-repo/secret-scanning/alerts/2",
+            "html_url": "https://github.com/owner/private-repo/security/secret-scanning/2",
+            "state": "resolved",
+            "resolution": "false_positive",
+            "resolved_at": "2020-11-07T02:47:13Z",
+            "resolved_by": {
+              "login": "monalisa",
+              "id": 2,
+              "node_id": "MDQ6VXNlcjI=",
+              "avatar_url": "https://alambic.github.com/avatars/u/2?",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/monalisa",
+              "html_url": "https://github.com/monalisa",
+              "followers_url": "https://api.github.com/users/monalisa/followers",
+              "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
+              "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
+              "organizations_url": "https://api.github.com/users/monalisa/orgs",
+              "repos_url": "https://api.github.com/users/monalisa/repos",
+              "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/monalisa/received_events",
+              "type": "User",
+              "site_admin": true
+            },
+            "secret_type": "adafruit_io_key",
+            "secret": "aio_XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+          },
+          {
+            "number": 1,
+            "created_at": "2020-11-06T18:18:30Z",
+            "url": "https://api.github.com/repos/owner/repo/secret-scanning/alerts/1",
+            "html_url": "https://github.com/owner/repo/security/secret-scanning/1",
+            "state": "open",
+            "resolution": null,
+            "resolved_at": null,
+            "resolved_by": null,
+            "secret_type": "mailchimp_api_key",
+            "secret": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us2"
           }
         ]
       },
@@ -90785,53 +90919,6 @@
             "site_admin": false
           }
         }
-      },
-      "secret-scanning-alert-list": {
-        "value": [
-          {
-            "number": 2,
-            "created_at": "2020-11-06T18:48:51Z",
-            "url": "https://api.github.com/repos/owner/private-repo/secret-scanning/alerts/2",
-            "html_url": "https://github.com/owner/private-repo/security/secret-scanning/2",
-            "state": "resolved",
-            "resolution": "false_positive",
-            "resolved_at": "2020-11-07T02:47:13Z",
-            "resolved_by": {
-              "login": "monalisa",
-              "id": 2,
-              "node_id": "MDQ6VXNlcjI=",
-              "avatar_url": "https://alambic.github.com/avatars/u/2?",
-              "gravatar_id": "",
-              "url": "https://api.github.com/users/monalisa",
-              "html_url": "https://github.com/monalisa",
-              "followers_url": "https://api.github.com/users/monalisa/followers",
-              "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
-              "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
-              "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
-              "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
-              "organizations_url": "https://api.github.com/users/monalisa/orgs",
-              "repos_url": "https://api.github.com/users/monalisa/repos",
-              "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
-              "received_events_url": "https://api.github.com/users/monalisa/received_events",
-              "type": "User",
-              "site_admin": true
-            },
-            "secret_type": "adafruit_io_key",
-            "secret": "aio_XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-          },
-          {
-            "number": 1,
-            "created_at": "2020-11-06T18:18:30Z",
-            "url": "https://api.github.com/repos/owner/repo/secret-scanning/alerts/1",
-            "html_url": "https://github.com/owner/repo/security/secret-scanning/1",
-            "state": "open",
-            "resolution": null,
-            "resolved_at": null,
-            "resolved_by": null,
-            "secret_type": "mailchimp_api_key",
-            "secret": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us2"
-          }
-        ]
       },
       "secret-scanning-alert-open": {
         "value": {
