@@ -1,5 +1,5 @@
 const { createWriteStream, readdirSync, writeFileSync } = require("fs");
-const { resolve } = require("path");
+const { basename, resolve } = require("path");
 
 const prettier = require("prettier");
 const execa = require("execa");
@@ -69,7 +69,7 @@ async function run() {
 
     const fromPath = `generated/${toFromFilename(file)}`;
     const toPath = `generated/${file}`;
-    const diffPath = `generated/${toDiffFilename(file)}`;
+    const diffPath = `generated/${toAniccaDiffFilename(file)}`;
 
     const cmd = `cargo run --bin cli diff ${resolve(fromPath)} ${resolve(
       toPath
@@ -151,6 +151,10 @@ async function run() {
       fromPath.replace(".deref", ""),
       toPath.replace(".deref", "")
     );
+
+    // add diff files
+    createDiffVersion(toPath);
+    createDiffVersion(toPath.replace(".deref", ""));
   }
 
   let schemasCode = "";
@@ -179,7 +183,8 @@ async function run() {
   );
 }
 
-function toFromFilename(filename) {
+function toFromFilename(path) {
+  const filename = basename(path);
   if (filename.startsWith("github.ae")) {
     return "api.github.com.deref.json";
   }
@@ -205,9 +210,24 @@ function toFromFilename(filename) {
   throw new Error(`Cannot calculate base version for ${filename}`);
 }
 
-function toDiffFilename(filename) {
+function toAniccaDiffFilename(path) {
+  const filename = basename(path);
   const fromFilename = toFromFilename(filename);
   return filename.replace(".deref.json", `.anicca-diff-to-${fromFilename}`);
+}
+
+function toDiffFilename(path) {
+  const filename = basename(path);
+  const fromFilename = toFromFilename(filename);
+
+  if (filename.includes(".deref")) {
+    return filename.replace(/\.deref\.json/, `.diff-to-${fromFilename}`);
+  }
+
+  return filename.replace(
+    /\.json/,
+    `.diff-to-${fromFilename.replace(".deref", "")}`
+  );
 }
 
 function filenameToVersion(filename) {
@@ -390,4 +410,74 @@ function addDiffExtensions(diffJson, fromPath, toPath) {
   );
 
   console.log(`"x-octokit".diff extension added to ${toPath}`);
+}
+
+function createDiffVersion(path) {
+  const schema = require(`../${path}`);
+  const newPaths = {};
+  let refs = new Set();
+
+  // remove all paths that didn't change and keep track of refs
+  for (const [path, methods] of Object.entries(schema.paths)) {
+    for (const [method, operation] of Object.entries(methods)) {
+      if (!operation["x-octokit"]?.diff) continue;
+
+      _.set(newPaths, `${path}.${method}`, operation);
+      refs = new Set([...refs, ...findRefs(operation, refs)]);
+    }
+  }
+  schema.paths = newPaths;
+
+  // go through all refs recursively
+  refs.forEach((ref) => {
+    const component = _.get(schema, ref);
+    findAllRefs(schema, component, refs);
+  });
+
+  // remove all components that didn't change
+  const newComponents = {};
+  refs.forEach((ref) => {
+    _.set(newComponents, ref, _.get(schema, ref));
+  });
+  schema.components = newComponents.components;
+
+  console.log("%d components left over", refs.size);
+
+  const newPath = "generated/" + toDiffFilename(path);
+
+  writeFileSync(
+    newPath,
+    prettier.format(JSON.stringify(schema), { parser: "json" })
+  );
+
+  console.log("%s updated", newPath);
+}
+
+function findRefs(obj) {
+  const newRefs = new Set();
+  mapObj(
+    obj,
+    (key, value) => {
+      if (key === "$ref") {
+        // value is e.g. "#/components/parameters/per-page"
+        newRefs.add(value.substr(2).replace(/\//g, "."));
+      }
+
+      return [key, value];
+    },
+    { deep: true }
+  );
+
+  return newRefs;
+}
+
+function findAllRefs(schema, component, refs) {
+  const newRefs = findRefs(refs, component);
+
+  newRefs.forEach((ref) => {
+    if (refs.has(ref)) return;
+    refs.add(ref);
+
+    findAllRefs(schema, _.get(schema, ref), refs);
+  });
 }
