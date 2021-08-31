@@ -1,114 +1,109 @@
 {
   "paths": {
-    "added": [
-      [
-        "/repos/{owner}/{repo}/git/refs/{namespace}",
-        {
-          "get": {
-            "deprecated": null,
-            "description": "Returns an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`. If there are no references to list, a `404` is returned.\n\n**Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@2.18/rest/reference/pulls#get-a-single-pull-request) to trigger a merge commit creation. For more information, see \"[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@2.18/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)\".\n\n```\nGET /repos/octocat/Hello-World/git/refs\n```\n\nYou can also request a sub-namespace. For example, to get all the tag references, you can call:\n\n```\nGET /repos/octocat/Hello-World/git/refs/tags\n```",
-            "externalDocs": {
-              "description": "API method documentation",
-              "url": "https://docs.github.com/enterprise-server@2.18/enterprise/2.18/rest/reference/git#get-a-reference"
+    "added": {
+      "/repos/{owner}/{repo}/git/refs/{namespace}": {
+        "get": {
+          "deprecated": null,
+          "description": "Returns an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`. If there are no references to list, a `404` is returned.\n\n**Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@2.18/rest/reference/pulls#get-a-single-pull-request) to trigger a merge commit creation. For more information, see \"[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@2.18/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)\".\n\n```\nGET /repos/octocat/Hello-World/git/refs\n```\n\nYou can also request a sub-namespace. For example, to get all the tag references, you can call:\n\n```\nGET /repos/octocat/Hello-World/git/refs/tags\n```",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@2.18/enterprise/2.18/rest/reference/git#get-a-reference"
+          },
+          "operationId": "git/get-all-refs",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "owner",
+              "required": true,
+              "schema": { "type": "string" },
+              "style": "simple"
             },
-            "operationId": "git/get-all-refs",
-            "parameters": [
-              {
-                "in": "path",
-                "name": "owner",
-                "required": true,
-                "schema": { "type": "string" },
-                "style": "simple"
-              },
-              {
-                "in": "path",
-                "name": "repo",
-                "required": true,
-                "schema": { "type": "string" },
-                "style": "simple"
-              },
-              {
-                "allowReserved": null,
-                "description": "Results per page (max 100)",
-                "in": "query",
-                "name": "per_page",
-                "required": false,
-                "schema": { "default": 30, "type": "integer" },
-                "style": "form"
-              },
-              {
-                "allowReserved": null,
-                "description": "Page number of the results to fetch.",
-                "in": "query",
-                "name": "page",
-                "required": false,
-                "schema": { "default": 1, "type": "integer" },
-                "style": "form"
-              }
-            ],
-            "responses": {
-              "200": {
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "items": {
-                        "description": "Git references within a repository",
-                        "properties": {
-                          "node_id": { "type": "string" },
-                          "object": {
-                            "properties": {
-                              "sha": {
-                                "description": "SHA for the reference",
-                                "example": "7638417db6d59f3c431d3e1f261cc637155684cd",
-                                "maxLength": 40,
-                                "minLength": 40,
-                                "type": "string"
-                              },
-                              "type": { "type": "string" },
-                              "url": { "format": "uri", "type": "string" }
-                            },
-                            "required": ["type", "sha", "url"],
-                            "type": "object"
-                          },
-                          "ref": { "type": "string" },
-                          "url": { "format": "uri", "type": "string" }
-                        },
-                        "required": ["ref", "node_id", "url", "object"],
-                        "title": "Git Reference",
-                        "type": "object"
-                      },
-                      "type": "array"
-                    }
-                  }
-                },
-                "description": "Response"
-              }
+            {
+              "in": "path",
+              "name": "repo",
+              "required": true,
+              "schema": { "type": "string" },
+              "style": "simple"
             },
-            "summary": "Get all references",
-            "tags": ["git"],
-            "x-github": {
-              "category": "git",
-              "enabledForGitHubApps": true,
-              "githubCloudOnly": false,
-              "subcategory": "refs"
+            {
+              "allowReserved": null,
+              "description": "Results per page (max 100)",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": { "default": 30, "type": "integer" },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": { "default": 1, "type": "integer" },
+              "style": "form"
             }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "description": "Git references within a repository",
+                      "properties": {
+                        "node_id": { "type": "string" },
+                        "object": {
+                          "properties": {
+                            "sha": {
+                              "description": "SHA for the reference",
+                              "example": "7638417db6d59f3c431d3e1f261cc637155684cd",
+                              "maxLength": 40,
+                              "minLength": 40,
+                              "type": "string"
+                            },
+                            "type": { "type": "string" },
+                            "url": { "format": "uri", "type": "string" }
+                          },
+                          "required": ["type", "sha", "url"],
+                          "type": "object"
+                        },
+                        "ref": { "type": "string" },
+                        "url": { "format": "uri", "type": "string" }
+                      },
+                      "required": ["ref", "node_id", "url", "object"],
+                      "title": "Git Reference",
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get all references",
+          "tags": ["git"],
+          "x-github": {
+            "category": "git",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "refs"
           }
         }
-      ]
-    ],
+      }
+    },
     "changed": {
       "/app": {
-        "operations_changed": {
-          "get": {
-            "responses": {
-              "changed": {
-                "200": {
-                  "content": {
-                    "changed": {
-                      "application/json": {
-                        "schema_changed": {
-                          "properties_changed": { "removed": ["slug"] }
-                        }
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": { "removed": ["slug"] }
                       }
                     }
                   }
@@ -119,17 +114,15 @@
         }
       },
       "/apps/{app_slug}": {
-        "operations_changed": {
-          "get": {
-            "responses": {
-              "changed": {
-                "200": {
-                  "content": {
-                    "changed": {
-                      "application/json": {
-                        "schema_changed": {
-                          "properties_changed": { "removed": ["slug"] }
-                        }
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": { "removed": ["slug"] }
                       }
                     }
                   }
@@ -140,63 +133,15 @@
         }
       },
       "/repos/{owner}/{repo}/branches": {
-        "operations_changed": {
-          "get": {
-            "responses": {
-              "changed": {
-                "200": {
-                  "content": {
-                    "changed": {
-                      "application/json": {
-                        "schema_changed": {
-                          "items_changed": {
-                            "properties_changed": {
-                              "changed": {
-                                "protection": {
-                                  "properties_changed": {
-                                    "changed": {
-                                      "restrictions": {
-                                        "properties_changed": {
-                                          "changed": {
-                                            "restrictions": {
-                                              "items_changed": {
-                                                "properties_changed": {
-                                                  "removed": [
-                                                    "apps",
-                                                    "apps_url"
-                                                  ]
-                                                }
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/repos/{owner}/{repo}/branches/{branch}": {
-        "operations_changed": {
-          "get": {
-            "responses": {
-              "changed": {
-                "200": {
-                  "content": {
-                    "changed": {
-                      "application/json": {
-                        "schema_changed": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
                           "properties_changed": {
                             "changed": {
                               "protection": {
@@ -230,25 +175,29 @@
           }
         }
       },
-      "/repos/{owner}/{repo}/branches/{branch}/protection": {
-        "operations_changed": {
-          "get": {
-            "responses": {
-              "changed": {
-                "200": {
-                  "content": {
-                    "changed": {
-                      "application/json": {
-                        "schema_changed": {
-                          "properties_changed": {
-                            "changed": {
-                              "restrictions": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "restrictions": {
-                                      "items_changed": {
-                                        "properties_changed": {
-                                          "removed": ["apps", "apps_url"]
+      "/repos/{owner}/{repo}/branches/{branch}": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "protection": {
+                              "properties_changed": {
+                                "changed": {
+                                  "restrictions": {
+                                    "properties_changed": {
+                                      "changed": {
+                                        "restrictions": {
+                                          "items_changed": {
+                                            "properties_changed": {
+                                              "removed": ["apps", "apps_url"]
+                                            }
+                                          }
                                         }
                                       }
                                     }
@@ -267,22 +216,26 @@
           }
         }
       },
-      "/repos/{owner}/{repo}/branches/{branch}/protection/restrictions": {
-        "operations_changed": {
-          "get": {
-            "responses": {
-              "changed": {
-                "200": {
-                  "content": {
-                    "changed": {
-                      "application/json": {
-                        "schema_changed": {
-                          "properties_changed": {
-                            "changed": {
-                              "restrictions": {
-                                "items_changed": {
-                                  "properties_changed": {
-                                    "removed": ["apps", "apps_url"]
+      "/repos/{owner}/{repo}/branches/{branch}/protection": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "restrictions": {
+                              "properties_changed": {
+                                "changed": {
+                                  "restrictions": {
+                                    "items_changed": {
+                                      "properties_changed": {
+                                        "removed": ["apps", "apps_url"]
+                                      }
+                                    }
                                   }
                                 }
                               }
@@ -298,96 +251,122 @@
           }
         }
       },
-      "/teams/{team_id}/discussions": {
-        "operations_changed": {
-          "get": {
-            "parameters": {
-              "added": [
-                {
-                  "description": "This API is under preview and subject to change.",
-                  "in": "header",
-                  "name": "accept",
-                  "required": true,
-                  "schema": {
-                    "default": "application/vnd.github.echo-preview+json",
-                    "type": "string"
-                  },
-                  "style": "simple"
+      "/repos/{owner}/{repo}/branches/{branch}/protection/restrictions": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "restrictions": {
+                              "items_changed": {
+                                "properties_changed": {
+                                  "removed": ["apps", "apps_url"]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
+          }
+        }
+      },
+      "/teams/{team_id}/discussions": {
+        "get": {
+          "parameters": {
+            "added": [
+              {
+                "description": "This API is under preview and subject to change.",
+                "in": "header",
+                "name": "accept",
+                "required": true,
+                "schema": {
+                  "default": "application/vnd.github.echo-preview+json",
+                  "type": "string"
+                },
+                "style": "simple"
+              }
+            ]
           }
         }
       },
       "/teams/{team_id}/discussions/{discussion_number}": {
-        "operations_changed": {
-          "get": {
-            "parameters": {
-              "added": [
-                {
-                  "description": "This API is under preview and subject to change.",
-                  "in": "header",
-                  "name": "accept",
-                  "required": true,
-                  "schema": {
-                    "default": "application/vnd.github.echo-preview+json",
-                    "type": "string"
-                  },
-                  "style": "simple"
-                }
-              ]
-            }
+        "get": {
+          "parameters": {
+            "added": [
+              {
+                "description": "This API is under preview and subject to change.",
+                "in": "header",
+                "name": "accept",
+                "required": true,
+                "schema": {
+                  "default": "application/vnd.github.echo-preview+json",
+                  "type": "string"
+                },
+                "style": "simple"
+              }
+            ]
           }
         }
       },
       "/teams/{team_id}/discussions/{discussion_number}/comments": {
-        "operations_changed": {
-          "get": {
-            "parameters": {
-              "added": [
-                {
-                  "description": "This API is under preview and subject to change.",
-                  "in": "header",
-                  "name": "accept",
-                  "required": true,
-                  "schema": {
-                    "default": "application/vnd.github.echo-preview+json",
-                    "type": "string"
-                  },
-                  "style": "simple"
-                }
-              ]
-            }
+        "get": {
+          "parameters": {
+            "added": [
+              {
+                "description": "This API is under preview and subject to change.",
+                "in": "header",
+                "name": "accept",
+                "required": true,
+                "schema": {
+                  "default": "application/vnd.github.echo-preview+json",
+                  "type": "string"
+                },
+                "style": "simple"
+              }
+            ]
           }
         }
       },
       "/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}": {
-        "operations_changed": {
-          "get": {
-            "parameters": {
-              "added": [
-                {
-                  "description": "This API is under preview and subject to change.",
-                  "in": "header",
-                  "name": "accept",
-                  "required": true,
-                  "schema": {
-                    "default": "application/vnd.github.echo-preview+json",
-                    "type": "string"
-                  },
-                  "style": "simple"
-                }
-              ]
-            }
+        "get": {
+          "parameters": {
+            "added": [
+              {
+                "description": "This API is under preview and subject to change.",
+                "in": "header",
+                "name": "accept",
+                "required": true,
+                "schema": {
+                  "default": "application/vnd.github.echo-preview+json",
+                  "type": "string"
+                },
+                "style": "simple"
+              }
+            ]
           }
         }
       }
     },
-    "removed": [
-      "/orgs/{org}/installations",
-      "/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps",
-      "/repos/{owner}/{repo}/git/matching-refs/{ref}",
-      "/repos/{owner}/{repo}/git/ref/{ref}"
-    ]
+    "removed": {
+      "/orgs/{org}/installations": ["get"],
+      "/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps": [
+        "get",
+        "put",
+        "post",
+        "delete"
+      ],
+      "/repos/{owner}/{repo}/git/matching-refs/{ref}": ["get"],
+      "/repos/{owner}/{repo}/git/ref/{ref}": ["get"]
+    }
   }
 }

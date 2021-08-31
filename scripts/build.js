@@ -93,6 +93,23 @@ async function run() {
 
     const json = require(`../${diffPath}`);
 
+    json.paths = {
+      changed: Object.fromEntries(
+        Object.entries(json.paths.changed).map(
+          ([path, { operations_changed }]) => {
+            return [path, operations_changed];
+          }
+        )
+      ),
+      added: Object.fromEntries(json.paths.added),
+      removed: Object.fromEntries(
+        json.paths.removed.map(([path, methods]) => [
+          path,
+          Object.keys(methods),
+        ])
+      ),
+    };
+
     const jsonWithoutNullValues = mapObj(json, removeNullValues);
     const newJson = mapObj(jsonWithoutNullValues, simplifyRemovedArrays, {
       deep: true,
