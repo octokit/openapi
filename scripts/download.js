@@ -2,10 +2,15 @@ const { get } = require("https");
 const fs = require("fs");
 
 const { Octokit } = require("@octokit/core");
+const { getCurrentVersions } = require("github-enterprise-server-versions");
 
 run().then(() => console.log("done"), console.error);
 
 async function run() {
+  fs.rmSync("cache", { recursive: true });
+  fs.mkdirSync("cache");
+  console.log("cache/ cleared");
+
   const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN,
   });
@@ -15,8 +20,7 @@ async function run() {
       items: [mostRecentPr],
     },
   } = await octokit.request("GET /search/issues", {
-    q:
-      "is:open is:pr author:github-openapi-bot repo:github/rest-api-description",
+    q: "is:open is:pr author:github-openapi-bot repo:github/rest-api-description",
   });
 
   const getDescriptionsOptions = {
@@ -57,9 +61,19 @@ async function run() {
     );
   }
 
+  const currentGhesVersions = await getCurrentVersions();
+
   for (const folder of data) {
     const { name } = folder;
     const ref = getDescriptionsOptions.ref;
+
+    if (
+      name.startsWith("ghes-") &&
+      !currentGhesVersions.includes(parseFloat(name.substr("ghes-".length)))
+    ) {
+      console.log(`Skipping ${name} because it is not a current GHES version`);
+      continue;
+    }
 
     await download(name, `${ref}/descriptions/${name}/${name}.json`);
     await download(
