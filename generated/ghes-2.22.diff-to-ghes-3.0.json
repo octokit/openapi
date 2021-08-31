@@ -1,0 +1,1783 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "0.0.0-development",
+    "title": "GitHub's official OpenAPI spec + Octokit extension",
+    "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
+    "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
+    "termsOfService": "https://docs.github.com/articles/github-terms-of-service",
+    "contact": {
+      "name": "Support",
+      "url": "https://github.com/octokit/openapi"
+    }
+  },
+  "tags": [
+    {
+      "name": "actions",
+      "description": "Endpoints to manage GitHub Actions using the REST API."
+    },
+    {
+      "name": "activity",
+      "description": "Activity APIs provide access to notifications, subscriptions, and timelines."
+    },
+    {
+      "name": "apps",
+      "description": "Information for integrations and installations."
+    },
+    {
+      "name": "billing",
+      "description": "Monitor charges and usage from Actions and Packages."
+    },
+    {
+      "name": "checks",
+      "description": "Rich interactions with checks run by your integrations."
+    },
+    {
+      "name": "code-scanning",
+      "description": "Retrieve code scanning alerts from a repository."
+    },
+    {
+      "name": "codes-of-conduct",
+      "description": "Insight into codes of conduct for your communities."
+    },
+    {
+      "name": "emojis",
+      "description": "List emojis available to use on GitHub."
+    },
+    {
+      "name": "enterprise-admin",
+      "description": "Administer a GitHub enterprise."
+    },
+    { "name": "gists", "description": "View, modify your gists." },
+    { "name": "git", "description": "Raw Git functionality." },
+    { "name": "gitignore", "description": "View gitignore templates" },
+    {
+      "name": "interactions",
+      "description": "Owner or admin management of users interactions."
+    },
+    { "name": "issues", "description": "Interact with GitHub Issues." },
+    { "name": "licenses", "description": "View various OSS licenses." },
+    { "name": "markdown", "description": "Render Github flavored markdown" },
+    {
+      "name": "meta",
+      "description": "Endpoints that give information about the API."
+    },
+    { "name": "migrations", "description": "Move projects to or from GitHub." },
+    {
+      "name": "oauth-authorizations",
+      "description": "Manage access of OAuth applications"
+    },
+    { "name": "orgs", "description": "Interact with GitHub Orgs." },
+    {
+      "name": "packages",
+      "description": "Manage packages for authenticated users and organizations."
+    },
+    { "name": "projects", "description": "Interact with GitHub Projects." },
+    { "name": "pulls", "description": "Interact with GitHub Pull Requests." },
+    {
+      "name": "rate-limit",
+      "description": "Check your current rate limit status"
+    },
+    {
+      "name": "reactions",
+      "description": "Interact with reactions to various GitHub entities."
+    },
+    { "name": "repos", "description": "Interact with GitHub Repos." },
+    {
+      "name": "scim",
+      "description": "Provisioning of GitHub organization membership for SCIM-enabled providers."
+    },
+    { "name": "search", "description": "Look for stuff on GitHub." },
+    {
+      "name": "secret-scanning",
+      "description": "Retrieve secret scanning alerts from a repository."
+    },
+    { "name": "teams", "description": "Interact with GitHub Teams." },
+    {
+      "name": "users",
+      "description": "Interact with and view information about users and also current user."
+    }
+  ],
+  "servers": [
+    {
+      "url": "{protocol}://{hostname}/api/v3",
+      "variables": {
+        "hostname": {
+          "description": "Self-hosted Enterprise Server or Enterprise Cloud hostname",
+          "default": "HOSTNAME"
+        },
+        "protocol": {
+          "description": "Self-hosted Enterprise Server or Enterprise Cloud protocol",
+          "default": "http"
+        }
+      }
+    }
+  ],
+  "externalDocs": {
+    "description": "GitHub Enterprise Developer Docs",
+    "url": "https://docs.github.com/enterprise-server@2.22/rest/"
+  },
+  "paths": {
+    "/app/installations": {
+      "get": {
+        "summary": "List installations for the authenticated app",
+        "description": "You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.\n\nThe permissions the installation has are included under the `permissions` key.",
+        "tags": ["apps"],
+        "operationId": "apps/list-installations",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/apps#list-installations-for-the-authenticated-app"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/since" },
+          {
+            "name": "outdated",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The permissions the installation has are included under the `permissions` key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/installation-ghes-2"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/base-installation-items-ghes-2"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "apps",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/app/installations/{installation_id}": {
+      "get": {
+        "summary": "Get an installation for the authenticated app",
+        "description": "Enables an authenticated GitHub App to find an installation's information using the installation id. The installation's account type (`target_type`) will be either an organization or a user account, depending which account the repository belongs to.\n\nYou must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.",
+        "tags": ["apps"],
+        "operationId": "apps/get-installation",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/apps#get-an-installation-for-the-authenticated-app"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/installation-id" }],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/installation-ghes-2"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/base-installation-ghes-2"
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "415": { "$ref": "#/components/responses/preview_header_missing" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "apps",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners": {
+      "get": {
+        "summary": "List self-hosted runners in a group for an enterprise",
+        "description": "Lists the self-hosted runners that are in a specific enterprise group.\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+        "operationId": "enterprise-admin/list-self-hosted-runners-in-group-for-enterprise",
+        "tags": ["enterprise-admin"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#list-self-hosted-runners-in-a-group-for-an-enterprise"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/enterprise" },
+          { "$ref": "#/components/parameters/runner-group-id" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_count": { "type": "number" },
+                    "runners": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner-no-labels"
+                      }
+                    }
+                  },
+                  "required": ["total_count", "runners"]
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-paginated-no-labels"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": false,
+          "githubCloudOnly": false,
+          "previews": [],
+          "category": "enterprise-admin",
+          "subcategory": "actions"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/enterprises/{enterprise}/actions/runners": {
+      "get": {
+        "summary": "List self-hosted runners for an enterprise",
+        "description": "Lists all self-hosted runners configured for an enterprise.\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+        "operationId": "enterprise-admin/list-self-hosted-runners-for-enterprise",
+        "tags": ["enterprise-admin"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#list-self-hosted-runners-for-an-enterprise"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/enterprise" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_count": { "type": "number" },
+                    "runners": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner-no-labels"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-paginated-no-labels"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": false,
+          "githubCloudOnly": false,
+          "previews": [],
+          "category": "enterprise-admin",
+          "subcategory": "actions"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/enterprises/{enterprise}/actions/runners/{runner_id}": {
+      "get": {
+        "summary": "Get a self-hosted runner for an enterprise",
+        "description": "Gets a specific self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+        "operationId": "enterprise-admin/get-self-hosted-runner-for-enterprise",
+        "tags": ["enterprise-admin"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#get-a-self-hosted-runner-for-an-enterprise"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/enterprise" },
+          { "$ref": "#/components/parameters/runner-id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/runner-no-labels" },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-no-labels"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": false,
+          "githubCloudOnly": false,
+          "previews": [],
+          "category": "enterprise-admin",
+          "subcategory": "actions"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners": {
+      "get": {
+        "summary": "List self-hosted runners in a group for an organization",
+        "description": "Lists self-hosted runners that are in a specific organization group.\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/list-self-hosted-runners-in-group-for-org",
+        "tags": ["actions"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-organization"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/org" },
+          { "$ref": "#/components/parameters/runner-group-id" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "runners"],
+                  "properties": {
+                    "total_count": { "type": "number" },
+                    "runners": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner-no-labels"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-paginated-no-labels"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/orgs/{org}/actions/runners": {
+      "get": {
+        "summary": "List self-hosted runners for an organization",
+        "description": "Lists all self-hosted runners configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/list-self-hosted-runners-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/actions#list-self-hosted-runners-for-an-organization"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/org" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "runners"],
+                  "properties": {
+                    "total_count": { "type": "number" },
+                    "runners": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner-no-labels"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-paginated-no-labels"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/orgs/{org}/actions/runners/{runner_id}": {
+      "get": {
+        "summary": "Get a self-hosted runner for an organization",
+        "description": "Gets a specific self-hosted runner configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/get-self-hosted-runner-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/actions#get-a-self-hosted-runner-for-an-organization"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/org" },
+          { "$ref": "#/components/parameters/runner-id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/runner-no-labels" },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-no-labels"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/orgs/{org}/installation": {
+      "get": {
+        "summary": "Get an organization installation for the authenticated app",
+        "description": "Enables an authenticated GitHub App to find the organization's installation information.\n\nYou must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.",
+        "tags": ["apps"],
+        "operationId": "apps/get-org-installation",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/apps#get-an-organization-installation-for-the-authenticated-app"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/org" }],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/installation-ghes-2"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/installation-ghes-2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "previews": [],
+          "category": "apps",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/orgs/{org}/installations": {
+      "get": {
+        "summary": "List app installations for an organization",
+        "description": "Lists all GitHub Apps in an organization. The installation count includes all GitHub Apps installed on repositories in the organization. You must be an organization owner with `admin:read` scope to use this endpoint.",
+        "tags": ["orgs"],
+        "operationId": "orgs/list-app-installations",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/orgs#list-app-installations-for-an-organization"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/org" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "installations"],
+                  "properties": {
+                    "total_count": { "type": "integer" },
+                    "installations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/installation-ghes-2"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/installation-paginated-ghes-2"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "orgs",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/actions/runners": {
+      "get": {
+        "summary": "List self-hosted runners for a repository",
+        "description": "Lists all self-hosted runners configured in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/list-self-hosted-runners-for-repo",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/actions#list-self-hosted-runners-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "runners"],
+                  "properties": {
+                    "total_count": { "type": "number" },
+                    "runners": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner-no-labels"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-paginated-no-labels"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/actions/runners/{runner_id}": {
+      "get": {
+        "summary": "Get a self-hosted runner for a repository",
+        "description": "Gets a specific self-hosted runner configured in a repository.\n\nYou must authenticate using an access token with the `repo` scope to use this\nendpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/get-self-hosted-runner-for-repo",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/actions#get-a-self-hosted-runner-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/runner-id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/runner-no-labels" },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-no-labels"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/alerts": {
+      "get": {
+        "summary": "List code scanning alerts for a repository",
+        "description": "Lists all open code scanning alerts for the default branch (usually `main`\nor `master`). You must use an access token with the `security_events` scope to use\nthis endpoint. GitHub Apps must have the `security_events` read permission to use\nthis endpoint.",
+        "tags": ["code-scanning"],
+        "operationId": "code-scanning/list-alerts-for-repo",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/tool-name" },
+          { "$ref": "#/components/parameters/tool-guid" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/git-ref" },
+          {
+            "name": "state",
+            "description": "Set to `open`, `fixed`, or `dismissed` to list code scanning alerts in a specific state.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/code-scanning-alert-state"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/code-scanning-alert-items"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-alert-items"
+                  }
+                }
+              }
+            }
+          },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "code-scanning",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}": {
+      "get": {
+        "summary": "Get a code scanning alert",
+        "description": "Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe instances field is deprecated and will, in future, not be included in the response for this endpoint. From GitHub Enterprise Server 3.0, the same information can be retrieved via a GET request to the URL specified by `instances_url`, added in that release.",
+        "tags": ["code-scanning"],
+        "operationId": "code-scanning/get-alert",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/code-scanning#get-a-code-scanning-alert"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/alert-number" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-alert"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-alert"
+                  }
+                }
+              }
+            }
+          },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "code-scanning",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "PARAMETER",
+              "date": "2020-09-17",
+              "parameter": "alert_number",
+              "before": { "name": "alert_id" }
+            }
+          ],
+          "diff": { "ghes-3.0.json": { "type": "changed" } }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/installation": {
+      "get": {
+        "summary": "Get a repository installation for the authenticated app",
+        "description": "Enables an authenticated GitHub App to find the repository's installation information. The installation's account type will be either an organization or a user account, depending which account the repository belongs to.\n\nYou must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.",
+        "tags": ["apps"],
+        "operationId": "apps/get-repo-installation",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/installation-ghes-2"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/installation-ghes-2"
+                  }
+                }
+              }
+            }
+          },
+          "301": { "$ref": "#/components/responses/moved_permanently" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "previews": [],
+          "category": "apps",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/user/installations": {
+      "get": {
+        "summary": "List app installations accessible to the user access token",
+        "description": "Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.\n\nYou must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.\n\nThe authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.\n\nYou can find the permissions for the installation under the `permissions` key.",
+        "tags": ["apps"],
+        "operationId": "apps/list-installations-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/apps#list-app-installations-accessible-to-the-user-access-token"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "You can find the permissions for the installation under the `permissions` key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "installations"],
+                  "properties": {
+                    "total_count": { "type": "integer" },
+                    "installations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/installation-ghes-2"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/base-installation-for-auth-user-paginated-ghes-2"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "415": { "$ref": "#/components/responses/preview_header_missing" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "previews": [],
+          "category": "apps",
+          "subcategory": "installations"
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    },
+    "/users/{username}/installation": {
+      "get": {
+        "summary": "Get a user installation for the authenticated app",
+        "description": "Enables an authenticated GitHub App to find the user’s installation information.\n\nYou must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.",
+        "tags": ["apps"],
+        "operationId": "apps/get-user-installation",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@2.22/rest/reference/apps#get-a-user-installation-for-the-authenticated-app"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/username" }],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/installation-ghes-2"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/installation-ghes-2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "previews": [],
+          "category": "apps",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "per-page": {
+        "name": "per_page",
+        "description": "Results per page (max 100)",
+        "in": "query",
+        "schema": { "type": "integer", "default": 30 }
+      },
+      "page": {
+        "name": "page",
+        "description": "Page number of the results to fetch.",
+        "in": "query",
+        "schema": { "type": "integer", "default": 1 }
+      },
+      "since": {
+        "name": "since",
+        "description": "Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string", "format": "date-time" }
+      },
+      "installation-id": {
+        "name": "installation_id",
+        "description": "installation_id parameter",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "enterprise": {
+        "name": "enterprise",
+        "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "runner-group-id": {
+        "name": "runner_group_id",
+        "description": "Unique identifier of the self-hosted runner group.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "runner-id": {
+        "name": "runner_id",
+        "description": "Unique identifier of the self-hosted runner.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "org": {
+        "name": "org",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "owner": {
+        "name": "owner",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "repo": {
+        "name": "repo",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "tool-name": {
+        "name": "tool_name",
+        "description": "The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+        }
+      },
+      "tool-guid": {
+        "name": "tool_guid",
+        "description": "The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/code-scanning-analysis-tool-guid"
+        }
+      },
+      "git-ref": {
+        "name": "ref",
+        "description": "The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`.",
+        "in": "query",
+        "required": false,
+        "schema": { "$ref": "#/components/schemas/code-scanning-ref" }
+      },
+      "alert-number": {
+        "name": "alert_number",
+        "in": "path",
+        "description": "The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation.",
+        "required": true,
+        "schema": { "$ref": "#/components/schemas/alert-number" }
+      },
+      "username": {
+        "name": "username",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    },
+    "schemas": {
+      "installation-ghes-2": {
+        "title": "Installation",
+        "description": "Installation",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the installation.",
+            "type": "integer",
+            "example": 1
+          },
+          "account": {
+            "nullable": true,
+            "anyOf": [
+              { "$ref": "#/components/schemas/simple-user" },
+              { "$ref": "#/components/schemas/enterprise" }
+            ]
+          },
+          "repository_selection": {
+            "description": "Describe whether all repositories have been selected or there's a selection involved",
+            "type": "string",
+            "enum": ["all", "selected"]
+          },
+          "access_tokens_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/installations/1/access_tokens"
+          },
+          "repositories_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/installation/repositories"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/organizations/github/settings/installations/1"
+          },
+          "app_id": { "type": "integer", "example": 1 },
+          "target_id": {
+            "description": "The ID of the user or organization this token is being scoped to.",
+            "type": "integer"
+          },
+          "target_type": { "type": "string", "example": "Organization" },
+          "permissions": {
+            "type": "object",
+            "example": { "issues": "read", "deployments": "write" },
+            "properties": {
+              "deployments": { "type": "string" },
+              "checks": { "type": "string" },
+              "metadata": { "type": "string" },
+              "contents": { "type": "string" },
+              "pull_requests": { "type": "string" },
+              "statuses": { "type": "string" },
+              "issues": { "type": "string", "example": "\"read\"" },
+              "organization_administration": {
+                "type": "string",
+                "example": "\"read\""
+              }
+            }
+          },
+          "events": { "type": "array", "items": { "type": "string" } },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "single_file_name": {
+            "type": "string",
+            "example": "config.yaml",
+            "nullable": true
+          },
+          "app_slug": { "type": "string", "example": "github-actions" },
+          "suspended_by": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+          },
+          "suspended_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "contact_email": {
+            "type": "string",
+            "example": "\"test_13f1e99741e3e004@d7e1eb0bc0a1ba12.com\"",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "app_id",
+          "app_slug",
+          "target_id",
+          "target_type",
+          "single_file_name",
+          "repository_selection",
+          "access_tokens_url",
+          "html_url",
+          "repositories_url",
+          "events",
+          "account",
+          "permissions",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "runner-no-labels": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "name": { "type": "string" },
+          "os": { "type": "string" },
+          "status": { "type": "string" },
+          "busy": { "type": "boolean" }
+        }
+      },
+      "code-scanning-alert-state": {
+        "type": "string",
+        "description": "State of a code scanning alert.",
+        "enum": ["open", "closed", "dismissed", "fixed"]
+      },
+      "code-scanning-alert-items": {
+        "type": "object",
+        "properties": {
+          "number": { "$ref": "#/components/schemas/alert-number" },
+          "created_at": { "$ref": "#/components/schemas/alert-created-at" },
+          "url": { "$ref": "#/components/schemas/alert-url" },
+          "html_url": { "$ref": "#/components/schemas/alert-html-url" },
+          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
+          "dismissed_by": { "$ref": "#/components/schemas/simple-user" },
+          "dismissed_at": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-at"
+          },
+          "dismissed_reason": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
+          },
+          "rule": {
+            "$ref": "#/components/schemas/code-scanning-alert-rule-summary"
+          },
+          "tool": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool"
+          },
+          "instance": {
+            "$ref": "#/components/schemas/code-scanning-alert-instance"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/code-scanning-alert-classification"
+          }
+        },
+        "required": [
+          "number",
+          "created_at",
+          "url",
+          "html_url",
+          "state",
+          "dismissed_by",
+          "dismissed_at",
+          "dismissed_reason",
+          "rule",
+          "tool",
+          "instance",
+          "classification"
+        ]
+      },
+      "code-scanning-alert": {
+        "type": "object",
+        "properties": {
+          "number": { "$ref": "#/components/schemas/alert-number" },
+          "created_at": { "$ref": "#/components/schemas/alert-created-at" },
+          "url": { "$ref": "#/components/schemas/alert-url" },
+          "html_url": { "$ref": "#/components/schemas/alert-html-url" },
+          "instances": { "deprecated": true },
+          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
+          "dismissed_by": { "$ref": "#/components/schemas/simple-user" },
+          "dismissed_at": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-at"
+          },
+          "dismissed_reason": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
+          },
+          "rule": { "$ref": "#/components/schemas/code-scanning-alert-rule" },
+          "tool": { "$ref": "#/components/schemas/code-scanning-analysis-tool" }
+        },
+        "required": [
+          "number",
+          "created_at",
+          "url",
+          "html_url",
+          "state",
+          "dismissed_by",
+          "dismissed_at",
+          "dismissed_reason",
+          "rule",
+          "tool"
+        ]
+      }
+    },
+    "examples": {
+      "base-installation-items-ghes-2": {
+        "value": [
+          {
+            "id": 1,
+            "account": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "access_tokens_url": "https://api.github.com/installations/1/access_tokens",
+            "repositories_url": "https://api.github.com/installation/repositories",
+            "html_url": "https://github.com/organizations/github/settings/installations/1",
+            "app_id": 1,
+            "target_id": 1,
+            "target_type": "Organization",
+            "permissions": {
+              "checks": "write",
+              "metadata": "read",
+              "contents": "read"
+            },
+            "events": ["push", "pull_request"],
+            "single_file_name": "config.yaml",
+            "repository_selection": "selected",
+            "created_at": "2017-07-08T16:18:44-04:00",
+            "updated_at": "2017-07-08T16:18:44-04:00",
+            "app_slug": "github-actions"
+          }
+        ]
+      },
+      "base-installation-ghes-2": {
+        "value": {
+          "id": 1,
+          "account": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "access_tokens_url": "https://api.github.com/installations/1/access_tokens",
+          "repositories_url": "https://api.github.com/installation/repositories",
+          "html_url": "https://github.com/organizations/github/settings/installations/1",
+          "app_id": 1,
+          "target_id": 1,
+          "target_type": "Organization",
+          "permissions": {
+            "checks": "write",
+            "metadata": "read",
+            "contents": "read"
+          },
+          "events": ["push", "pull_request"],
+          "single_file_name": "config.yaml",
+          "repository_selection": "selected",
+          "created_at": "2017-07-08T16:18:44-04:00",
+          "updated_at": "2017-07-08T16:18:44-04:00",
+          "app_slug": "github-actions"
+        }
+      },
+      "runner-paginated-no-labels": {
+        "value": {
+          "total_count": 2,
+          "runners": [
+            {
+              "id": 23,
+              "name": "linux_runner",
+              "os": "linux",
+              "status": "online",
+              "busy": true
+            },
+            {
+              "id": 24,
+              "name": "mac_runner",
+              "os": "macos",
+              "status": "offline",
+              "busy": false
+            }
+          ]
+        }
+      },
+      "runner-no-labels": {
+        "value": {
+          "id": 23,
+          "name": "mac_runner",
+          "os": "macos",
+          "status": "online",
+          "busy": true
+        }
+      },
+      "installation-ghes-2": {
+        "value": {
+          "id": 1,
+          "account": {
+            "login": "github",
+            "id": 1,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+            "avatar_url": "https://github.com/images/error/hubot_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/github",
+            "html_url": "https://github.com/github",
+            "followers_url": "https://api.github.com/users/github/followers",
+            "following_url": "https://api.github.com/users/github/following{/other_user}",
+            "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+            "organizations_url": "https://api.github.com/users/github/orgs",
+            "repos_url": "https://api.github.com/orgs/github/repos",
+            "events_url": "https://api.github.com/orgs/github/events",
+            "received_events_url": "https://api.github.com/users/github/received_events",
+            "type": "Organization",
+            "site_admin": false
+          },
+          "repository_selection": "all",
+          "access_tokens_url": "https://api.github.com/installations/1/access_tokens",
+          "repositories_url": "https://api.github.com/installation/repositories",
+          "html_url": "https://github.com/organizations/github/settings/installations/1",
+          "app_id": 1,
+          "target_id": 1,
+          "target_type": "Organization",
+          "permissions": {
+            "checks": "write",
+            "metadata": "read",
+            "contents": "read"
+          },
+          "events": ["push", "pull_request"],
+          "created_at": "2018-02-09T20:51:14Z",
+          "updated_at": "2018-02-09T20:51:14Z",
+          "single_file_name": "config.yml",
+          "app_slug": "github-actions"
+        }
+      },
+      "installation-paginated-ghes-2": {
+        "value": {
+          "total_count": 1,
+          "installations": [
+            {
+              "id": 25381,
+              "account": {
+                "login": "octo-org",
+                "id": 6811672,
+                "node_id": "MDEyOk9yZ2FuaXphdGlvbjY4MTE2NzI=",
+                "avatar_url": "https://avatars3.githubusercontent.com/u/6811672?v=4",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octo-org",
+                "html_url": "https://github.com/octo-org",
+                "followers_url": "https://api.github.com/users/octo-org/followers",
+                "following_url": "https://api.github.com/users/octo-org/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octo-org/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octo-org/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octo-org/subscriptions",
+                "organizations_url": "https://api.github.com/users/octo-org/orgs",
+                "repos_url": "https://api.github.com/users/octo-org/repos",
+                "events_url": "https://api.github.com/users/octo-org/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octo-org/received_events",
+                "type": "Organization",
+                "site_admin": false
+              },
+              "repository_selection": "selected",
+              "access_tokens_url": "https://api.github.com/app/installations/25381/access_tokens",
+              "repositories_url": "https://api.github.com/installation/repositories",
+              "html_url": "https://github.com/organizations/octo-org/settings/installations/25381",
+              "app_id": 2218,
+              "target_id": 6811672,
+              "target_type": "Organization",
+              "permissions": {
+                "deployments": "write",
+                "metadata": "read",
+                "pull_requests": "read",
+                "statuses": "read"
+              },
+              "events": ["deployment", "deployment_status"],
+              "created_at": "2017-05-16T08:47:09.000-07:00",
+              "updated_at": "2017-06-06T11:23:23.000-07:00",
+              "single_file_name": "config.yml",
+              "app_slug": "github-actions"
+            }
+          ]
+        }
+      },
+      "code-scanning-alert-items": {
+        "value": [
+          {
+            "number": 4,
+            "created_at": "2020-02-13T12:29:18Z",
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/4",
+            "html_url": "https://github.com/octocat/hello-world/code-scanning/4",
+            "state": "open",
+            "dismissed_by": null,
+            "dismissed_at": null,
+            "dismissed_reason": null,
+            "rule": {
+              "id": "js/zipslip",
+              "severity": "error",
+              "description": "Arbitrary file write during zip extraction",
+              "name": "js/zipslip"
+            },
+            "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+            "instance": {
+              "ref": "refs/heads/main",
+              "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "environment": "{}",
+              "state": "open",
+              "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+              "message": {
+                "text": "This path depends on a user-provided value."
+              },
+              "location": {
+                "path": "spec-main/api-session-spec.ts",
+                "start_line": 917,
+                "end_line": 917,
+                "start_column": 7,
+                "end_column": 18
+              },
+              "classifications": ["test"]
+            }
+          },
+          {
+            "number": 3,
+            "created_at": "2020-02-13T12:29:18Z",
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/3",
+            "html_url": "https://github.com/octocat/hello-world/code-scanning/3",
+            "state": "dismissed",
+            "dismissed_by": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "dismissed_at": "2020-02-14T12:29:18Z",
+            "dismissed_reason": "false positive",
+            "rule": {
+              "id": "js/zipslip",
+              "severity": "error",
+              "description": "Arbitrary file write during zip extraction",
+              "name": "js/zipslip"
+            },
+            "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+            "instance": {
+              "ref": "refs/heads/main",
+              "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "environment": "{}",
+              "state": "open",
+              "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+              "message": {
+                "text": "This path depends on a user-provided value."
+              },
+              "location": {
+                "path": "lib/ab12-gen.js",
+                "start_line": 917,
+                "end_line": 917,
+                "start_column": 7,
+                "end_column": 18
+              },
+              "classifications": []
+            }
+          }
+        ]
+      },
+      "code-scanning-alert": {
+        "value": {
+          "number": 42,
+          "created_at": "2020-06-19T11:21:34Z",
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42",
+          "html_url": "https://github.com/octocat/hello-world/code-scanning/42",
+          "state": "dismissed",
+          "dismissed_by": {
+            "login": "octocat",
+            "id": 54933897,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "dismissed_at": "2020-02-14T12:29:18Z",
+          "dismissed_reason": "false positive",
+          "rule": {
+            "id": "js/zipslip",
+            "severity": "error",
+            "security_severity_level": "high",
+            "description": "Arbitrary file write during zip extraction (\"Zip Slip\")",
+            "name": "js/zipslip",
+            "full_description": "Extracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten.",
+            "tags": ["security", "external/cwe/cwe-022"],
+            "help": "# Arbitrary file write during zip extraction (\"Zip Slip\")\\nExtracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten ..."
+          },
+          "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+          "instances": [
+            {
+              "ref": "refs/heads/main",
+              "analysis_key": ".github/workflows/codeql-analysis.yml:analyze",
+              "environment": "{\"language\":\"javascript\"}",
+              "state": "dismissed",
+              "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+              "message": {
+                "text": "Unsanitized zip archive item path, which may contain '..', is used in a file system operation."
+              },
+              "location": {
+                "path": "src/badcode.js",
+                "start_line": 917,
+                "end_line": 917,
+                "start_column": 7,
+                "end_column": 18
+              },
+              "classifications": ["test"]
+            },
+            {
+              "ref": "refs/pull/3740/head",
+              "analysis_key": ".github/workflows/codeql-analysis.yml:analyze",
+              "environment": "{\"language\":\"javascript\"}",
+              "state": "dismissed",
+              "commit_sha": "42cb832f6839406e3daa691dd652a8dc36ee8930",
+              "message": {
+                "text": "Unsanitized zip archive item path, which may contain '..', is used in a file system operation."
+              },
+              "location": {
+                "path": "src/badcode.js",
+                "start_line": 917,
+                "end_line": 917,
+                "start_column": 7,
+                "end_column": 18
+              },
+              "classifications": ["test"]
+            }
+          ]
+        }
+      },
+      "base-installation-for-auth-user-paginated-ghes-2": {
+        "value": {
+          "total_count": 2,
+          "installations": [
+            {
+              "id": 1,
+              "account": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "access_tokens_url": "https://api.github.com/installations/1/access_tokens",
+              "repositories_url": "https://api.github.com/installation/repositories",
+              "html_url": "https://github.com/organizations/github/settings/installations/1",
+              "app_id": 1,
+              "target_id": 1,
+              "target_type": "Organization",
+              "permissions": {
+                "checks": "write",
+                "metadata": "read",
+                "contents": "read"
+              },
+              "events": ["push", "pull_request"],
+              "single_file_name": "config.yaml",
+              "repository_selection": "all",
+              "created_at": "2017-07-08T16:18:44-04:00",
+              "updated_at": "2017-07-08T16:18:44-04:00",
+              "app_slug": "github-actions"
+            },
+            {
+              "id": 3,
+              "account": {
+                "login": "octocat",
+                "id": 2,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "access_tokens_url": "https://api.github.com/installations/1/access_tokens",
+              "repositories_url": "https://api.github.com/installation/repositories",
+              "html_url": "https://github.com/organizations/github/settings/installations/1",
+              "app_id": 1,
+              "target_id": 1,
+              "target_type": "Organization",
+              "permissions": {
+                "checks": "write",
+                "metadata": "read",
+                "contents": "read"
+              },
+              "events": ["push", "pull_request"],
+              "single_file_name": "config.yaml",
+              "repository_selection": "all",
+              "created_at": "2017-07-08T16:18:44-04:00",
+              "updated_at": "2017-07-08T16:18:44-04:00",
+              "app_slug": "github-actions"
+            }
+          ]
+        }
+      }
+    },
+    "headers": {
+      "link": {
+        "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
+        "schema": { "type": "string" }
+      }
+    },
+    "responses": {
+      "not_found": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "preview_header_missing": {
+        "description": "Preview header missing",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["message", "documentation_url"],
+              "properties": {
+                "message": { "type": "string" },
+                "documentation_url": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "service_unavailable": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "message": { "type": "string" },
+                "documentation_url": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "moved_permanently": {
+        "description": "Moved permanently",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "not_modified": { "description": "Not modified" },
+      "requires_authentication": {
+        "description": "Requires authentication",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      }
+    }
+  }
+}
