@@ -1,0 +1,2985 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "0.0.0-development",
+    "title": "GitHub's official OpenAPI spec + Octokit extension",
+    "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
+    "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
+    "termsOfService": "https://docs.github.com/articles/github-terms-of-service",
+    "contact": {
+      "name": "Support",
+      "url": "https://github.com/octokit/openapi"
+    }
+  },
+  "tags": [
+    {
+      "name": "actions",
+      "description": "Endpoints to manage GitHub Actions using the REST API."
+    },
+    {
+      "name": "activity",
+      "description": "Activity APIs provide access to notifications, subscriptions, and timelines."
+    },
+    {
+      "name": "apps",
+      "description": "Information for integrations and installations."
+    },
+    {
+      "name": "billing",
+      "description": "Monitor charges and usage from Actions and Packages."
+    },
+    {
+      "name": "checks",
+      "description": "Rich interactions with checks run by your integrations."
+    },
+    {
+      "name": "code-scanning",
+      "description": "Retrieve code scanning alerts from a repository."
+    },
+    {
+      "name": "codes-of-conduct",
+      "description": "Insight into codes of conduct for your communities."
+    },
+    {
+      "name": "emojis",
+      "description": "List emojis available to use on GitHub."
+    },
+    {
+      "name": "enterprise-admin",
+      "description": "Administer a GitHub enterprise."
+    },
+    { "name": "gists", "description": "View, modify your gists." },
+    { "name": "git", "description": "Raw Git functionality." },
+    { "name": "gitignore", "description": "View gitignore templates" },
+    {
+      "name": "interactions",
+      "description": "Owner or admin management of users interactions."
+    },
+    { "name": "issues", "description": "Interact with GitHub Issues." },
+    { "name": "licenses", "description": "View various OSS licenses." },
+    { "name": "markdown", "description": "Render Github flavored markdown" },
+    {
+      "name": "meta",
+      "description": "Endpoints that give information about the API."
+    },
+    { "name": "migrations", "description": "Move projects to or from GitHub." },
+    {
+      "name": "oauth-authorizations",
+      "description": "Manage access of OAuth applications"
+    },
+    { "name": "orgs", "description": "Interact with GitHub Orgs." },
+    {
+      "name": "packages",
+      "description": "Manage packages for authenticated users and organizations."
+    },
+    { "name": "projects", "description": "Interact with GitHub Projects." },
+    { "name": "pulls", "description": "Interact with GitHub Pull Requests." },
+    {
+      "name": "rate-limit",
+      "description": "Check your current rate limit status"
+    },
+    {
+      "name": "reactions",
+      "description": "Interact with reactions to various GitHub entities."
+    },
+    { "name": "repos", "description": "Interact with GitHub Repos." },
+    {
+      "name": "scim",
+      "description": "Provisioning of GitHub organization membership for SCIM-enabled providers."
+    },
+    { "name": "search", "description": "Look for stuff on GitHub." },
+    {
+      "name": "secret-scanning",
+      "description": "Retrieve secret scanning alerts from a repository."
+    },
+    { "name": "teams", "description": "Interact with GitHub Teams." },
+    {
+      "name": "users",
+      "description": "Interact with and view information about users and also current user."
+    }
+  ],
+  "servers": [
+    {
+      "url": "{protocol}://{hostname}/api/v3",
+      "variables": {
+        "hostname": {
+          "description": "Self-hosted Enterprise Server or Enterprise Cloud hostname",
+          "default": "HOSTNAME"
+        },
+        "protocol": {
+          "description": "Self-hosted Enterprise Server or Enterprise Cloud protocol",
+          "default": "http"
+        }
+      }
+    }
+  ],
+  "externalDocs": {
+    "description": "GitHub Enterprise Developer Docs",
+    "url": "https://docs.github.com/enterprise-server@3.0/rest/"
+  },
+  "paths": {
+    "/feeds": {
+      "get": {
+        "summary": "Get feeds",
+        "description": "GitHub Enterprise Server provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:\n\n*   **Timeline**: The GitHub Enterprise Server global public timeline\n*   **User**: The public timeline for any user, using [URI template](https://docs.github.com/enterprise-server@3.0/rest/overview/resources-in-the-rest-api#hypermedia)\n*   **Current user public**: The public timeline for the authenticated user\n*   **Current user**: The private timeline for the authenticated user\n*   **Current user actor**: The private timeline for activity created by the authenticated user\n*   **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.\n*   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub Enterprise Server.\n\n**Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/enterprise-server@3.0/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.",
+        "tags": ["activity"],
+        "operationId": "activity/get-feeds",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/activity#get-feeds"
+        },
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/feed" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/feed" }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "activity",
+          "subcategory": "feeds"
+        },
+        "x-octokit": { "diff": { "ghes-3.1.json": { "type": "changed" } } }
+      }
+    },
+    "/gists/{gist_id}": {
+      "get": {
+        "summary": "Get a gist",
+        "description": "",
+        "tags": ["gists"],
+        "operationId": "gists/get",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/gists#get-a-gist"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/gist-id" }],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/gist-simple" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/gist" }
+                }
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "403": { "$ref": "#/components/responses/forbidden_gist" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "previews": [],
+          "category": "gists",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.1.json": { "type": "changed" } } }
+      }
+    },
+    "/gists/{gist_id}/forks": {
+      "get": {
+        "summary": "List gist forks",
+        "description": "",
+        "tags": ["gists"],
+        "operationId": "gists/list-forks",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/gists#list-gist-forks"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/gist-id" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/gist-simple" }
+                },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/gist-fork-items" }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "previews": [],
+          "category": "gists",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.1.json": { "type": "changed" } } }
+      }
+    },
+    "/gists/{gist_id}/{sha}": {
+      "get": {
+        "summary": "Get a gist revision",
+        "description": "",
+        "tags": ["gists"],
+        "operationId": "gists/get-revision",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/gists#get-a-gist-revision"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/gist-id" },
+          {
+            "name": "sha",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/gist-simple" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/gist" }
+                }
+              }
+            }
+          },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "previews": [],
+          "category": "gists",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.1.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/commits/{commit_sha}/pulls": {
+      "get": {
+        "summary": "List pull requests associated with a commit",
+        "description": "Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/enterprise-server@3.0/rest/reference/pulls#list-pull-requests) endpoint.",
+        "tags": ["repos"],
+        "operationId": "repos/list-pull-requests-associated-with-commit",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/repos#list-pull-requests-associated-with-a-commit"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/commit-sha" },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/pull-request-simple"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/pull-request-simple-items"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "415": { "$ref": "#/components/responses/preview_header_missing" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [
+            {
+              "required": true,
+              "name": "groot",
+              "note": "Listing branches or pull requests for a commit in the Commits API is currently available for developers to preview. See the [blog post](https://developer.github.com/changes/2019-04-11-pulls-branches-for-commit/) for more details. To access the new endpoints during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.0/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.groot-preview+json\n```"
+            }
+          ],
+          "category": "repos",
+          "subcategory": "commits"
+        },
+        "x-octokit": { "diff": { "ghes-3.1.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/pulls": {
+      "get": {
+        "summary": "List pull requests",
+        "description": "Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
+        "tags": ["pulls"],
+        "operationId": "pulls/list",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/pulls#list-pull-requests"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          {
+            "name": "state",
+            "description": "Either `open`, `closed`, or `all` to filter by state.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["open", "closed", "all"],
+              "default": "open"
+            }
+          },
+          {
+            "name": "head",
+            "description": "Filter pulls by head user or head organization and branch name in the format of `user:ref-name` or `organization:ref-name`. For example: `github:new-script-format` or `octocat:test-branch`.",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "base",
+            "description": "Filter pulls by base branch name. Example: `gh-pages`.",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "sort",
+            "description": "What to sort results by. Can be either `created`, `updated`, `popularity` (comment count) or `long-running` (age, filtering by pulls updated in the last month).",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "popularity", "long-running"],
+              "default": "created"
+            }
+          },
+          {
+            "name": "direction",
+            "description": "The direction of the sort. Can be either `asc` or `desc`. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`.",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "enum": ["asc", "desc"] }
+          },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/pull-request-simple"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/pull-request-simple-items"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "pulls",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.1.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/pulls/{pull_number}": {
+      "get": {
+        "summary": "Get a pull request",
+        "description": "Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nLists details of a pull request by providing its number.\n\nWhen you get, [create](https://docs.github.com/enterprise-server@3.0/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/enterprise-server@3.0/rest/reference/pulls#update-a-pull-request) a pull request, GitHub Enterprise Server creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see \"[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.0/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)\".\n\nThe value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub Enterprise Server has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.\n\nThe value of the `merge_commit_sha` attribute changes depending on the state of the pull request. Before merging a pull request, the `merge_commit_sha` attribute holds the SHA of the _test_ merge commit. After merging a pull request, the `merge_commit_sha` attribute changes depending on how you merged the pull request:\n\n*   If merged as a [merge commit](https://help.github.com/articles/about-merge-methods-on-github/), `merge_commit_sha` represents the SHA of the merge commit.\n*   If merged via a [squash](https://help.github.com/articles/about-merge-methods-on-github/#squashing-your-merge-commits), `merge_commit_sha` represents the SHA of the squashed commit on the base branch.\n*   If [rebased](https://help.github.com/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.\n\nPass the appropriate [media type](https://docs.github.com/enterprise-server@3.0/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.",
+        "tags": ["pulls"],
+        "operationId": "pulls/get",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.0/rest/reference/pulls#get-a-pull-request"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/pull-number" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pass the appropriate [media type](https://docs.github.com/enterprise-server@3.0/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/pull-request" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/pull-request" }
+                }
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "500": { "$ref": "#/components/responses/internal_error" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "pulls",
+          "subcategory": null
+        },
+        "x-octokit": { "diff": { "ghes-3.1.json": { "type": "changed" } } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "feed": {
+        "title": "Feed",
+        "description": "Feed",
+        "type": "object",
+        "properties": {
+          "timeline_url": {
+            "type": "string",
+            "example": "https://github.com/timeline"
+          },
+          "user_url": {
+            "type": "string",
+            "example": "https://github.com/{user}"
+          },
+          "current_user_public_url": {
+            "type": "string",
+            "example": "https://github.com/octocat"
+          },
+          "current_user_url": {
+            "type": "string",
+            "example": "https://github.com/octocat.private?token=abc123"
+          },
+          "current_user_actor_url": {
+            "type": "string",
+            "example": "https://github.com/octocat.private.actor?token=abc123"
+          },
+          "current_user_organization_url": {
+            "type": "string",
+            "example": "https://github.com/octocat-org"
+          },
+          "current_user_organization_urls": {
+            "type": "array",
+            "example": [
+              "https://github.com/organizations/github/octocat.private.atom?token=abc123"
+            ],
+            "items": { "type": "string", "format": "uri" }
+          },
+          "_links": {
+            "type": "object",
+            "properties": {
+              "timeline": { "$ref": "#/components/schemas/link-with-type" },
+              "user": { "$ref": "#/components/schemas/link-with-type" },
+              "security_advisories": {
+                "$ref": "#/components/schemas/link-with-type"
+              },
+              "current_user": { "$ref": "#/components/schemas/link-with-type" },
+              "current_user_public": {
+                "$ref": "#/components/schemas/link-with-type"
+              },
+              "current_user_actor": {
+                "$ref": "#/components/schemas/link-with-type"
+              },
+              "current_user_organization": {
+                "$ref": "#/components/schemas/link-with-type"
+              },
+              "current_user_organizations": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/link-with-type" }
+              }
+            },
+            "required": ["timeline", "user"]
+          }
+        },
+        "required": ["_links", "timeline_url", "user_url"]
+      },
+      "gist-simple": {
+        "title": "Gist Simple",
+        "description": "Gist Simple",
+        "type": "object",
+        "properties": {
+          "forks": {
+            "deprecated": true,
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+                "user": { "$ref": "#/components/schemas/public-user" },
+                "created_at": { "type": "string", "format": "date-time" },
+                "updated_at": { "type": "string", "format": "date-time" }
+              }
+            }
+          },
+          "history": {
+            "deprecated": true,
+            "nullable": true,
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/gist-history" }
+          },
+          "fork_of": {
+            "nullable": true,
+            "title": "Gist",
+            "description": "Gist",
+            "type": "object",
+            "properties": {
+              "url": { "type": "string", "format": "uri" },
+              "forks_url": { "type": "string", "format": "uri" },
+              "commits_url": { "type": "string", "format": "uri" },
+              "id": { "type": "string" },
+              "node_id": { "type": "string" },
+              "git_pull_url": { "type": "string", "format": "uri" },
+              "git_push_url": { "type": "string", "format": "uri" },
+              "html_url": { "type": "string", "format": "uri" },
+              "files": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "filename": { "type": "string" },
+                    "type": { "type": "string" },
+                    "language": { "type": "string" },
+                    "raw_url": { "type": "string" },
+                    "size": { "type": "integer" }
+                  }
+                }
+              },
+              "public": { "type": "boolean" },
+              "created_at": { "type": "string", "format": "date-time" },
+              "updated_at": { "type": "string", "format": "date-time" },
+              "description": { "type": "string", "nullable": true },
+              "comments": { "type": "integer" },
+              "user": {
+                "nullable": true,
+                "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+              },
+              "comments_url": { "type": "string", "format": "uri" },
+              "owner": {
+                "nullable": true,
+                "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+              },
+              "truncated": { "type": "boolean" },
+              "forks": { "type": "array", "items": {} },
+              "history": { "type": "array", "items": {} }
+            },
+            "required": [
+              "id",
+              "node_id",
+              "url",
+              "forks_url",
+              "commits_url",
+              "git_pull_url",
+              "git_push_url",
+              "html_url",
+              "comments_url",
+              "public",
+              "description",
+              "comments",
+              "user",
+              "files",
+              "created_at",
+              "updated_at"
+            ]
+          },
+          "url": { "type": "string" },
+          "forks_url": { "type": "string" },
+          "commits_url": { "type": "string" },
+          "id": { "type": "string" },
+          "node_id": { "type": "string" },
+          "git_pull_url": { "type": "string" },
+          "git_push_url": { "type": "string" },
+          "html_url": { "type": "string" },
+          "files": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true,
+              "type": "object",
+              "properties": {
+                "filename": { "type": "string" },
+                "type": { "type": "string" },
+                "language": { "type": "string" },
+                "raw_url": { "type": "string" },
+                "size": { "type": "integer" },
+                "truncated": { "type": "boolean" },
+                "content": { "type": "string" }
+              }
+            }
+          },
+          "public": { "type": "boolean" },
+          "created_at": { "type": "string" },
+          "updated_at": { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "comments": { "type": "integer" },
+          "user": { "type": "string", "nullable": true },
+          "comments_url": { "type": "string" },
+          "owner": { "$ref": "#/components/schemas/simple-user" },
+          "truncated": { "type": "boolean" }
+        }
+      },
+      "pull-request-simple": {
+        "title": "Pull Request Simple",
+        "description": "Pull Request Simple",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
+          },
+          "id": { "type": "integer", "example": 1 },
+          "node_id": {
+            "type": "string",
+            "example": "MDExOlB1bGxSZXF1ZXN0MQ=="
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World/pull/1347"
+          },
+          "diff_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World/pull/1347.diff"
+          },
+          "patch_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World/pull/1347.patch"
+          },
+          "issue_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347"
+          },
+          "commits_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits"
+          },
+          "review_comments_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments"
+          },
+          "review_comment_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}"
+          },
+          "comments_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
+          },
+          "statuses_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+          },
+          "number": { "type": "integer", "example": 1347 },
+          "state": { "type": "string", "example": "open" },
+          "locked": { "type": "boolean", "example": true },
+          "title": { "type": "string", "example": "new-feature" },
+          "user": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+          },
+          "body": {
+            "type": "string",
+            "example": "Please pull these awesome changes",
+            "nullable": true
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer", "format": "int64" },
+                "node_id": { "type": "string" },
+                "url": { "type": "string" },
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "color": { "type": "string" },
+                "default": { "type": "boolean" }
+              }
+            }
+          },
+          "milestone": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/milestone" }]
+          },
+          "active_lock_reason": {
+            "type": "string",
+            "example": "too heated",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z",
+            "nullable": true
+          },
+          "merged_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z",
+            "nullable": true
+          },
+          "merge_commit_sha": {
+            "type": "string",
+            "example": "e5bd3914e2e596debea16f433f57875b5b90bcd6",
+            "nullable": true
+          },
+          "assignee": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+          },
+          "assignees": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/simple-user" },
+            "nullable": true
+          },
+          "requested_reviewers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/simple-user" },
+            "nullable": true
+          },
+          "requested_teams": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/team" },
+            "nullable": true
+          },
+          "head": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "ref": { "type": "string" },
+              "repo": { "$ref": "#/components/schemas/repository" },
+              "sha": { "type": "string" },
+              "user": {
+                "nullable": true,
+                "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+              }
+            },
+            "required": ["label", "ref", "repo", "sha", "user"]
+          },
+          "base": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "ref": { "type": "string" },
+              "repo": { "$ref": "#/components/schemas/repository" },
+              "sha": { "type": "string" },
+              "user": {
+                "nullable": true,
+                "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+              }
+            },
+            "required": ["label", "ref", "repo", "sha", "user"]
+          },
+          "_links": {
+            "type": "object",
+            "properties": {
+              "comments": { "$ref": "#/components/schemas/link" },
+              "commits": { "$ref": "#/components/schemas/link" },
+              "statuses": { "$ref": "#/components/schemas/link" },
+              "html": { "$ref": "#/components/schemas/link" },
+              "issue": { "$ref": "#/components/schemas/link" },
+              "review_comments": { "$ref": "#/components/schemas/link" },
+              "review_comment": { "$ref": "#/components/schemas/link" },
+              "self": { "$ref": "#/components/schemas/link" }
+            },
+            "required": [
+              "comments",
+              "commits",
+              "statuses",
+              "html",
+              "issue",
+              "review_comments",
+              "review_comment",
+              "self"
+            ]
+          },
+          "author_association": {
+            "$ref": "#/components/schemas/author_association"
+          },
+          "draft": {
+            "description": "Indicates whether or not the pull request is a draft.",
+            "example": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "_links",
+          "assignee",
+          "labels",
+          "base",
+          "body",
+          "closed_at",
+          "comments_url",
+          "commits_url",
+          "created_at",
+          "diff_url",
+          "head",
+          "html_url",
+          "id",
+          "node_id",
+          "issue_url",
+          "merge_commit_sha",
+          "merged_at",
+          "milestone",
+          "number",
+          "patch_url",
+          "review_comment_url",
+          "review_comments_url",
+          "statuses_url",
+          "state",
+          "locked",
+          "title",
+          "updated_at",
+          "url",
+          "user",
+          "author_association"
+        ]
+      },
+      "pull-request": {
+        "type": "object",
+        "title": "Pull Request",
+        "description": "Pull requests let you tell others about changes you've pushed to a repository on GitHub. Once a pull request is sent, interested parties can review the set of changes, discuss potential modifications, and even push follow-up commits if necessary.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
+          },
+          "id": { "type": "integer", "example": 1 },
+          "node_id": {
+            "type": "string",
+            "example": "MDExOlB1bGxSZXF1ZXN0MQ=="
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World/pull/1347"
+          },
+          "diff_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World/pull/1347.diff"
+          },
+          "patch_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World/pull/1347.patch"
+          },
+          "issue_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347"
+          },
+          "commits_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits"
+          },
+          "review_comments_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments"
+          },
+          "review_comment_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}"
+          },
+          "comments_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
+          },
+          "statuses_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+          },
+          "number": {
+            "description": "Number uniquely identifying the pull request within its repository.",
+            "example": 42,
+            "type": "integer"
+          },
+          "state": {
+            "description": "State of this Pull Request. Either `open` or `closed`.",
+            "enum": ["open", "closed"],
+            "example": "open",
+            "type": "string"
+          },
+          "locked": { "type": "boolean", "example": true },
+          "title": {
+            "description": "The title of the pull request.",
+            "example": "Amazing new feature",
+            "type": "string"
+          },
+          "user": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+          },
+          "body": {
+            "type": "string",
+            "example": "Please pull these awesome changes",
+            "nullable": true
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer", "format": "int64" },
+                "node_id": { "type": "string" },
+                "url": { "type": "string" },
+                "name": { "type": "string" },
+                "description": { "type": "string", "nullable": true },
+                "color": { "type": "string" },
+                "default": { "type": "boolean" }
+              }
+            }
+          },
+          "milestone": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/milestone" }]
+          },
+          "active_lock_reason": {
+            "type": "string",
+            "example": "too heated",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z",
+            "nullable": true
+          },
+          "merged_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z",
+            "nullable": true
+          },
+          "merge_commit_sha": {
+            "type": "string",
+            "example": "e5bd3914e2e596debea16f433f57875b5b90bcd6",
+            "nullable": true
+          },
+          "assignee": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+          },
+          "assignees": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/simple-user" },
+            "nullable": true
+          },
+          "requested_reviewers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/simple-user" },
+            "nullable": true
+          },
+          "requested_teams": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/team-simple" },
+            "nullable": true
+          },
+          "head": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "ref": { "type": "string" },
+              "repo": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "archive_url": { "type": "string" },
+                  "assignees_url": { "type": "string" },
+                  "blobs_url": { "type": "string" },
+                  "branches_url": { "type": "string" },
+                  "collaborators_url": { "type": "string" },
+                  "comments_url": { "type": "string" },
+                  "commits_url": { "type": "string" },
+                  "compare_url": { "type": "string" },
+                  "contents_url": { "type": "string" },
+                  "contributors_url": { "type": "string", "format": "uri" },
+                  "deployments_url": { "type": "string", "format": "uri" },
+                  "description": { "type": "string", "nullable": true },
+                  "downloads_url": { "type": "string", "format": "uri" },
+                  "events_url": { "type": "string", "format": "uri" },
+                  "fork": { "type": "boolean" },
+                  "forks_url": { "type": "string", "format": "uri" },
+                  "full_name": { "type": "string" },
+                  "git_commits_url": { "type": "string" },
+                  "git_refs_url": { "type": "string" },
+                  "git_tags_url": { "type": "string" },
+                  "hooks_url": { "type": "string", "format": "uri" },
+                  "html_url": { "type": "string", "format": "uri" },
+                  "id": { "type": "integer" },
+                  "node_id": { "type": "string" },
+                  "issue_comment_url": { "type": "string" },
+                  "issue_events_url": { "type": "string" },
+                  "issues_url": { "type": "string" },
+                  "keys_url": { "type": "string" },
+                  "labels_url": { "type": "string" },
+                  "languages_url": { "type": "string", "format": "uri" },
+                  "merges_url": { "type": "string", "format": "uri" },
+                  "milestones_url": { "type": "string" },
+                  "name": { "type": "string" },
+                  "notifications_url": { "type": "string" },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "avatar_url": { "type": "string", "format": "uri" },
+                      "events_url": { "type": "string" },
+                      "followers_url": { "type": "string", "format": "uri" },
+                      "following_url": { "type": "string" },
+                      "gists_url": { "type": "string" },
+                      "gravatar_id": { "type": "string", "nullable": true },
+                      "html_url": { "type": "string", "format": "uri" },
+                      "id": { "type": "integer" },
+                      "node_id": { "type": "string" },
+                      "login": { "type": "string" },
+                      "organizations_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "received_events_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "repos_url": { "type": "string", "format": "uri" },
+                      "site_admin": { "type": "boolean" },
+                      "starred_url": { "type": "string" },
+                      "subscriptions_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "type": { "type": "string" },
+                      "url": { "type": "string", "format": "uri" }
+                    },
+                    "required": [
+                      "avatar_url",
+                      "events_url",
+                      "followers_url",
+                      "following_url",
+                      "gists_url",
+                      "gravatar_id",
+                      "html_url",
+                      "id",
+                      "node_id",
+                      "login",
+                      "organizations_url",
+                      "received_events_url",
+                      "repos_url",
+                      "site_admin",
+                      "starred_url",
+                      "subscriptions_url",
+                      "type",
+                      "url"
+                    ]
+                  },
+                  "private": { "type": "boolean" },
+                  "pulls_url": { "type": "string" },
+                  "releases_url": { "type": "string" },
+                  "stargazers_url": { "type": "string", "format": "uri" },
+                  "statuses_url": { "type": "string" },
+                  "subscribers_url": { "type": "string", "format": "uri" },
+                  "subscription_url": { "type": "string", "format": "uri" },
+                  "tags_url": { "type": "string", "format": "uri" },
+                  "teams_url": { "type": "string", "format": "uri" },
+                  "trees_url": { "type": "string" },
+                  "url": { "type": "string", "format": "uri" },
+                  "clone_url": { "type": "string" },
+                  "default_branch": { "type": "string" },
+                  "forks": { "type": "integer" },
+                  "forks_count": { "type": "integer" },
+                  "git_url": { "type": "string" },
+                  "has_downloads": { "type": "boolean" },
+                  "has_issues": { "type": "boolean" },
+                  "has_projects": { "type": "boolean" },
+                  "has_wiki": { "type": "boolean" },
+                  "has_pages": { "type": "boolean" },
+                  "homepage": {
+                    "type": "string",
+                    "format": "uri",
+                    "nullable": true
+                  },
+                  "language": { "type": "string", "nullable": true },
+                  "master_branch": { "type": "string" },
+                  "archived": { "type": "boolean" },
+                  "disabled": { "type": "boolean" },
+                  "mirror_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "nullable": true
+                  },
+                  "open_issues": { "type": "integer" },
+                  "open_issues_count": { "type": "integer" },
+                  "permissions": {
+                    "type": "object",
+                    "properties": {
+                      "admin": { "type": "boolean" },
+                      "maintain": { "type": "boolean" },
+                      "push": { "type": "boolean" },
+                      "triage": { "type": "boolean" },
+                      "pull": { "type": "boolean" }
+                    },
+                    "required": ["admin", "pull", "push"]
+                  },
+                  "temp_clone_token": { "type": "string" },
+                  "allow_merge_commit": { "type": "boolean" },
+                  "allow_squash_merge": { "type": "boolean" },
+                  "allow_rebase_merge": { "type": "boolean" },
+                  "license": {
+                    "type": "object",
+                    "properties": {
+                      "key": { "type": "string" },
+                      "name": { "type": "string" },
+                      "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                      },
+                      "spdx_id": { "type": "string", "nullable": true },
+                      "node_id": { "type": "string" }
+                    },
+                    "required": ["key", "name", "url", "spdx_id", "node_id"],
+                    "nullable": true
+                  },
+                  "pushed_at": { "type": "string", "format": "date-time" },
+                  "size": { "type": "integer" },
+                  "ssh_url": { "type": "string" },
+                  "stargazers_count": { "type": "integer" },
+                  "svn_url": { "type": "string", "format": "uri" },
+                  "topics": { "type": "array", "items": { "type": "string" } },
+                  "watchers": { "type": "integer" },
+                  "watchers_count": { "type": "integer" },
+                  "created_at": { "type": "string", "format": "date-time" },
+                  "updated_at": { "type": "string", "format": "date-time" }
+                },
+                "required": [
+                  "archive_url",
+                  "assignees_url",
+                  "blobs_url",
+                  "branches_url",
+                  "collaborators_url",
+                  "comments_url",
+                  "commits_url",
+                  "compare_url",
+                  "contents_url",
+                  "contributors_url",
+                  "deployments_url",
+                  "description",
+                  "downloads_url",
+                  "events_url",
+                  "fork",
+                  "forks_url",
+                  "full_name",
+                  "git_commits_url",
+                  "git_refs_url",
+                  "git_tags_url",
+                  "hooks_url",
+                  "html_url",
+                  "id",
+                  "node_id",
+                  "issue_comment_url",
+                  "issue_events_url",
+                  "issues_url",
+                  "keys_url",
+                  "labels_url",
+                  "languages_url",
+                  "merges_url",
+                  "milestones_url",
+                  "name",
+                  "notifications_url",
+                  "owner",
+                  "private",
+                  "pulls_url",
+                  "releases_url",
+                  "stargazers_url",
+                  "statuses_url",
+                  "subscribers_url",
+                  "subscription_url",
+                  "tags_url",
+                  "teams_url",
+                  "trees_url",
+                  "url",
+                  "clone_url",
+                  "default_branch",
+                  "forks",
+                  "forks_count",
+                  "git_url",
+                  "has_downloads",
+                  "has_issues",
+                  "has_projects",
+                  "has_wiki",
+                  "has_pages",
+                  "homepage",
+                  "language",
+                  "archived",
+                  "disabled",
+                  "mirror_url",
+                  "open_issues",
+                  "open_issues_count",
+                  "license",
+                  "pushed_at",
+                  "size",
+                  "ssh_url",
+                  "stargazers_count",
+                  "svn_url",
+                  "watchers",
+                  "watchers_count",
+                  "created_at",
+                  "updated_at"
+                ]
+              },
+              "sha": { "type": "string" },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "avatar_url": { "type": "string", "format": "uri" },
+                  "events_url": { "type": "string" },
+                  "followers_url": { "type": "string", "format": "uri" },
+                  "following_url": { "type": "string" },
+                  "gists_url": { "type": "string" },
+                  "gravatar_id": { "type": "string", "nullable": true },
+                  "html_url": { "type": "string", "format": "uri" },
+                  "id": { "type": "integer" },
+                  "node_id": { "type": "string" },
+                  "login": { "type": "string" },
+                  "organizations_url": { "type": "string", "format": "uri" },
+                  "received_events_url": { "type": "string", "format": "uri" },
+                  "repos_url": { "type": "string", "format": "uri" },
+                  "site_admin": { "type": "boolean" },
+                  "starred_url": { "type": "string" },
+                  "subscriptions_url": { "type": "string", "format": "uri" },
+                  "type": { "type": "string" },
+                  "url": { "type": "string", "format": "uri" }
+                },
+                "required": [
+                  "avatar_url",
+                  "events_url",
+                  "followers_url",
+                  "following_url",
+                  "gists_url",
+                  "gravatar_id",
+                  "html_url",
+                  "id",
+                  "node_id",
+                  "login",
+                  "organizations_url",
+                  "received_events_url",
+                  "repos_url",
+                  "site_admin",
+                  "starred_url",
+                  "subscriptions_url",
+                  "type",
+                  "url"
+                ]
+              }
+            },
+            "required": ["label", "ref", "repo", "sha", "user"]
+          },
+          "base": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "ref": { "type": "string" },
+              "repo": {
+                "type": "object",
+                "properties": {
+                  "archive_url": { "type": "string" },
+                  "assignees_url": { "type": "string" },
+                  "blobs_url": { "type": "string" },
+                  "branches_url": { "type": "string" },
+                  "collaborators_url": { "type": "string" },
+                  "comments_url": { "type": "string" },
+                  "commits_url": { "type": "string" },
+                  "compare_url": { "type": "string" },
+                  "contents_url": { "type": "string" },
+                  "contributors_url": { "type": "string", "format": "uri" },
+                  "deployments_url": { "type": "string", "format": "uri" },
+                  "description": { "type": "string", "nullable": true },
+                  "downloads_url": { "type": "string", "format": "uri" },
+                  "events_url": { "type": "string", "format": "uri" },
+                  "fork": { "type": "boolean" },
+                  "forks_url": { "type": "string", "format": "uri" },
+                  "full_name": { "type": "string" },
+                  "git_commits_url": { "type": "string" },
+                  "git_refs_url": { "type": "string" },
+                  "git_tags_url": { "type": "string" },
+                  "hooks_url": { "type": "string", "format": "uri" },
+                  "html_url": { "type": "string", "format": "uri" },
+                  "id": { "type": "integer" },
+                  "node_id": { "type": "string" },
+                  "issue_comment_url": { "type": "string" },
+                  "issue_events_url": { "type": "string" },
+                  "issues_url": { "type": "string" },
+                  "keys_url": { "type": "string" },
+                  "labels_url": { "type": "string" },
+                  "languages_url": { "type": "string", "format": "uri" },
+                  "merges_url": { "type": "string", "format": "uri" },
+                  "milestones_url": { "type": "string" },
+                  "name": { "type": "string" },
+                  "notifications_url": { "type": "string" },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "avatar_url": { "type": "string", "format": "uri" },
+                      "events_url": { "type": "string" },
+                      "followers_url": { "type": "string", "format": "uri" },
+                      "following_url": { "type": "string" },
+                      "gists_url": { "type": "string" },
+                      "gravatar_id": { "type": "string", "nullable": true },
+                      "html_url": { "type": "string", "format": "uri" },
+                      "id": { "type": "integer" },
+                      "node_id": { "type": "string" },
+                      "login": { "type": "string" },
+                      "organizations_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "received_events_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "repos_url": { "type": "string", "format": "uri" },
+                      "site_admin": { "type": "boolean" },
+                      "starred_url": { "type": "string" },
+                      "subscriptions_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "type": { "type": "string" },
+                      "url": { "type": "string", "format": "uri" }
+                    },
+                    "required": [
+                      "avatar_url",
+                      "events_url",
+                      "followers_url",
+                      "following_url",
+                      "gists_url",
+                      "gravatar_id",
+                      "html_url",
+                      "id",
+                      "node_id",
+                      "login",
+                      "organizations_url",
+                      "received_events_url",
+                      "repos_url",
+                      "site_admin",
+                      "starred_url",
+                      "subscriptions_url",
+                      "type",
+                      "url"
+                    ]
+                  },
+                  "private": { "type": "boolean" },
+                  "pulls_url": { "type": "string" },
+                  "releases_url": { "type": "string" },
+                  "stargazers_url": { "type": "string", "format": "uri" },
+                  "statuses_url": { "type": "string" },
+                  "subscribers_url": { "type": "string", "format": "uri" },
+                  "subscription_url": { "type": "string", "format": "uri" },
+                  "tags_url": { "type": "string", "format": "uri" },
+                  "teams_url": { "type": "string", "format": "uri" },
+                  "trees_url": { "type": "string" },
+                  "url": { "type": "string", "format": "uri" },
+                  "clone_url": { "type": "string" },
+                  "default_branch": { "type": "string" },
+                  "forks": { "type": "integer" },
+                  "forks_count": { "type": "integer" },
+                  "git_url": { "type": "string" },
+                  "has_downloads": { "type": "boolean" },
+                  "has_issues": { "type": "boolean" },
+                  "has_projects": { "type": "boolean" },
+                  "has_wiki": { "type": "boolean" },
+                  "has_pages": { "type": "boolean" },
+                  "homepage": {
+                    "type": "string",
+                    "format": "uri",
+                    "nullable": true
+                  },
+                  "language": { "type": "string", "nullable": true },
+                  "master_branch": { "type": "string" },
+                  "archived": { "type": "boolean" },
+                  "disabled": { "type": "boolean" },
+                  "mirror_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "nullable": true
+                  },
+                  "open_issues": { "type": "integer" },
+                  "open_issues_count": { "type": "integer" },
+                  "permissions": {
+                    "type": "object",
+                    "properties": {
+                      "admin": { "type": "boolean" },
+                      "maintain": { "type": "boolean" },
+                      "push": { "type": "boolean" },
+                      "triage": { "type": "boolean" },
+                      "pull": { "type": "boolean" }
+                    },
+                    "required": ["admin", "pull", "push"]
+                  },
+                  "temp_clone_token": { "type": "string" },
+                  "allow_merge_commit": { "type": "boolean" },
+                  "allow_squash_merge": { "type": "boolean" },
+                  "allow_rebase_merge": { "type": "boolean" },
+                  "license": {
+                    "nullable": true,
+                    "allOf": [{ "$ref": "#/components/schemas/license-simple" }]
+                  },
+                  "pushed_at": { "type": "string", "format": "date-time" },
+                  "size": { "type": "integer" },
+                  "ssh_url": { "type": "string" },
+                  "stargazers_count": { "type": "integer" },
+                  "svn_url": { "type": "string", "format": "uri" },
+                  "topics": { "type": "array", "items": { "type": "string" } },
+                  "watchers": { "type": "integer" },
+                  "watchers_count": { "type": "integer" },
+                  "created_at": { "type": "string", "format": "date-time" },
+                  "updated_at": { "type": "string", "format": "date-time" }
+                },
+                "required": [
+                  "archive_url",
+                  "assignees_url",
+                  "blobs_url",
+                  "branches_url",
+                  "collaborators_url",
+                  "comments_url",
+                  "commits_url",
+                  "compare_url",
+                  "contents_url",
+                  "contributors_url",
+                  "deployments_url",
+                  "description",
+                  "downloads_url",
+                  "events_url",
+                  "fork",
+                  "forks_url",
+                  "full_name",
+                  "git_commits_url",
+                  "git_refs_url",
+                  "git_tags_url",
+                  "hooks_url",
+                  "html_url",
+                  "id",
+                  "node_id",
+                  "issue_comment_url",
+                  "issue_events_url",
+                  "issues_url",
+                  "keys_url",
+                  "labels_url",
+                  "languages_url",
+                  "merges_url",
+                  "milestones_url",
+                  "name",
+                  "notifications_url",
+                  "owner",
+                  "private",
+                  "pulls_url",
+                  "releases_url",
+                  "stargazers_url",
+                  "statuses_url",
+                  "subscribers_url",
+                  "subscription_url",
+                  "tags_url",
+                  "teams_url",
+                  "trees_url",
+                  "url",
+                  "clone_url",
+                  "default_branch",
+                  "forks",
+                  "forks_count",
+                  "git_url",
+                  "has_downloads",
+                  "has_issues",
+                  "has_projects",
+                  "has_wiki",
+                  "has_pages",
+                  "homepage",
+                  "language",
+                  "archived",
+                  "disabled",
+                  "mirror_url",
+                  "open_issues",
+                  "open_issues_count",
+                  "license",
+                  "pushed_at",
+                  "size",
+                  "ssh_url",
+                  "stargazers_count",
+                  "svn_url",
+                  "watchers",
+                  "watchers_count",
+                  "created_at",
+                  "updated_at"
+                ]
+              },
+              "sha": { "type": "string" },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "avatar_url": { "type": "string", "format": "uri" },
+                  "events_url": { "type": "string" },
+                  "followers_url": { "type": "string", "format": "uri" },
+                  "following_url": { "type": "string" },
+                  "gists_url": { "type": "string" },
+                  "gravatar_id": { "type": "string", "nullable": true },
+                  "html_url": { "type": "string", "format": "uri" },
+                  "id": { "type": "integer" },
+                  "node_id": { "type": "string" },
+                  "login": { "type": "string" },
+                  "organizations_url": { "type": "string", "format": "uri" },
+                  "received_events_url": { "type": "string", "format": "uri" },
+                  "repos_url": { "type": "string", "format": "uri" },
+                  "site_admin": { "type": "boolean" },
+                  "starred_url": { "type": "string" },
+                  "subscriptions_url": { "type": "string", "format": "uri" },
+                  "type": { "type": "string" },
+                  "url": { "type": "string", "format": "uri" }
+                },
+                "required": [
+                  "avatar_url",
+                  "events_url",
+                  "followers_url",
+                  "following_url",
+                  "gists_url",
+                  "gravatar_id",
+                  "html_url",
+                  "id",
+                  "node_id",
+                  "login",
+                  "organizations_url",
+                  "received_events_url",
+                  "repos_url",
+                  "site_admin",
+                  "starred_url",
+                  "subscriptions_url",
+                  "type",
+                  "url"
+                ]
+              }
+            },
+            "required": ["label", "ref", "repo", "sha", "user"]
+          },
+          "_links": {
+            "type": "object",
+            "properties": {
+              "comments": { "$ref": "#/components/schemas/link" },
+              "commits": { "$ref": "#/components/schemas/link" },
+              "statuses": { "$ref": "#/components/schemas/link" },
+              "html": { "$ref": "#/components/schemas/link" },
+              "issue": { "$ref": "#/components/schemas/link" },
+              "review_comments": { "$ref": "#/components/schemas/link" },
+              "review_comment": { "$ref": "#/components/schemas/link" },
+              "self": { "$ref": "#/components/schemas/link" }
+            },
+            "required": [
+              "comments",
+              "commits",
+              "statuses",
+              "html",
+              "issue",
+              "review_comments",
+              "review_comment",
+              "self"
+            ]
+          },
+          "author_association": {
+            "$ref": "#/components/schemas/author_association"
+          },
+          "draft": {
+            "description": "Indicates whether or not the pull request is a draft.",
+            "example": false,
+            "type": "boolean"
+          },
+          "merged": { "type": "boolean" },
+          "mergeable": { "type": "boolean", "example": true, "nullable": true },
+          "rebaseable": {
+            "type": "boolean",
+            "example": true,
+            "nullable": true
+          },
+          "mergeable_state": { "type": "string", "example": "clean" },
+          "merged_by": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
+          },
+          "comments": { "type": "integer", "example": 10 },
+          "review_comments": { "type": "integer", "example": 0 },
+          "maintainer_can_modify": {
+            "description": "Indicates whether maintainers can modify the pull request.",
+            "example": true,
+            "type": "boolean"
+          },
+          "commits": { "type": "integer", "example": 3 },
+          "additions": { "type": "integer", "example": 100 },
+          "deletions": { "type": "integer", "example": 3 },
+          "changed_files": { "type": "integer", "example": 5 }
+        },
+        "required": [
+          "_links",
+          "assignee",
+          "labels",
+          "base",
+          "body",
+          "closed_at",
+          "comments_url",
+          "commits_url",
+          "created_at",
+          "diff_url",
+          "head",
+          "html_url",
+          "id",
+          "node_id",
+          "issue_url",
+          "merge_commit_sha",
+          "merged_at",
+          "milestone",
+          "number",
+          "patch_url",
+          "review_comment_url",
+          "review_comments_url",
+          "statuses_url",
+          "state",
+          "locked",
+          "title",
+          "updated_at",
+          "url",
+          "user",
+          "author_association",
+          "additions",
+          "changed_files",
+          "comments",
+          "commits",
+          "deletions",
+          "mergeable",
+          "mergeable_state",
+          "merged",
+          "maintainer_can_modify",
+          "merged_by",
+          "review_comments"
+        ]
+      }
+    },
+    "examples": {
+      "feed": {
+        "value": {
+          "timeline_url": "https://github.com/timeline",
+          "user_url": "https://github.com/{user}",
+          "current_user_public_url": "https://github.com/octocat",
+          "current_user_url": "https://github.com/octocat.private?token=abc123",
+          "current_user_actor_url": "https://github.com/octocat.private.actor?token=abc123",
+          "current_user_organization_url": "",
+          "current_user_organization_urls": [
+            "https://github.com/organizations/github/octocat.private.atom?token=abc123"
+          ],
+          "_links": {
+            "timeline": {
+              "href": "https://github.com/timeline",
+              "type": "application/atom+xml"
+            },
+            "user": {
+              "href": "https://github.com/{user}",
+              "type": "application/atom+xml"
+            },
+            "current_user_public": {
+              "href": "https://github.com/octocat",
+              "type": "application/atom+xml"
+            },
+            "current_user": {
+              "href": "https://github.com/octocat.private?token=abc123",
+              "type": "application/atom+xml"
+            },
+            "current_user_actor": {
+              "href": "https://github.com/octocat.private.actor?token=abc123",
+              "type": "application/atom+xml"
+            },
+            "current_user_organization": { "href": "", "type": "" },
+            "current_user_organizations": [
+              {
+                "href": "https://github.com/organizations/github/octocat.private.atom?token=abc123",
+                "type": "application/atom+xml"
+              }
+            ]
+          }
+        }
+      },
+      "gist": {
+        "value": {
+          "url": "https://api.github.com/gists/aa5a315d61ae9438b18d",
+          "forks_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/forks",
+          "commits_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/commits",
+          "id": "aa5a315d61ae9438b18d",
+          "node_id": "MDQ6R2lzdGFhNWEzMTVkNjFhZTk0MzhiMThk",
+          "git_pull_url": "https://gist.github.com/aa5a315d61ae9438b18d.git",
+          "git_push_url": "https://gist.github.com/aa5a315d61ae9438b18d.git",
+          "html_url": "https://gist.github.com/aa5a315d61ae9438b18d",
+          "created_at": "2010-04-14T02:15:15Z",
+          "updated_at": "2011-06-20T11:34:15Z",
+          "description": "Hello World Examples",
+          "comments": 0,
+          "comments_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/comments/"
+        }
+      },
+      "gist-fork-items": {
+        "value": [
+          {
+            "url": "https://api.github.com/gists/aa5a315d61ae9438b18d",
+            "forks_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/forks",
+            "commits_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/commits",
+            "id": "aa5a315d61ae9438b18d",
+            "node_id": "MDQ6R2lzdGFhNWEzMTVkNjFhZTk0MzhiMThk",
+            "git_pull_url": "https://gist.github.com/aa5a315d61ae9438b18d.git",
+            "git_push_url": "https://gist.github.com/aa5a315d61ae9438b18d.git",
+            "html_url": "https://gist.github.com/aa5a315d61ae9438b18d",
+            "files": {
+              "hello_world.rb": {
+                "filename": "hello_world.rb",
+                "type": "application/x-ruby",
+                "language": "Ruby",
+                "raw_url": "https://gist.githubusercontent.com/octocat/6cad326836d38bd3a7ae/raw/db9c55113504e46fa076e7df3a04ce592e2e86d8/hello_world.rb",
+                "size": 167
+              }
+            },
+            "public": true,
+            "created_at": "2010-04-14T02:15:15Z",
+            "updated_at": "2011-06-20T11:34:15Z",
+            "description": "Hello World Examples",
+            "comments": 1,
+            "user": null,
+            "comments_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/comments/",
+            "owner": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            }
+          }
+        ]
+      },
+      "pull-request-simple-items": {
+        "value": [
+          {
+            "url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347",
+            "id": 1,
+            "node_id": "MDExOlB1bGxSZXF1ZXN0MQ==",
+            "html_url": "https://github.com/octocat/Hello-World/pull/1347",
+            "diff_url": "https://github.com/octocat/Hello-World/pull/1347.diff",
+            "patch_url": "https://github.com/octocat/Hello-World/pull/1347.patch",
+            "issue_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
+            "commits_url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits",
+            "review_comments_url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments",
+            "review_comment_url": "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}",
+            "comments_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments",
+            "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "number": 1347,
+            "state": "open",
+            "locked": true,
+            "title": "Amazing new feature",
+            "user": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "body": "Please pull these awesome changes in!",
+            "labels": [
+              {
+                "id": 208045946,
+                "node_id": "MDU6TGFiZWwyMDgwNDU5NDY=",
+                "url": "https://api.github.com/repos/octocat/Hello-World/labels/bug",
+                "name": "bug",
+                "description": "Something isn't working",
+                "color": "f29513",
+                "default": true
+              }
+            ],
+            "milestone": {
+              "url": "https://api.github.com/repos/octocat/Hello-World/milestones/1",
+              "html_url": "https://github.com/octocat/Hello-World/milestones/v1.0",
+              "labels_url": "https://api.github.com/repos/octocat/Hello-World/milestones/1/labels",
+              "id": 1002604,
+              "node_id": "MDk6TWlsZXN0b25lMTAwMjYwNA==",
+              "number": 1,
+              "state": "open",
+              "title": "v1.0",
+              "description": "Tracking milestone for version 1.0",
+              "creator": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "open_issues": 4,
+              "closed_issues": 8,
+              "created_at": "2011-04-10T20:09:31Z",
+              "updated_at": "2014-03-03T18:58:10Z",
+              "closed_at": "2013-02-12T13:22:01Z",
+              "due_on": "2012-10-09T23:39:01Z"
+            },
+            "active_lock_reason": "too heated",
+            "created_at": "2011-01-26T19:01:12Z",
+            "updated_at": "2011-01-26T19:01:12Z",
+            "closed_at": "2011-01-26T19:01:12Z",
+            "merged_at": "2011-01-26T19:01:12Z",
+            "merge_commit_sha": "e5bd3914e2e596debea16f433f57875b5b90bcd6",
+            "assignee": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "assignees": [
+              {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              {
+                "login": "hubot",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/hubot_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/hubot",
+                "html_url": "https://github.com/hubot",
+                "followers_url": "https://api.github.com/users/hubot/followers",
+                "following_url": "https://api.github.com/users/hubot/following{/other_user}",
+                "gists_url": "https://api.github.com/users/hubot/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/hubot/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/hubot/subscriptions",
+                "organizations_url": "https://api.github.com/users/hubot/orgs",
+                "repos_url": "https://api.github.com/users/hubot/repos",
+                "events_url": "https://api.github.com/users/hubot/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/hubot/received_events",
+                "type": "User",
+                "site_admin": true
+              }
+            ],
+            "requested_reviewers": [
+              {
+                "login": "other_user",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/other_user_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/other_user",
+                "html_url": "https://github.com/other_user",
+                "followers_url": "https://api.github.com/users/other_user/followers",
+                "following_url": "https://api.github.com/users/other_user/following{/other_user}",
+                "gists_url": "https://api.github.com/users/other_user/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/other_user/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/other_user/subscriptions",
+                "organizations_url": "https://api.github.com/users/other_user/orgs",
+                "repos_url": "https://api.github.com/users/other_user/repos",
+                "events_url": "https://api.github.com/users/other_user/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/other_user/received_events",
+                "type": "User",
+                "site_admin": false
+              }
+            ],
+            "requested_teams": [
+              {
+                "id": 1,
+                "node_id": "MDQ6VGVhbTE=",
+                "url": "https://api.github.com/teams/1",
+                "html_url": "https://github.com/orgs/github/teams/justice-league",
+                "name": "Justice League",
+                "slug": "justice-league",
+                "description": "A great team.",
+                "privacy": "closed",
+                "permission": "admin",
+                "members_url": "https://api.github.com/teams/1/members{/member}",
+                "repositories_url": "https://api.github.com/teams/1/repos"
+              }
+            ],
+            "head": {
+              "label": "octocat:new-topic",
+              "ref": "new-topic",
+              "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
+              "user": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "repo": {
+                "id": 1296269,
+                "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+                "name": "Hello-World",
+                "full_name": "octocat/Hello-World",
+                "owner": {
+                  "login": "octocat",
+                  "id": 1,
+                  "node_id": "MDQ6VXNlcjE=",
+                  "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                  "gravatar_id": "",
+                  "url": "https://api.github.com/users/octocat",
+                  "html_url": "https://github.com/octocat",
+                  "followers_url": "https://api.github.com/users/octocat/followers",
+                  "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                  "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                  "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                  "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                  "organizations_url": "https://api.github.com/users/octocat/orgs",
+                  "repos_url": "https://api.github.com/users/octocat/repos",
+                  "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                  "received_events_url": "https://api.github.com/users/octocat/received_events",
+                  "type": "User",
+                  "site_admin": false
+                },
+                "private": false,
+                "html_url": "https://github.com/octocat/Hello-World",
+                "description": "This your first repo!",
+                "fork": false,
+                "url": "https://api.github.com/repos/octocat/Hello-World",
+                "archive_url": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+                "collaborators_url": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+                "commits_url": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/octocat/Hello-World/contributors",
+                "deployments_url": "https://api.github.com/repos/octocat/Hello-World/deployments",
+                "downloads_url": "https://api.github.com/repos/octocat/Hello-World/downloads",
+                "events_url": "https://api.github.com/repos/octocat/Hello-World/events",
+                "forks_url": "https://api.github.com/repos/octocat/Hello-World/forks",
+                "git_commits_url": "https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+                "git_url": "git:github.com/octocat/Hello-World.git",
+                "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+                "issue_events_url": "https://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/octocat/Hello-World/issues{/number}",
+                "keys_url": "https://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/octocat/Hello-World/labels{/name}",
+                "languages_url": "https://api.github.com/repos/octocat/Hello-World/languages",
+                "merges_url": "https://api.github.com/repos/octocat/Hello-World/merges",
+                "milestones_url": "https://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+                "notifications_url": "https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+                "pulls_url": "https://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+                "releases_url": "https://api.github.com/repos/octocat/Hello-World/releases{/id}",
+                "ssh_url": "git@github.com:octocat/Hello-World.git",
+                "stargazers_url": "https://api.github.com/repos/octocat/Hello-World/stargazers",
+                "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+                "subscribers_url": "https://api.github.com/repos/octocat/Hello-World/subscribers",
+                "subscription_url": "https://api.github.com/repos/octocat/Hello-World/subscription",
+                "tags_url": "https://api.github.com/repos/octocat/Hello-World/tags",
+                "teams_url": "https://api.github.com/repos/octocat/Hello-World/teams",
+                "trees_url": "https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+                "clone_url": "https://github.com/octocat/Hello-World.git",
+                "mirror_url": "git:git.example.com/octocat/Hello-World",
+                "hooks_url": "https://api.github.com/repos/octocat/Hello-World/hooks",
+                "svn_url": "https://svn.github.com/octocat/Hello-World",
+                "homepage": "https://github.com",
+                "language": null,
+                "forks_count": 9,
+                "stargazers_count": 80,
+                "watchers_count": 80,
+                "size": 108,
+                "default_branch": "master",
+                "open_issues_count": 0,
+                "is_template": true,
+                "topics": ["octocat", "atom", "electron", "api"],
+                "has_issues": true,
+                "has_projects": true,
+                "has_wiki": true,
+                "has_pages": false,
+                "has_downloads": true,
+                "archived": false,
+                "disabled": false,
+                "visibility": "public",
+                "pushed_at": "2011-01-26T19:06:43Z",
+                "created_at": "2011-01-26T19:01:12Z",
+                "updated_at": "2011-01-26T19:14:43Z",
+                "permissions": { "admin": false, "push": false, "pull": true },
+                "allow_rebase_merge": true,
+                "template_repository": null,
+                "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
+                "allow_squash_merge": true,
+                "delete_branch_on_merge": true,
+                "allow_merge_commit": true,
+                "subscribers_count": 42,
+                "network_count": 0,
+                "license": {
+                  "key": "mit",
+                  "name": "MIT License",
+                  "url": "https://api.github.com/licenses/mit",
+                  "spdx_id": "MIT",
+                  "node_id": "MDc6TGljZW5zZW1pdA==",
+                  "html_url": "https://github.com/licenses/mit"
+                },
+                "forks": 1,
+                "open_issues": 1,
+                "watchers": 1
+              }
+            },
+            "base": {
+              "label": "octocat:master",
+              "ref": "master",
+              "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
+              "user": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "repo": {
+                "id": 1296269,
+                "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+                "name": "Hello-World",
+                "full_name": "octocat/Hello-World",
+                "owner": {
+                  "login": "octocat",
+                  "id": 1,
+                  "node_id": "MDQ6VXNlcjE=",
+                  "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                  "gravatar_id": "",
+                  "url": "https://api.github.com/users/octocat",
+                  "html_url": "https://github.com/octocat",
+                  "followers_url": "https://api.github.com/users/octocat/followers",
+                  "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                  "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                  "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                  "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                  "organizations_url": "https://api.github.com/users/octocat/orgs",
+                  "repos_url": "https://api.github.com/users/octocat/repos",
+                  "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                  "received_events_url": "https://api.github.com/users/octocat/received_events",
+                  "type": "User",
+                  "site_admin": false
+                },
+                "private": false,
+                "html_url": "https://github.com/octocat/Hello-World",
+                "description": "This your first repo!",
+                "fork": false,
+                "url": "https://api.github.com/repos/octocat/Hello-World",
+                "archive_url": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+                "collaborators_url": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+                "commits_url": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/octocat/Hello-World/contributors",
+                "deployments_url": "https://api.github.com/repos/octocat/Hello-World/deployments",
+                "downloads_url": "https://api.github.com/repos/octocat/Hello-World/downloads",
+                "events_url": "https://api.github.com/repos/octocat/Hello-World/events",
+                "forks_url": "https://api.github.com/repos/octocat/Hello-World/forks",
+                "git_commits_url": "https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+                "git_url": "git:github.com/octocat/Hello-World.git",
+                "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+                "issue_events_url": "https://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/octocat/Hello-World/issues{/number}",
+                "keys_url": "https://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/octocat/Hello-World/labels{/name}",
+                "languages_url": "https://api.github.com/repos/octocat/Hello-World/languages",
+                "merges_url": "https://api.github.com/repos/octocat/Hello-World/merges",
+                "milestones_url": "https://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+                "notifications_url": "https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+                "pulls_url": "https://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+                "releases_url": "https://api.github.com/repos/octocat/Hello-World/releases{/id}",
+                "ssh_url": "git@github.com:octocat/Hello-World.git",
+                "stargazers_url": "https://api.github.com/repos/octocat/Hello-World/stargazers",
+                "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+                "subscribers_url": "https://api.github.com/repos/octocat/Hello-World/subscribers",
+                "subscription_url": "https://api.github.com/repos/octocat/Hello-World/subscription",
+                "tags_url": "https://api.github.com/repos/octocat/Hello-World/tags",
+                "teams_url": "https://api.github.com/repos/octocat/Hello-World/teams",
+                "trees_url": "https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+                "clone_url": "https://github.com/octocat/Hello-World.git",
+                "mirror_url": "git:git.example.com/octocat/Hello-World",
+                "hooks_url": "https://api.github.com/repos/octocat/Hello-World/hooks",
+                "svn_url": "https://svn.github.com/octocat/Hello-World",
+                "homepage": "https://github.com",
+                "language": null,
+                "forks_count": 9,
+                "stargazers_count": 80,
+                "watchers_count": 80,
+                "size": 108,
+                "default_branch": "master",
+                "open_issues_count": 0,
+                "is_template": true,
+                "topics": ["octocat", "atom", "electron", "api"],
+                "has_issues": true,
+                "has_projects": true,
+                "has_wiki": true,
+                "has_pages": false,
+                "has_downloads": true,
+                "archived": false,
+                "disabled": false,
+                "visibility": "public",
+                "pushed_at": "2011-01-26T19:06:43Z",
+                "created_at": "2011-01-26T19:01:12Z",
+                "updated_at": "2011-01-26T19:14:43Z",
+                "permissions": { "admin": false, "push": false, "pull": true },
+                "allow_rebase_merge": true,
+                "template_repository": null,
+                "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
+                "allow_squash_merge": true,
+                "delete_branch_on_merge": true,
+                "allow_merge_commit": true,
+                "subscribers_count": 42,
+                "network_count": 0,
+                "license": {
+                  "key": "mit",
+                  "name": "MIT License",
+                  "url": "https://api.github.com/licenses/mit",
+                  "spdx_id": "MIT",
+                  "node_id": "MDc6TGljZW5zZW1pdA==",
+                  "html_url": "https://github.com/licenses/mit"
+                },
+                "forks": 1,
+                "open_issues": 1,
+                "watchers": 1
+              }
+            },
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
+              },
+              "html": {
+                "href": "https://github.com/octocat/Hello-World/pull/1347"
+              },
+              "issue": {
+                "href": "https://api.github.com/repos/octocat/Hello-World/issues/1347"
+              },
+              "comments": {
+                "href": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
+              },
+              "review_comments": {
+                "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments"
+              },
+              "review_comment": {
+                "href": "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}"
+              },
+              "commits": {
+                "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits"
+              },
+              "statuses": {
+                "href": "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+              }
+            },
+            "author_association": "OWNER",
+            "draft": false
+          }
+        ]
+      },
+      "pull-request": {
+        "value": {
+          "url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347",
+          "id": 1,
+          "node_id": "MDExOlB1bGxSZXF1ZXN0MQ==",
+          "html_url": "https://github.com/octocat/Hello-World/pull/1347",
+          "diff_url": "https://github.com/octocat/Hello-World/pull/1347.diff",
+          "patch_url": "https://github.com/octocat/Hello-World/pull/1347.patch",
+          "issue_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
+          "commits_url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits",
+          "review_comments_url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments",
+          "review_comment_url": "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}",
+          "comments_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments",
+          "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e",
+          "number": 1347,
+          "state": "open",
+          "locked": true,
+          "title": "Amazing new feature",
+          "user": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "body": "Please pull these awesome changes in!",
+          "labels": [
+            {
+              "id": 208045946,
+              "node_id": "MDU6TGFiZWwyMDgwNDU5NDY=",
+              "url": "https://api.github.com/repos/octocat/Hello-World/labels/bug",
+              "name": "bug",
+              "description": "Something isn't working",
+              "color": "f29513",
+              "default": true
+            }
+          ],
+          "milestone": {
+            "url": "https://api.github.com/repos/octocat/Hello-World/milestones/1",
+            "html_url": "https://github.com/octocat/Hello-World/milestones/v1.0",
+            "labels_url": "https://api.github.com/repos/octocat/Hello-World/milestones/1/labels",
+            "id": 1002604,
+            "node_id": "MDk6TWlsZXN0b25lMTAwMjYwNA==",
+            "number": 1,
+            "state": "open",
+            "title": "v1.0",
+            "description": "Tracking milestone for version 1.0",
+            "creator": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "open_issues": 4,
+            "closed_issues": 8,
+            "created_at": "2011-04-10T20:09:31Z",
+            "updated_at": "2014-03-03T18:58:10Z",
+            "closed_at": "2013-02-12T13:22:01Z",
+            "due_on": "2012-10-09T23:39:01Z"
+          },
+          "active_lock_reason": "too heated",
+          "created_at": "2011-01-26T19:01:12Z",
+          "updated_at": "2011-01-26T19:01:12Z",
+          "closed_at": "2011-01-26T19:01:12Z",
+          "merged_at": "2011-01-26T19:01:12Z",
+          "merge_commit_sha": "e5bd3914e2e596debea16f433f57875b5b90bcd6",
+          "assignee": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "assignees": [
+            {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            {
+              "login": "hubot",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/hubot_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/hubot",
+              "html_url": "https://github.com/hubot",
+              "followers_url": "https://api.github.com/users/hubot/followers",
+              "following_url": "https://api.github.com/users/hubot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/hubot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/hubot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/hubot/subscriptions",
+              "organizations_url": "https://api.github.com/users/hubot/orgs",
+              "repos_url": "https://api.github.com/users/hubot/repos",
+              "events_url": "https://api.github.com/users/hubot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/hubot/received_events",
+              "type": "User",
+              "site_admin": true
+            }
+          ],
+          "requested_reviewers": [
+            {
+              "login": "other_user",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/other_user_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/other_user",
+              "html_url": "https://github.com/other_user",
+              "followers_url": "https://api.github.com/users/other_user/followers",
+              "following_url": "https://api.github.com/users/other_user/following{/other_user}",
+              "gists_url": "https://api.github.com/users/other_user/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/other_user/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/other_user/subscriptions",
+              "organizations_url": "https://api.github.com/users/other_user/orgs",
+              "repos_url": "https://api.github.com/users/other_user/repos",
+              "events_url": "https://api.github.com/users/other_user/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/other_user/received_events",
+              "type": "User",
+              "site_admin": false
+            }
+          ],
+          "requested_teams": [
+            {
+              "id": 1,
+              "node_id": "MDQ6VGVhbTE=",
+              "url": "https://api.github.com/teams/1",
+              "html_url": "https://github.com/orgs/github/teams/justice-league",
+              "name": "Justice League",
+              "slug": "justice-league",
+              "description": "A great team.",
+              "privacy": "closed",
+              "permission": "admin",
+              "members_url": "https://api.github.com/teams/1/members{/member}",
+              "repositories_url": "https://api.github.com/teams/1/repos"
+            }
+          ],
+          "head": {
+            "label": "octocat:new-topic",
+            "ref": "new-topic",
+            "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "user": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "repo": {
+              "id": 1296269,
+              "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+              "name": "Hello-World",
+              "full_name": "octocat/Hello-World",
+              "owner": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "private": false,
+              "html_url": "https://github.com/octocat/Hello-World",
+              "description": "This your first repo!",
+              "fork": false,
+              "url": "https://api.github.com/repos/octocat/Hello-World",
+              "archive_url": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+              "assignees_url": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+              "blobs_url": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+              "branches_url": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+              "collaborators_url": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+              "comments_url": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+              "commits_url": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+              "compare_url": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+              "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+              "contributors_url": "https://api.github.com/repos/octocat/Hello-World/contributors",
+              "deployments_url": "https://api.github.com/repos/octocat/Hello-World/deployments",
+              "downloads_url": "https://api.github.com/repos/octocat/Hello-World/downloads",
+              "events_url": "https://api.github.com/repos/octocat/Hello-World/events",
+              "forks_url": "https://api.github.com/repos/octocat/Hello-World/forks",
+              "git_commits_url": "https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+              "git_refs_url": "https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+              "git_tags_url": "https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+              "git_url": "git:github.com/octocat/Hello-World.git",
+              "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+              "issue_events_url": "https://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+              "issues_url": "https://api.github.com/repos/octocat/Hello-World/issues{/number}",
+              "keys_url": "https://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+              "labels_url": "https://api.github.com/repos/octocat/Hello-World/labels{/name}",
+              "languages_url": "https://api.github.com/repos/octocat/Hello-World/languages",
+              "merges_url": "https://api.github.com/repos/octocat/Hello-World/merges",
+              "milestones_url": "https://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+              "notifications_url": "https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+              "pulls_url": "https://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+              "releases_url": "https://api.github.com/repos/octocat/Hello-World/releases{/id}",
+              "ssh_url": "git@github.com:octocat/Hello-World.git",
+              "stargazers_url": "https://api.github.com/repos/octocat/Hello-World/stargazers",
+              "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+              "subscribers_url": "https://api.github.com/repos/octocat/Hello-World/subscribers",
+              "subscription_url": "https://api.github.com/repos/octocat/Hello-World/subscription",
+              "tags_url": "https://api.github.com/repos/octocat/Hello-World/tags",
+              "teams_url": "https://api.github.com/repos/octocat/Hello-World/teams",
+              "trees_url": "https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+              "clone_url": "https://github.com/octocat/Hello-World.git",
+              "mirror_url": "git:git.example.com/octocat/Hello-World",
+              "hooks_url": "https://api.github.com/repos/octocat/Hello-World/hooks",
+              "svn_url": "https://svn.github.com/octocat/Hello-World",
+              "homepage": "https://github.com",
+              "language": null,
+              "forks_count": 9,
+              "stargazers_count": 80,
+              "watchers_count": 80,
+              "size": 108,
+              "default_branch": "master",
+              "open_issues_count": 0,
+              "topics": ["octocat", "atom", "electron", "api"],
+              "has_issues": true,
+              "has_projects": true,
+              "has_wiki": true,
+              "has_pages": false,
+              "has_downloads": true,
+              "archived": false,
+              "disabled": false,
+              "pushed_at": "2011-01-26T19:06:43Z",
+              "created_at": "2011-01-26T19:01:12Z",
+              "updated_at": "2011-01-26T19:14:43Z",
+              "permissions": { "admin": false, "push": false, "pull": true },
+              "allow_rebase_merge": true,
+              "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
+              "allow_squash_merge": true,
+              "allow_merge_commit": true,
+              "forks": 123,
+              "open_issues": 123,
+              "license": {
+                "key": "mit",
+                "name": "MIT License",
+                "url": "https://api.github.com/licenses/mit",
+                "spdx_id": "MIT",
+                "node_id": "MDc6TGljZW5zZW1pdA=="
+              },
+              "watchers": 123
+            }
+          },
+          "base": {
+            "label": "octocat:master",
+            "ref": "master",
+            "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "user": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "repo": {
+              "id": 1296269,
+              "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+              "name": "Hello-World",
+              "full_name": "octocat/Hello-World",
+              "owner": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "private": false,
+              "html_url": "https://github.com/octocat/Hello-World",
+              "description": "This your first repo!",
+              "fork": false,
+              "url": "https://api.github.com/repos/octocat/Hello-World",
+              "archive_url": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+              "assignees_url": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+              "blobs_url": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+              "branches_url": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+              "collaborators_url": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+              "comments_url": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+              "commits_url": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+              "compare_url": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+              "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+              "contributors_url": "https://api.github.com/repos/octocat/Hello-World/contributors",
+              "deployments_url": "https://api.github.com/repos/octocat/Hello-World/deployments",
+              "downloads_url": "https://api.github.com/repos/octocat/Hello-World/downloads",
+              "events_url": "https://api.github.com/repos/octocat/Hello-World/events",
+              "forks_url": "https://api.github.com/repos/octocat/Hello-World/forks",
+              "git_commits_url": "https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+              "git_refs_url": "https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+              "git_tags_url": "https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+              "git_url": "git:github.com/octocat/Hello-World.git",
+              "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+              "issue_events_url": "https://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+              "issues_url": "https://api.github.com/repos/octocat/Hello-World/issues{/number}",
+              "keys_url": "https://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+              "labels_url": "https://api.github.com/repos/octocat/Hello-World/labels{/name}",
+              "languages_url": "https://api.github.com/repos/octocat/Hello-World/languages",
+              "merges_url": "https://api.github.com/repos/octocat/Hello-World/merges",
+              "milestones_url": "https://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+              "notifications_url": "https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+              "pulls_url": "https://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+              "releases_url": "https://api.github.com/repos/octocat/Hello-World/releases{/id}",
+              "ssh_url": "git@github.com:octocat/Hello-World.git",
+              "stargazers_url": "https://api.github.com/repos/octocat/Hello-World/stargazers",
+              "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+              "subscribers_url": "https://api.github.com/repos/octocat/Hello-World/subscribers",
+              "subscription_url": "https://api.github.com/repos/octocat/Hello-World/subscription",
+              "tags_url": "https://api.github.com/repos/octocat/Hello-World/tags",
+              "teams_url": "https://api.github.com/repos/octocat/Hello-World/teams",
+              "trees_url": "https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+              "clone_url": "https://github.com/octocat/Hello-World.git",
+              "mirror_url": "git:git.example.com/octocat/Hello-World",
+              "hooks_url": "https://api.github.com/repos/octocat/Hello-World/hooks",
+              "svn_url": "https://svn.github.com/octocat/Hello-World",
+              "homepage": "https://github.com",
+              "language": null,
+              "forks_count": 9,
+              "stargazers_count": 80,
+              "watchers_count": 80,
+              "size": 108,
+              "default_branch": "master",
+              "open_issues_count": 0,
+              "topics": ["octocat", "atom", "electron", "api"],
+              "has_issues": true,
+              "has_projects": true,
+              "has_wiki": true,
+              "has_pages": false,
+              "has_downloads": true,
+              "archived": false,
+              "disabled": false,
+              "pushed_at": "2011-01-26T19:06:43Z",
+              "created_at": "2011-01-26T19:01:12Z",
+              "updated_at": "2011-01-26T19:14:43Z",
+              "permissions": { "admin": false, "push": false, "pull": true },
+              "allow_rebase_merge": true,
+              "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
+              "allow_squash_merge": true,
+              "allow_merge_commit": true,
+              "forks": 123,
+              "open_issues": 123,
+              "license": {
+                "key": "mit",
+                "name": "MIT License",
+                "url": "https://api.github.com/licenses/mit",
+                "spdx_id": "MIT",
+                "node_id": "MDc6TGljZW5zZW1pdA=="
+              },
+              "watchers": 123
+            }
+          },
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
+            },
+            "html": {
+              "href": "https://github.com/octocat/Hello-World/pull/1347"
+            },
+            "issue": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/issues/1347"
+            },
+            "comments": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
+            },
+            "review_comments": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments"
+            },
+            "review_comment": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}"
+            },
+            "commits": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits"
+            },
+            "statuses": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+            }
+          },
+          "author_association": "OWNER",
+          "draft": false,
+          "merged": false,
+          "mergeable": true,
+          "rebaseable": true,
+          "mergeable_state": "clean",
+          "merged_by": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "comments": 10,
+          "review_comments": 0,
+          "maintainer_can_modify": true,
+          "commits": 3,
+          "additions": 100,
+          "deletions": 3,
+          "changed_files": 5
+        }
+      }
+    },
+    "parameters": {
+      "gist-id": {
+        "name": "gist_id",
+        "description": "gist_id parameter",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "per-page": {
+        "name": "per_page",
+        "description": "Results per page (max 100)",
+        "in": "query",
+        "schema": { "type": "integer", "default": 30 }
+      },
+      "page": {
+        "name": "page",
+        "description": "Page number of the results to fetch.",
+        "in": "query",
+        "schema": { "type": "integer", "default": 1 }
+      },
+      "owner": {
+        "name": "owner",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "repo": {
+        "name": "repo",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "commit-sha": {
+        "name": "commit_sha",
+        "description": "commit_sha parameter",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "x-multi-segment": true
+      },
+      "pull-number": {
+        "name": "pull_number",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      }
+    },
+    "responses": {
+      "not_modified": { "description": "Not modified" },
+      "forbidden_gist": {
+        "description": "Forbidden Gist",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "block": {
+                  "type": "object",
+                  "properties": {
+                    "reason": { "type": "string" },
+                    "created_at": { "type": "string" },
+                    "html_url": { "type": "string", "nullable": true }
+                  }
+                },
+                "message": { "type": "string" },
+                "documentation_url": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "not_found": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "validation_failed": {
+        "description": "Validation failed",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/validation-error" }
+          }
+        }
+      },
+      "preview_header_missing": {
+        "description": "Preview header missing",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["message", "documentation_url"],
+              "properties": {
+                "message": { "type": "string" },
+                "documentation_url": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "internal_error": {
+        "description": "Internal Error",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      }
+    },
+    "headers": {
+      "link": {
+        "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
+        "schema": { "type": "string" }
+      }
+    }
+  }
+}
