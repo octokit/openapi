@@ -94,20 +94,24 @@ async function run() {
     const json = require(`../${diffPath}`);
 
     json.paths = {
-      changed: Object.fromEntries(
-        Object.entries(json.paths.changed).map(
-          ([path, { operations_changed }]) => {
-            return [path, operations_changed];
-          }
-        )
-      ),
-      added: Object.fromEntries(json.paths.added),
-      removed: Object.fromEntries(
-        json.paths.removed.map(([path, methods]) => [
-          path,
-          Object.keys(methods),
-        ])
-      ),
+      changed: json.paths.changed
+        ? Object.fromEntries(
+            Object.entries(json.paths.changed).map(
+              ([path, { operations_changed }]) => {
+                return [path, operations_changed];
+              }
+            )
+          )
+        : {},
+      added: json.paths.added ? Object.fromEntries(json.paths.added) : {},
+      removed: json.paths.removed
+        ? Object.fromEntries(
+            json.paths.removed.map(([path, methods]) => [
+              path,
+              Object.keys(methods),
+            ])
+          )
+        : {},
     };
 
     const jsonWithoutNullValues = mapObj(json, removeNullValues);
@@ -139,6 +143,27 @@ async function run() {
     );
 
     console.log(`${diffPath} re-formatted, keys sorted, and simplified`);
+
+    // add `"x-octokit".diff` to schemas
+    const fromJson = require(`../${fromPath}`);
+    const toJson = require(`../${toPath}`);
+
+    const { added, removed, changed } = sortedJson.paths;
+    const from = filenameToVersion(fromPath);
+    const to = filenameToVersion(toPath);
+
+    addDiffToOperations(from, toJson, added, "added");
+    addDiffToOperations(from, toJson, changed, "changed");
+    addRemovedOperations(from, to, toJson, fromJson, removed);
+
+    writeFileSync(
+      toPath,
+      prettier.format(JSON.stringify(toJson), {
+        parser: "json",
+      })
+    );
+
+    console.log(`"x-octokit".diff extension added to ${toPath}`);
   }
 
   let schemasCode = "";
@@ -196,6 +221,10 @@ function toFromFilename(filename) {
 function toDiffFilename(filename) {
   const fromFilename = toFromFilename(filename);
   return filename.replace(".deref.json", `.anicca-diff-to-${fromFilename}`);
+}
+
+function filenameToVersion(filename) {
+  return filename.replace(/^generated\//, "").replace(/\.deref\.json$/, "");
 }
 
 function removeUnchangedKeys(key, value) {
@@ -299,4 +328,56 @@ function isEmptyDeep(obj) {
     return !obj.length;
   }
   return false;
+}
+
+function addDiffToOperations(version, schema, diff = {}, type) {
+  for (const [path, methods] of Object.entries(diff)) {
+    for (const method of Object.keys(methods)) {
+      const operation = schema.paths[path][method];
+      operation["x-octokit"] = {
+        ...operation["x-octokit"],
+        diff: {
+          [version]: { type },
+        },
+      };
+    }
+  }
+}
+
+function addRemovedOperations(
+  fromVersion,
+  toVersion,
+  schema,
+  diffSchema,
+  diff = {}
+) {
+  for (const [path, methods] of Object.entries(diff)) {
+    for (const method of methods) {
+      if (!schema.paths[path]) {
+        schema.paths[path] = {};
+      }
+
+      // leave out some properties
+      const {
+        requestBody,
+        parameters,
+        responses,
+        "x-github": _ignore,
+        ...diffOperation
+      } = diffSchema.paths[path][method];
+
+      schema.paths[path][method] = {
+        ...diffOperation,
+        responses: {
+          501: {
+            description: "Not Implemented",
+          },
+        },
+        description: `This endpoint does not exist ${toVersion}. It was added in ${fromVersion}`,
+        "x-octokit": {
+          [fromVersion]: "removed",
+        },
+      };
+    }
+  }
 }
