@@ -145,25 +145,12 @@ async function run() {
     console.log(`${diffPath} re-formatted, keys sorted, and simplified`);
 
     // add `"x-octokit".diff` to schemas
-    const fromJson = require(`../${fromPath}`);
-    const toJson = require(`../${toPath}`);
-
-    const { added, removed, changed } = sortedJson.paths;
-    const from = filenameToVersion(fromPath);
-    const to = filenameToVersion(toPath);
-
-    addDiffToOperations(from, toJson, added, "added");
-    addDiffToOperations(from, toJson, changed, "changed");
-    addRemovedOperations(from, to, toJson, fromJson, removed);
-
-    writeFileSync(
-      toPath,
-      prettier.format(JSON.stringify(toJson), {
-        parser: "json",
-      })
+    addDiffExtensions(sortedJson, fromPath, toPath);
+    addDiffExtensions(
+      sortedJson,
+      fromPath.replace(".deref", ""),
+      toPath.replace(".deref", "")
     );
-
-    console.log(`"x-octokit".diff extension added to ${toPath}`);
   }
 
   let schemasCode = "";
@@ -334,6 +321,7 @@ function addDiffToOperations(version, schema, diff = {}, type) {
   for (const [path, methods] of Object.entries(diff)) {
     for (const method of Object.keys(methods)) {
       const operation = schema.paths[path][method];
+
       operation["x-octokit"] = {
         ...operation["x-octokit"],
         diff: {
@@ -380,4 +368,26 @@ function addRemovedOperations(
       };
     }
   }
+}
+
+function addDiffExtensions(diffJson, fromPath, toPath) {
+  const fromJson = require(`../${fromPath}`);
+  const toJson = require(`../${toPath}`);
+
+  const { added, removed, changed } = diffJson.paths;
+  const from = filenameToVersion(fromPath);
+  const to = filenameToVersion(toPath);
+
+  addDiffToOperations(from, toJson, added, "added");
+  addDiffToOperations(from, toJson, changed, "changed");
+  addRemovedOperations(from, to, toJson, fromJson, removed);
+
+  writeFileSync(
+    toPath,
+    prettier.format(JSON.stringify(toJson), {
+      parser: "json",
+    })
+  );
+
+  console.log(`"x-octokit".diff extension added to ${toPath}`);
 }
