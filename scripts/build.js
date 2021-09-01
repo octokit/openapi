@@ -213,7 +213,7 @@ function toFromFilename(path) {
 function toAniccaDiffFilename(path) {
   const filename = basename(path);
   const fromFilename = toFromFilename(filename);
-  return filename.replace(".deref.json", `.anicca-diff-to-${fromFilename}`);
+  return filename.replace(".deref.json", `-anicca-diff-to-${fromFilename}`);
 }
 
 function toDiffFilename(path) {
@@ -221,12 +221,12 @@ function toDiffFilename(path) {
   const fromFilename = toFromFilename(filename);
 
   if (filename.includes(".deref")) {
-    return filename.replace(/\.deref\.json/, `.diff-to-${fromFilename}`);
+    return filename.replace(/\.deref\.json/, `-diff-to-${fromFilename}`);
   }
 
   return filename.replace(
     /\.json/,
-    `.diff-to-${fromFilename.replace(".deref", "")}`
+    `-diff-to-${fromFilename.replace(".deref", "")}`
   );
 }
 
