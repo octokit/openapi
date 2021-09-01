@@ -472,7 +472,7 @@ function findRefs(obj) {
 }
 
 function findAllRefs(schema, component, refs) {
-  const newRefs = findRefs(refs, component);
+  const newRefs = findRefs(component);
 
   newRefs.forEach((ref) => {
     if (refs.has(ref)) return;

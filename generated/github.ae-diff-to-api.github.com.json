@@ -2570,6 +2570,333 @@
           "suspended_users": { "type": "integer" }
         },
         "required": ["total_users", "admin_users", "suspended_users"]
+      },
+      "simple-user": {
+        "title": "Simple User",
+        "description": "Simple User",
+        "type": "object",
+        "properties": {
+          "name": { "nullable": true, "type": "string" },
+          "email": { "nullable": true, "type": "string" },
+          "login": { "type": "string", "example": "octocat" },
+          "id": { "type": "integer", "example": 1 },
+          "node_id": { "type": "string", "example": "MDQ6VXNlcjE=" },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/images/error/octocat_happy.gif"
+          },
+          "gravatar_id": {
+            "type": "string",
+            "example": "41d064eb2195891e12d0413f63227ea7",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat"
+          },
+          "followers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/followers"
+          },
+          "following_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/following{/other_user}"
+          },
+          "gists_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+          },
+          "starred_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+          },
+          "subscriptions_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/subscriptions"
+          },
+          "organizations_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/orgs"
+          },
+          "repos_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/repos"
+          },
+          "events_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/events{/privacy}"
+          },
+          "received_events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/received_events"
+          },
+          "type": { "type": "string", "example": "User" },
+          "site_admin": { "type": "boolean" },
+          "starred_at": {
+            "type": "string",
+            "example": "\"2020-07-09T00:17:55Z\""
+          }
+        },
+        "required": [
+          "avatar_url",
+          "events_url",
+          "followers_url",
+          "following_url",
+          "gists_url",
+          "gravatar_id",
+          "html_url",
+          "id",
+          "node_id",
+          "login",
+          "organizations_url",
+          "received_events_url",
+          "repos_url",
+          "site_admin",
+          "starred_url",
+          "subscriptions_url",
+          "type",
+          "url"
+        ],
+        "nullable": true
+      },
+      "scoped-installation": {
+        "title": "Scoped Installation",
+        "type": "object",
+        "properties": {
+          "permissions": { "$ref": "#/components/schemas/app-permissions" },
+          "repository_selection": {
+            "description": "Describe whether all repositories have been selected or there's a selection involved",
+            "type": "string",
+            "enum": ["all", "selected"]
+          },
+          "single_file_name": {
+            "type": "string",
+            "example": "config.yaml",
+            "nullable": true
+          },
+          "has_multiple_single_files": { "type": "boolean", "example": true },
+          "single_file_paths": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["config.yml", ".github/issue_TEMPLATE.md"]
+          },
+          "repositories_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/repos"
+          },
+          "account": { "$ref": "#/components/schemas/simple-user" }
+        },
+        "required": [
+          "permissions",
+          "repository_selection",
+          "single_file_name",
+          "repositories_url",
+          "account"
+        ]
+      },
+      "app-permissions": {
+        "title": "App Permissions",
+        "type": "object",
+        "description": "The permissions granted to the user-to-server access token.",
+        "properties": {
+          "actions": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "administration": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for repository creation, deletion, settings, teams, and collaborators creation. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "checks": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for checks on code. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "content_references": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for notification of content references and creation content attachments. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "contents": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "deployments": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for deployments and deployment statuses. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "environments": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for managing repository environments. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "issues": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for issues and related comments, assignees, labels, and milestones. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "metadata": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to search repositories, list collaborators, and access repository metadata. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "packages": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for packages published to GitHub Packages. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "pages": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to retrieve Pages statuses, configuration, and builds, as well as create new builds. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "pull_requests": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for pull requests and related comments, assignees, labels, milestones, and merges. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "repository_hooks": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage the post-receive hooks for a repository. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "repository_projects": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage repository projects, columns, and cards. Can be one of: `read`, `write`, or `admin`.",
+            "enum": ["read", "write", "admin"]
+          },
+          "secret_scanning_alerts": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage secret scanning alerts. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "secrets": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage repository secrets. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "security_events": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage security events like code scanning alerts. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "single_file": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage just a single file. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "statuses": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for commit statuses. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "vulnerability_alerts": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to retrieve Dependabot alerts. Can be one of: `read`.",
+            "enum": ["read"]
+          },
+          "workflows": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to update GitHub Actions workflow files. Can be one of: `write`.",
+            "enum": ["write"]
+          },
+          "members": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for organization teams and members. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "organization_administration": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage access to an organization. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "organization_hooks": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "organization_plan": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing an organization's plan. Can be one of: `read`.",
+            "enum": ["read"]
+          },
+          "organization_projects": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage organization projects, columns, and cards. Can be one of: `read`, `write`, or `admin`.",
+            "enum": ["read", "write", "admin"]
+          },
+          "organization_packages": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for organization packages published to GitHub Packages. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "organization_secrets": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage organization secrets. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "organization_self_hosted_runners": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage GitHub Actions self-hosted runners available to an organization. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "organization_user_blocking": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage users blocked by the organization. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          },
+          "team_discussions": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage team discussions and related comments. Can be one of: `read` or `write`.",
+            "enum": ["read", "write"]
+          }
+        },
+        "example": {
+          "contents": "read",
+          "issues": "read",
+          "deployments": "write",
+          "single_file": "read"
+        }
+      },
+      "basic-error": {
+        "title": "Basic Error",
+        "description": "Basic Error",
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "documentation_url": { "type": "string" },
+          "url": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      },
+      "announcement-message": {
+        "type": "string",
+        "description": "The announcement text in GitHub Flavored Markdown. For more information about GitHub Flavored Markdown, see \"[Mastering markdown](https://guides.github.com/features/mastering-markdown/).\"",
+        "example": "Very **important** announcement about _nothing_."
+      },
+      "announcement-expiration": {
+        "type": "string",
+        "format": "date-time",
+        "description": "The time at which the announcement expires. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. To set an announcement that never expires, omit this parameter, set it to `null`, or set it to an empty string.",
+        "example": "\"2021-01-01T00:00:00.000-07:00\"",
+        "nullable": true
       }
     },
     "examples": {
