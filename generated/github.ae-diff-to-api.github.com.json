@@ -1394,8 +1394,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "nullable": true,
-                  "allOf": [{ "$ref": "#/components/schemas/authorization" }]
+                  "$ref": "#/components/schemas/nullable-authorization"
                 },
                 "examples": {
                   "default": {
@@ -2372,13 +2371,14 @@
           "updated_at": { "type": "string", "format": "date-time" },
           "created_at": { "type": "string", "format": "date-time" },
           "fingerprint": { "type": "string", "nullable": true },
-          "user": {
-            "nullable": true,
-            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
-          },
+          "user": { "$ref": "#/components/schemas/nullable-simple-user" },
           "installation": {
-            "nullable": true,
-            "allOf": [{ "$ref": "#/components/schemas/scoped-installation" }]
+            "$ref": "#/components/schemas/nullable-scoped-installation"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "required": [
@@ -2393,8 +2393,66 @@
           "fingerprint",
           "url",
           "created_at",
-          "updated_at"
+          "updated_at",
+          "expires_at"
         ]
+      },
+      "nullable-authorization": {
+        "title": "Authorization",
+        "description": "The authorization for an OAuth app, GitHub App, or a Personal Access Token.",
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "url": { "type": "string", "format": "uri" },
+          "scopes": {
+            "description": "A list of scopes that this authorization is in.",
+            "type": "array",
+            "items": { "type": "string" },
+            "nullable": true
+          },
+          "token": { "type": "string" },
+          "token_last_eight": { "type": "string", "nullable": true },
+          "hashed_token": { "type": "string", "nullable": true },
+          "app": {
+            "type": "object",
+            "properties": {
+              "client_id": { "type": "string" },
+              "name": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            },
+            "required": ["client_id", "name", "url"]
+          },
+          "note": { "type": "string", "nullable": true },
+          "note_url": { "type": "string", "format": "uri", "nullable": true },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "fingerprint": { "type": "string", "nullable": true },
+          "user": { "$ref": "#/components/schemas/nullable-simple-user" },
+          "installation": {
+            "$ref": "#/components/schemas/nullable-scoped-installation"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "app",
+          "id",
+          "note",
+          "note_url",
+          "scopes",
+          "token",
+          "hashed_token",
+          "token_last_eight",
+          "fingerprint",
+          "url",
+          "created_at",
+          "updated_at",
+          "expires_at"
+        ],
+        "nullable": true
       },
       "announcement": {
         "title": "Enterprise Announcement",
@@ -2574,7 +2632,7 @@
         },
         "required": ["total_users", "admin_users", "suspended_users"]
       },
-      "simple-user": {
+      "nullable-simple-user": {
         "title": "Simple User",
         "description": "Simple User",
         "type": "object",
@@ -2674,7 +2732,7 @@
         ],
         "nullable": true
       },
-      "scoped-installation": {
+      "nullable-scoped-installation": {
         "title": "Scoped Installation",
         "type": "object",
         "properties": {
@@ -2708,7 +2766,8 @@
           "single_file_name",
           "repositories_url",
           "account"
-        ]
+        ],
+        "nullable": true
       },
       "app-permissions": {
         "title": "App Permissions",
@@ -2877,6 +2936,105 @@
           "deployments": "write",
           "single_file": "read"
         }
+      },
+      "simple-user": {
+        "title": "Simple User",
+        "description": "Simple User",
+        "type": "object",
+        "properties": {
+          "name": { "nullable": true, "type": "string" },
+          "email": { "nullable": true, "type": "string" },
+          "login": { "type": "string", "example": "octocat" },
+          "id": { "type": "integer", "example": 1 },
+          "node_id": { "type": "string", "example": "MDQ6VXNlcjE=" },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/images/error/octocat_happy.gif"
+          },
+          "gravatar_id": {
+            "type": "string",
+            "example": "41d064eb2195891e12d0413f63227ea7",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat"
+          },
+          "followers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/followers"
+          },
+          "following_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/following{/other_user}"
+          },
+          "gists_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+          },
+          "starred_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+          },
+          "subscriptions_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/subscriptions"
+          },
+          "organizations_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/orgs"
+          },
+          "repos_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/repos"
+          },
+          "events_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/events{/privacy}"
+          },
+          "received_events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/received_events"
+          },
+          "type": { "type": "string", "example": "User" },
+          "site_admin": { "type": "boolean" },
+          "starred_at": {
+            "type": "string",
+            "example": "\"2020-07-09T00:17:55Z\""
+          }
+        },
+        "required": [
+          "avatar_url",
+          "events_url",
+          "followers_url",
+          "following_url",
+          "gists_url",
+          "gravatar_id",
+          "html_url",
+          "id",
+          "node_id",
+          "login",
+          "organizations_url",
+          "received_events_url",
+          "repos_url",
+          "site_admin",
+          "starred_url",
+          "subscriptions_url",
+          "type",
+          "url"
+        ]
       },
       "basic-error": {
         "title": "Basic Error",
@@ -3111,6 +3269,7 @@
             "note_url": "http://optional/note/url",
             "updated_at": "2011-09-06T20:39:23Z",
             "created_at": "2011-09-06T17:26:27Z",
+            "expires_at": "2011-09-08T17:26:27Z",
             "fingerprint": "jklmnop12345678"
           }
         ]
@@ -3132,6 +3291,7 @@
           "note_url": "http://optional/note/url",
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
+          "expires_at": "2011-10-06T17:26:27Z",
           "fingerprint": ""
         }
       },
@@ -3153,6 +3313,7 @@
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
           "fingerprint": "jklmnop12345678",
+          "expires_at": "2011-09-08T17:26:27Z",
           "user": {
             "login": "octocat",
             "id": 1,
