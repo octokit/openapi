@@ -6,6 +6,7 @@ const execa = require("execa");
 const sortKeys = require("sort-keys");
 const equal = require("deep-equal");
 const _ = require("lodash");
+const { getCurrentVersions } = require("github-enterprise-server-versions");
 
 const overrides = require("./overrides");
 const mapObj = require("./lib/map-obj");
@@ -17,6 +18,9 @@ if (!process.env.ANICCA_REPOSITORY_PATH && !process.env.GITHUB_WORKSPACE) {
 run();
 
 async function run() {
+  const ghesVersions = await getCurrentVersions();
+  const latestGhesVersion = ghesVersions.reverse()[0];
+
   const schemaFileNames = readdirSync("cache");
   const changeFileNames = readdirSync("changes");
 
@@ -67,9 +71,12 @@ async function run() {
     if (!file.endsWith("deref.json")) continue;
     if (file.startsWith("api.github.com")) continue;
 
-    const fromPath = `generated/${toFromFilename(file)}`;
+    const fromPath = `generated/${toFromFilename(file, latestGhesVersion)}`;
     const toPath = `generated/${file}`;
-    const diffPath = `generated/${toAniccaDiffFilename(file)}`;
+    const diffPath = `generated/${toAniccaDiffFilename(
+      file,
+      latestGhesVersion
+    )}`;
 
     const cmd = `cargo run --bin cli diff ${resolve(fromPath)} ${resolve(
       toPath
@@ -153,8 +160,8 @@ async function run() {
     );
 
     // add diff files
-    createDiffVersion(toPath);
-    createDiffVersion(toPath.replace(".deref", ""));
+    createDiffVersion(toPath, latestGhesVersion);
+    createDiffVersion(toPath.replace(".deref", ""), latestGhesVersion);
   }
 
   let schemasCode = "";
@@ -183,13 +190,13 @@ async function run() {
   );
 }
 
-function toFromFilename(path) {
+function toFromFilename(path, latestGhesVersion) {
   const filename = basename(path);
   if (filename.startsWith("github.ae")) {
     return "api.github.com.deref.json";
   }
 
-  if (filename.startsWith("ghes-3.1")) {
+  if (filename.startsWith(`ghes-${latestGhesVersion}`)) {
     return "api.github.com.deref.json";
   }
 
@@ -210,15 +217,15 @@ function toFromFilename(path) {
   throw new Error(`Cannot calculate base version for ${filename}`);
 }
 
-function toAniccaDiffFilename(path) {
+function toAniccaDiffFilename(path, latestGhesVersion) {
   const filename = basename(path);
-  const fromFilename = toFromFilename(filename);
+  const fromFilename = toFromFilename(filename, latestGhesVersion);
   return filename.replace(".deref.json", `-anicca-diff-to-${fromFilename}`);
 }
 
-function toDiffFilename(path) {
+function toDiffFilename(path, latestGhesVersion) {
   const filename = basename(path);
-  const fromFilename = toFromFilename(filename);
+  const fromFilename = toFromFilename(filename, latestGhesVersion);
 
   if (filename.includes(".deref")) {
     return filename.replace(/\.deref\.json/, `-diff-to-${fromFilename}`);
@@ -412,7 +419,7 @@ function addDiffExtensions(diffJson, fromPath, toPath) {
   console.log(`"x-octokit".diff extension added to ${toPath}`);
 }
 
-function createDiffVersion(path) {
+function createDiffVersion(path, latestGhesVersion) {
   const schema = require(`../${path}`);
   const newPaths = {};
   let refs = new Set();
@@ -443,7 +450,7 @@ function createDiffVersion(path) {
 
   console.log("%d components left over", refs.size);
 
-  const newPath = "generated/" + toDiffFilename(path);
+  const newPath = "generated/" + toDiffFilename(path, latestGhesVersion);
 
   writeFileSync(
     newPath,
