@@ -2554,6 +2554,11 @@
                     "type": "boolean",
                     "description": "`true` to archive this repository. **Note**: You cannot unarchive repositories through the API.",
                     "default": false
+                  },
+                  "allow_forking": {
+                    "type": "boolean",
+                    "description": "Either `true` to allow private forks, or `false` to prevent private forks.",
+                    "default": false
                   }
                 }
               },
@@ -3533,7 +3538,7 @@
       },
       "post": {
         "summary": "Create a fork",
-        "description": "Create a fork for the authenticated user.\n\n**Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=rest-api).",
+        "description": "Create a fork for the authenticated user.\n\n**Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).",
         "tags": ["repos"],
         "operationId": "repos/create-fork",
         "externalDocs": {
@@ -7751,6 +7756,10 @@
             "type": "boolean",
             "example": true
           },
+          "allow_forking": {
+            "description": "Whether to allow forking this repo",
+            "type": "boolean"
+          },
           "subscribers_count": { "type": "integer" },
           "network_count": { "type": "integer" },
           "open_issues": { "type": "integer" },
@@ -8278,7 +8287,8 @@
           },
           "forks": { "type": "integer", "example": 0 },
           "open_issues": { "type": "integer", "example": 0 },
-          "watchers": { "type": "integer", "example": 0 }
+          "watchers": { "type": "integer", "example": 0 },
+          "allow_forking": { "type": "boolean" }
         },
         "required": [
           "archive_url",
@@ -8759,6 +8769,12 @@
             "type": "boolean",
             "example": true
           },
+          "allow_forking": {
+            "description": "Whether to allow forking this repo",
+            "default": false,
+            "type": "boolean",
+            "example": false
+          },
           "subscribers_count": { "type": "integer" },
           "network_count": { "type": "integer" },
           "open_issues": { "type": "integer" },
@@ -9119,6 +9135,7 @@
           "allow_squash_merge": { "type": "boolean", "example": true },
           "delete_branch_on_merge": { "type": "boolean", "example": false },
           "allow_merge_commit": { "type": "boolean", "example": true },
+          "allow_forking": { "type": "boolean", "example": true },
           "subscribers_count": { "type": "integer", "example": 42 },
           "network_count": { "type": "integer", "example": 0 },
           "license": { "$ref": "#/components/schemas/nullable-license-simple" },
@@ -10607,7 +10624,8 @@
           "allow_merge_commit": { "type": "boolean" },
           "allow_squash_merge": { "type": "boolean" },
           "allow_rebase_merge": { "type": "boolean" },
-          "delete_branch_on_merge": { "type": "boolean" }
+          "delete_branch_on_merge": { "type": "boolean" },
+          "allow_forking": { "type": "boolean" }
         },
         "required": [
           "archive_url",
@@ -11773,6 +11791,10 @@
             "default": true,
             "type": "boolean",
             "example": true
+          },
+          "allow_forking": {
+            "description": "Whether to allow forking this repo",
+            "type": "boolean"
           },
           "subscribers_count": { "type": "integer" },
           "network_count": { "type": "integer" },
@@ -15880,6 +15902,7 @@
           "allow_squash_merge": true,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
+          "allow_forking": true,
           "subscribers_count": 42,
           "network_count": 0,
           "organization": {
@@ -20387,6 +20410,7 @@
             "allow_squash_merge": true,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
+            "allow_forking": true,
             "subscribers_count": 42,
             "network_count": 0
           }
