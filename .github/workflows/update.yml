@@ -1,8 +1,6 @@
-on:
+"on":
   schedule:
-    # Every day at 4am pacific time
     - cron: 0 12 * * *
-  # manual trigger
   workflow_dispatch: {}
 name: Update
 jobs:
@@ -13,47 +11,48 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           cache: npm
+          node-version: 16
       - run: npm ci
       - run: npm run download
-
-      # setup runst & anicca
       - uses: actions/checkout@v2
         with:
-          repository: "xuorig/anicca"
+          repository: xuorig/anicca
           path: anicca
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
       - run: cargo build
         working-directory: anicca
-
-      # build
       - run: npm run build
-
-      # delete git checkout in anicca to not confuse the
-      # create-or-update-pull-request-action action.
       - run: rm -rf anicca
       - name: update cache
         uses: gr2m/create-or-update-pull-request-action@v1.x
         env:
           GITHUB_TOKEN: ${{ secrets.OCTOKITBOT_PAT }}
         with:
-          title: "🤖📯 GitHub OpenAPI Update"
-          body: |
-            I found new changes in [GitHub's official OpenAPI specifications](https://github.com/github/rest-api-description) and thought I'd let you know about it 👋🤖
+          title: 🤖📯 GitHub OpenAPI Update
+          body: >
+            I found new changes in [GitHub's official OpenAPI
+            specifications](https://github.com/github/rest-api-description) and
+            thought I'd let you know about it 👋🤖
 
-            I can't tell if the changes include fixes, features, breaking changes or just cache updates, you'll have to figure that out on yourself and adapt the commit messages accordingly to trigger the right release, see [our commit message conventions](https://github.com/octokit/openapi/blob/main/CONTRIBUTING.md#merging-the-pull-request--releasing-a-new-version).
-          branch: "update"
-          author: "Octokit Bot <octokitbot@martynus.net>"
-          path: "cache/"
+
+            I can't tell if the changes include fixes, features, breaking
+            changes or just cache updates, you'll have to figure that out on
+            yourself and adapt the commit messages accordingly to trigger the
+            right release, see [our commit message
+            conventions](https://github.com/octokit/openapi/blob/main/CONTRIBUTING.md#merging-the-pull-request--releasing-a-new-version).
+          branch: update
+          author: Octokit Bot <octokitbot@martynus.net>
+          path: cache/
           commit-message: "build: cache"
-          labels: "maintenance"
+          labels: maintenance
       - name: Create pull request
         uses: gr2m/create-or-update-pull-request-action@v1.x
         env:
           GITHUB_TOKEN: ${{ secrets.OCTOKITBOT_PAT }}
         with:
-          branch: "update"
-          author: "Octokit Bot <octokitbot@martynus.net>"
+          branch: update
+          author: Octokit Bot <octokitbot@martynus.net>
           commit-message: "WIP: schema updates"
-          labels: "maintenance"
+          labels: maintenance
