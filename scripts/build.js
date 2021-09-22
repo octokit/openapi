@@ -7,9 +7,9 @@ const sortKeys = require("sort-keys");
 const equal = require("deep-equal");
 const _ = require("lodash");
 const { getCurrentVersions } = require("github-enterprise-server-versions");
+const mapObj = require("map-obj");
 
 const overrides = require("./overrides");
-const mapObj = require("./lib/map-obj");
 
 if (!process.env.ANICCA_REPOSITORY_PATH && !process.env.GITHUB_WORKSPACE) {
   throw new Error("Please set ANICCA_REPOSITORY_PATH or GITHUB_WORKSPACE");
@@ -243,7 +243,7 @@ function filenameToVersion(filename) {
 
 function removeUnchangedKeys(key, value) {
   if (value === null) {
-    return mapObj.mapObjSkip;
+    return mapObj.mapObjectSkip;
   }
 
   // we don't care about description changes
@@ -252,7 +252,7 @@ function removeUnchangedKeys(key, value) {
     typeof value === "object" &&
     equal(Object.keys(value).sort(), ["from", "to"])
   ) {
-    return mapObj.mapObjSkip;
+    return mapObj.mapObjectSkip;
   }
 
   // we also don't care about operation summary changes
@@ -261,7 +261,7 @@ function removeUnchangedKeys(key, value) {
     typeof value === "object" &&
     equal(Object.keys(value).sort(), ["from", "to"])
   ) {
-    return mapObj.mapObjSkip;
+    return mapObj.mapObjectSkip;
   }
 
   if (equal(Object.keys(value).sort(), ["added", "changed", "removed"])) {
@@ -269,11 +269,11 @@ function removeUnchangedKeys(key, value) {
   }
 
   if (equal(value, { added: [], changed: {}, removed: [] })) {
-    return mapObj.mapObjSkip;
+    return mapObj.mapObjectSkip;
   }
 
   if (equal(value, { added: [], removed: [] })) {
-    return mapObj.mapObjSkip;
+    return mapObj.mapObjectSkip;
   }
 
   if (
@@ -295,7 +295,7 @@ function removeUnchangedKeys(key, value) {
         operations_removed: [],
       })
     ) {
-      return mapObj.mapObjSkip;
+      return mapObj.mapObjectSkip;
     }
   }
 
@@ -304,7 +304,7 @@ function removeUnchangedKeys(key, value) {
 
 function removeNullValues(key, value) {
   if (value === null) {
-    return mapObj.mapObjSkip;
+    return mapObj.mapObjectSkip;
   }
 
   return [key, value];
@@ -320,7 +320,7 @@ function simplifyRemovedArrays(key, value) {
 
 function removeEmptyObjects(key, value) {
   if (equal(value, {})) {
-    return mapObj.mapObjSkip;
+    return mapObj.mapObjectSkip;
   }
 
   return [key, value];
@@ -328,7 +328,7 @@ function removeEmptyObjects(key, value) {
 
 function removeDeepEmptyObjects(key, value) {
   if (isEmptyDeep(value)) {
-    return mapObj.mapObjSkip;
+    return mapObj.mapObjectSkip;
   }
 
   return [key, value];
