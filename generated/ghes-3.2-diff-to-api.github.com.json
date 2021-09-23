@@ -2596,6 +2596,40 @@
         "x-octokit": {
           "diff": { "api.github.com.json": { "type": "changed" } }
         }
+      },
+      "put": {
+        "summary": "Set allowed actions for an enterprise",
+        "description": "Sets the actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise).\"\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+        "operationId": "enterprise-admin/set-allowed-actions-enterprise",
+        "tags": ["enterprise-admin"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/enterprise-admin#set-allowed-actions-for-an-enterprise"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/enterprise" }],
+        "responses": { "204": { "description": "Response" } },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/selected-actions" },
+              "examples": {
+                "selected_actions": {
+                  "$ref": "#/components/examples/selected-actions"
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": false,
+          "githubCloudOnly": false,
+          "previews": [],
+          "category": "enterprise-admin",
+          "subcategory": "actions"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
       }
     },
     "/meta": {
@@ -2635,6 +2669,161 @@
         }
       }
     },
+    "/orgs/{org}": {
+      "patch": {
+        "summary": "Update an organization",
+        "description": "**Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).\n\nEnables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.",
+        "tags": ["orgs"],
+        "operationId": "orgs/update",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/orgs/#update-an-organization"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/org" }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "billing_email": {
+                    "type": "string",
+                    "description": "Billing email address. This address is not publicized."
+                  },
+                  "company": {
+                    "type": "string",
+                    "description": "The company name."
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "The publicly visible email address."
+                  },
+                  "twitter_username": {
+                    "type": "string",
+                    "description": "The Twitter username of the company."
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "The location."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The shorthand name of the company."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the company."
+                  },
+                  "has_organization_projects": {
+                    "type": "boolean",
+                    "description": "Toggles whether an organization can use organization projects."
+                  },
+                  "has_repository_projects": {
+                    "type": "boolean",
+                    "description": "Toggles whether repositories that belong to the organization can use repository projects."
+                  },
+                  "default_repository_permission": {
+                    "type": "string",
+                    "description": "Default permission level members have for organization repositories:  \n\\* `read` - can pull, but not push to or administer this repository.  \n\\* `write` - can pull and push, but not administer this repository.  \n\\* `admin` - can pull, push, and administer this repository.  \n\\* `none` - no permissions granted by default.",
+                    "enum": ["read", "write", "admin", "none"],
+                    "default": "read"
+                  },
+                  "members_can_create_repositories": {
+                    "type": "boolean",
+                    "description": "Toggles the ability of non-admin organization members to create repositories. Can be one of:  \n\\* `true` - all organization members can create repositories.  \n\\* `false` - only organization owners can create repositories.  \nDefault: `true`  \n**Note:** A parameter can override this parameter. See `members_allowed_repository_creation_type` in this table for details. **Note:** A parameter can override this parameter. See `members_allowed_repository_creation_type` in this table for details.",
+                    "default": true
+                  },
+                  "members_can_create_internal_repositories": {
+                    "type": "boolean",
+                    "description": "Toggles whether organization members can create internal repositories, which are visible to all enterprise members. You can only allow members to create internal repositories if your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. Can be one of:  \n\\* `true` - all organization members can create internal repositories.  \n\\* `false` - only organization owners can create internal repositories.  \nDefault: `true`. For more information, see \"[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
+                  },
+                  "members_can_create_private_repositories": {
+                    "type": "boolean",
+                    "description": "Toggles whether organization members can create private repositories, which are visible to organization members with permission. Can be one of:  \n\\* `true` - all organization members can create private repositories.  \n\\* `false` - only organization owners can create private repositories.  \nDefault: `true`. For more information, see \"[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
+                  },
+                  "members_can_create_public_repositories": {
+                    "type": "boolean",
+                    "description": "Toggles whether organization members can create public repositories, which are visible to anyone. Can be one of:  \n\\* `true` - all organization members can create public repositories.  \n\\* `false` - only organization owners can create public repositories.  \nDefault: `true`. For more information, see \"[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
+                  },
+                  "members_allowed_repository_creation_type": {
+                    "type": "string",
+                    "description": "Specifies which types of repositories non-admin organization members can create. Can be one of:  \n\\* `all` - all organization members can create public and private repositories.  \n\\* `private` - members can create private repositories. This option is only available to repositories that are part of an organization on GitHub Enterprise Cloud.  \n\\* `none` - only admin members can create repositories.  \n**Note:** This parameter is deprecated and will be removed in the future. Its return value ignores internal repositories. Using this parameter overrides values set in `members_can_create_repositories`. See the parameter deprecation notice in the operation description for details.",
+                    "enum": ["all", "private", "none"]
+                  },
+                  "members_can_create_pages": {
+                    "type": "boolean",
+                    "description": "Toggles whether organization members can create GitHub Pages sites. Can be one of:  \n\\* `true` - all organization members can create GitHub Pages sites.  \n\\* `false` - no organization members can create GitHub Pages sites. Existing published sites will not be impacted.",
+                    "default": true
+                  },
+                  "blog": {
+                    "type": "string",
+                    "example": "\"http://github.blog\""
+                  }
+                }
+              },
+              "example": {
+                "billing_email": "mona@github.com",
+                "company": "GitHub",
+                "email": "mona@github.com",
+                "twitter_username": "github",
+                "location": "San Francisco",
+                "name": "github",
+                "description": "GitHub, the company.",
+                "default_repository_permission": "read",
+                "members_can_create_repositories": true,
+                "members_allowed_repository_creation_type": "all"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/organization-full" },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/organization-full"
+                  }
+                }
+              }
+            }
+          },
+          "409": { "$ref": "#/components/responses/conflict" },
+          "415": { "$ref": "#/components/responses/preview_header_missing" },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/validation-error" },
+                    { "$ref": "#/components/schemas/validation-error-simple" }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [
+            {
+              "required": false,
+              "name": "surtur",
+              "note": "New repository creation permissions are available to preview. You can now use `members_can_create_public_repositories`, `members_can_create_private_repositories`, and `members_can_create_internal_repositories`. You can only allow members to create internal repositories if your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. These parameters provide more granular permissions to configure the type of repositories organization members can create.\n\nTo access these new parameters during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.surtur-preview+json\n```"
+            }
+          ],
+          "category": "orgs",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      }
+    },
     "/orgs/{org}/actions/permissions/selected-actions": {
       "get": {
         "summary": "Get allowed actions for an organization",
@@ -2656,6 +2845,40 @@
                   "default": {
                     "$ref": "#/components/examples/selected-actions"
                   }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "permissions"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      },
+      "put": {
+        "summary": "Set allowed actions for an organization",
+        "description": "Sets the actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization).\"\n\nIf the organization belongs to an enterprise that has `selected` actions set at the enterprise level, then you cannot override any of the enterprise's allowed actions settings.\n\nTo use the `patterns_allowed` setting for private repositories, the organization must belong to an enterprise. If the organization does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories in the organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.",
+        "operationId": "actions/set-allowed-actions-organization",
+        "tags": ["actions"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/actions#set-allowed-actions-for-an-organization"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/org" }],
+        "responses": { "204": { "description": "Response" } },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/selected-actions" },
+              "examples": {
+                "selected_actions": {
+                  "$ref": "#/components/examples/selected-actions"
                 }
               }
             }
@@ -2920,6 +3143,43 @@
                   "default": {
                     "$ref": "#/components/examples/selected-actions"
                   }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "permissions"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      },
+      "put": {
+        "summary": "Set allowed actions for a repository",
+        "description": "Sets the actions that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository).\"\n\nIf the repository belongs to an organization or enterprise that has `selected` actions set at the organization or enterprise levels, then you cannot override any of the allowed actions settings.\n\nTo use the `patterns_allowed` setting for private repositories, the repository must belong to an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories.\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.",
+        "operationId": "actions/set-allowed-actions-repository",
+        "tags": ["actions"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/actions#set-allowed-actions-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" }
+        ],
+        "responses": { "204": { "description": "Response" } },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/selected-actions" },
+              "examples": {
+                "selected_actions": {
+                  "$ref": "#/components/examples/selected-actions"
                 }
               }
             }
@@ -3201,6 +3461,98 @@
         "x-octokit": {
           "diff": { "api.github.com.json": { "type": "changed" } }
         }
+      },
+      "post": {
+        "summary": "Create a release",
+        "description": "Users with push access to the repository can create a release.\n\nThis endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.2/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.2/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
+        "tags": ["repos"],
+        "operationId": "repos/create-release",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#create-a-release"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tag_name": {
+                    "type": "string",
+                    "description": "The name of the tag."
+                  },
+                  "target_commitish": {
+                    "type": "string",
+                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the release."
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "Text describing the contents of the tag."
+                  },
+                  "draft": {
+                    "type": "boolean",
+                    "description": "`true` to create a draft (unpublished) release, `false` to create a published one.",
+                    "default": false
+                  },
+                  "prerelease": {
+                    "type": "boolean",
+                    "description": "`true` to identify the release as a prerelease. `false` to identify the release as a full release.",
+                    "default": false
+                  }
+                },
+                "required": ["tag_name"]
+              },
+              "example": {
+                "tag_name": "v1.0.0",
+                "target_commitish": "master",
+                "name": "v1.0.0",
+                "body": "Description of the release",
+                "draft": false,
+                "prerelease": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/release" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/release" }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/repos/octocat/Hello-World/releases/1",
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "triggersNotification": true,
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "repos",
+          "subcategory": "releases"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
       }
     },
     "/repos/{owner}/{repo}/releases/latest": {
@@ -3318,6 +3670,87 @@
             }
           },
           "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "repos",
+          "subcategory": "releases"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      },
+      "patch": {
+        "summary": "Update a release",
+        "description": "Users with push access to the repository can edit a release.",
+        "tags": ["repos"],
+        "operationId": "repos/update-release",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#update-a-release"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/release-id" }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tag_name": {
+                    "type": "string",
+                    "description": "The name of the tag."
+                  },
+                  "target_commitish": {
+                    "type": "string",
+                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the release."
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "Text describing the contents of the tag."
+                  },
+                  "draft": {
+                    "type": "boolean",
+                    "description": "`true` makes the release a draft, and `false` publishes the release."
+                  },
+                  "prerelease": {
+                    "type": "boolean",
+                    "description": "`true` to identify the release as a prerelease, `false` to identify the release as a full release."
+                  }
+                }
+              },
+              "example": {
+                "tag_name": "v1.0.0",
+                "target_commitish": "master",
+                "name": "v1.0.0",
+                "body": "Description of the release",
+                "draft": false,
+                "prerelease": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/release" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/release" }
+                }
+              }
+            }
+          }
         },
         "x-github": {
           "githubCloudOnly": false,
@@ -4931,6 +5364,239 @@
           "installed_version": { "type": "string", "example": "3.2.0" }
         },
         "required": ["verifiable_password_authentication"]
+      },
+      "organization-full": {
+        "title": "Organization Full",
+        "description": "Organization Full",
+        "type": "object",
+        "properties": {
+          "login": { "type": "string", "example": "github" },
+          "id": { "type": "integer", "example": 1 },
+          "node_id": {
+            "type": "string",
+            "example": "MDEyOk9yZ2FuaXphdGlvbjE="
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/orgs/github"
+          },
+          "repos_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/orgs/github/repos"
+          },
+          "events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/orgs/github/events"
+          },
+          "hooks_url": {
+            "type": "string",
+            "example": "https://api.github.com/orgs/github/hooks"
+          },
+          "issues_url": {
+            "type": "string",
+            "example": "https://api.github.com/orgs/github/issues"
+          },
+          "members_url": {
+            "type": "string",
+            "example": "https://api.github.com/orgs/github/members{/member}"
+          },
+          "public_members_url": {
+            "type": "string",
+            "example": "https://api.github.com/orgs/github/public_members{/member}"
+          },
+          "avatar_url": {
+            "type": "string",
+            "example": "https://github.com/images/error/octocat_happy.gif"
+          },
+          "description": {
+            "type": "string",
+            "example": "A great organization",
+            "nullable": true
+          },
+          "name": { "type": "string", "example": "github" },
+          "company": { "type": "string", "example": "GitHub" },
+          "blog": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/blog"
+          },
+          "location": { "type": "string", "example": "San Francisco" },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "octocat@github.com"
+          },
+          "twitter_username": {
+            "type": "string",
+            "example": "github",
+            "nullable": true
+          },
+          "is_verified": { "type": "boolean", "example": true },
+          "has_organization_projects": { "type": "boolean", "example": true },
+          "has_repository_projects": { "type": "boolean", "example": true },
+          "public_repos": { "type": "integer", "example": 2 },
+          "public_gists": { "type": "integer", "example": 1 },
+          "followers": { "type": "integer", "example": 20 },
+          "following": { "type": "integer", "example": 0 },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2008-01-14T04:33:35Z"
+          },
+          "type": { "type": "string", "example": "Organization" },
+          "total_private_repos": { "type": "integer", "example": 100 },
+          "owned_private_repos": { "type": "integer", "example": 100 },
+          "private_gists": {
+            "type": "integer",
+            "example": 81,
+            "nullable": true
+          },
+          "disk_usage": {
+            "type": "integer",
+            "example": 10000,
+            "nullable": true
+          },
+          "collaborators": {
+            "type": "integer",
+            "example": 8,
+            "nullable": true
+          },
+          "billing_email": {
+            "type": "string",
+            "format": "email",
+            "example": "org@example.com",
+            "nullable": true
+          },
+          "plan": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "space": { "type": "integer" },
+              "private_repos": { "type": "integer" },
+              "filled_seats": { "type": "integer" },
+              "seats": { "type": "integer" }
+            },
+            "required": ["name", "space", "private_repos"]
+          },
+          "default_repository_permission": {
+            "type": "string",
+            "nullable": true
+          },
+          "members_can_create_repositories": {
+            "type": "boolean",
+            "example": true,
+            "nullable": true
+          },
+          "two_factor_requirement_enabled": {
+            "type": "boolean",
+            "example": true,
+            "nullable": true
+          },
+          "members_allowed_repository_creation_type": {
+            "type": "string",
+            "example": "all"
+          },
+          "members_can_create_public_repositories": {
+            "type": "boolean",
+            "example": true
+          },
+          "members_can_create_private_repositories": {
+            "type": "boolean",
+            "example": true
+          },
+          "members_can_create_internal_repositories": {
+            "type": "boolean",
+            "example": true
+          },
+          "members_can_create_pages": { "type": "boolean", "example": true },
+          "members_can_create_public_pages": {
+            "type": "boolean",
+            "example": true
+          },
+          "members_can_create_private_pages": {
+            "type": "boolean",
+            "example": true
+          },
+          "updated_at": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "login",
+          "url",
+          "id",
+          "node_id",
+          "repos_url",
+          "events_url",
+          "hooks_url",
+          "issues_url",
+          "members_url",
+          "public_members_url",
+          "avatar_url",
+          "description",
+          "html_url",
+          "has_organization_projects",
+          "has_repository_projects",
+          "public_repos",
+          "public_gists",
+          "followers",
+          "following",
+          "type",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "validation-error": {
+        "title": "Validation Error",
+        "description": "Validation Error",
+        "type": "object",
+        "required": ["message", "documentation_url"],
+        "properties": {
+          "message": { "type": "string" },
+          "documentation_url": { "type": "string" },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["code"],
+              "properties": {
+                "resource": { "type": "string" },
+                "field": { "type": "string" },
+                "message": { "type": "string" },
+                "code": { "type": "string" },
+                "index": { "type": "integer" },
+                "value": {
+                  "oneOf": [
+                    { "type": "string", "nullable": true },
+                    { "type": "integer", "nullable": true },
+                    {
+                      "type": "array",
+                      "nullable": true,
+                      "items": { "type": "string" }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "validation-error-simple": {
+        "title": "Validation Error Simple",
+        "description": "Validation Error Simple",
+        "type": "object",
+        "required": ["message", "documentation_url"],
+        "properties": {
+          "message": { "type": "string" },
+          "documentation_url": { "type": "string" },
+          "errors": { "type": "array", "items": { "type": "string" } }
+        }
       },
       "org-pre-receive-hook": {
         "type": "object",
@@ -6571,41 +7237,6 @@
           "html_url": { "type": "string", "format": "uri", "nullable": true }
         },
         "required": ["url", "html_url", "key", "name"]
-      },
-      "validation-error": {
-        "title": "Validation Error",
-        "description": "Validation Error",
-        "type": "object",
-        "required": ["message", "documentation_url"],
-        "properties": {
-          "message": { "type": "string" },
-          "documentation_url": { "type": "string" },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["code"],
-              "properties": {
-                "resource": { "type": "string" },
-                "field": { "type": "string" },
-                "message": { "type": "string" },
-                "code": { "type": "string" },
-                "index": { "type": "integer" },
-                "value": {
-                  "oneOf": [
-                    { "type": "string", "nullable": true },
-                    { "type": "integer", "nullable": true },
-                    {
-                      "type": "array",
-                      "nullable": true,
-                      "items": { "type": "string" }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
       }
     },
     "examples": {
@@ -7168,6 +7799,56 @@
           "installed_version": "3.2.0"
         }
       },
+      "organization-full": {
+        "value": {
+          "login": "github",
+          "id": 1,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+          "url": "https://api.github.com/orgs/github",
+          "repos_url": "https://api.github.com/orgs/github/repos",
+          "events_url": "https://api.github.com/orgs/github/events",
+          "hooks_url": "https://api.github.com/orgs/github/hooks",
+          "issues_url": "https://api.github.com/orgs/github/issues",
+          "members_url": "https://api.github.com/orgs/github/members{/member}",
+          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+          "description": "A great organization",
+          "name": "github",
+          "company": "GitHub",
+          "blog": "https://github.com/blog",
+          "location": "San Francisco",
+          "email": "octocat@github.com",
+          "twitter_username": "github",
+          "is_verified": true,
+          "has_organization_projects": true,
+          "has_repository_projects": true,
+          "public_repos": 2,
+          "public_gists": 1,
+          "followers": 20,
+          "following": 0,
+          "html_url": "https://github.com/octocat",
+          "created_at": "2008-01-14T04:33:35Z",
+          "type": "Organization",
+          "total_private_repos": 100,
+          "owned_private_repos": 100,
+          "private_gists": 81,
+          "disk_usage": 10000,
+          "collaborators": 8,
+          "billing_email": "mona@github.com",
+          "plan": { "name": "Medium", "space": 400, "private_repos": 20 },
+          "default_repository_permission": "read",
+          "members_can_create_repositories": true,
+          "two_factor_requirement_enabled": true,
+          "members_allowed_repository_creation_type": "all",
+          "members_can_create_public_repositories": false,
+          "members_can_create_private_repositories": false,
+          "members_can_create_internal_repositories": false,
+          "members_can_create_pages": true,
+          "members_can_create_public_pages": true,
+          "members_can_create_private_pages": true,
+          "updated_at": "2014-03-03T18:58:10Z"
+        }
+      },
       "org-pre-receive-hook-items": {
         "value": [
           {
@@ -7630,6 +8311,29 @@
         }
       },
       "not_modified": { "description": "Not modified" },
+      "conflict": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "preview_header_missing": {
+        "description": "Preview header missing",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["message", "documentation_url"],
+              "properties": {
+                "message": { "type": "string" },
+                "documentation_url": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
       "validation_failed": {
         "description": "Validation failed",
         "content": {
