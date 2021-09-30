@@ -84,9 +84,9 @@ function overrides(file, schema) {
     file.startsWith("github.ae") ||
     file.startsWith("ghes-3.2")
   ) {
-    // recover `POST /repos/{owner}/{repo}/community/code_of_conduct` (with deprecation flags)
+    // recover `GET /repos/{owner}/{repo}/community/code_of_conduct` (with deprecation flags)
     schema.paths["/repos/{owner}/{repo}/community/code_of_conduct"] = {
-      post: /deref/.test(file)
+      get: /deref/.test(file)
         ? require("./codes-of-conduct-get-for-repo.deref.json")
         : require("./codes-of-conduct-get-for-repo.json"),
     };
