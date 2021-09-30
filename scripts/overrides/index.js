@@ -1,6 +1,11 @@
 module.exports = overrides;
 
 function overrides(file, schema) {
+  const isGHES = file.startsWith("ghes-");
+  const ghesVersion = isGHES
+    ? Number(file.match(/(?<=^ghes-)\d\.\d/)[0])
+    : null;
+
   // remove `{ "type": "array", ...}` entries from `requestBody.content["aplication/json"].schema.anyOf
   // Octokit requires the request body to be set to an object in order to derive the variable name
   for (const [path, methods] of Object.entries(schema.paths)) {
@@ -66,11 +71,24 @@ function overrides(file, schema) {
       "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments"
     ].post.operationId = "apps/create-content-attachment-for-repo";
 
-    // recove all endpoints
+    // recover all endpoints
     schema.paths["/content_references/{content_reference_id}/attachments"] = {
       post: /deref/.test(file)
         ? require("./apps-create-content-attachment.deref.json")
         : require("./apps-create-content-attachment.json"),
+    };
+  }
+
+  if (
+    file.startsWith("api.github.com") ||
+    file.startsWith("github.ae") ||
+    file.startsWith("ghes-3.2")
+  ) {
+    // recover `POST /repos/{owner}/{repo}/community/code_of_conduct` (with deprecation flags)
+    schema.paths["/repos/{owner}/{repo}/community/code_of_conduct"] = {
+      post: /deref/.test(file)
+        ? require("./codes-of-conduct-get-for-repo.deref.json")
+        : require("./codes-of-conduct-get-for-repo.json"),
     };
   }
 }
