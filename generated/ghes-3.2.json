@@ -10730,8 +10730,7 @@
               "note": "The `is_template` and `template_repository` keys are currently available for developer to preview. See [Create a repository using a template](https://docs.github.com/enterprise-server@3.2/rest/reference/repos#create-a-repository-using-a-template) to learn how to create template repositories. To access these new response keys during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
             }
           ],
-          "category": "repos",
-          "subcategory": null
+          "category": "repos"
         },
         "x-octokit": {}
       },
@@ -10771,7 +10770,7 @@
                   },
                   "visibility": {
                     "type": "string",
-                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see \"[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)\" in the GitHub Help documentation.  \nThe `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.",
+                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see \"[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)\" in the GitHub Help documentation.",
                     "enum": ["public", "private", "visibility", "internal"]
                   },
                   "has_issues": {
@@ -10876,11 +10875,6 @@
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "previews": [
-            {
-              "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/enterprise-server@3.2/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            },
             {
               "required": false,
               "name": "baptiste",
@@ -13916,6 +13910,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
+          "category": "repos",
           "previews": [
             {
               "required": false,
@@ -13927,8 +13922,7 @@
               "name": "scarlet-witch",
               "note": "The Codes of Conduct API is currently available for developers to preview.\n\nTo access the API during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.scarlet-witch-preview+json\n```"
             }
-          ],
-          "category": "repos"
+          ]
         },
         "x-octokit": {}
       },
@@ -13970,7 +13964,7 @@
                   },
                   "visibility": {
                     "type": "string",
-                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. The `visibility` parameter overrides the `private` parameter when you use both along with the `nebula-preview` preview header.",
+                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`.\"",
                     "enum": ["public", "private", "visibility", "internal"]
                   },
                   "security_and_analysis": {
@@ -14094,11 +14088,6 @@
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "previews": [
-            {
-              "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/enterprise-server@3.2/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            },
             {
               "required": false,
               "name": "baptiste",
@@ -14344,7 +14333,9 @@
           "category": "actions",
           "subcategory": "workflow-jobs"
         },
-        "x-octokit": {}
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
       }
     },
     "/repos/{owner}/{repo}/actions/jobs/{job_id}/logs": {
@@ -15104,7 +15095,9 @@
           "category": "actions",
           "subcategory": "workflow-jobs"
         },
-        "x-octokit": {}
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
       }
     },
     "/repos/{owner}/{repo}/actions/runs/{run_id}/logs": {
@@ -15284,7 +15277,7 @@
     "/repos/{owner}/{repo}/actions/runs/{run_id}/rerun": {
       "post": {
         "summary": "Re-run a workflow",
-        "description": "Re-runs your workflow run using its `id`. You must authenticate using\nan access token with the `repo` scope to use this endpoint. GitHub Apps must have\nthe `actions:write` permission to use this endpoint.",
+        "description": "Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.",
         "tags": ["actions"],
         "operationId": "actions/re-run-workflow",
         "externalDocs": {
@@ -31361,21 +31354,19 @@
               }
             }
           },
-          "304": { "$ref": "#/components/responses/not_modified" },
-          "415": { "$ref": "#/components/responses/preview_header_missing" }
+          "304": { "$ref": "#/components/responses/not_modified" }
         },
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
+          "category": "search",
           "previews": [
             {
               "required": true,
               "name": "cloak",
               "note": "The Commit Search API is currently available for developers to preview. During the preview period, the APIs may change without advance notice. Please see the [blog post](https://developer.github.com/changes/2017-01-05-commit-search-api/) for full details.\n\nTo access the API you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.cloak-preview\n```"
             }
-          ],
-          "category": "search",
-          "subcategory": null
+          ]
         },
         "x-octokit": {}
       }
@@ -35544,11 +35535,6 @@
           "previews": [
             {
               "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/enterprise-server@3.2/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            },
-            {
-              "required": false,
               "name": "baptiste",
               "note": "The `is_template` and `template_repository` keys are currently available for developer to preview. See [Create a repository using a template](https://docs.github.com/enterprise-server@3.2/rest/reference/repos#create-a-repository-using-a-template) to learn how to create template repositories. To access these new response keys during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
             }
@@ -36708,15 +36694,14 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
+          "category": "repos",
           "previews": [
             {
               "required": false,
               "name": "nebula",
               "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/enterprise-server@3.2/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
             }
-          ],
-          "category": "repos",
-          "subcategory": null
+          ]
         },
         "x-octokit": {}
       }
@@ -37794,15 +37779,29 @@
         "responses": { "501": { "description": "Not Implemented" } }
       }
     },
-    "/repos/{owner}/{repo}/actions/runs/{run_id}/retry": {
-      "post": {
-        "summary": "Retry a workflow",
+    "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_num}": {
+      "get": {
+        "summary": "Get a workflow run attempt",
         "description": "This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json",
         "tags": ["actions"],
-        "operationId": "actions/retry-workflow",
+        "operationId": "actions/get-workflow-run-attempt",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/actions#retry-a-workflow"
+          "url": "https://docs.github.com/rest/reference/actions#get-a-workflow-run-attempt"
+        },
+        "x-octokit": { "api.github.com.json": "removed" },
+        "responses": { "501": { "description": "Not Implemented" } }
+      }
+    },
+    "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_num}/logs": {
+      "get": {
+        "summary": "Download workflow run attempt logs",
+        "description": "This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json",
+        "tags": ["actions"],
+        "operationId": "actions/download-workflow-run-attempt-logs",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#download-workflow-run-attempt-logs"
         },
         "x-octokit": { "api.github.com.json": "removed" },
         "responses": { "501": { "description": "Not Implemented" } }
@@ -46332,6 +46331,11 @@
             "type": "string",
             "example": "https://api.github.com/repos/github/hello-world/actions/runs/5"
           },
+          "run_attempt": {
+            "type": "integer",
+            "description": "Attempt number of the associated workflow run, 1 for first attempt and higher if the workflow was re-run.",
+            "example": 1
+          },
           "node_id": { "type": "string", "example": "MDg6Q2hlY2tSdW40" },
           "head_sha": {
             "description": "The SHA of the commit that is being run.",
@@ -46581,7 +46585,7 @@
           },
           "run_attempt": {
             "type": "integer",
-            "description": "Attempt number of the run, 1 for first attempt and higher if the workflow was retried.",
+            "description": "Attempt number of the run, 1 for first attempt and higher if the workflow was re-run.",
             "example": 1
           },
           "event": { "type": "string", "example": "push" },
@@ -52221,6 +52225,10 @@
                   "master_branch": { "type": "string" },
                   "archived": { "type": "boolean" },
                   "disabled": { "type": "boolean" },
+                  "visibility": {
+                    "description": "The repository visibility: public, private, or internal.",
+                    "type": "string"
+                  },
                   "mirror_url": {
                     "type": "string",
                     "format": "uri",
@@ -52518,6 +52526,10 @@
                   "master_branch": { "type": "string" },
                   "archived": { "type": "boolean" },
                   "disabled": { "type": "boolean" },
+                  "visibility": {
+                    "description": "The repository visibility: public, private, or internal.",
+                    "type": "string"
+                  },
                   "mirror_url": {
                     "type": "string",
                     "format": "uri",
@@ -53681,6 +53693,10 @@
           "disabled": {
             "type": "boolean",
             "description": "Returns whether or not this repository disabled."
+          },
+          "visibility": {
+            "description": "The repository visibility: public, private, or internal.",
+            "type": "string"
           },
           "license": { "$ref": "#/components/schemas/nullable-license-simple" },
           "permissions": {
@@ -69792,6 +69808,7 @@
               "has_downloads": true,
               "archived": true,
               "disabled": true,
+              "visibility": "private",
               "license": {
                 "key": "mit",
                 "name": "MIT License",

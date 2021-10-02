@@ -9660,11 +9660,6 @@
           "previews": [
             {
               "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            },
-            {
-              "required": false,
               "name": "baptiste",
               "note": "The `is_template` and `template_repository` keys are currently available for developer to preview. See [Create a repository using a template](https://docs.github.com/rest/reference/repos#create-a-repository-using-a-template) to learn how to create template repositories. To access these new response keys during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
             }
@@ -9710,7 +9705,7 @@
                   },
                   "visibility": {
                     "type": "string",
-                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see \"[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)\" in the GitHub Help documentation.  \nThe `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.",
+                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see \"[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)\" in the GitHub Help documentation.",
                     "enum": ["public", "private", "visibility", "internal"]
                   },
                   "has_issues": {
@@ -9815,11 +9810,6 @@
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "previews": [
-            {
-              "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            },
             {
               "required": false,
               "name": "baptiste",
@@ -12998,13 +12988,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [
-            {
-              "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            }
-          ],
           "category": "repos",
           "subcategory": null
         },
@@ -13048,7 +13031,7 @@
                   },
                   "visibility": {
                     "type": "string",
-                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. The `visibility` parameter overrides the `private` parameter when you use both along with the `nebula-preview` preview header.",
+                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`.\"",
                     "enum": ["public", "private", "visibility", "internal"]
                   },
                   "security_and_analysis": {
@@ -13172,11 +13155,6 @@
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "previews": [
-            {
-              "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            },
             {
               "required": false,
               "name": "baptiste",
@@ -14117,6 +14095,82 @@
         "x-octokit": {}
       }
     },
+    "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_num}": {
+      "get": {
+        "summary": "Get a workflow run attempt",
+        "description": "Gets a specific workflow run attempt. Anyone with read access to the repository\ncan use this endpoint. If the repository is private you must use an access token\nwith the `repo` scope. GitHub Apps must have the `actions:read` permission to\nuse this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/get-workflow-run-attempt",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#get-a-workflow-run-attempt"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/run-id" },
+          { "$ref": "#/components/parameters/attempt-num" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/workflow-run" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/workflow-run" }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "workflow-runs"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_num}/logs": {
+      "get": {
+        "summary": "Download workflow run attempt logs",
+        "description": "Gets a redirect URL to download an archive of log files for a specific workflow run attempt. This link expires after\n1 minute. Look for `Location:` in the response header to find the URL for the download. Anyone with read access to\nthe repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.\nGitHub Apps must have the `actions:read` permission to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/download-workflow-run-attempt-logs",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#download-workflow-run-attempt-logs"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/run-id" },
+          { "$ref": "#/components/parameters/attempt-num" }
+        ],
+        "responses": {
+          "302": {
+            "description": "Response",
+            "headers": {
+              "Location": {
+                "example": "https://pipelines.actions.githubusercontent.com/ab1f3cCFPB34Nd6imvFxpGZH5hNlDp2wijMwl2gDoO0bcrrlJj/_apis/pipelines/1/runs/19/signedlogcontent?urlExpires=2020-01-22T22%3A44%3A54.1389777Z&urlSigningMethod=HMACV1&urlSignature=2TUDfIg4fm36OJmfPy6km5QD5DLCOkBVzvhWZM8B%2BUY%3D",
+                "schema": { "type": "string" }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "workflow-runs"
+        },
+        "x-octokit": {}
+      }
+    },
     "/repos/{owner}/{repo}/actions/runs/{run_id}/cancel": {
       "post": {
         "summary": "Cancel a workflow run",
@@ -14395,7 +14449,7 @@
     "/repos/{owner}/{repo}/actions/runs/{run_id}/rerun": {
       "post": {
         "summary": "Re-run a workflow",
-        "description": "**Deprecation Notice:** This endpoint is deprecated.\nWe recommend migrating your existing code to use the new [retry workflow](https://docs.github.com/rest/reference/actions#retry-a-workflow) endpoint.\n\nRe-runs your workflow run using its `id`. You must authenticate using\nan access token with the `repo` scope to use this endpoint. GitHub Apps must have\nthe `actions:write` permission to use this endpoint.",
+        "description": "Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.",
         "tags": ["actions"],
         "operationId": "actions/re-run-workflow",
         "externalDocs": {
@@ -14430,45 +14484,6 @@
           "subcategory": "workflow-runs"
         },
         "deprecated": true,
-        "x-octokit": {}
-      }
-    },
-    "/repos/{owner}/{repo}/actions/runs/{run_id}/retry": {
-      "post": {
-        "summary": "Retry a workflow",
-        "description": "Retry your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.",
-        "tags": ["actions"],
-        "operationId": "actions/retry-workflow",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/actions#retry-a-workflow"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/owner" },
-          { "$ref": "#/components/parameters/repo" },
-          { "$ref": "#/components/parameters/run-id" }
-        ],
-        "responses": {
-          "201": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "previews": [],
-          "category": "actions",
-          "subcategory": "workflow-runs"
-        },
         "x-octokit": {}
       }
     },
@@ -32610,19 +32625,11 @@
               }
             }
           },
-          "304": { "$ref": "#/components/responses/not_modified" },
-          "415": { "$ref": "#/components/responses/preview_header_missing" }
+          "304": { "$ref": "#/components/responses/not_modified" }
         },
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [
-            {
-              "required": true,
-              "name": "cloak",
-              "note": "The Commit Search API is currently available for developers to preview. During the preview period, the APIs may change without advance notice. Please see the [blog post](https://developer.github.com/changes/2017-01-05-commit-search-api/) for full details.\n\nTo access the API you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.cloak-preview\n```"
-            }
-          ],
           "category": "search",
           "subcategory": null
         },
@@ -37481,11 +37488,6 @@
           "previews": [
             {
               "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            },
-            {
-              "required": false,
               "name": "baptiste",
               "note": "The `is_template` and `template_repository` keys are currently available for developer to preview. See [Create a repository using a template](https://docs.github.com/rest/reference/repos#create-a-repository-using-a-template) to learn how to create template repositories. To access these new response keys during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
             }
@@ -38954,13 +38956,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [
-            {
-              "required": false,
-              "name": "nebula",
-              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
-            }
-          ],
           "category": "repos",
           "subcategory": null
         },
@@ -46553,6 +46548,11 @@
             "type": "string",
             "example": "https://api.github.com/repos/github/hello-world/actions/runs/5"
           },
+          "run_attempt": {
+            "type": "integer",
+            "description": "Attempt number of the associated workflow run, 1 for first attempt and higher if the workflow was re-run.",
+            "example": 1
+          },
           "node_id": { "type": "string", "example": "MDg6Q2hlY2tSdW40" },
           "head_sha": {
             "description": "The SHA of the commit that is being run.",
@@ -46643,6 +46643,36 @@
           "check_run_url": {
             "type": "string",
             "example": "https://api.github.com/repos/github/hello-world/check-runs/4"
+          },
+          "labels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Labels for the workflow job. Specified by the \"runs_on\" attribute in the action's workflow file.",
+            "example": ["self-hosted", "foo", "bar"]
+          },
+          "runner_id": {
+            "type": "integer",
+            "nullable": true,
+            "example": 1,
+            "description": "The ID of the runner to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.)"
+          },
+          "runner_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "my runner",
+            "description": "The name of the runner to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.)"
+          },
+          "runner_group_id": {
+            "type": "integer",
+            "nullable": true,
+            "example": 2,
+            "description": "The ID of the runner group to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.)"
+          },
+          "runner_group_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "my runner group",
+            "description": "The name of the runner group to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.)"
           }
         },
         "required": [
@@ -46658,7 +46688,12 @@
           "conclusion",
           "started_at",
           "completed_at",
-          "check_run_url"
+          "check_run_url",
+          "labels",
+          "runner_id",
+          "runner_name",
+          "runner_group_id",
+          "runner_group_name"
         ]
       },
       "actions-enabled": {
@@ -46802,7 +46837,7 @@
           },
           "run_attempt": {
             "type": "integer",
-            "description": "Attempt number of the run, 1 for first attempt and higher if the workflow was retried.",
+            "description": "Attempt number of the run, 1 for first attempt and higher if the workflow was re-run.",
             "example": 1
           },
           "event": { "type": "string", "example": "push" },
@@ -52838,6 +52873,10 @@
                   "master_branch": { "type": "string" },
                   "archived": { "type": "boolean" },
                   "disabled": { "type": "boolean" },
+                  "visibility": {
+                    "description": "The repository visibility: public, private, or internal.",
+                    "type": "string"
+                  },
                   "mirror_url": {
                     "type": "string",
                     "format": "uri",
@@ -53135,6 +53174,10 @@
                   "master_branch": { "type": "string" },
                   "archived": { "type": "boolean" },
                   "disabled": { "type": "boolean" },
+                  "visibility": {
+                    "description": "The repository visibility: public, private, or internal.",
+                    "type": "string"
+                  },
                   "mirror_url": {
                     "type": "string",
                     "format": "uri",
@@ -54714,6 +54757,10 @@
           "disabled": {
             "type": "boolean",
             "description": "Returns whether or not this repository disabled."
+          },
+          "visibility": {
+            "description": "The repository visibility: public, private, or internal.",
+            "type": "string"
           },
           "license": { "$ref": "#/components/schemas/nullable-license-simple" },
           "permissions": {
@@ -61922,7 +61969,12 @@
               "completed_at": "2020-01-20T09:44:39.000-08:00"
             }
           ],
-          "check_run_url": "https://api.github.com/repos/octo-org/octo-repo/check-runs/399444496"
+          "check_run_url": "https://api.github.com/repos/octo-org/octo-repo/check-runs/399444496",
+          "labels": ["self-hosted", "foo", "bar"],
+          "runner_id": 1,
+          "runner_name": "my runner",
+          "runner_group_id": 2,
+          "runner_group_name": "my runner group"
         }
       },
       "actions-repository-permissions": {
@@ -62417,7 +62469,12 @@
                   "completed_at": "2020-01-20T09:44:39.000-08:00"
                 }
               ],
-              "check_run_url": "https://api.github.com/repos/octo-org/octo-repo/check-runs/399444496"
+              "check_run_url": "https://api.github.com/repos/octo-org/octo-repo/check-runs/399444496",
+              "labels": ["self-hosted", "foo", "bar"],
+              "runner_id": 1,
+              "runner_name": "my runner",
+              "runner_group_id": 2,
+              "runner_group_name": "my runner group"
             }
           ]
         }
@@ -71860,6 +71917,7 @@
               "has_downloads": true,
               "archived": true,
               "disabled": true,
+              "visibility": "private",
               "license": {
                 "key": "mit",
                 "name": "MIT License",
@@ -74646,6 +74704,13 @@
       "run-id": {
         "name": "run_id",
         "description": "The id of the workflow run.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "attempt-num": {
+        "name": "attempt_num",
+        "description": "The attempt number of the workflow run.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
