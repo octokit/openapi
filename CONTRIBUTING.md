@@ -27,16 +27,24 @@ cd openapi
 npm install
 ```
 
-Download the latest official OpenAPI specifications from GitHub
+### Download the latest official OpenAPI specifications from GitHub
 
 ```shell
 npm run download
 ```
 
-Generated the schemas with the `x-octokit` extension
+### Generate the schemas with the `x-octokit` extension
+
+This command relies on a tool called annica. [`anicca`](https://github.com/xuorig/anicca) is created by Marc-André aka [@xuorig](https://github.com/xuorig), who is working on GitHub's OpenAPI spec and the surrounding tooling. It was needed an OpenAPI diff tool and all the tools found couldn't handle the size of GitHub's spec, which is why [@xuorig](https://github.com/xuorig) created `anicca` in the first place.
+
+It's written in Rust and there is no pre-compiled binary yet that could just run. Once there is the whole setup will become simpler. Until then, the user needs to:
+
+1. Clone [anicca's repository](https://github.com/xuorig/anicca) repository
+2. [Install Rust](https://doc.rust-lang.org/cargo/getting-started/installation.html) (if it's not installed yet)
+3. Define `ANICCA_REPOSITORY_PATH` environment variable pointing to the path where you cloned anicca's repository.
 
 ```shell
-npm run build
+ANICCA_REPOSITORY_PATH='<path_to_my_local_anicca_repo>' npm run build
 ```
 
 ## Submitting the Pull Request
