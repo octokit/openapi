@@ -11,10 +11,6 @@ const mapObj = require("map-obj");
 
 const overrides = require("./overrides");
 
-if (!process.env.ANICCA_REPOSITORY_PATH && !process.env.GITHUB_WORKSPACE) {
-  throw new Error("Please set ANICCA_REPOSITORY_PATH or GITHUB_WORKSPACE");
-}
-
 run();
 
 async function run() {
@@ -85,12 +81,18 @@ async function run() {
     console.log("$ %s", cmd);
     // generate diff files using `anicca`
     // cargo run --bin cli diff /Users/gregor/Projects/octokit/openapi/generated/api.github.com.deref.json /Users/gregor/Projects/octokit/openapi/generated/ghes-3.1.deref.json --format json > diff.json
+
+    let aniccaCwd;
+    if (process.env.GITHUB_ACTIONS) {
+      // github actions
+      aniccaCwd = process.env.GITHUB_WORKSPACE + "/anicca";
+    } else {
+      // local
+      aniccaCwd = process.env.ANICCA_REPOSITORY_PATH || ".";
+    }
+
     const command = execa.command(cmd, {
-      cwd:
-        // local
-        process.env.ANICCA_REPOSITORY_PATH ||
-        // github actions
-        process.env.GITHUB_WORKSPACE + "/anicca",
+      cwd: aniccaCwd,
     });
     command.stderr.pipe(process.stderr);
     command.stdout.pipe(createWriteStream(resolve(diffPath)));
