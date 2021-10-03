@@ -33,7 +33,7 @@ npm install
 npm run download
 ```
 
-### Generated the schemas with the `x-octokit` extension
+### Generate the schemas with the `x-octokit` extension
 
 This command relies on a tool called annica. [`anicca`](https://github.com/xuorig/anicca) is created by Marc-André aka [@xuorig][https://github.com/xuorig], who is working on GitHub's OpenAPI spec and the surrounding tooling. It was needed an OpenAPI diff tool and all the tools found couldn't handle the size of GitHub's spec, which is why [@xuorig](https://github.com/xuorig) created `anicca` in the first place.
 
