@@ -11,11 +11,11 @@ const mapObj = require("map-obj");
 
 const overrides = require("./overrides");
 
-run();
-
 if (!process.env.GITHUB_ACTIONS && !process.env.ANICCA_REPOSITORY_PATH) {
   throw new Error("Please set ANICCA_REPOSITORY_PATH");
 }
+
+run();
 
 async function run() {
   const ghesVersions = await getCurrentVersions();
