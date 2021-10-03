@@ -13,6 +13,10 @@ const overrides = require("./overrides");
 
 run();
 
+if (!process.env.GITHUB_ACTIONS && !process.env.ANICCA_REPOSITORY_PATH) {
+  throw new Error("Please set ANICCA_REPOSITORY_PATH");
+}
+
 async function run() {
   const ghesVersions = await getCurrentVersions();
   const latestGhesVersion = ghesVersions.reverse()[0];
@@ -82,14 +86,9 @@ async function run() {
     // generate diff files using `anicca`
     // cargo run --bin cli diff /Users/gregor/Projects/octokit/openapi/generated/api.github.com.deref.json /Users/gregor/Projects/octokit/openapi/generated/ghes-3.1.deref.json --format json > diff.json
 
-    let aniccaCwd;
-    if (process.env.GITHUB_ACTIONS) {
-      // github actions
-      aniccaCwd = process.env.GITHUB_WORKSPACE + "/anicca";
-    } else {
-      // local
-      aniccaCwd = process.env.ANICCA_REPOSITORY_PATH || ".";
-    }
+    const aniccaCwd = process.env.GITHUB_ACTIONS
+      ? `${process.env.GITHUB_WORKSPACE}/anicca`
+      : process.env.ANICCA_REPOSITORY_PATH;
 
     const command = execa.command(cmd, {
       cwd: aniccaCwd,
