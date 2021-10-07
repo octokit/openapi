@@ -2604,41 +2604,6 @@
         "x-octokit": {
           "diff": { "api.github.com.json": { "type": "changed" } }
         }
-      },
-      "put": {
-        "summary": "Set allowed actions for an enterprise",
-        "description": "Sets the actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise).\"\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
-        "operationId": "enterprise-admin/set-allowed-actions-enterprise",
-        "tags": ["enterprise-admin"],
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/enterprise-admin#set-allowed-actions-for-an-enterprise"
-        },
-        "parameters": [{ "$ref": "#/components/parameters/enterprise" }],
-        "responses": { "204": { "description": "Response" } },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/selected-actions" },
-              "examples": {
-                "selected_actions": {
-                  "$ref": "#/components/examples/selected-actions"
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "enabledForGitHubApps": false,
-          "githubCloudOnly": false,
-          "previews": [],
-          "category": "enterprise-admin",
-          "subcategory": "actions"
-        },
-        "x-octokit": {
-          "diff": { "api.github.com.json": { "type": "changed" } }
-        }
       }
     },
     "/meta": {
@@ -2678,159 +2643,6 @@
         }
       }
     },
-    "/orgs/{org}": {
-      "patch": {
-        "summary": "Update an organization",
-        "description": "**Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).\n\nEnables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.",
-        "tags": ["orgs"],
-        "operationId": "orgs/update",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/orgs/#update-an-organization"
-        },
-        "parameters": [{ "$ref": "#/components/parameters/org" }],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "billing_email": {
-                    "type": "string",
-                    "description": "Billing email address. This address is not publicized."
-                  },
-                  "company": {
-                    "type": "string",
-                    "description": "The company name."
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "The publicly visible email address."
-                  },
-                  "twitter_username": {
-                    "type": "string",
-                    "description": "The Twitter username of the company."
-                  },
-                  "location": {
-                    "type": "string",
-                    "description": "The location."
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "The shorthand name of the company."
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "The description of the company."
-                  },
-                  "has_organization_projects": {
-                    "type": "boolean",
-                    "description": "Toggles whether an organization can use organization projects."
-                  },
-                  "has_repository_projects": {
-                    "type": "boolean",
-                    "description": "Toggles whether repositories that belong to the organization can use repository projects."
-                  },
-                  "default_repository_permission": {
-                    "type": "string",
-                    "description": "Default permission level members have for organization repositories:  \n\\* `read` - can pull, but not push to or administer this repository.  \n\\* `write` - can pull and push, but not administer this repository.  \n\\* `admin` - can pull, push, and administer this repository.  \n\\* `none` - no permissions granted by default.",
-                    "enum": ["read", "write", "admin", "none"],
-                    "default": "read"
-                  },
-                  "members_can_create_repositories": {
-                    "type": "boolean",
-                    "description": "Toggles the ability of non-admin organization members to create repositories. Can be one of:  \n\\* `true` - all organization members can create repositories.  \n\\* `false` - only organization owners can create repositories.  \nDefault: `true`  \n**Note:** A parameter can override this parameter. See `members_allowed_repository_creation_type` in this table for details. **Note:** A parameter can override this parameter. See `members_allowed_repository_creation_type` in this table for details.",
-                    "default": true
-                  },
-                  "members_can_create_internal_repositories": {
-                    "type": "boolean",
-                    "description": "Toggles whether organization members can create internal repositories, which are visible to all enterprise members. You can only allow members to create internal repositories if your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. Can be one of:  \n\\* `true` - all organization members can create internal repositories.  \n\\* `false` - only organization owners can create internal repositories.  \nDefault: `true`. For more information, see \"[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
-                  },
-                  "members_can_create_private_repositories": {
-                    "type": "boolean",
-                    "description": "Toggles whether organization members can create private repositories, which are visible to organization members with permission. Can be one of:  \n\\* `true` - all organization members can create private repositories.  \n\\* `false` - only organization owners can create private repositories.  \nDefault: `true`. For more information, see \"[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
-                  },
-                  "members_can_create_public_repositories": {
-                    "type": "boolean",
-                    "description": "Toggles whether organization members can create public repositories, which are visible to anyone. Can be one of:  \n\\* `true` - all organization members can create public repositories.  \n\\* `false` - only organization owners can create public repositories.  \nDefault: `true`. For more information, see \"[Restricting repository creation in your organization](https://help.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
-                  },
-                  "members_allowed_repository_creation_type": {
-                    "type": "string",
-                    "description": "Specifies which types of repositories non-admin organization members can create. Can be one of:  \n\\* `all` - all organization members can create public and private repositories.  \n\\* `private` - members can create private repositories. This option is only available to repositories that are part of an organization on GitHub Enterprise Cloud.  \n\\* `none` - only admin members can create repositories.  \n**Note:** This parameter is deprecated and will be removed in the future. Its return value ignores internal repositories. Using this parameter overrides values set in `members_can_create_repositories`. See the parameter deprecation notice in the operation description for details.",
-                    "enum": ["all", "private", "none"]
-                  },
-                  "members_can_create_pages": {
-                    "type": "boolean",
-                    "description": "Toggles whether organization members can create GitHub Pages sites. Can be one of:  \n\\* `true` - all organization members can create GitHub Pages sites.  \n\\* `false` - no organization members can create GitHub Pages sites. Existing published sites will not be impacted.",
-                    "default": true
-                  },
-                  "blog": {
-                    "type": "string",
-                    "example": "\"http://github.blog\""
-                  }
-                }
-              },
-              "example": {
-                "billing_email": "mona@github.com",
-                "company": "GitHub",
-                "email": "mona@github.com",
-                "twitter_username": "github",
-                "location": "San Francisco",
-                "name": "github",
-                "description": "GitHub, the company.",
-                "default_repository_permission": "read",
-                "members_can_create_repositories": true,
-                "members_allowed_repository_creation_type": "all"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/organization-full" },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/organization-full"
-                  }
-                }
-              }
-            }
-          },
-          "409": { "$ref": "#/components/responses/conflict" },
-          "422": {
-            "description": "Validation failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    { "$ref": "#/components/schemas/validation-error" },
-                    { "$ref": "#/components/schemas/validation-error-simple" }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "orgs",
-          "previews": [
-            {
-              "required": false,
-              "name": "surtur",
-              "note": "New repository creation permissions are available to preview. You can now use `members_can_create_public_repositories`, `members_can_create_private_repositories`, and `members_can_create_internal_repositories`. You can only allow members to create internal repositories if your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. These parameters provide more granular permissions to configure the type of repositories organization members can create.\n\nTo access these new parameters during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.surtur-preview+json\n```"
-            }
-          ]
-        },
-        "x-octokit": {
-          "diff": { "api.github.com.json": { "type": "changed" } }
-        }
-      }
-    },
     "/orgs/{org}/actions/permissions/selected-actions": {
       "get": {
         "summary": "Get allowed actions for an organization",
@@ -2852,40 +2664,6 @@
                   "default": {
                     "$ref": "#/components/examples/selected-actions"
                   }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "enabledForGitHubApps": true,
-          "githubCloudOnly": false,
-          "previews": [],
-          "category": "actions",
-          "subcategory": "permissions"
-        },
-        "x-octokit": {
-          "diff": { "api.github.com.json": { "type": "changed" } }
-        }
-      },
-      "put": {
-        "summary": "Set allowed actions for an organization",
-        "description": "Sets the actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization).\"\n\nIf the organization belongs to an enterprise that has `selected` actions set at the enterprise level, then you cannot override any of the enterprise's allowed actions settings.\n\nTo use the `patterns_allowed` setting for private repositories, the organization must belong to an enterprise. If the organization does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories in the organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.",
-        "operationId": "actions/set-allowed-actions-organization",
-        "tags": ["actions"],
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/actions#set-allowed-actions-for-an-organization"
-        },
-        "parameters": [{ "$ref": "#/components/parameters/org" }],
-        "responses": { "204": { "description": "Response" } },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/selected-actions" },
-              "examples": {
-                "selected_actions": {
-                  "$ref": "#/components/examples/selected-actions"
                 }
               }
             }
@@ -3126,6 +2904,46 @@
         "x-octokit": { "diff": { "api.github.com.json": { "type": "added" } } }
       }
     },
+    "/repos/{owner}/{repo}/actions/jobs/{job_id}": {
+      "get": {
+        "summary": "Get a job for a workflow run",
+        "description": "Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/get-job-for-workflow-run",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/actions#get-a-job-for-a-workflow-run"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/job-id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/job" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/job" }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "workflow-jobs"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      }
+    },
     "/repos/{owner}/{repo}/actions/permissions/selected-actions": {
       "get": {
         "summary": "Get allowed actions for a repository",
@@ -3165,39 +2983,248 @@
         "x-octokit": {
           "diff": { "api.github.com.json": { "type": "changed" } }
         }
-      },
-      "put": {
-        "summary": "Set allowed actions for a repository",
-        "description": "Sets the actions that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository).\"\n\nIf the repository belongs to an organization or enterprise that has `selected` actions set at the organization or enterprise levels, then you cannot override any of the allowed actions settings.\n\nTo use the `patterns_allowed` setting for private repositories, the repository must belong to an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories.\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.",
-        "operationId": "actions/set-allowed-actions-repository",
+      }
+    },
+    "/repos/{owner}/{repo}/actions/runs/{run_id}/jobs": {
+      "get": {
+        "summary": "List jobs for a workflow run",
+        "description": "Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@3.2/rest/overview/resources-in-the-rest-api#parameters).",
         "tags": ["actions"],
+        "operationId": "actions/list-jobs-for-workflow-run",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/actions#set-allowed-actions-for-a-repository"
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/actions#list-jobs-for-a-workflow-run"
         },
         "parameters": [
           { "$ref": "#/components/parameters/owner" },
-          { "$ref": "#/components/parameters/repo" }
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/run-id" },
+          {
+            "name": "filter",
+            "description": "Filters jobs by their `completed_at` timestamp. Can be one of:  \n\\* `latest`: Returns jobs from the most recent execution of the workflow run.  \n\\* `all`: Returns all jobs for a workflow run, including from old executions of the workflow run.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["latest", "all"],
+              "default": "latest"
+            }
+          },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
         ],
-        "responses": { "204": { "description": "Response" } },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/selected-actions" },
-              "examples": {
-                "selected_actions": {
-                  "$ref": "#/components/examples/selected-actions"
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "jobs"],
+                  "properties": {
+                    "total_count": { "type": "integer" },
+                    "jobs": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/job" }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/job-paginated" }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "workflow-jobs"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}": {
+      "get": {
+        "summary": "Get a code scanning alert",
+        "description": "Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.",
+        "tags": ["code-scanning"],
+        "operationId": "code-scanning/get-alert",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/code-scanning#get-a-code-scanning-alert"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/alert-number" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-alert"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-alert"
+                  }
                 }
               }
             }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "code-scanning",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "PARAMETER",
+              "date": "2020-09-17",
+              "parameter": "alert_number",
+              "before": { "name": "alert_id" }
+            }
+          ],
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/analyses": {
+      "get": {
+        "summary": "List code scanning analyses for a repository",
+        "description": "Lists the details of all code scanning analyses for a repository,\nstarting with the most recent.\nThe response is paginated and you can use the `page` and `per_page` parameters\nto list the analyses you're interested in.\nBy default 30 analyses are listed per page.\n\nThe `rules_count` field in the response give the number of rules\nthat were run in the analysis.\nFor very old analyses this data is not available,\nand `0` is returned in this field.\n\nYou must use an access token with the `security_events` scope to use this endpoint.\nGitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.",
+        "operationId": "code-scanning/list-recent-analyses",
+        "tags": ["code-scanning"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/tool-name" },
+          { "$ref": "#/components/parameters/tool-guid" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per-page" },
+          {
+            "name": "ref",
+            "in": "query",
+            "description": "The Git reference for the analyses you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`.",
+            "required": false,
+            "schema": { "$ref": "#/components/schemas/code-scanning-ref" }
+          },
+          {
+            "name": "sarif_id",
+            "in": "query",
+            "description": "Filter analyses belonging to the same SARIF upload.",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+            }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/code-scanning-analysis"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-analysis-items"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
         },
         "x-github": {
           "enabledForGitHubApps": true,
           "githubCloudOnly": false,
           "previews": [],
-          "category": "actions",
-          "subcategory": "permissions"
+          "category": "code-scanning"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}": {
+      "get": {
+        "summary": "Get a code scanning analysis for a repository",
+        "description": "Gets a specified code scanning analysis for a repository.\nYou must use an access token with the `security_events` scope to use this endpoint.\nGitHub Apps must have the `security_events` read permission to use this endpoint.\n\nThe default JSON response contains fields that describe the analysis.\nThis includes the Git reference and commit SHA to which the analysis relates,\nthe datetime of the analysis, the name of the code scanning tool,\nand the number of alerts.\n\nThe `rules_count` field in the default response give the number of rules\nthat were run in the analysis.\nFor very old analyses this data is not available,\nand `0` is returned in this field.\n\nIf you use the Accept header `application/sarif+json`,\nthe response contains the analysis data that was uploaded.\nThis is formatted as\n[SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).\n\n**Deprecation notice**:\nThe `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.",
+        "operationId": "code-scanning/get-analysis",
+        "tags": ["code-scanning"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          {
+            "name": "analysis_id",
+            "in": "path",
+            "description": "The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation.",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json+sarif": { "schema": { "type": "string" } },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-analysis"
+                },
+                "examples": {
+                  "response": {
+                    "$ref": "#/components/examples/code-scanning-analysis-default"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "previews": [],
+          "category": "code-scanning"
         },
         "x-octokit": {
           "diff": { "api.github.com.json": { "type": "changed" } }
@@ -3468,98 +3495,6 @@
         "x-octokit": {
           "diff": { "api.github.com.json": { "type": "changed" } }
         }
-      },
-      "post": {
-        "summary": "Create a release",
-        "description": "Users with push access to the repository can create a release.\n\nThis endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.2/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.2/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
-        "tags": ["repos"],
-        "operationId": "repos/create-release",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#create-a-release"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/owner" },
-          { "$ref": "#/components/parameters/repo" }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "tag_name": {
-                    "type": "string",
-                    "description": "The name of the tag."
-                  },
-                  "target_commitish": {
-                    "type": "string",
-                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the release."
-                  },
-                  "body": {
-                    "type": "string",
-                    "description": "Text describing the contents of the tag."
-                  },
-                  "draft": {
-                    "type": "boolean",
-                    "description": "`true` to create a draft (unpublished) release, `false` to create a published one.",
-                    "default": false
-                  },
-                  "prerelease": {
-                    "type": "boolean",
-                    "description": "`true` to identify the release as a prerelease. `false` to identify the release as a full release.",
-                    "default": false
-                  }
-                },
-                "required": ["tag_name"]
-              },
-              "example": {
-                "tag_name": "v1.0.0",
-                "target_commitish": "master",
-                "name": "v1.0.0",
-                "body": "Description of the release",
-                "draft": false,
-                "prerelease": false
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/release" },
-                "examples": {
-                  "default": { "$ref": "#/components/examples/release" }
-                }
-              }
-            },
-            "headers": {
-              "Location": {
-                "example": "https://api.github.com/repos/octocat/Hello-World/releases/1",
-                "schema": { "type": "string" }
-              }
-            }
-          },
-          "422": { "$ref": "#/components/responses/validation_failed" }
-        },
-        "x-github": {
-          "triggersNotification": true,
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "previews": [],
-          "category": "repos",
-          "subcategory": "releases"
-        },
-        "x-octokit": {
-          "diff": { "api.github.com.json": { "type": "changed" } }
-        }
       }
     },
     "/repos/{owner}/{repo}/releases/latest": {
@@ -3677,87 +3612,6 @@
             }
           },
           "404": { "$ref": "#/components/responses/not_found" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "previews": [],
-          "category": "repos",
-          "subcategory": "releases"
-        },
-        "x-octokit": {
-          "diff": { "api.github.com.json": { "type": "changed" } }
-        }
-      },
-      "patch": {
-        "summary": "Update a release",
-        "description": "Users with push access to the repository can edit a release.",
-        "tags": ["repos"],
-        "operationId": "repos/update-release",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#update-a-release"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/owner" },
-          { "$ref": "#/components/parameters/repo" },
-          { "$ref": "#/components/parameters/release-id" }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "tag_name": {
-                    "type": "string",
-                    "description": "The name of the tag."
-                  },
-                  "target_commitish": {
-                    "type": "string",
-                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the release."
-                  },
-                  "body": {
-                    "type": "string",
-                    "description": "Text describing the contents of the tag."
-                  },
-                  "draft": {
-                    "type": "boolean",
-                    "description": "`true` makes the release a draft, and `false` publishes the release."
-                  },
-                  "prerelease": {
-                    "type": "boolean",
-                    "description": "`true` to identify the release as a prerelease, `false` to identify the release as a full release."
-                  }
-                }
-              },
-              "example": {
-                "tag_name": "v1.0.0",
-                "target_commitish": "master",
-                "name": "v1.0.0",
-                "body": "Description of the release",
-                "draft": false,
-                "prerelease": false
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/release" },
-                "examples": {
-                  "default": { "$ref": "#/components/examples/release" }
-                }
-              }
-            }
-          }
         },
         "x-github": {
           "githubCloudOnly": false,
@@ -4504,6 +4358,45 @@
         "in": "path",
         "required": true,
         "schema": { "type": "string" }
+      },
+      "job-id": {
+        "name": "job_id",
+        "description": "job_id parameter",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "run-id": {
+        "name": "run_id",
+        "description": "The id of the workflow run.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "alert-number": {
+        "name": "alert_number",
+        "in": "path",
+        "description": "The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation.",
+        "required": true,
+        "schema": { "$ref": "#/components/schemas/alert-number" }
+      },
+      "tool-name": {
+        "name": "tool_name",
+        "description": "The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+        }
+      },
+      "tool-guid": {
+        "name": "tool_guid",
+        "description": "The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/code-scanning-analysis-tool-guid"
+        }
       },
       "release-id": {
         "name": "release_id",
@@ -5372,239 +5265,6 @@
         },
         "required": ["verifiable_password_authentication"]
       },
-      "organization-full": {
-        "title": "Organization Full",
-        "description": "Organization Full",
-        "type": "object",
-        "properties": {
-          "login": { "type": "string", "example": "github" },
-          "id": { "type": "integer", "example": 1 },
-          "node_id": {
-            "type": "string",
-            "example": "MDEyOk9yZ2FuaXphdGlvbjE="
-          },
-          "url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/orgs/github"
-          },
-          "repos_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/orgs/github/repos"
-          },
-          "events_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/orgs/github/events"
-          },
-          "hooks_url": {
-            "type": "string",
-            "example": "https://api.github.com/orgs/github/hooks"
-          },
-          "issues_url": {
-            "type": "string",
-            "example": "https://api.github.com/orgs/github/issues"
-          },
-          "members_url": {
-            "type": "string",
-            "example": "https://api.github.com/orgs/github/members{/member}"
-          },
-          "public_members_url": {
-            "type": "string",
-            "example": "https://api.github.com/orgs/github/public_members{/member}"
-          },
-          "avatar_url": {
-            "type": "string",
-            "example": "https://github.com/images/error/octocat_happy.gif"
-          },
-          "description": {
-            "type": "string",
-            "example": "A great organization",
-            "nullable": true
-          },
-          "name": { "type": "string", "example": "github" },
-          "company": { "type": "string", "example": "GitHub" },
-          "blog": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://github.com/blog"
-          },
-          "location": { "type": "string", "example": "San Francisco" },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "octocat@github.com"
-          },
-          "twitter_username": {
-            "type": "string",
-            "example": "github",
-            "nullable": true
-          },
-          "is_verified": { "type": "boolean", "example": true },
-          "has_organization_projects": { "type": "boolean", "example": true },
-          "has_repository_projects": { "type": "boolean", "example": true },
-          "public_repos": { "type": "integer", "example": 2 },
-          "public_gists": { "type": "integer", "example": 1 },
-          "followers": { "type": "integer", "example": 20 },
-          "following": { "type": "integer", "example": 0 },
-          "html_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://github.com/octocat"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2008-01-14T04:33:35Z"
-          },
-          "type": { "type": "string", "example": "Organization" },
-          "total_private_repos": { "type": "integer", "example": 100 },
-          "owned_private_repos": { "type": "integer", "example": 100 },
-          "private_gists": {
-            "type": "integer",
-            "example": 81,
-            "nullable": true
-          },
-          "disk_usage": {
-            "type": "integer",
-            "example": 10000,
-            "nullable": true
-          },
-          "collaborators": {
-            "type": "integer",
-            "example": 8,
-            "nullable": true
-          },
-          "billing_email": {
-            "type": "string",
-            "format": "email",
-            "example": "org@example.com",
-            "nullable": true
-          },
-          "plan": {
-            "type": "object",
-            "properties": {
-              "name": { "type": "string" },
-              "space": { "type": "integer" },
-              "private_repos": { "type": "integer" },
-              "filled_seats": { "type": "integer" },
-              "seats": { "type": "integer" }
-            },
-            "required": ["name", "space", "private_repos"]
-          },
-          "default_repository_permission": {
-            "type": "string",
-            "nullable": true
-          },
-          "members_can_create_repositories": {
-            "type": "boolean",
-            "example": true,
-            "nullable": true
-          },
-          "two_factor_requirement_enabled": {
-            "type": "boolean",
-            "example": true,
-            "nullable": true
-          },
-          "members_allowed_repository_creation_type": {
-            "type": "string",
-            "example": "all"
-          },
-          "members_can_create_public_repositories": {
-            "type": "boolean",
-            "example": true
-          },
-          "members_can_create_private_repositories": {
-            "type": "boolean",
-            "example": true
-          },
-          "members_can_create_internal_repositories": {
-            "type": "boolean",
-            "example": true
-          },
-          "members_can_create_pages": { "type": "boolean", "example": true },
-          "members_can_create_public_pages": {
-            "type": "boolean",
-            "example": true
-          },
-          "members_can_create_private_pages": {
-            "type": "boolean",
-            "example": true
-          },
-          "updated_at": { "type": "string", "format": "date-time" }
-        },
-        "required": [
-          "login",
-          "url",
-          "id",
-          "node_id",
-          "repos_url",
-          "events_url",
-          "hooks_url",
-          "issues_url",
-          "members_url",
-          "public_members_url",
-          "avatar_url",
-          "description",
-          "html_url",
-          "has_organization_projects",
-          "has_repository_projects",
-          "public_repos",
-          "public_gists",
-          "followers",
-          "following",
-          "type",
-          "created_at",
-          "updated_at"
-        ]
-      },
-      "validation-error": {
-        "title": "Validation Error",
-        "description": "Validation Error",
-        "type": "object",
-        "required": ["message", "documentation_url"],
-        "properties": {
-          "message": { "type": "string" },
-          "documentation_url": { "type": "string" },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["code"],
-              "properties": {
-                "resource": { "type": "string" },
-                "field": { "type": "string" },
-                "message": { "type": "string" },
-                "code": { "type": "string" },
-                "index": { "type": "integer" },
-                "value": {
-                  "oneOf": [
-                    { "type": "string", "nullable": true },
-                    { "type": "integer", "nullable": true },
-                    {
-                      "type": "array",
-                      "nullable": true,
-                      "items": { "type": "string" }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "validation-error-simple": {
-        "title": "Validation Error Simple",
-        "description": "Validation Error Simple",
-        "type": "object",
-        "required": ["message", "documentation_url"],
-        "properties": {
-          "message": { "type": "string" },
-          "documentation_url": { "type": "string" },
-          "errors": { "type": "array", "items": { "type": "string" } }
-        }
-      },
       "org-pre-receive-hook": {
         "type": "object",
         "properties": {
@@ -5614,6 +5274,256 @@
           "configuration_url": { "type": "string" },
           "allow_downstream_configuration": { "type": "boolean" }
         }
+      },
+      "job": {
+        "title": "Job",
+        "description": "Information of a job execution in a workflow run",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The id of the job.",
+            "example": 21,
+            "type": "integer"
+          },
+          "run_id": {
+            "description": "The id of the associated workflow run.",
+            "example": 5,
+            "type": "integer"
+          },
+          "run_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5"
+          },
+          "run_attempt": {
+            "type": "integer",
+            "description": "Attempt number of the associated workflow run, 1 for first attempt and higher if the workflow was re-run.",
+            "example": 1
+          },
+          "node_id": { "type": "string", "example": "MDg6Q2hlY2tSdW40" },
+          "head_sha": {
+            "description": "The SHA of the commit that is being run.",
+            "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/jobs/21"
+          },
+          "html_url": {
+            "type": "string",
+            "example": "https://github.com/github/hello-world/runs/4",
+            "nullable": true
+          },
+          "status": {
+            "description": "The phase of the lifecycle that the job is currently in.",
+            "example": "queued",
+            "type": "string",
+            "enum": ["queued", "in_progress", "completed"]
+          },
+          "conclusion": {
+            "description": "The outcome of the job.",
+            "example": "success",
+            "type": "string",
+            "nullable": true
+          },
+          "started_at": {
+            "description": "The time that the job started, in ISO 8601 format.",
+            "example": "2019-08-08T08:00:00-07:00",
+            "format": "date-time",
+            "type": "string"
+          },
+          "completed_at": {
+            "description": "The time that the job finished, in ISO 8601 format.",
+            "example": "2019-08-08T08:00:00-07:00",
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "description": "The name of the job.",
+            "example": "test-coverage",
+            "type": "string"
+          },
+          "steps": {
+            "description": "Steps in this job.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "status", "conclusion", "number"],
+              "properties": {
+                "status": {
+                  "description": "The phase of the lifecycle that the job is currently in.",
+                  "example": "queued",
+                  "type": "string",
+                  "enum": ["queued", "in_progress", "completed"]
+                },
+                "conclusion": {
+                  "description": "The outcome of the job.",
+                  "example": "success",
+                  "type": "string",
+                  "nullable": true
+                },
+                "name": {
+                  "description": "The name of the job.",
+                  "example": "test-coverage",
+                  "type": "string"
+                },
+                "number": { "type": "integer", "example": 1 },
+                "started_at": {
+                  "description": "The time that the step started, in ISO 8601 format.",
+                  "example": "2019-08-08T08:00:00-07:00",
+                  "format": "date-time",
+                  "type": "string",
+                  "nullable": true
+                },
+                "completed_at": {
+                  "description": "The time that the job finished, in ISO 8601 format.",
+                  "example": "2019-08-08T08:00:00-07:00",
+                  "format": "date-time",
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "check_run_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/check-runs/4"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "run_id",
+          "run_url",
+          "head_sha",
+          "name",
+          "url",
+          "html_url",
+          "status",
+          "conclusion",
+          "started_at",
+          "completed_at",
+          "check_run_url"
+        ]
+      },
+      "code-scanning-alert": {
+        "type": "object",
+        "properties": {
+          "number": { "$ref": "#/components/schemas/alert-number" },
+          "created_at": { "$ref": "#/components/schemas/alert-created-at" },
+          "url": { "$ref": "#/components/schemas/alert-url" },
+          "html_url": { "$ref": "#/components/schemas/alert-html-url" },
+          "instances_url": {
+            "$ref": "#/components/schemas/alert-instances-url"
+          },
+          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
+          "dismissed_by": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "dismissed_at": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-at"
+          },
+          "dismissed_reason": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
+          },
+          "rule": { "$ref": "#/components/schemas/code-scanning-alert-rule" },
+          "tool": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool"
+          },
+          "most_recent_instance": {
+            "$ref": "#/components/schemas/code-scanning-alert-instance"
+          },
+          "instances": { "deprecated": true }
+        },
+        "required": [
+          "number",
+          "created_at",
+          "url",
+          "html_url",
+          "instances_url",
+          "state",
+          "dismissed_by",
+          "dismissed_at",
+          "dismissed_reason",
+          "rule",
+          "tool",
+          "most_recent_instance"
+        ]
+      },
+      "code-scanning-ref": {
+        "type": "string",
+        "description": "The full Git reference, formatted as `refs/heads/<branch name>`,\n`refs/pull/<number>/merge`, or `refs/pull/<number>/head`."
+      },
+      "code-scanning-analysis-sarif-id": {
+        "type": "string",
+        "description": "An identifier for the upload.",
+        "example": "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53",
+        "nullable": false
+      },
+      "code-scanning-analysis": {
+        "type": "object",
+        "properties": {
+          "ref": { "$ref": "#/components/schemas/code-scanning-ref" },
+          "commit_sha": {
+            "$ref": "#/components/schemas/code-scanning-analysis-commit-sha"
+          },
+          "analysis_key": {
+            "$ref": "#/components/schemas/code-scanning-analysis-analysis-key"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/code-scanning-analysis-environment"
+          },
+          "category": {
+            "$ref": "#/components/schemas/code-scanning-analysis-category"
+          },
+          "error": { "type": "string", "example": "error reading field xyz" },
+          "created_at": {
+            "$ref": "#/components/schemas/code-scanning-analysis-created-at"
+          },
+          "results_count": {
+            "type": "integer",
+            "description": "The total number of results in the analysis."
+          },
+          "rules_count": {
+            "type": "integer",
+            "description": "The total number of rules used in the analysis."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for this analysis."
+          },
+          "url": { "$ref": "#/components/schemas/code-scanning-analysis-url" },
+          "sarif_id": {
+            "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+          },
+          "tool": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool"
+          },
+          "deletable": { "type": "boolean" },
+          "warning": {
+            "type": "string",
+            "description": "Warning generated when processing the analysis",
+            "example": "123 results were ignored"
+          },
+          "tool_name": { "type": "string" }
+        },
+        "required": [
+          "ref",
+          "commit_sha",
+          "analysis_key",
+          "environment",
+          "error",
+          "created_at",
+          "results_count",
+          "rules_count",
+          "id",
+          "url",
+          "sarif_id",
+          "tool",
+          "deletable",
+          "warning"
+        ]
       },
       "repository-pre-receive-hook": {
         "type": "object",
@@ -6575,6 +6485,217 @@
         "example": "\"2021-01-01T00:00:00.000-07:00\"",
         "nullable": true
       },
+      "alert-number": {
+        "type": "integer",
+        "description": "The security alert number.",
+        "readOnly": true,
+        "nullable": false
+      },
+      "alert-created-at": {
+        "type": "string",
+        "description": "The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "format": "date-time",
+        "readOnly": true,
+        "nullable": false
+      },
+      "alert-url": {
+        "type": "string",
+        "description": "The REST API URL of the alert resource.",
+        "format": "uri",
+        "readOnly": true,
+        "nullable": false
+      },
+      "alert-html-url": {
+        "type": "string",
+        "description": "The GitHub URL of the alert resource.",
+        "format": "uri",
+        "readOnly": true,
+        "nullable": false
+      },
+      "alert-instances-url": {
+        "type": "string",
+        "description": "The REST API URL for fetching the list of instances for an alert.",
+        "format": "uri",
+        "readOnly": true,
+        "nullable": false
+      },
+      "code-scanning-alert-state": {
+        "type": "string",
+        "description": "State of a code scanning alert.",
+        "enum": ["open", "closed", "dismissed", "fixed"]
+      },
+      "code-scanning-alert-dismissed-at": {
+        "type": "string",
+        "description": "The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "format": "date-time",
+        "readOnly": true,
+        "nullable": true
+      },
+      "code-scanning-alert-dismissed-reason": {
+        "type": "string",
+        "description": "**Required when the state is dismissed.** The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`.",
+        "nullable": true,
+        "enum": [null, "false positive", "won't fix", "used in tests"]
+      },
+      "code-scanning-alert-rule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": true,
+            "type": "string",
+            "description": "A unique identifier for the rule used to detect the alert."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the rule used to detect the alert."
+          },
+          "severity": {
+            "nullable": true,
+            "type": "string",
+            "description": "The severity of the alert.",
+            "enum": ["none", "note", "warning", "error"]
+          },
+          "security_severity_level": {
+            "nullable": true,
+            "type": "string",
+            "description": "The security severity of the alert.",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "description": {
+            "type": "string",
+            "description": "A short description of the rule used to detect the alert."
+          },
+          "full_description": {
+            "type": "string",
+            "description": "description of the rule used to detect the alert."
+          },
+          "tags": {
+            "nullable": true,
+            "type": "array",
+            "description": "A set of tags applicable for the rule.",
+            "items": { "type": "string" }
+          },
+          "help": {
+            "nullable": true,
+            "type": "string",
+            "description": "Detailed documentation for the rule as GitHub Flavored Markdown."
+          }
+        }
+      },
+      "code-scanning-analysis-tool": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+          },
+          "version": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool-version"
+          },
+          "guid": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool-guid"
+          }
+        }
+      },
+      "code-scanning-analysis-tool-name": {
+        "type": "string",
+        "description": "The name of the tool used to generate the code scanning analysis."
+      },
+      "code-scanning-analysis-tool-version": {
+        "nullable": true,
+        "type": "string",
+        "description": "The version of the tool used to generate the code scanning analysis."
+      },
+      "code-scanning-analysis-tool-guid": {
+        "nullable": true,
+        "type": "string",
+        "description": "The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data."
+      },
+      "code-scanning-alert-instance": {
+        "type": "object",
+        "properties": {
+          "ref": { "$ref": "#/components/schemas/code-scanning-ref" },
+          "analysis_key": {
+            "$ref": "#/components/schemas/code-scanning-analysis-analysis-key"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/code-scanning-alert-environment"
+          },
+          "category": {
+            "$ref": "#/components/schemas/code-scanning-analysis-category"
+          },
+          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
+          "commit_sha": { "type": "string" },
+          "message": {
+            "type": "object",
+            "properties": { "text": { "type": "string" } }
+          },
+          "location": {
+            "$ref": "#/components/schemas/code-scanning-alert-location"
+          },
+          "html_url": { "type": "string" },
+          "classifications": {
+            "type": "array",
+            "description": "Classifications that have been applied to the file that triggered the alert.\nFor example identifying it as documentation, or a generated file.",
+            "items": {
+              "$ref": "#/components/schemas/code-scanning-alert-classification"
+            }
+          }
+        }
+      },
+      "code-scanning-analysis-analysis-key": {
+        "type": "string",
+        "description": "Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name."
+      },
+      "code-scanning-alert-environment": {
+        "type": "string",
+        "description": "Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed."
+      },
+      "code-scanning-analysis-category": {
+        "type": "string",
+        "description": "Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code."
+      },
+      "code-scanning-alert-location": {
+        "type": "object",
+        "description": "Describe a region within a file for the alert.",
+        "properties": {
+          "path": { "type": "string" },
+          "start_line": { "type": "integer" },
+          "end_line": { "type": "integer" },
+          "start_column": { "type": "integer" },
+          "end_column": { "type": "integer" }
+        }
+      },
+      "code-scanning-alert-classification": {
+        "type": "string",
+        "description": "A classification of the file. For example to identify it as generated.",
+        "nullable": true,
+        "enum": ["source", "generated", "test", "library"]
+      },
+      "code-scanning-analysis-commit-sha": {
+        "description": "The SHA of the commit to which the analysis you are uploading relates.",
+        "type": "string",
+        "minLength": 40,
+        "maxLength": 40,
+        "pattern": "^[0-9a-fA-F]+$"
+      },
+      "code-scanning-analysis-environment": {
+        "type": "string",
+        "description": "Identifies the variable values associated with the environment in which this analysis was performed."
+      },
+      "code-scanning-analysis-created-at": {
+        "type": "string",
+        "description": "The time that the analysis was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "format": "date-time",
+        "readOnly": true,
+        "nullable": false
+      },
+      "code-scanning-analysis-url": {
+        "type": "string",
+        "description": "The REST API URL of the analysis resource.",
+        "format": "uri",
+        "readOnly": true,
+        "nullable": false
+      },
       "release-asset": {
         "title": "Release Asset",
         "description": "Data related to a release.",
@@ -7244,6 +7365,41 @@
           "html_url": { "type": "string", "format": "uri", "nullable": true }
         },
         "required": ["url", "html_url", "key", "name"]
+      },
+      "validation-error": {
+        "title": "Validation Error",
+        "description": "Validation Error",
+        "type": "object",
+        "required": ["message", "documentation_url"],
+        "properties": {
+          "message": { "type": "string" },
+          "documentation_url": { "type": "string" },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["code"],
+              "properties": {
+                "resource": { "type": "string" },
+                "field": { "type": "string" },
+                "message": { "type": "string" },
+                "code": { "type": "string" },
+                "index": { "type": "integer" },
+                "value": {
+                  "oneOf": [
+                    { "type": "string", "nullable": true },
+                    { "type": "integer", "nullable": true },
+                    {
+                      "type": "array",
+                      "nullable": true,
+                      "items": { "type": "string" }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "examples": {
@@ -7806,56 +7962,6 @@
           "installed_version": "3.2.0"
         }
       },
-      "organization-full": {
-        "value": {
-          "login": "github",
-          "id": 1,
-          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
-          "url": "https://api.github.com/orgs/github",
-          "repos_url": "https://api.github.com/orgs/github/repos",
-          "events_url": "https://api.github.com/orgs/github/events",
-          "hooks_url": "https://api.github.com/orgs/github/hooks",
-          "issues_url": "https://api.github.com/orgs/github/issues",
-          "members_url": "https://api.github.com/orgs/github/members{/member}",
-          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
-          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-          "description": "A great organization",
-          "name": "github",
-          "company": "GitHub",
-          "blog": "https://github.com/blog",
-          "location": "San Francisco",
-          "email": "octocat@github.com",
-          "twitter_username": "github",
-          "is_verified": true,
-          "has_organization_projects": true,
-          "has_repository_projects": true,
-          "public_repos": 2,
-          "public_gists": 1,
-          "followers": 20,
-          "following": 0,
-          "html_url": "https://github.com/octocat",
-          "created_at": "2008-01-14T04:33:35Z",
-          "type": "Organization",
-          "total_private_repos": 100,
-          "owned_private_repos": 100,
-          "private_gists": 81,
-          "disk_usage": 10000,
-          "collaborators": 8,
-          "billing_email": "mona@github.com",
-          "plan": { "name": "Medium", "space": 400, "private_repos": 20 },
-          "default_repository_permission": "read",
-          "members_can_create_repositories": true,
-          "two_factor_requirement_enabled": true,
-          "members_allowed_repository_creation_type": "all",
-          "members_can_create_public_repositories": false,
-          "members_can_create_private_repositories": false,
-          "members_can_create_internal_repositories": false,
-          "members_can_create_pages": true,
-          "members_can_create_public_pages": true,
-          "members_can_create_private_pages": true,
-          "updated_at": "2014-03-03T18:58:10Z"
-        }
-      },
       "org-pre-receive-hook-items": {
         "value": [
           {
@@ -7883,6 +7989,332 @@
           "enforcement": "enabled",
           "configuration_url": "https://github.example.com/api/v3/orgs/octocat/pre-receive-hooks/42",
           "allow_downstream_configuration": false
+        }
+      },
+      "job": {
+        "value": {
+          "id": 399444496,
+          "run_id": 29679449,
+          "run_url": "https://api.github.com/repos/octo-org/octo-repo/actions/runs/29679449",
+          "node_id": "MDEyOldvcmtmbG93IEpvYjM5OTQ0NDQ5Ng==",
+          "head_sha": "f83a356604ae3c5d03e1b46ef4d1ca77d64a90b0",
+          "url": "https://api.github.com/repos/octo-org/octo-repo/actions/jobs/399444496",
+          "html_url": "https://github.com/octo-org/octo-repo/runs/399444496",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2020-01-20T17:42:40Z",
+          "completed_at": "2020-01-20T17:44:39Z",
+          "name": "build",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2020-01-20T09:42:40.000-08:00",
+              "completed_at": "2020-01-20T09:42:41.000-08:00"
+            },
+            {
+              "name": "Run actions/checkout@v2",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2020-01-20T09:42:41.000-08:00",
+              "completed_at": "2020-01-20T09:42:45.000-08:00"
+            },
+            {
+              "name": "Set up Ruby",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2020-01-20T09:42:45.000-08:00",
+              "completed_at": "2020-01-20T09:42:45.000-08:00"
+            },
+            {
+              "name": "Run actions/cache@v2",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2020-01-20T09:42:45.000-08:00",
+              "completed_at": "2020-01-20T09:42:48.000-08:00"
+            },
+            {
+              "name": "Install Bundler",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2020-01-20T09:42:48.000-08:00",
+              "completed_at": "2020-01-20T09:42:52.000-08:00"
+            },
+            {
+              "name": "Install Gems",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2020-01-20T09:42:52.000-08:00",
+              "completed_at": "2020-01-20T09:42:53.000-08:00"
+            },
+            {
+              "name": "Run Tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2020-01-20T09:42:53.000-08:00",
+              "completed_at": "2020-01-20T09:42:59.000-08:00"
+            },
+            {
+              "name": "Deploy to Heroku",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2020-01-20T09:42:59.000-08:00",
+              "completed_at": "2020-01-20T09:44:39.000-08:00"
+            },
+            {
+              "name": "Post actions/cache@v2",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2020-01-20T09:44:39.000-08:00",
+              "completed_at": "2020-01-20T09:44:39.000-08:00"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2020-01-20T09:44:39.000-08:00",
+              "completed_at": "2020-01-20T09:44:39.000-08:00"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/octo-org/octo-repo/check-runs/399444496"
+        }
+      },
+      "job-paginated": {
+        "value": {
+          "total_count": 1,
+          "jobs": [
+            {
+              "id": 399444496,
+              "run_id": 29679449,
+              "run_url": "https://api.github.com/repos/octo-org/octo-repo/actions/runs/29679449",
+              "node_id": "MDEyOldvcmtmbG93IEpvYjM5OTQ0NDQ5Ng==",
+              "head_sha": "f83a356604ae3c5d03e1b46ef4d1ca77d64a90b0",
+              "url": "https://api.github.com/repos/octo-org/octo-repo/actions/jobs/399444496",
+              "html_url": "https://github.com/octo-org/octo-repo/runs/399444496",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2020-01-20T17:42:40Z",
+              "completed_at": "2020-01-20T17:44:39Z",
+              "name": "build",
+              "steps": [
+                {
+                  "name": "Set up job",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 1,
+                  "started_at": "2020-01-20T09:42:40.000-08:00",
+                  "completed_at": "2020-01-20T09:42:41.000-08:00"
+                },
+                {
+                  "name": "Run actions/checkout@v2",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 2,
+                  "started_at": "2020-01-20T09:42:41.000-08:00",
+                  "completed_at": "2020-01-20T09:42:45.000-08:00"
+                },
+                {
+                  "name": "Set up Ruby",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 3,
+                  "started_at": "2020-01-20T09:42:45.000-08:00",
+                  "completed_at": "2020-01-20T09:42:45.000-08:00"
+                },
+                {
+                  "name": "Run actions/cache@v2",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 4,
+                  "started_at": "2020-01-20T09:42:45.000-08:00",
+                  "completed_at": "2020-01-20T09:42:48.000-08:00"
+                },
+                {
+                  "name": "Install Bundler",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 5,
+                  "started_at": "2020-01-20T09:42:48.000-08:00",
+                  "completed_at": "2020-01-20T09:42:52.000-08:00"
+                },
+                {
+                  "name": "Install Gems",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 6,
+                  "started_at": "2020-01-20T09:42:52.000-08:00",
+                  "completed_at": "2020-01-20T09:42:53.000-08:00"
+                },
+                {
+                  "name": "Run Tests",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 7,
+                  "started_at": "2020-01-20T09:42:53.000-08:00",
+                  "completed_at": "2020-01-20T09:42:59.000-08:00"
+                },
+                {
+                  "name": "Deploy to Heroku",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 8,
+                  "started_at": "2020-01-20T09:42:59.000-08:00",
+                  "completed_at": "2020-01-20T09:44:39.000-08:00"
+                },
+                {
+                  "name": "Post actions/cache@v2",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 16,
+                  "started_at": "2020-01-20T09:44:39.000-08:00",
+                  "completed_at": "2020-01-20T09:44:39.000-08:00"
+                },
+                {
+                  "name": "Complete job",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 17,
+                  "started_at": "2020-01-20T09:44:39.000-08:00",
+                  "completed_at": "2020-01-20T09:44:39.000-08:00"
+                }
+              ],
+              "check_run_url": "https://api.github.com/repos/octo-org/octo-repo/check-runs/399444496"
+            }
+          ]
+        }
+      },
+      "code-scanning-alert": {
+        "value": {
+          "number": 42,
+          "created_at": "2020-06-19T11:21:34Z",
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42",
+          "html_url": "https://github.com/octocat/hello-world/code-scanning/42",
+          "state": "dismissed",
+          "dismissed_by": {
+            "login": "octocat",
+            "id": 54933897,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "dismissed_at": "2020-02-14T12:29:18Z",
+          "dismissed_reason": "false positive",
+          "rule": {
+            "id": "js/zipslip",
+            "severity": "error",
+            "security_severity_level": "high",
+            "description": "Arbitrary file write during zip extraction (\"Zip Slip\")",
+            "name": "js/zipslip",
+            "full_description": "Extracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten.",
+            "tags": ["security", "external/cwe/cwe-022"],
+            "help": "# Arbitrary file write during zip extraction (\"Zip Slip\")\\nExtracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten ..."
+          },
+          "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+          "most_recent_instance": {
+            "ref": "refs/heads/main",
+            "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "environment": "{}",
+            "state": "dismissed",
+            "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+            "message": {
+              "text": "This path depends on a user-provided value."
+            },
+            "location": {
+              "path": "spec-main/api-session-spec.ts",
+              "start_line": 917,
+              "end_line": 917,
+              "start_column": 7,
+              "end_column": 18
+            },
+            "classifications": ["test"]
+          },
+          "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42/instances"
+        }
+      },
+      "code-scanning-analysis-items": {
+        "value": [
+          {
+            "ref": "refs/heads/main",
+            "commit_sha": "d99612c3e1f2970085cfbaeadf8f010ef69bad83",
+            "analysis_key": ".github/workflows/codeql-analysis.yml:analyze",
+            "environment": "{\"language\":\"python\"}",
+            "error": "",
+            "category": ".github/workflows/codeql-analysis.yml:analyze/language:python",
+            "created_at": "2020-08-27T15:05:21Z",
+            "results_count": 17,
+            "rules_count": 49,
+            "id": 201,
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/201",
+            "sarif_id": "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53",
+            "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+            "deletable": true,
+            "warning": ""
+          },
+          {
+            "ref": "refs/heads/my-branch",
+            "commit_sha": "c8cff6510d4d084fb1b4aa13b64b97ca12b07321",
+            "analysis_key": ".github/workflows/shiftleft.yml:build",
+            "environment": "{}",
+            "error": "",
+            "category": ".github/workflows/shiftleft.yml:build/",
+            "created_at": "2020-08-31T22:46:44Z",
+            "results_count": 17,
+            "rules_count": 32,
+            "id": 200,
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/200",
+            "sarif_id": "8981cd8e-b078-4ac3-a3be-1dad7dbd0b582",
+            "tool": {
+              "name": "Python Security Analysis",
+              "guid": null,
+              "version": "1.2.0"
+            },
+            "deletable": true,
+            "warning": ""
+          }
+        ]
+      },
+      "code-scanning-analysis-default": {
+        "summary": "Default response",
+        "value": {
+          "ref": "refs/heads/main",
+          "commit_sha": "c18c69115654ff0166991962832dc2bd7756e655",
+          "analysis_key": ".github/workflows/codeql-analysis.yml:analyze",
+          "environment": "{\"language\":\"javascript\"}",
+          "error": "",
+          "category": ".github/workflows/codeql-analysis.yml:analyze/language:javascript",
+          "created_at": "2021-01-13T11:55:49Z",
+          "results_count": 3,
+          "rules_count": 67,
+          "id": 3602840,
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/201",
+          "sarif_id": "47177e22-5596-11eb-80a1-c1e54ef945c6",
+          "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+          "deletable": true,
+          "warning": ""
         }
       },
       "repository-pre-receive-hook-items": {
@@ -8318,11 +8750,26 @@
         }
       },
       "not_modified": { "description": "Not modified" },
-      "conflict": {
-        "description": "Conflict",
+      "code_scanning_forbidden_read": {
+        "description": "Response if GitHub Advanced Security is not enabled for this repository",
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "service_unavailable": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "message": { "type": "string" },
+                "documentation_url": { "type": "string" }
+              }
+            }
           }
         }
       },
