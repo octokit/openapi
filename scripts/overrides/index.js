@@ -82,7 +82,8 @@ function overrides(file, schema) {
   if (
     file.startsWith("api.github.com") ||
     file.startsWith("github.ae") ||
-    file.startsWith("ghes-3.2")
+    file.startsWith("ghes-3.2") ||
+    file.startsWith("ghes-3.3")
   ) {
     // recover `GET /repos/{owner}/{repo}/community/code_of_conduct` (with deprecation flags)
     schema.paths["/repos/{owner}/{repo}/community/code_of_conduct"] = {
