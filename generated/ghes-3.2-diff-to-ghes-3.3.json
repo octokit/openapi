@@ -1,0 +1,3227 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "0.0.0-development",
+    "title": "GitHub's official OpenAPI spec + Octokit extension",
+    "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
+    "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
+    "termsOfService": "https://docs.github.com/articles/github-terms-of-service",
+    "contact": {
+      "name": "Support",
+      "url": "https://github.com/octokit/openapi"
+    }
+  },
+  "tags": [
+    {
+      "name": "actions",
+      "description": "Endpoints to manage GitHub Actions using the REST API."
+    },
+    {
+      "name": "activity",
+      "description": "Activity APIs provide access to notifications, subscriptions, and timelines."
+    },
+    {
+      "name": "apps",
+      "description": "Information for integrations and installations."
+    },
+    {
+      "name": "billing",
+      "description": "Monitor charges and usage from Actions and Packages."
+    },
+    {
+      "name": "checks",
+      "description": "Rich interactions with checks run by your integrations."
+    },
+    {
+      "name": "code-scanning",
+      "description": "Retrieve code scanning alerts from a repository."
+    },
+    {
+      "name": "codes-of-conduct",
+      "description": "Insight into codes of conduct for your communities."
+    },
+    {
+      "name": "codespaces",
+      "description": "Endpoints to manage Codespaces using the REST API."
+    },
+    {
+      "name": "emojis",
+      "description": "List emojis available to use on GitHub."
+    },
+    {
+      "name": "enterprise-admin",
+      "description": "Administer a GitHub enterprise."
+    },
+    { "name": "dependabot", "description": "Endpoints to manage Dependabot." },
+    {
+      "name": "dependency-graph",
+      "description": "Endpoints to access Dependency Graph features."
+    },
+    { "name": "gists", "description": "View, modify your gists." },
+    { "name": "git", "description": "Raw Git functionality." },
+    { "name": "gitignore", "description": "View gitignore templates" },
+    {
+      "name": "interactions",
+      "description": "Owner or admin management of users interactions."
+    },
+    { "name": "issues", "description": "Interact with GitHub Issues." },
+    { "name": "licenses", "description": "View various OSS licenses." },
+    { "name": "markdown", "description": "Render GitHub flavored markdown" },
+    {
+      "name": "meta",
+      "description": "Endpoints that give information about the API."
+    },
+    { "name": "migrations", "description": "Move projects to or from GitHub." },
+    {
+      "name": "oauth-authorizations",
+      "description": "Manage access of OAuth applications"
+    },
+    { "name": "orgs", "description": "Interact with GitHub Orgs." },
+    {
+      "name": "packages",
+      "description": "Manage packages for authenticated users and organizations."
+    },
+    { "name": "projects", "description": "Interact with GitHub Projects." },
+    { "name": "pulls", "description": "Interact with GitHub Pull Requests." },
+    {
+      "name": "rate-limit",
+      "description": "Check your current rate limit status"
+    },
+    {
+      "name": "reactions",
+      "description": "Interact with reactions to various GitHub entities."
+    },
+    { "name": "repos", "description": "Interact with GitHub Repos." },
+    {
+      "name": "scim",
+      "description": "Provisioning of GitHub organization membership for SCIM-enabled providers."
+    },
+    { "name": "search", "description": "Look for stuff on GitHub." },
+    {
+      "name": "secret-scanning",
+      "description": "Retrieve secret scanning alerts from a repository."
+    },
+    { "name": "server-statistics", "description": "GHES statistics" },
+    { "name": "teams", "description": "Interact with GitHub Teams." },
+    {
+      "name": "users",
+      "description": "Interact with and view information about users and also current user."
+    }
+  ],
+  "servers": [
+    {
+      "url": "{protocol}://{hostname}/api/v3",
+      "variables": {
+        "hostname": {
+          "description": "Self-hosted Enterprise Server or Enterprise Cloud hostname",
+          "default": "HOSTNAME"
+        },
+        "protocol": {
+          "description": "Self-hosted Enterprise Server or Enterprise Cloud protocol",
+          "default": "http"
+        }
+      }
+    }
+  ],
+  "externalDocs": {
+    "description": "GitHub Enterprise Developer Docs",
+    "url": "https://docs.github.com/enterprise-server@3.2/rest/"
+  },
+  "paths": {
+    "/admin/hooks": {
+      "post": {
+        "summary": "Create a global webhook",
+        "description": "",
+        "operationId": "enterprise-admin/create-global-webhook",
+        "tags": ["enterprise-admin"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/enterprise-admin#create-a-global-webhook"
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/global-hook" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/global-hook" }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Must be passed as \"web\"."
+                  },
+                  "config": {
+                    "type": "object",
+                    "description": "Key/value pairs to provide settings for this webhook.",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "The URL to which the payloads will be delivered."
+                      },
+                      "content_type": {
+                        "type": "string",
+                        "description": "The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`."
+                      },
+                      "secret": {
+                        "type": "string",
+                        "description": "If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://docs.github.com/enterprise-server@3.2/webhooks/event-payloads/#delivery-headers) header."
+                      },
+                      "insecure_ssl": {
+                        "type": "string",
+                        "description": "Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.**"
+                      }
+                    },
+                    "required": ["url"]
+                  },
+                  "events": {
+                    "type": "array",
+                    "description": "The [events](https://docs.github.com/enterprise-server@3.2/webhooks/event-payloads) that trigger this webhook. A global webhook can be triggered by `user` and `organization` events. Default: `user` and `organization`.",
+                    "items": { "type": "string" }
+                  },
+                  "active": {
+                    "type": "boolean",
+                    "description": "Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications.",
+                    "default": true
+                  }
+                },
+                "required": ["name", "config"]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "web",
+                    "events": ["organization", "user"],
+                    "config": {
+                      "url": "https://example.com/webhook",
+                      "content_type": "json",
+                      "secret": "secret"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "enterprise-admin",
+          "subcategory": "global-webhooks",
+          "previews": [
+            {
+              "required": true,
+              "name": "superpro",
+              "note": "The [Global Webhooks API](https://docs.github.com/enterprise-server@3.2/rest/reference/enterprise-admin#global-webhooks) is currently available for developers to preview. To access the API during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.superpro-preview+json\n```"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "accept",
+            "description": "This API is under preview and subject to change.",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.github.superpro-preview+json"
+            },
+            "required": true
+          }
+        ],
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/admin/hooks/{hook_id}": {
+      "get": {
+        "summary": "Get a global webhook",
+        "description": "",
+        "operationId": "enterprise-admin/get-global-webhook",
+        "tags": ["enterprise-admin"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/enterprise-admin#get-a-global-webhook"
+        },
+        "parameters": [
+          {
+            "name": "accept",
+            "description": "This API is under preview and subject to change.",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.github.superpro-preview+json"
+            },
+            "required": true
+          },
+          { "$ref": "#/components/parameters/hook-id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/global-hook" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/global-hook" }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "enterprise-admin",
+          "subcategory": "global-webhooks",
+          "previews": [
+            {
+              "required": true,
+              "name": "superpro",
+              "note": "The [Global Webhooks API](https://docs.github.com/enterprise-server@3.2/rest/reference/enterprise-admin#global-webhooks) is currently available for developers to preview. To access the API during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.superpro-preview+json\n```"
+            }
+          ]
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      },
+      "patch": {
+        "summary": "Update a global webhook",
+        "description": "Parameters that are not provided will be overwritten with the default value or removed if no default exists.",
+        "operationId": "enterprise-admin/update-global-webhook",
+        "tags": ["enterprise-admin"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/enterprise-admin#update-a-global-webhook"
+        },
+        "parameters": [
+          {
+            "name": "accept",
+            "description": "This API is under preview and subject to change.",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.github.superpro-preview+json"
+            },
+            "required": true
+          },
+          { "$ref": "#/components/parameters/hook-id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/global-hook-2" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/global-hook-2" }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "config": {
+                    "type": "object",
+                    "description": "Key/value pairs to provide settings for this webhook.",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "The URL to which the payloads will be delivered."
+                      },
+                      "content_type": {
+                        "type": "string",
+                        "description": "The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`."
+                      },
+                      "secret": {
+                        "type": "string",
+                        "description": "If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://docs.github.com/enterprise-server@3.2/webhooks/event-payloads/#delivery-headers) header."
+                      },
+                      "insecure_ssl": {
+                        "type": "string",
+                        "description": "Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.**"
+                      }
+                    },
+                    "required": ["url"]
+                  },
+                  "events": {
+                    "type": "array",
+                    "description": "The [events](https://docs.github.com/enterprise-server@3.2/webhooks/event-payloads) that trigger this webhook. A global webhook can be triggered by `user` and `organization` events. Default: `user` and `organization`.",
+                    "items": { "type": "string" }
+                  },
+                  "active": {
+                    "type": "boolean",
+                    "description": "Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications.",
+                    "default": true
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "events": ["organization"],
+                    "config": { "url": "https://example.com/webhook" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "enterprise-admin",
+          "subcategory": "global-webhooks",
+          "previews": [
+            {
+              "required": true,
+              "name": "superpro",
+              "note": "The [Global Webhooks API](https://docs.github.com/enterprise-server@3.2/rest/reference/enterprise-admin#global-webhooks) is currently available for developers to preview. To access the API during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.superpro-preview+json\n```"
+            }
+          ]
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/actions/jobs/{job_id}": {
+      "get": {
+        "summary": "Get a job for a workflow run",
+        "description": "Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/get-job-for-workflow-run",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/actions#get-a-job-for-a-workflow-run"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/job-id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/job" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/job" }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "workflow-jobs"
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/actions/runs/{run_id}/jobs": {
+      "get": {
+        "summary": "List jobs for a workflow run",
+        "description": "Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@3.2/rest/overview/resources-in-the-rest-api#parameters).",
+        "tags": ["actions"],
+        "operationId": "actions/list-jobs-for-workflow-run",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/actions#list-jobs-for-a-workflow-run"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/run-id" },
+          {
+            "name": "filter",
+            "description": "Filters jobs by their `completed_at` timestamp. `latest` returns jobs from the most recent execution of the workflow run. `all` returns all jobs for a workflow run, including from old executions of the workflow run.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["latest", "all"],
+              "default": "latest"
+            }
+          },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "jobs"],
+                  "properties": {
+                    "total_count": { "type": "integer" },
+                    "jobs": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/job" }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/job-paginated" }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "workflow-jobs"
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}": {
+      "get": {
+        "summary": "Get a code scanning alert",
+        "description": "Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.",
+        "tags": ["code-scanning"],
+        "operationId": "code-scanning/get-alert",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/code-scanning#get-a-code-scanning-alert"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/alert-number" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-alert"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-alert"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "code-scanning",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "PARAMETER",
+              "date": "2020-09-17",
+              "parameter": "alert_number",
+              "before": { "name": "alert_id" }
+            }
+          ],
+          "diff": { "ghes-3.3.json": { "type": "changed" } }
+        }
+      },
+      "patch": {
+        "summary": "Update a code scanning alert",
+        "description": "Updates the status of a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.",
+        "operationId": "code-scanning/update-alert",
+        "tags": ["code-scanning"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/code-scanning#update-a-code-scanning-alert"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/alert-number" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "$ref": "#/components/schemas/code-scanning-alert-set-state"
+                  },
+                  "dismissed_reason": {
+                    "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
+                  }
+                },
+                "required": ["state"]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "state": "dismissed",
+                    "dismissed_reason": "false positive",
+                    "dismissed_comment": "This alert is not actually correct, because there's a sanitizer included in the library."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-alert"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-alert-dismissed"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_write"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "code-scanning"
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/analyses": {
+      "get": {
+        "summary": "List code scanning analyses for a repository",
+        "description": "Lists the details of all code scanning analyses for a repository,\nstarting with the most recent.\nThe response is paginated and you can use the `page` and `per_page` parameters\nto list the analyses you're interested in.\nBy default 30 analyses are listed per page.\n\nThe `rules_count` field in the response give the number of rules\nthat were run in the analysis.\nFor very old analyses this data is not available,\nand `0` is returned in this field.\n\nYou must use an access token with the `security_events` scope to use this endpoint.\nGitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.",
+        "operationId": "code-scanning/list-recent-analyses",
+        "tags": ["code-scanning"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/tool-name" },
+          { "$ref": "#/components/parameters/tool-guid" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per-page" },
+          {
+            "name": "ref",
+            "in": "query",
+            "description": "The Git reference for the analyses you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`.",
+            "required": false,
+            "schema": { "$ref": "#/components/schemas/code-scanning-ref" }
+          },
+          {
+            "name": "sarif_id",
+            "in": "query",
+            "description": "Filter analyses belonging to the same SARIF upload.",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/code-scanning-analysis"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-analysis-items"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "code-scanning"
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}": {
+      "get": {
+        "summary": "Get a code scanning analysis for a repository",
+        "description": "Gets a specified code scanning analysis for a repository.\nYou must use an access token with the `security_events` scope to use this endpoint.\nGitHub Apps must have the `security_events` read permission to use this endpoint.\n\nThe default JSON response contains fields that describe the analysis.\nThis includes the Git reference and commit SHA to which the analysis relates,\nthe datetime of the analysis, the name of the code scanning tool,\nand the number of alerts.\n\nThe `rules_count` field in the default response give the number of rules\nthat were run in the analysis.\nFor very old analyses this data is not available,\nand `0` is returned in this field.\n\nIf you use the Accept header `application/sarif+json`,\nthe response contains the analysis data that was uploaded.\nThis is formatted as\n[SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).\n\n**Deprecation notice**:\nThe `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.",
+        "operationId": "code-scanning/get-analysis",
+        "tags": ["code-scanning"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          {
+            "name": "analysis_id",
+            "in": "path",
+            "description": "The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation.",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json+sarif": { "schema": { "type": "string" } },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-analysis"
+                },
+                "examples": {
+                  "response": {
+                    "$ref": "#/components/examples/code-scanning-analysis-default"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "503": { "$ref": "#/components/responses/service_unavailable" }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "code-scanning"
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/comments/{comment_id}/reactions": {
+      "post": {
+        "summary": "Create reaction for a commit comment",
+        "description": "Create a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.2/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment.",
+        "tags": ["reactions"],
+        "operationId": "reactions/create-for-commit-comment",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/reactions#create-reaction-for-a-commit-comment"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/comment-id" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "The [reaction type](https://docs.github.com/enterprise-server@3.2/rest/reference/reactions#reaction-types) to add to the commit comment.",
+                    "enum": [
+                      "+1",
+                      "-1",
+                      "laugh",
+                      "confused",
+                      "heart",
+                      "hooray",
+                      "rocket",
+                      "eyes"
+                    ]
+                  }
+                },
+                "required": ["content"]
+              },
+              "examples": { "default": { "value": { "content": "heart" } } }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reaction exists",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/reaction" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/reaction" }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Reaction created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/reaction" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/reaction" }
+                }
+              }
+            }
+          },
+          "415": { "$ref": "#/components/responses/preview_header_missing" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "reactions",
+          "previews": [
+            {
+              "required": true,
+              "name": "squirrel-girl",
+              "note": "An additional `reactions` object in the issue comment payload is currently available for developers to preview. During the preview period, the APIs may change without advance notice. Please see the [blog post](https://developer.github.com/changes/2016-05-12-reactions-api-preview) for full details.\n\nTo access the API you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.squirrel-girl-preview\n```\nThe `reactions` key will have the following payload where `url` can be used to construct the API location for [listing and creating](https://docs.github.com/enterprise-server@3.2/rest/reference/reactions) reactions."
+            }
+          ]
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/releases": {
+      "post": {
+        "summary": "Create a release",
+        "description": "Users with push access to the repository can create a release.\n\nThis endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.2/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.2/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
+        "tags": ["repos"],
+        "operationId": "repos/create-release",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#create-a-release"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tag_name": {
+                    "type": "string",
+                    "description": "The name of the tag."
+                  },
+                  "target_commitish": {
+                    "type": "string",
+                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the release."
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "Text describing the contents of the tag."
+                  },
+                  "draft": {
+                    "type": "boolean",
+                    "description": "`true` to create a draft (unpublished) release, `false` to create a published one.",
+                    "default": false
+                  },
+                  "prerelease": {
+                    "type": "boolean",
+                    "description": "`true` to identify the release as a prerelease. `false` to identify the release as a full release.",
+                    "default": false
+                  }
+                },
+                "required": ["tag_name"]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "tag_name": "v1.0.0",
+                    "target_commitish": "master",
+                    "name": "v1.0.0",
+                    "body": "Description of the release",
+                    "draft": false,
+                    "prerelease": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/release" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/release" }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/repos/octocat/Hello-World/releases/1",
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "triggersNotification": true,
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "releases"
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/releases/{release_id}/reactions": {
+      "get": {
+        "summary": "List reactions for a release",
+        "description": "List the reactions to a [release](https://docs.github.com/enterprise-server@3.2/rest/reference/repos#releases).",
+        "tags": ["reactions"],
+        "operationId": "reactions/list-for-release",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/reactions/#list-reactions-for-a-release"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/release-id" },
+          {
+            "name": "content",
+            "description": "Returns a single [reaction type](https://docs.github.com/enterprise-server@3.2/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a release.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["+1", "laugh", "heart", "hooray", "rocket", "eyes"]
+            }
+          },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/reaction" }
+                },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/reaction-items" }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "415": { "$ref": "#/components/responses/preview_header_missing" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "reactions",
+          "previews": [
+            {
+              "required": true,
+              "name": "squirrel-girl",
+              "note": "An additional `reactions` object in the issue comment payload is currently available for developers to preview. During the preview period, the APIs may change without advance notice. Please see the [blog post](https://developer.github.com/changes/2016-05-12-reactions-api-preview) for full details.\n\nTo access the API you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.squirrel-girl-preview\n```\nThe `reactions` key will have the following payload where `url` can be used to construct the API location for [listing and creating](https://docs.github.com/enterprise-server@3.2/rest/reference/reactions) reactions."
+            }
+          ]
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/repos/{owner}/{repo}/topics": {
+      "get": {
+        "summary": "Get all repository topics",
+        "description": "",
+        "tags": ["repos"],
+        "operationId": "repos/get-all-topics",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#get-all-repository-topics"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/per-page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/topic" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/topic" }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "415": { "$ref": "#/components/responses/preview_header_missing" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "previews": [
+            {
+              "required": true,
+              "name": "mercy",
+              "note": "The `topics` property for repositories on GitHub is currently available for developers to preview. To view the `topics` property in calls that return repository results, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.mercy-preview+json\n```"
+            }
+          ]
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      },
+      "put": {
+        "summary": "Replace all repository topics",
+        "description": "",
+        "tags": ["repos"],
+        "operationId": "repos/replace-all-topics",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#replace-all-repository-topics"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "names": {
+                    "type": "array",
+                    "description": "An array of topics to add to the repository. Pass one or more topics to _replace_ the set of existing topics. Send an empty array (`[]`) to clear all topics from the repository. **Note:** Topic `names` cannot contain uppercase letters.",
+                    "items": { "type": "string" }
+                  }
+                },
+                "required": ["names"]
+              },
+              "examples": {
+                "default": {
+                  "value": { "names": ["octocat", "atom", "electron", "api"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/topic" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/topic" }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "415": { "$ref": "#/components/responses/preview_header_missing" },
+          "422": { "$ref": "#/components/responses/validation_failed_simple" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "previews": [
+            {
+              "required": true,
+              "name": "mercy",
+              "note": "The `topics` property for repositories on GitHub is currently available for developers to preview. To view the `topics` property in calls that return repository results, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.mercy-preview+json\n```"
+            }
+          ]
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/search/topics": {
+      "get": {
+        "summary": "Search topics",
+        "description": "Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.2/rest/overview/resources-in-the-rest-api#pagination). See \"[Searching topics](https://docs.github.com/articles/searching-topics/)\" for a detailed list of qualifiers.\n\nWhen searching for topics, you can get text match metadata for the topic's **short\\_description**, **description**, **name**, or **display\\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.2/rest/reference/search#text-match-metadata).\n\nFor example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query might look like this:\n\n`q=ruby+is:featured`\n\nThis query searches for topics with the keyword `ruby` and limits the results to find only topics that are featured. The topics that are the best match for the query appear first in the search results.",
+        "tags": ["search"],
+        "operationId": "search/topics",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/search#search-topics"
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.2/rest/reference/search#constructing-a-search-query).",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "incomplete_results", "items"],
+                  "properties": {
+                    "total_count": { "type": "integer" },
+                    "incomplete_results": { "type": "boolean" },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/topic-search-result-item"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/topic-search-result-item-paginated"
+                  }
+                }
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "415": { "$ref": "#/components/responses/preview_header_missing" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "search",
+          "previews": [
+            {
+              "required": true,
+              "name": "mercy",
+              "note": "The `topics` property for repositories on GitHub is currently available for developers to preview. To view the `topics` property in calls that return repository results, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.mercy-preview+json\n```"
+            }
+          ]
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    },
+    "/user/projects": {
+      "post": {
+        "summary": "Create a user project",
+        "description": "",
+        "tags": ["projects"],
+        "operationId": "projects/create-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/projects#create-a-user-project"
+        },
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "Name of the project",
+                    "example": "Week One Sprint",
+                    "type": "string"
+                  },
+                  "body": {
+                    "description": "Body of the project",
+                    "example": "This project represents the sprint of the first week in January",
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "required": ["name"],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/project" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/project" }
+                }
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "415": { "$ref": "#/components/responses/preview_header_missing" },
+          "422": { "$ref": "#/components/responses/validation_failed_simple" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "projects",
+          "previews": [
+            {
+              "required": true,
+              "name": "inertia",
+              "note": "The Projects API is currently available for developers to preview. During the preview period, the API may change without advance notice. Please see the [blog post](https://developer.github.com/changes/2016-10-27-changes-to-projects-api) for full details. To access the API during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.2/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.inertia-preview+json\n```"
+            }
+          ]
+        },
+        "x-octokit": { "diff": { "ghes-3.3.json": { "type": "changed" } } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "global-hook": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "active": { "type": "boolean" },
+          "events": { "type": "array", "items": { "type": "string" } },
+          "config": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "content_type": { "type": "string" },
+              "insecure_ssl": { "type": "string" },
+              "secret": { "type": "string" }
+            }
+          },
+          "updated_at": { "type": "string" },
+          "created_at": { "type": "string" },
+          "url": { "type": "string" },
+          "ping_url": { "type": "string" }
+        }
+      },
+      "global-hook-2": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "active": { "type": "boolean" },
+          "events": { "type": "array", "items": { "type": "string" } },
+          "config": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "content_type": { "type": "string" },
+              "insecure_ssl": { "type": "string" }
+            }
+          },
+          "updated_at": { "type": "string" },
+          "created_at": { "type": "string" },
+          "url": { "type": "string" },
+          "ping_url": { "type": "string" }
+        }
+      },
+      "job": {
+        "title": "Job",
+        "description": "Information of a job execution in a workflow run",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The id of the job.",
+            "example": 21,
+            "type": "integer"
+          },
+          "run_id": {
+            "description": "The id of the associated workflow run.",
+            "example": 5,
+            "type": "integer"
+          },
+          "run_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5"
+          },
+          "node_id": { "type": "string", "example": "MDg6Q2hlY2tSdW40" },
+          "head_sha": {
+            "description": "The SHA of the commit that is being run.",
+            "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/jobs/21"
+          },
+          "html_url": {
+            "type": "string",
+            "example": "https://github.com/github/hello-world/runs/4",
+            "nullable": true
+          },
+          "status": {
+            "description": "The phase of the lifecycle that the job is currently in.",
+            "example": "queued",
+            "type": "string",
+            "enum": ["queued", "in_progress", "completed"]
+          },
+          "conclusion": {
+            "description": "The outcome of the job.",
+            "example": "success",
+            "type": "string",
+            "nullable": true
+          },
+          "started_at": {
+            "description": "The time that the job started, in ISO 8601 format.",
+            "example": "2019-08-08T08:00:00-07:00",
+            "format": "date-time",
+            "type": "string"
+          },
+          "completed_at": {
+            "description": "The time that the job finished, in ISO 8601 format.",
+            "example": "2019-08-08T08:00:00-07:00",
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "description": "The name of the job.",
+            "example": "test-coverage",
+            "type": "string"
+          },
+          "steps": {
+            "description": "Steps in this job.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "status", "conclusion", "number"],
+              "properties": {
+                "status": {
+                  "description": "The phase of the lifecycle that the job is currently in.",
+                  "example": "queued",
+                  "type": "string",
+                  "enum": ["queued", "in_progress", "completed"]
+                },
+                "conclusion": {
+                  "description": "The outcome of the job.",
+                  "example": "success",
+                  "type": "string",
+                  "nullable": true
+                },
+                "name": {
+                  "description": "The name of the job.",
+                  "example": "test-coverage",
+                  "type": "string"
+                },
+                "number": { "type": "integer", "example": 1 },
+                "started_at": {
+                  "description": "The time that the step started, in ISO 8601 format.",
+                  "example": "2019-08-08T08:00:00-07:00",
+                  "format": "date-time",
+                  "type": "string",
+                  "nullable": true
+                },
+                "completed_at": {
+                  "description": "The time that the job finished, in ISO 8601 format.",
+                  "example": "2019-08-08T08:00:00-07:00",
+                  "format": "date-time",
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "check_run_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/check-runs/4"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "run_id",
+          "run_url",
+          "head_sha",
+          "name",
+          "url",
+          "html_url",
+          "status",
+          "conclusion",
+          "started_at",
+          "completed_at",
+          "check_run_url"
+        ]
+      },
+      "code-scanning-alert": {
+        "type": "object",
+        "properties": {
+          "number": { "$ref": "#/components/schemas/alert-number" },
+          "created_at": { "$ref": "#/components/schemas/alert-created-at" },
+          "url": { "$ref": "#/components/schemas/alert-url" },
+          "html_url": { "$ref": "#/components/schemas/alert-html-url" },
+          "instances_url": {
+            "$ref": "#/components/schemas/alert-instances-url"
+          },
+          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
+          "dismissed_by": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "dismissed_at": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-at"
+          },
+          "dismissed_reason": {
+            "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
+          },
+          "rule": { "$ref": "#/components/schemas/code-scanning-alert-rule" },
+          "tool": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool"
+          },
+          "most_recent_instance": {
+            "$ref": "#/components/schemas/code-scanning-alert-instance"
+          },
+          "instances": { "deprecated": true }
+        },
+        "required": [
+          "number",
+          "created_at",
+          "url",
+          "html_url",
+          "instances_url",
+          "state",
+          "dismissed_by",
+          "dismissed_at",
+          "dismissed_reason",
+          "rule",
+          "tool",
+          "most_recent_instance"
+        ]
+      },
+      "code-scanning-alert-set-state": {
+        "description": "Sets the state of the code scanning alert. You must provide `dismissed_reason` when you set the state to `dismissed`.",
+        "type": "string",
+        "enum": ["open", "dismissed"]
+      },
+      "code-scanning-alert-dismissed-reason": {
+        "type": "string",
+        "description": "**Required when the state is dismissed.** The reason for dismissing or closing the alert.",
+        "nullable": true,
+        "enum": [null, "false positive", "won't fix", "used in tests"]
+      },
+      "code-scanning-ref": {
+        "type": "string",
+        "description": "The full Git reference, formatted as `refs/heads/<branch name>`,\n`refs/pull/<number>/merge`, or `refs/pull/<number>/head`."
+      },
+      "code-scanning-analysis-sarif-id": {
+        "type": "string",
+        "description": "An identifier for the upload.",
+        "example": "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53"
+      },
+      "code-scanning-analysis": {
+        "type": "object",
+        "properties": {
+          "ref": { "$ref": "#/components/schemas/code-scanning-ref" },
+          "commit_sha": {
+            "$ref": "#/components/schemas/code-scanning-analysis-commit-sha"
+          },
+          "analysis_key": {
+            "$ref": "#/components/schemas/code-scanning-analysis-analysis-key"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/code-scanning-analysis-environment"
+          },
+          "category": {
+            "$ref": "#/components/schemas/code-scanning-analysis-category"
+          },
+          "error": { "type": "string", "example": "error reading field xyz" },
+          "created_at": {
+            "$ref": "#/components/schemas/code-scanning-analysis-created-at"
+          },
+          "results_count": {
+            "type": "integer",
+            "description": "The total number of results in the analysis."
+          },
+          "rules_count": {
+            "type": "integer",
+            "description": "The total number of rules used in the analysis."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for this analysis."
+          },
+          "url": { "$ref": "#/components/schemas/code-scanning-analysis-url" },
+          "sarif_id": {
+            "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+          },
+          "tool": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool"
+          },
+          "deletable": { "type": "boolean" },
+          "warning": {
+            "type": "string",
+            "description": "Warning generated when processing the analysis",
+            "example": "123 results were ignored"
+          },
+          "tool_name": { "type": "string" }
+        },
+        "required": [
+          "ref",
+          "commit_sha",
+          "analysis_key",
+          "environment",
+          "error",
+          "created_at",
+          "results_count",
+          "rules_count",
+          "id",
+          "url",
+          "sarif_id",
+          "tool",
+          "deletable",
+          "warning"
+        ]
+      },
+      "reaction": {
+        "title": "Reaction",
+        "description": "Reactions to conversations provide a way to help people express their feelings more simply and effectively.",
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "node_id": { "type": "string", "example": "MDg6UmVhY3Rpb24x" },
+          "user": { "$ref": "#/components/schemas/nullable-simple-user" },
+          "content": {
+            "description": "The reaction to use",
+            "example": "heart",
+            "type": "string",
+            "enum": [
+              "+1",
+              "-1",
+              "laugh",
+              "confused",
+              "heart",
+              "hooray",
+              "rocket",
+              "eyes"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2016-05-20T20:09:31Z"
+          }
+        },
+        "required": ["id", "node_id", "user", "content", "created_at"]
+      },
+      "release": {
+        "title": "Release",
+        "description": "A release.",
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "html_url": { "type": "string", "format": "uri" },
+          "assets_url": { "type": "string", "format": "uri" },
+          "upload_url": { "type": "string" },
+          "tarball_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "zipball_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "id": { "type": "integer" },
+          "node_id": { "type": "string" },
+          "tag_name": {
+            "description": "The name of the tag.",
+            "example": "v1.0.0",
+            "type": "string"
+          },
+          "target_commitish": {
+            "description": "Specifies the commitish value that determines where the Git tag is created from.",
+            "example": "master",
+            "type": "string"
+          },
+          "name": { "type": "string", "nullable": true },
+          "body": { "type": "string", "nullable": true },
+          "draft": {
+            "description": "true to create a draft (unpublished) release, false to create a published one.",
+            "example": false,
+            "type": "boolean"
+          },
+          "prerelease": {
+            "description": "Whether to identify the release as a prerelease or a full release.",
+            "example": false,
+            "type": "boolean"
+          },
+          "created_at": { "type": "string", "format": "date-time" },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "author": { "$ref": "#/components/schemas/simple-user" },
+          "assets": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/release-asset" }
+          },
+          "body_html": { "type": "string" },
+          "body_text": { "type": "string" },
+          "mentions_count": { "type": "integer" },
+          "reactions": { "$ref": "#/components/schemas/reaction-rollup" }
+        },
+        "required": [
+          "assets_url",
+          "upload_url",
+          "tarball_url",
+          "zipball_url",
+          "created_at",
+          "published_at",
+          "draft",
+          "id",
+          "node_id",
+          "author",
+          "html_url",
+          "name",
+          "prerelease",
+          "tag_name",
+          "target_commitish",
+          "assets",
+          "url"
+        ]
+      },
+      "topic": {
+        "title": "Topic",
+        "description": "A topic aggregates entities that are related to a subject.",
+        "type": "object",
+        "properties": {
+          "names": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["names"]
+      },
+      "topic-search-result-item": {
+        "title": "Topic Search Result Item",
+        "description": "Topic Search Result Item",
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "display_name": { "type": "string", "nullable": true },
+          "short_description": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "created_by": { "type": "string", "nullable": true },
+          "released": { "type": "string", "nullable": true },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "featured": { "type": "boolean" },
+          "curated": { "type": "boolean" },
+          "score": { "type": "number" },
+          "repository_count": { "type": "integer", "nullable": true },
+          "logo_url": { "type": "string", "format": "uri", "nullable": true },
+          "text_matches": {
+            "$ref": "#/components/schemas/search-result-text-matches"
+          },
+          "related": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "topic_relation": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "topic_id": { "type": "integer" },
+                    "relation_type": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "aliases": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "topic_relation": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "topic_id": { "type": "integer" },
+                    "relation_type": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "name",
+          "display_name",
+          "short_description",
+          "description",
+          "created_by",
+          "released",
+          "created_at",
+          "updated_at",
+          "featured",
+          "curated",
+          "score"
+        ]
+      },
+      "project": {
+        "title": "Project",
+        "description": "Projects are a way to organize columns and cards of work.",
+        "type": "object",
+        "properties": {
+          "owner_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/api-playground/projects-test"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/projects/1002604"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/api-playground/projects-test/projects/12"
+          },
+          "columns_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/projects/1002604/columns"
+          },
+          "id": { "type": "integer", "example": 1002604 },
+          "node_id": {
+            "type": "string",
+            "example": "MDc6UHJvamVjdDEwMDI2MDQ="
+          },
+          "name": {
+            "description": "Name of the project",
+            "example": "Week One Sprint",
+            "type": "string"
+          },
+          "body": {
+            "description": "Body of the project",
+            "example": "This project represents the sprint of the first week in January",
+            "type": "string",
+            "nullable": true
+          },
+          "number": { "type": "integer", "example": 1 },
+          "state": {
+            "description": "State of the project; either 'open' or 'closed'",
+            "example": "open",
+            "type": "string"
+          },
+          "creator": { "$ref": "#/components/schemas/nullable-simple-user" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-04-10T20:09:31Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2014-03-03T18:58:10Z"
+          },
+          "organization_permission": {
+            "description": "The baseline permission that all organization members have on this project. Only present if owner is an organization.",
+            "type": "string",
+            "enum": ["read", "write", "admin", "none"]
+          },
+          "private": {
+            "description": "Whether or not this project can be seen by everyone. Only present if owner is an organization.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "number",
+          "name",
+          "body",
+          "state",
+          "url",
+          "html_url",
+          "owner_url",
+          "creator",
+          "columns_url",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "alert-number": {
+        "type": "integer",
+        "description": "The security alert number.",
+        "readOnly": true
+      },
+      "alert-created-at": {
+        "type": "string",
+        "description": "The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "format": "date-time",
+        "readOnly": true
+      },
+      "alert-url": {
+        "type": "string",
+        "description": "The REST API URL of the alert resource.",
+        "format": "uri",
+        "readOnly": true
+      },
+      "alert-html-url": {
+        "type": "string",
+        "description": "The GitHub URL of the alert resource.",
+        "format": "uri",
+        "readOnly": true
+      },
+      "alert-instances-url": {
+        "type": "string",
+        "description": "The REST API URL for fetching the list of instances for an alert.",
+        "format": "uri",
+        "readOnly": true
+      },
+      "code-scanning-alert-state": {
+        "type": "string",
+        "description": "State of a code scanning alert.",
+        "enum": ["open", "closed", "dismissed", "fixed"]
+      },
+      "nullable-simple-user": {
+        "title": "Simple User",
+        "description": "Simple User",
+        "type": "object",
+        "properties": {
+          "name": { "nullable": true, "type": "string" },
+          "email": { "nullable": true, "type": "string" },
+          "login": { "type": "string", "example": "octocat" },
+          "id": { "type": "integer", "example": 1 },
+          "node_id": { "type": "string", "example": "MDQ6VXNlcjE=" },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/images/error/octocat_happy.gif"
+          },
+          "gravatar_id": {
+            "type": "string",
+            "example": "41d064eb2195891e12d0413f63227ea7",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat"
+          },
+          "followers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/followers"
+          },
+          "following_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/following{/other_user}"
+          },
+          "gists_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+          },
+          "starred_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+          },
+          "subscriptions_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/subscriptions"
+          },
+          "organizations_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/orgs"
+          },
+          "repos_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/repos"
+          },
+          "events_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/events{/privacy}"
+          },
+          "received_events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/received_events"
+          },
+          "type": { "type": "string", "example": "User" },
+          "site_admin": { "type": "boolean" },
+          "starred_at": {
+            "type": "string",
+            "example": "\"2020-07-09T00:17:55Z\""
+          }
+        },
+        "required": [
+          "avatar_url",
+          "events_url",
+          "followers_url",
+          "following_url",
+          "gists_url",
+          "gravatar_id",
+          "html_url",
+          "id",
+          "node_id",
+          "login",
+          "organizations_url",
+          "received_events_url",
+          "repos_url",
+          "site_admin",
+          "starred_url",
+          "subscriptions_url",
+          "type",
+          "url"
+        ],
+        "nullable": true
+      },
+      "code-scanning-alert-dismissed-at": {
+        "type": "string",
+        "description": "The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "format": "date-time",
+        "readOnly": true,
+        "nullable": true
+      },
+      "code-scanning-alert-rule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": true,
+            "type": "string",
+            "description": "A unique identifier for the rule used to detect the alert."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the rule used to detect the alert."
+          },
+          "severity": {
+            "nullable": true,
+            "type": "string",
+            "description": "The severity of the alert.",
+            "enum": ["none", "note", "warning", "error"]
+          },
+          "security_severity_level": {
+            "nullable": true,
+            "type": "string",
+            "description": "The security severity of the alert.",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "description": {
+            "type": "string",
+            "description": "A short description of the rule used to detect the alert."
+          },
+          "full_description": {
+            "type": "string",
+            "description": "description of the rule used to detect the alert."
+          },
+          "tags": {
+            "nullable": true,
+            "type": "array",
+            "description": "A set of tags applicable for the rule.",
+            "items": { "type": "string" }
+          },
+          "help": {
+            "nullable": true,
+            "type": "string",
+            "description": "Detailed documentation for the rule as GitHub Flavored Markdown."
+          }
+        }
+      },
+      "code-scanning-analysis-tool": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+          },
+          "version": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool-version"
+          },
+          "guid": {
+            "$ref": "#/components/schemas/code-scanning-analysis-tool-guid"
+          }
+        }
+      },
+      "code-scanning-analysis-tool-name": {
+        "type": "string",
+        "description": "The name of the tool used to generate the code scanning analysis."
+      },
+      "code-scanning-analysis-tool-version": {
+        "nullable": true,
+        "type": "string",
+        "description": "The version of the tool used to generate the code scanning analysis."
+      },
+      "code-scanning-analysis-tool-guid": {
+        "nullable": true,
+        "type": "string",
+        "description": "The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data."
+      },
+      "code-scanning-alert-instance": {
+        "type": "object",
+        "properties": {
+          "ref": { "$ref": "#/components/schemas/code-scanning-ref" },
+          "analysis_key": {
+            "$ref": "#/components/schemas/code-scanning-analysis-analysis-key"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/code-scanning-alert-environment"
+          },
+          "category": {
+            "$ref": "#/components/schemas/code-scanning-analysis-category"
+          },
+          "state": { "$ref": "#/components/schemas/code-scanning-alert-state" },
+          "commit_sha": { "type": "string" },
+          "message": {
+            "type": "object",
+            "properties": { "text": { "type": "string" } }
+          },
+          "location": {
+            "$ref": "#/components/schemas/code-scanning-alert-location"
+          },
+          "html_url": { "type": "string" },
+          "classifications": {
+            "type": "array",
+            "description": "Classifications that have been applied to the file that triggered the alert.\nFor example identifying it as documentation, or a generated file.",
+            "items": {
+              "$ref": "#/components/schemas/code-scanning-alert-classification"
+            }
+          }
+        }
+      },
+      "code-scanning-analysis-analysis-key": {
+        "type": "string",
+        "description": "Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name."
+      },
+      "code-scanning-alert-environment": {
+        "type": "string",
+        "description": "Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed."
+      },
+      "code-scanning-analysis-category": {
+        "type": "string",
+        "description": "Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code."
+      },
+      "code-scanning-alert-location": {
+        "type": "object",
+        "description": "Describe a region within a file for the alert.",
+        "properties": {
+          "path": { "type": "string" },
+          "start_line": { "type": "integer" },
+          "end_line": { "type": "integer" },
+          "start_column": { "type": "integer" },
+          "end_column": { "type": "integer" }
+        }
+      },
+      "code-scanning-alert-classification": {
+        "type": "string",
+        "description": "A classification of the file. For example to identify it as generated.",
+        "nullable": true,
+        "enum": ["source", "generated", "test", "library"]
+      },
+      "basic-error": {
+        "title": "Basic Error",
+        "description": "Basic Error",
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "documentation_url": { "type": "string" },
+          "url": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      },
+      "code-scanning-analysis-commit-sha": {
+        "description": "The SHA of the commit to which the analysis you are uploading relates.",
+        "type": "string",
+        "minLength": 40,
+        "maxLength": 40,
+        "pattern": "^[0-9a-fA-F]+$"
+      },
+      "code-scanning-analysis-environment": {
+        "type": "string",
+        "description": "Identifies the variable values associated with the environment in which this analysis was performed."
+      },
+      "code-scanning-analysis-created-at": {
+        "type": "string",
+        "description": "The time that the analysis was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "format": "date-time",
+        "readOnly": true
+      },
+      "code-scanning-analysis-url": {
+        "type": "string",
+        "description": "The REST API URL of the analysis resource.",
+        "format": "uri",
+        "readOnly": true
+      },
+      "validation-error": {
+        "title": "Validation Error",
+        "description": "Validation Error",
+        "type": "object",
+        "required": ["message", "documentation_url"],
+        "properties": {
+          "message": { "type": "string" },
+          "documentation_url": { "type": "string" },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["code"],
+              "properties": {
+                "resource": { "type": "string" },
+                "field": { "type": "string" },
+                "message": { "type": "string" },
+                "code": { "type": "string" },
+                "index": { "type": "integer" },
+                "value": {
+                  "oneOf": [
+                    { "type": "string", "nullable": true },
+                    { "type": "integer", "nullable": true },
+                    {
+                      "type": "array",
+                      "nullable": true,
+                      "items": { "type": "string" }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "simple-user": {
+        "title": "Simple User",
+        "description": "Simple User",
+        "type": "object",
+        "properties": {
+          "name": { "nullable": true, "type": "string" },
+          "email": { "nullable": true, "type": "string" },
+          "login": { "type": "string", "example": "octocat" },
+          "id": { "type": "integer", "example": 1 },
+          "node_id": { "type": "string", "example": "MDQ6VXNlcjE=" },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/images/error/octocat_happy.gif"
+          },
+          "gravatar_id": {
+            "type": "string",
+            "example": "41d064eb2195891e12d0413f63227ea7",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat"
+          },
+          "followers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/followers"
+          },
+          "following_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/following{/other_user}"
+          },
+          "gists_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+          },
+          "starred_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+          },
+          "subscriptions_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/subscriptions"
+          },
+          "organizations_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/orgs"
+          },
+          "repos_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/repos"
+          },
+          "events_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/events{/privacy}"
+          },
+          "received_events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/received_events"
+          },
+          "type": { "type": "string", "example": "User" },
+          "site_admin": { "type": "boolean" },
+          "starred_at": {
+            "type": "string",
+            "example": "\"2020-07-09T00:17:55Z\""
+          }
+        },
+        "required": [
+          "avatar_url",
+          "events_url",
+          "followers_url",
+          "following_url",
+          "gists_url",
+          "gravatar_id",
+          "html_url",
+          "id",
+          "node_id",
+          "login",
+          "organizations_url",
+          "received_events_url",
+          "repos_url",
+          "site_admin",
+          "starred_url",
+          "subscriptions_url",
+          "type",
+          "url"
+        ]
+      },
+      "release-asset": {
+        "title": "Release Asset",
+        "description": "Data related to a release.",
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "browser_download_url": { "type": "string", "format": "uri" },
+          "id": { "type": "integer" },
+          "node_id": { "type": "string" },
+          "name": {
+            "description": "The file name of the asset.",
+            "type": "string",
+            "example": "Team Environment"
+          },
+          "label": { "type": "string", "nullable": true },
+          "state": {
+            "description": "State of the release asset.",
+            "type": "string",
+            "enum": ["uploaded", "open"]
+          },
+          "content_type": { "type": "string" },
+          "size": { "type": "integer" },
+          "download_count": { "type": "integer" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "uploader": { "$ref": "#/components/schemas/nullable-simple-user" }
+        },
+        "required": [
+          "id",
+          "name",
+          "content_type",
+          "size",
+          "state",
+          "url",
+          "node_id",
+          "download_count",
+          "label",
+          "uploader",
+          "browser_download_url",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "reaction-rollup": {
+        "title": "Reaction Rollup",
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "total_count": { "type": "integer" },
+          "+1": { "type": "integer" },
+          "-1": { "type": "integer" },
+          "laugh": { "type": "integer" },
+          "confused": { "type": "integer" },
+          "heart": { "type": "integer" },
+          "hooray": { "type": "integer" },
+          "eyes": { "type": "integer" },
+          "rocket": { "type": "integer" }
+        },
+        "required": [
+          "url",
+          "total_count",
+          "+1",
+          "-1",
+          "laugh",
+          "confused",
+          "heart",
+          "hooray",
+          "eyes",
+          "rocket"
+        ]
+      },
+      "validation-error-simple": {
+        "title": "Validation Error Simple",
+        "description": "Validation Error Simple",
+        "type": "object",
+        "required": ["message", "documentation_url"],
+        "properties": {
+          "message": { "type": "string" },
+          "documentation_url": { "type": "string" },
+          "errors": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "search-result-text-matches": {
+        "title": "Search Result Text Matches",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "object_url": { "type": "string" },
+            "object_type": { "nullable": true, "type": "string" },
+            "property": { "type": "string" },
+            "fragment": { "type": "string" },
+            "matches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "text": { "type": "string" },
+                  "indices": { "type": "array", "items": { "type": "integer" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "global-hook": {
+        "value": {
+          "type": "Global",
+          "id": 1,
+          "name": "web",
+          "active": true,
+          "events": ["organization", "user"],
+          "config": {
+            "url": "https://example.com",
+            "content_type": "json",
+            "insecure_ssl": "0",
+            "secret": "********"
+          },
+          "updated_at": "2017-12-07T00:14:59Z",
+          "created_at": "2017-12-07T00:14:59Z",
+          "url": "https://api.github.com/admin/hooks/1",
+          "ping_url": "https://api.github.com/admin/hooks/1/pings"
+        }
+      },
+      "global-hook-2": {
+        "value": {
+          "type": "Global",
+          "id": 1,
+          "name": "web",
+          "active": true,
+          "events": ["organization"],
+          "config": {
+            "url": "https://example.com",
+            "content_type": "form",
+            "insecure_ssl": "0"
+          },
+          "updated_at": "2017-12-07T00:14:59Z",
+          "created_at": "2017-12-07T00:14:59Z",
+          "url": "https://api.github.com/admin/hooks/1",
+          "ping_url": "https://api.github.com/admin/hooks/1/pings"
+        }
+      },
+      "job": {
+        "value": {
+          "id": 399444496,
+          "run_id": 29679449,
+          "run_url": "https://api.github.com/repos/octo-org/octo-repo/actions/runs/29679449",
+          "node_id": "MDEyOldvcmtmbG93IEpvYjM5OTQ0NDQ5Ng==",
+          "head_sha": "f83a356604ae3c5d03e1b46ef4d1ca77d64a90b0",
+          "url": "https://api.github.com/repos/octo-org/octo-repo/actions/jobs/399444496",
+          "html_url": "https://github.com/octo-org/octo-repo/runs/399444496",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2020-01-20T17:42:40Z",
+          "completed_at": "2020-01-20T17:44:39Z",
+          "name": "build",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2020-01-20T09:42:40.000-08:00",
+              "completed_at": "2020-01-20T09:42:41.000-08:00"
+            },
+            {
+              "name": "Run actions/checkout@v2",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2020-01-20T09:42:41.000-08:00",
+              "completed_at": "2020-01-20T09:42:45.000-08:00"
+            },
+            {
+              "name": "Set up Ruby",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2020-01-20T09:42:45.000-08:00",
+              "completed_at": "2020-01-20T09:42:45.000-08:00"
+            },
+            {
+              "name": "Run actions/cache@v3",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2020-01-20T09:42:45.000-08:00",
+              "completed_at": "2020-01-20T09:42:48.000-08:00"
+            },
+            {
+              "name": "Install Bundler",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2020-01-20T09:42:48.000-08:00",
+              "completed_at": "2020-01-20T09:42:52.000-08:00"
+            },
+            {
+              "name": "Install Gems",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2020-01-20T09:42:52.000-08:00",
+              "completed_at": "2020-01-20T09:42:53.000-08:00"
+            },
+            {
+              "name": "Run Tests",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2020-01-20T09:42:53.000-08:00",
+              "completed_at": "2020-01-20T09:42:59.000-08:00"
+            },
+            {
+              "name": "Deploy to Heroku",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2020-01-20T09:42:59.000-08:00",
+              "completed_at": "2020-01-20T09:44:39.000-08:00"
+            },
+            {
+              "name": "Post actions/cache@v3",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2020-01-20T09:44:39.000-08:00",
+              "completed_at": "2020-01-20T09:44:39.000-08:00"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2020-01-20T09:44:39.000-08:00",
+              "completed_at": "2020-01-20T09:44:39.000-08:00"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/octo-org/octo-repo/check-runs/399444496"
+        }
+      },
+      "job-paginated": {
+        "value": {
+          "total_count": 1,
+          "jobs": [
+            {
+              "id": 399444496,
+              "run_id": 29679449,
+              "run_url": "https://api.github.com/repos/octo-org/octo-repo/actions/runs/29679449",
+              "node_id": "MDEyOldvcmtmbG93IEpvYjM5OTQ0NDQ5Ng==",
+              "head_sha": "f83a356604ae3c5d03e1b46ef4d1ca77d64a90b0",
+              "url": "https://api.github.com/repos/octo-org/octo-repo/actions/jobs/399444496",
+              "html_url": "https://github.com/octo-org/octo-repo/runs/399444496",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2020-01-20T17:42:40Z",
+              "completed_at": "2020-01-20T17:44:39Z",
+              "name": "build",
+              "steps": [
+                {
+                  "name": "Set up job",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 1,
+                  "started_at": "2020-01-20T09:42:40.000-08:00",
+                  "completed_at": "2020-01-20T09:42:41.000-08:00"
+                },
+                {
+                  "name": "Run actions/checkout@v2",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 2,
+                  "started_at": "2020-01-20T09:42:41.000-08:00",
+                  "completed_at": "2020-01-20T09:42:45.000-08:00"
+                },
+                {
+                  "name": "Set up Ruby",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 3,
+                  "started_at": "2020-01-20T09:42:45.000-08:00",
+                  "completed_at": "2020-01-20T09:42:45.000-08:00"
+                },
+                {
+                  "name": "Run actions/cache@v3",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 4,
+                  "started_at": "2020-01-20T09:42:45.000-08:00",
+                  "completed_at": "2020-01-20T09:42:48.000-08:00"
+                },
+                {
+                  "name": "Install Bundler",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 5,
+                  "started_at": "2020-01-20T09:42:48.000-08:00",
+                  "completed_at": "2020-01-20T09:42:52.000-08:00"
+                },
+                {
+                  "name": "Install Gems",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 6,
+                  "started_at": "2020-01-20T09:42:52.000-08:00",
+                  "completed_at": "2020-01-20T09:42:53.000-08:00"
+                },
+                {
+                  "name": "Run Tests",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 7,
+                  "started_at": "2020-01-20T09:42:53.000-08:00",
+                  "completed_at": "2020-01-20T09:42:59.000-08:00"
+                },
+                {
+                  "name": "Deploy to Heroku",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 8,
+                  "started_at": "2020-01-20T09:42:59.000-08:00",
+                  "completed_at": "2020-01-20T09:44:39.000-08:00"
+                },
+                {
+                  "name": "Post actions/cache@v3",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 16,
+                  "started_at": "2020-01-20T09:44:39.000-08:00",
+                  "completed_at": "2020-01-20T09:44:39.000-08:00"
+                },
+                {
+                  "name": "Complete job",
+                  "status": "completed",
+                  "conclusion": "success",
+                  "number": 17,
+                  "started_at": "2020-01-20T09:44:39.000-08:00",
+                  "completed_at": "2020-01-20T09:44:39.000-08:00"
+                }
+              ],
+              "check_run_url": "https://api.github.com/repos/octo-org/octo-repo/check-runs/399444496",
+              "labels": ["self-hosted", "foo", "bar"],
+              "runner_id": 1,
+              "runner_name": "my runner",
+              "runner_group_id": 2,
+              "runner_group_name": "my runner group"
+            }
+          ]
+        }
+      },
+      "code-scanning-alert": {
+        "value": {
+          "number": 42,
+          "created_at": "2020-06-19T11:21:34Z",
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42",
+          "html_url": "https://github.com/octocat/hello-world/code-scanning/42",
+          "state": "dismissed",
+          "dismissed_by": {
+            "login": "octocat",
+            "id": 54933897,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "dismissed_at": "2020-02-14T12:29:18Z",
+          "dismissed_reason": "false positive",
+          "rule": {
+            "id": "js/zipslip",
+            "severity": "error",
+            "description": "Arbitrary file write during zip extraction (\"Zip Slip\")",
+            "name": "js/zipslip",
+            "full_description": "Extracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten.",
+            "tags": ["security", "external/cwe/cwe-022"],
+            "help": "# Arbitrary file write during zip extraction (\"Zip Slip\")\\nExtracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten ..."
+          },
+          "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+          "most_recent_instance": {
+            "ref": "refs/heads/main",
+            "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "environment": "{}",
+            "state": "dismissed",
+            "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+            "message": {
+              "text": "This path depends on a user-provided value."
+            },
+            "location": {
+              "path": "spec-main/api-session-spec.ts",
+              "start_line": 917,
+              "end_line": 917,
+              "start_column": 7,
+              "end_column": 18
+            },
+            "classifications": ["test"]
+          },
+          "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42/instances"
+        }
+      },
+      "code-scanning-alert-dismissed": {
+        "value": {
+          "number": 42,
+          "created_at": "2020-08-25T21:28:36Z",
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42",
+          "html_url": "https://github.com/octocat/hello-world/code-scanning/42",
+          "state": "dismissed",
+          "dismissed_by": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "dismissed_at": "2020-09-02T22:34:56Z",
+          "dismissed_reason": "false positive",
+          "rule": {
+            "id": "js/zipslip",
+            "severity": "error",
+            "description": "Arbitrary file write during zip extraction (\"Zip Slip\")",
+            "name": "js/zipslip",
+            "full_description": "Extracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten.",
+            "tags": ["security", "external/cwe/cwe-022"],
+            "help": "# Arbitrary file write during zip extraction (\"Zip Slip\")\\nExtracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten ..."
+          },
+          "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+          "most_recent_instance": {
+            "ref": "refs/heads/main",
+            "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "environment": "{}",
+            "state": "dismissed",
+            "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
+            "message": {
+              "text": "This path depends on a user-provided value."
+            },
+            "location": {
+              "path": "spec-main/api-session-spec.ts",
+              "start_line": 917,
+              "end_line": 917,
+              "start_column": 7,
+              "end_column": 18
+            },
+            "classifications": ["test"]
+          },
+          "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42/instances"
+        }
+      },
+      "code-scanning-analysis-items": {
+        "value": [
+          {
+            "ref": "refs/heads/main",
+            "commit_sha": "d99612c3e1f2970085cfbaeadf8f010ef69bad83",
+            "analysis_key": ".github/workflows/codeql-analysis.yml:analyze",
+            "environment": "{\"language\":\"python\"}",
+            "error": "",
+            "category": ".github/workflows/codeql-analysis.yml:analyze/language:python",
+            "created_at": "2020-08-27T15:05:21Z",
+            "results_count": 17,
+            "rules_count": 49,
+            "id": 201,
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/201",
+            "sarif_id": "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53",
+            "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+            "deletable": true,
+            "warning": ""
+          },
+          {
+            "ref": "refs/heads/my-branch",
+            "commit_sha": "c8cff6510d4d084fb1b4aa13b64b97ca12b07321",
+            "analysis_key": ".github/workflows/shiftleft.yml:build",
+            "environment": "{}",
+            "error": "",
+            "category": ".github/workflows/shiftleft.yml:build/",
+            "created_at": "2020-08-31T22:46:44Z",
+            "results_count": 17,
+            "rules_count": 32,
+            "id": 200,
+            "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/200",
+            "sarif_id": "8981cd8e-b078-4ac3-a3be-1dad7dbd0b582",
+            "tool": {
+              "name": "Python Security Analysis",
+              "guid": null,
+              "version": "1.2.0"
+            },
+            "deletable": true,
+            "warning": ""
+          }
+        ]
+      },
+      "code-scanning-analysis-default": {
+        "summary": "Default response",
+        "value": {
+          "ref": "refs/heads/main",
+          "commit_sha": "c18c69115654ff0166991962832dc2bd7756e655",
+          "analysis_key": ".github/workflows/codeql-analysis.yml:analyze",
+          "environment": "{\"language\":\"javascript\"}",
+          "error": "",
+          "category": ".github/workflows/codeql-analysis.yml:analyze/language:javascript",
+          "created_at": "2021-01-13T11:55:49Z",
+          "results_count": 3,
+          "rules_count": 67,
+          "id": 3602840,
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/analyses/201",
+          "sarif_id": "47177e22-5596-11eb-80a1-c1e54ef945c6",
+          "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
+          "deletable": true,
+          "warning": ""
+        }
+      },
+      "reaction": {
+        "value": {
+          "id": 1,
+          "node_id": "MDg6UmVhY3Rpb24x",
+          "user": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "content": "heart",
+          "created_at": "2016-05-20T20:09:31Z"
+        }
+      },
+      "release": {
+        "value": {
+          "url": "https://api.github.com/repos/octocat/Hello-World/releases/1",
+          "html_url": "https://github.com/octocat/Hello-World/releases/v1.0.0",
+          "assets_url": "https://api.github.com/repos/octocat/Hello-World/releases/1/assets",
+          "upload_url": "https://uploads.github.com/repos/octocat/Hello-World/releases/1/assets{?name,label}",
+          "tarball_url": "https://api.github.com/repos/octocat/Hello-World/tarball/v1.0.0",
+          "zipball_url": "https://api.github.com/repos/octocat/Hello-World/zipball/v1.0.0",
+          "discussion_url": "https://github.com/octocat/Hello-World/discussions/90",
+          "id": 1,
+          "node_id": "MDc6UmVsZWFzZTE=",
+          "tag_name": "v1.0.0",
+          "target_commitish": "master",
+          "name": "v1.0.0",
+          "body": "Description of the release",
+          "draft": false,
+          "prerelease": false,
+          "created_at": "2013-02-27T19:35:32Z",
+          "published_at": "2013-02-27T19:35:32Z",
+          "author": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "assets": [
+            {
+              "url": "https://api.github.com/repos/octocat/Hello-World/releases/assets/1",
+              "browser_download_url": "https://github.com/octocat/Hello-World/releases/download/v1.0.0/example.zip",
+              "id": 1,
+              "node_id": "MDEyOlJlbGVhc2VBc3NldDE=",
+              "name": "example.zip",
+              "label": "short description",
+              "state": "uploaded",
+              "content_type": "application/zip",
+              "size": 1024,
+              "download_count": 42,
+              "created_at": "2013-02-27T19:35:32Z",
+              "updated_at": "2013-02-27T19:35:32Z",
+              "uploader": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              }
+            }
+          ]
+        }
+      },
+      "reaction-items": {
+        "value": [
+          {
+            "id": 1,
+            "node_id": "MDg6UmVhY3Rpb24x",
+            "user": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "content": "heart",
+            "created_at": "2016-05-20T20:09:31Z"
+          }
+        ]
+      },
+      "topic": { "value": { "names": ["octocat", "atom", "electron", "api"] } },
+      "topic-search-result-item-paginated": {
+        "value": {
+          "total_count": 6,
+          "incomplete_results": false,
+          "items": [
+            {
+              "name": "ruby",
+              "display_name": "Ruby",
+              "short_description": "Ruby is a scripting language designed for simplified object-oriented programming.",
+              "description": "Ruby was developed by Yukihiro \"Matz\" Matsumoto in 1995 with the intent of having an easily readable programming language. It is integrated with the Rails framework to create dynamic web-applications. Ruby's syntax is similar to that of Perl and Python.",
+              "created_by": "Yukihiro Matsumoto",
+              "released": "December 21, 1995",
+              "created_at": "2016-11-28T22:03:59Z",
+              "updated_at": "2017-10-30T18:16:32Z",
+              "featured": true,
+              "curated": true,
+              "score": 1
+            },
+            {
+              "name": "rails",
+              "display_name": "Rails",
+              "short_description": "Ruby on Rails (Rails) is a web application framework written in Ruby.",
+              "description": "Ruby on Rails (Rails) is a web application framework written in Ruby. It is meant to help simplify the building of complex websites.",
+              "created_by": "David Heinemeier Hansson",
+              "released": "December 13 2005",
+              "created_at": "2016-12-09T17:03:50Z",
+              "updated_at": "2017-10-30T16:20:19Z",
+              "featured": true,
+              "curated": true,
+              "score": 1
+            },
+            {
+              "name": "python",
+              "display_name": "Python",
+              "short_description": "Python is a dynamically typed programming language.",
+              "description": "Python is a dynamically typed programming language designed by Guido Van Rossum. Much like the programming language Ruby, Python was designed to be easily read by programmers. Because of its large following and many libraries, Python can be implemented and used to do anything from webpages to scientific research.",
+              "created_by": "Guido van Rossum",
+              "released": "February 20, 1991",
+              "created_at": "2016-12-07T00:07:02Z",
+              "updated_at": "2017-10-27T22:45:43Z",
+              "featured": true,
+              "curated": true,
+              "score": 1
+            },
+            {
+              "name": "jekyll",
+              "display_name": "Jekyll",
+              "short_description": "Jekyll is a simple, blog-aware static site generator.",
+              "description": "Jekyll is a blog-aware, site generator written in Ruby. It takes raw text files, runs it through a renderer and produces a publishable static website.",
+              "created_by": "Tom Preston-Werner",
+              "released": "2008",
+              "created_at": "2016-12-16T21:53:08Z",
+              "updated_at": "2017-10-27T19:00:24Z",
+              "featured": true,
+              "curated": true,
+              "score": 1
+            },
+            {
+              "name": "sass",
+              "display_name": "Sass",
+              "short_description": "Sass is a stable extension to classic CSS.",
+              "description": "Sass is a stylesheet language with a main implementation in Ruby. It is an extension of CSS that makes improvements to the old stylesheet format, such as being able to declare variables and using a cleaner nesting syntax.",
+              "created_by": "Hampton Catlin, Natalie Weizenbaum, Chris Eppstein",
+              "released": "November 28, 2006",
+              "created_at": "2016-12-16T21:53:45Z",
+              "updated_at": "2018-01-16T16:30:40Z",
+              "featured": true,
+              "curated": true,
+              "score": 1
+            },
+            {
+              "name": "homebrew",
+              "display_name": "Homebrew",
+              "short_description": "Homebrew is a package manager for macOS.",
+              "description": "Homebrew is a package manager for Apple's macOS operating system. It simplifies the installation of software and is popular in the Ruby on Rails community.",
+              "created_by": "Max Howell",
+              "released": "2009",
+              "created_at": "2016-12-17T20:30:44Z",
+              "updated_at": "2018-02-06T16:14:56Z",
+              "featured": true,
+              "curated": true,
+              "score": 1
+            }
+          ]
+        }
+      },
+      "project": {
+        "value": {
+          "owner_url": "https://api.github.com/users/octocat",
+          "url": "https://api.github.com/projects/1002603",
+          "html_url": "https://github.com/users/octocat/projects/1",
+          "columns_url": "https://api.github.com/projects/1002603/columns",
+          "id": 1002603,
+          "node_id": "MDc6UHJvamVjdDEwMDI2MDM=",
+          "name": "My Projects",
+          "body": "A board to manage my personal projects.",
+          "number": 1,
+          "state": "open",
+          "creator": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "created_at": "2011-04-10T20:09:31Z",
+          "updated_at": "2014-03-03T18:58:10Z"
+        }
+      }
+    },
+    "parameters": {
+      "hook-id": {
+        "name": "hook_id",
+        "description": "The unique identifier of the hook.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "owner": {
+        "name": "owner",
+        "description": "The account owner of the repository. The name is not case sensitive.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "repo": {
+        "name": "repo",
+        "description": "The name of the repository. The name is not case sensitive.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "job-id": {
+        "name": "job_id",
+        "description": "The unique identifier of the job.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "run-id": {
+        "name": "run_id",
+        "description": "The unique identifier of the workflow run.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "per-page": {
+        "name": "per_page",
+        "description": "The number of results per page (max 100).",
+        "in": "query",
+        "schema": { "type": "integer", "default": 30 }
+      },
+      "page": {
+        "name": "page",
+        "description": "Page number of the results to fetch.",
+        "in": "query",
+        "schema": { "type": "integer", "default": 1 }
+      },
+      "alert-number": {
+        "name": "alert_number",
+        "in": "path",
+        "description": "The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation.",
+        "required": true,
+        "schema": { "$ref": "#/components/schemas/alert-number" }
+      },
+      "tool-name": {
+        "name": "tool_name",
+        "description": "The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/code-scanning-analysis-tool-name"
+        }
+      },
+      "tool-guid": {
+        "name": "tool_guid",
+        "description": "The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/code-scanning-analysis-tool-guid"
+        }
+      },
+      "comment-id": {
+        "name": "comment_id",
+        "description": "The unique identifier of the comment.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
+      "release-id": {
+        "name": "release_id",
+        "description": "The unique identifier of the release.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      }
+    },
+    "headers": {
+      "link": {
+        "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
+        "schema": { "type": "string" }
+      }
+    },
+    "responses": {
+      "code_scanning_forbidden_read": {
+        "description": "Response if GitHub Advanced Security is not enabled for this repository",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "not_found": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "service_unavailable": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "message": { "type": "string" },
+                "documentation_url": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "code_scanning_forbidden_write": {
+        "description": "Response if the repository is archived or if github advanced security is not enabled for this repository",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "preview_header_missing": {
+        "description": "Preview header missing",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["message", "documentation_url"],
+              "properties": {
+                "message": { "type": "string" },
+                "documentation_url": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "validation_failed": {
+        "description": "Validation failed",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/validation-error" }
+          }
+        }
+      },
+      "validation_failed_simple": {
+        "description": "Validation failed",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/validation-error-simple" }
+          }
+        }
+      },
+      "not_modified": { "description": "Not modified" },
+      "requires_authentication": {
+        "description": "Requires authentication",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
+      "forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      }
+    }
+  }
+}
