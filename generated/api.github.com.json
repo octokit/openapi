@@ -76,6 +76,10 @@
       "name": "oauth-authorizations",
       "description": "Manage access of OAuth applications"
     },
+    {
+      "name": "oidc",
+      "description": "Endpoints to manage GitHub OIDC configuration using the REST API."
+    },
     { "name": "orgs", "description": "Interact with GitHub Orgs." },
     {
       "name": "packages",
@@ -12897,6 +12901,12 @@
                   }
                 },
                 "nullable": true
+              },
+              "examples": {
+                "default": {
+                  "summary": "Updates the permissions for the team to write for the project",
+                  "value": { "permission": "write" }
+                }
               }
             }
           }
@@ -14120,6 +14130,12 @@
                   }
                 },
                 "nullable": true
+              },
+              "examples": {
+                "default": {
+                  "summary": "Applying write permissions for the new collaborator",
+                  "value": { "permission": "write" }
+                }
               }
             }
           }
@@ -46241,7 +46257,7 @@
             "example": "2011-01-26T19:01:12Z",
             "nullable": true
           },
-          "subscription_url": {
+          "created_at": {
             "type": "string",
             "format": "date-time",
             "example": "2011-01-26T19:14:43Z",
@@ -46641,22 +46657,8 @@
           "ssh_url": { "type": "string" },
           "stargazers_url": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "created_at": { "type": "string", "format": "date-time" },
-          "updated_at": { "type": "string", "format": "date-time" },
-          "draft": { "type": "boolean" },
-          "closed_by": { "$ref": "#/components/schemas/nullable-simple-user" },
-          "body_html": { "type": "string" },
-          "body_text": { "type": "string" },
-          "timeline_url": { "type": "string", "format": "uri" },
-          "repository": { "$ref": "#/components/schemas/repository" },
-          "performed_via_github_app": {
-            "$ref": "#/components/schemas/nullable-integration"
-          },
-          "author_association": {
-            "$ref": "#/components/schemas/author_association"
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/stargazers"
           },
           "reactions": { "$ref": "#/components/schemas/reaction-rollup" }
         },
@@ -46723,9 +46725,6 @@
           "issue_url": { "type": "string", "format": "uri" },
           "author_association": {
             "$ref": "#/components/schemas/author_association"
-          },
-          "performed_via_github_app": {
-            "$ref": "#/components/schemas/nullable-integration"
           },
           "clone_url": { "type": "string" },
           "mirror_url": { "type": "string", "nullable": true },
