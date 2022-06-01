@@ -3266,6 +3266,8 @@
           {
             "$ref": "#/components/parameters/secret-scanning-alert-resolution"
           },
+          { "$ref": "#/components/parameters/secret-scanning-alert-sort" },
+          { "$ref": "#/components/parameters/direction" },
           { "$ref": "#/components/parameters/per-page" },
           { "$ref": "#/components/parameters/pagination-before" },
           { "$ref": "#/components/parameters/pagination-after" }
@@ -9788,6 +9790,12 @@
                     "default": "member"
                   }
                 }
+              },
+              "examples": {
+                "default": {
+                  "summary": "Set an organization membership role for a user",
+                  "value": { "role": "member" }
+                }
               }
             }
           }
@@ -11138,8 +11146,12 @@
           {
             "$ref": "#/components/parameters/secret-scanning-alert-resolution"
           },
+          { "$ref": "#/components/parameters/secret-scanning-alert-sort" },
+          { "$ref": "#/components/parameters/direction" },
           { "$ref": "#/components/parameters/page" },
-          { "$ref": "#/components/parameters/per-page" }
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/pagination-before" },
+          { "$ref": "#/components/parameters/pagination-after" }
         ],
         "responses": {
           "200": {
@@ -12727,6 +12739,12 @@
                     "enum": ["member", "maintainer"],
                     "default": "member"
                   }
+                }
+              },
+              "examples": {
+                "default": {
+                  "summary": "Add or update team membership for an organization member",
+                  "value": { "role": "maintainer" }
                 }
               }
             }
@@ -32726,8 +32744,12 @@
           {
             "$ref": "#/components/parameters/secret-scanning-alert-resolution"
           },
+          { "$ref": "#/components/parameters/secret-scanning-alert-sort" },
+          { "$ref": "#/components/parameters/direction" },
           { "$ref": "#/components/parameters/page" },
-          { "$ref": "#/components/parameters/per-page" }
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/pagination-before" },
+          { "$ref": "#/components/parameters/pagination-after" }
         ],
         "responses": {
           "200": {
@@ -54136,9 +54158,9 @@
           },
           "prebuild_availability": {
             "type": "string",
-            "description": "Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be \"null\" if prebuilds are not supported or prebuild availability could not be determined. Value is the type of prebuild available, or \"none\" if none are available.",
-            "example": "blob",
-            "enum": ["none", "blob", "pool"],
+            "description": "Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be \"null\" if prebuilds are not supported or prebuild availability could not be determined. Value will be \"none\" if no prebuild is available. Latest values \"ready\" and \"in_progress\" indicate the prebuild availability status. Old values \"blob\" and \"pool\" will be deprecated soon.",
+            "example": "ready",
+            "enum": ["none", "blob", "pool", "ready", "in_progress"],
             "nullable": true
           }
         },
@@ -54396,9 +54418,9 @@
           },
           "prebuild_availability": {
             "type": "string",
-            "description": "Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be \"null\" if prebuilds are not supported or prebuild availability could not be determined. Value is the type of prebuild available, or \"none\" if none are available.",
-            "example": "blob",
-            "enum": ["none", "blob", "pool"],
+            "description": "Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be \"null\" if prebuilds are not supported or prebuild availability could not be determined. Value will be \"none\" if no prebuild is available. Latest values \"ready\" and \"in_progress\" indicate the prebuild availability status. Old values \"blob\" and \"pool\" will be deprecated soon.",
+            "example": "ready",
+            "enum": ["none", "blob", "pool", "ready", "in_progress"],
             "nullable": true
           }
         },
@@ -84710,6 +84732,28 @@
         "required": false,
         "schema": { "type": "string" }
       },
+      "secret-scanning-alert-sort": {
+        "name": "sort",
+        "description": "The property to sort the results by. `created` means when the alert was created. `updated` means when the alert was updated or resolved.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["created", "updated"],
+          "default": "created"
+        }
+      },
+      "direction": {
+        "name": "direction",
+        "description": "The direction to sort the results by.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
+      },
       "pagination-before": {
         "name": "before",
         "description": "A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
@@ -84744,17 +84788,6 @@
         "in": "query",
         "required": false,
         "schema": { "type": "string" }
-      },
-      "direction": {
-        "name": "direction",
-        "description": "The direction to sort the results by.",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": ["asc", "desc"],
-          "default": "desc"
-        }
       },
       "account-id": {
         "name": "account_id",
