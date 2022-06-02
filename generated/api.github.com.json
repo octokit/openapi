@@ -3266,8 +3266,6 @@
           {
             "$ref": "#/components/parameters/secret-scanning-alert-resolution"
           },
-          { "$ref": "#/components/parameters/secret-scanning-alert-sort" },
-          { "$ref": "#/components/parameters/direction" },
           { "$ref": "#/components/parameters/per-page" },
           { "$ref": "#/components/parameters/pagination-before" },
           { "$ref": "#/components/parameters/pagination-after" }
@@ -27843,6 +27841,12 @@
                     "enum": ["off-topic", "too heated", "resolved", "spam"]
                   }
                 }
+              },
+              "examples": {
+                "default": {
+                  "summary": "Example of locking an issue as off-topic",
+                  "value": { "lock_reason": "off-topic" }
+                }
               }
             }
           }
@@ -28081,6 +28085,11 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/timeline-issue-events"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/timeline-issue-events"
                   }
                 }
               }
@@ -39454,6 +39463,10 @@
             }
           }
         },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
         "responses": {
           "201": {
             "description": "Response",
@@ -39467,6 +39480,27 @@
                   "default": { "$ref": "#/components/examples/email-items" }
                 }
               }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "users",
+          "subcategory": "emails"
+        },
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-10-05",
+              "before": { "operationId": "users/add-email-for-authenticated" }
             }
           },
           "304": { "$ref": "#/components/responses/not_modified" },
@@ -40503,6 +40537,511 @@
           "enabledForGitHubApps": false,
           "category": "users",
           "subcategory": "keys"
+        },
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-10-05",
+              "before": {
+                "operationId": "users/get-public-ssh-key-for-authenticated"
+              }
+            }
+          ]
+        }
+      },
+      "delete": {
+        "summary": "Delete a public SSH key for the authenticated user",
+        "description": "Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).",
+        "tags": ["users"],
+        "operationId": "users/delete-public-ssh-key-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/users#delete-a-public-ssh-key-for-the-authenticated-user"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/key-id" }],
+        "responses": {
+          "204": { "description": "Response" },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "users",
+          "subcategory": "keys"
+        },
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-10-05",
+              "before": {
+                "operationId": "users/delete-public-ssh-key-for-authenticated"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/user/marketplace_purchases": {
+      "get": {
+        "summary": "List subscriptions for the authenticated user",
+        "description": "Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).",
+        "tags": ["apps"],
+        "operationId": "apps/list-subscriptions-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/user-marketplace-purchase"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-marketplace-purchase-items"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "apps",
+          "subcategory": "marketplace"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/marketplace_purchases/stubbed": {
+      "get": {
+        "summary": "List subscriptions for the authenticated user (stubbed)",
+        "description": "Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).",
+        "tags": ["apps"],
+        "operationId": "apps/list-subscriptions-for-authenticated-user-stubbed",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user-stubbed"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/user-marketplace-purchase"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-marketplace-purchase-items"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "apps",
+          "subcategory": "marketplace"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/memberships/orgs": {
+      "get": {
+        "summary": "List organization memberships for the authenticated user",
+        "description": "",
+        "tags": ["orgs"],
+        "operationId": "orgs/list-memberships-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/orgs#list-organization-memberships-for-the-authenticated-user"
+        },
+        "parameters": [
+          {
+            "name": "state",
+            "description": "Indicates the state of the memberships to return. Can be either `active` or `pending`. If not specified, the API returns both active and pending memberships.",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "enum": ["active", "pending"] }
+          },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/org-membership" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/org-membership-items"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "orgs",
+          "subcategory": "members"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/memberships/orgs/{org}": {
+      "get": {
+        "summary": "Get an organization membership for the authenticated user",
+        "description": "",
+        "tags": ["orgs"],
+        "operationId": "orgs/get-membership-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/orgs#get-an-organization-membership-for-the-authenticated-user"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/org" }],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/org-membership" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/org-membership" }
+                }
+              }
+            }
+          },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "orgs",
+          "subcategory": "members"
+        },
+        "x-octokit": {}
+      },
+      "patch": {
+        "summary": "Update an organization membership for the authenticated user",
+        "description": "",
+        "tags": ["orgs"],
+        "operationId": "orgs/update-membership-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/org" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "description": "The state that the membership should be in. Only `\"active\"` will be accepted.",
+                    "enum": ["active"]
+                  }
+                },
+                "required": ["state"]
+              },
+              "examples": { "default": { "value": { "state": "active" } } }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/org-membership" },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/org-membership-2"
+                  }
+                }
+              }
+            }
+          },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "orgs",
+          "subcategory": "members"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/migrations": {
+      "get": {
+        "summary": "List user migrations",
+        "description": "Lists all migrations a user has started.",
+        "tags": ["migrations"],
+        "operationId": "migrations/list-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/migrations#list-user-migrations"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/migration" }
+                },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/migration-items" }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "migrations",
+          "subcategory": "users"
+        },
+        "x-octokit": {}
+      },
+      "post": {
+        "summary": "Start a user migration",
+        "description": "Initiates the generation of a user migration archive.",
+        "tags": ["migrations"],
+        "operationId": "migrations/start-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/migrations#start-a-user-migration"
+        },
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "lock_repositories": {
+                    "description": "Lock the repositories being migrated at the start of the migration",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_metadata": {
+                    "description": "Indicates whether metadata should be excluded and only git source should be included for the migration.",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_git_data": {
+                    "description": "Indicates whether the repository git data should be excluded from the migration.",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_attachments": {
+                    "description": "Do not include attachments in the migration",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_releases": {
+                    "description": "Do not include releases in the migration",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_owner_projects": {
+                    "description": "Indicates whether projects owned by the organization or users should be excluded.",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "org_metadata_only": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Indicates whether this should only include organization metadata (repositories array should be empty and will ignore other flags).",
+                    "default": false
+                  },
+                  "exclude": {
+                    "description": "Exclude attributes from the API response to improve performance",
+                    "example": ["repositories"],
+                    "readOnly": false,
+                    "type": "array",
+                    "items": {
+                      "description": "Allowed values that can be passed to the exclude param.",
+                      "enum": ["repositories"],
+                      "example": "repositories",
+                      "type": "string"
+                    }
+                  },
+                  "repositories": {
+                    "type": "array",
+                    "items": {
+                      "description": "Repository path, owner and name",
+                      "example": "acme/widgets",
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["repositories"],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/migration" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/migration-2" }
+                }
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "migrations",
+          "subcategory": "users"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/migrations/{migration_id}": {
+      "get": {
+        "summary": "Get a user migration status",
+        "description": "Fetches a single user migration. The response includes the `state` of the migration, which can be one of the following values:\n\n*   `pending` - the migration hasn't started yet.\n*   `exporting` - the migration is in progress.\n*   `exported` - the migration finished successfully.\n*   `failed` - the migration failed.\n\nOnce the migration has been `exported` you can [download the migration archive](https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive).",
+        "tags": ["migrations"],
+        "operationId": "migrations/get-status-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/migrations#get-a-user-migration-status"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/migration-id" },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "array", "items": { "type": "string" } }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/migration" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/migration" }
+                }
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "migrations",
+          "subcategory": "users"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/migrations/{migration_id}/archive": {
+      "get": {
+        "summary": "Download a user migration archive",
+        "description": "Fetches the URL to download the migration archive as a `tar.gz` file. Depending on the resources your repository uses, the migration archive can contain JSON files with data for these objects:\n\n*   attachments\n*   bases\n*   commit\\_comments\n*   issue\\_comments\n*   issue\\_events\n*   issues\n*   milestones\n*   organizations\n*   projects\n*   protected\\_branches\n*   pull\\_request\\_reviews\n*   pull\\_requests\n*   releases\n*   repositories\n*   review\\_comments\n*   schema\n*   users\n\nThe archive will also contain an `attachments` directory that includes all attachment files uploaded to GitHub.com and a `repositories` directory that contains the repository's Git data.",
+        "tags": ["migrations"],
+        "operationId": "migrations/get-archive-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/migration-id" }],
+        "responses": {
+          "302": { "description": "Response" },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "migrations",
+          "subcategory": "users"
         },
         "x-octokit": {
           "changes": [
@@ -66933,6 +67472,7 @@
             "dismissed_by": null,
             "dismissed_at": null,
             "dismissed_reason": null,
+            "dismissed_comment": null,
             "rule": {
               "id": "js/zipslip",
               "severity": "error",
@@ -67196,6 +67736,7 @@
             },
             "dismissed_at": "2020-02-14T12:29:18Z",
             "dismissed_reason": "false positive",
+            "dismissed_comment": "This alert is not actually correct, because there's a sanitizer included in the library.",
             "rule": {
               "id": "js/zipslip",
               "severity": "error",
@@ -73049,6 +73590,7 @@
             "dismissed_by": null,
             "dismissed_at": null,
             "dismissed_reason": null,
+            "dismissed_comment": null,
             "rule": {
               "id": "js/zipslip",
               "severity": "error",
@@ -73106,6 +73648,7 @@
             },
             "dismissed_at": "2020-02-14T12:29:18Z",
             "dismissed_reason": "false positive",
+            "dismissed_comment": "This alert is not actually correct, because there's a sanitizer included in the library.",
             "rule": {
               "id": "js/zipslip",
               "severity": "error",
@@ -73166,6 +73709,7 @@
           },
           "dismissed_at": "2020-02-14T12:29:18Z",
           "dismissed_reason": "false positive",
+          "dismissed_comment": "This alert is not actually correct, because there's a sanitizer included in the library.",
           "rule": {
             "id": "js/zipslip",
             "severity": "error",
@@ -73228,6 +73772,7 @@
           },
           "dismissed_at": "2020-09-02T22:34:56Z",
           "dismissed_reason": "false positive",
+          "dismissed_comment": "This alert is not actually correct, because there's a sanitizer included in the library.",
           "rule": {
             "id": "js/zipslip",
             "severity": "error",
@@ -77770,6 +78315,171 @@
             "description": "Something isn't working",
             "color": "f29513",
             "default": true
+          }
+        ]
+      },
+      "timeline-issue-events": {
+        "value": [
+          {
+            "id": 6430295168,
+            "node_id": "LOE_lADODwFebM5HwC0kzwAAAAF_RoSA",
+            "url": "https://api.github.com/repos/github/roadmap/issues/events/6430295168",
+            "actor": {
+              "login": "github",
+              "id": 9919,
+              "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/github",
+              "html_url": "https://github.com/github",
+              "followers_url": "https://api.github.com/users/github/followers",
+              "following_url": "https://api.github.com/users/github/following{/other_user}",
+              "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+              "organizations_url": "https://api.github.com/users/github/orgs",
+              "repos_url": "https://api.github.com/users/github/repos",
+              "events_url": "https://api.github.com/users/github/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/github/received_events",
+              "type": "Organization",
+              "site_admin": false
+            },
+            "event": "locked",
+            "commit_id": null,
+            "commit_url": null,
+            "created_at": "2022-04-13T20:49:13Z",
+            "lock_reason": null,
+            "performed_via_github_app": null
+          },
+          {
+            "id": 6430296748,
+            "node_id": "LE_lADODwFebM5HwC0kzwAAAAF_Roqs",
+            "url": "https://api.github.com/repos/github/roadmap/issues/events/6430296748",
+            "actor": {
+              "login": "github-product-roadmap",
+              "id": 67656570,
+              "node_id": "MDQ6VXNlcjY3NjU2NTcw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/67656570?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/github-product-roadmap",
+              "html_url": "https://github.com/github-product-roadmap",
+              "followers_url": "https://api.github.com/users/github-product-roadmap/followers",
+              "following_url": "https://api.github.com/users/github-product-roadmap/following{/other_user}",
+              "gists_url": "https://api.github.com/users/github-product-roadmap/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/github-product-roadmap/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/github-product-roadmap/subscriptions",
+              "organizations_url": "https://api.github.com/users/github-product-roadmap/orgs",
+              "repos_url": "https://api.github.com/users/github-product-roadmap/repos",
+              "events_url": "https://api.github.com/users/github-product-roadmap/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/github-product-roadmap/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "event": "labeled",
+            "commit_id": null,
+            "commit_url": null,
+            "created_at": "2022-04-13T20:49:34Z",
+            "label": { "name": "beta", "color": "99dd88" },
+            "performed_via_github_app": null
+          },
+          {
+            "id": 6635165802,
+            "node_id": "RTE_lADODwFebM5HwC0kzwAAAAGLfJhq",
+            "url": "https://api.github.com/repos/github/roadmap/issues/events/6635165802",
+            "actor": {
+              "login": "github-product-roadmap",
+              "id": 67656570,
+              "node_id": "MDQ6VXNlcjY3NjU2NTcw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/67656570?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/github-product-roadmap",
+              "html_url": "https://github.com/github-product-roadmap",
+              "followers_url": "https://api.github.com/users/github-product-roadmap/followers",
+              "following_url": "https://api.github.com/users/github-product-roadmap/following{/other_user}",
+              "gists_url": "https://api.github.com/users/github-product-roadmap/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/github-product-roadmap/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/github-product-roadmap/subscriptions",
+              "organizations_url": "https://api.github.com/users/github-product-roadmap/orgs",
+              "repos_url": "https://api.github.com/users/github-product-roadmap/repos",
+              "events_url": "https://api.github.com/users/github-product-roadmap/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/github-product-roadmap/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "event": "renamed",
+            "commit_id": null,
+            "commit_url": null,
+            "created_at": "2022-05-18T19:29:01Z",
+            "rename": {
+              "from": "Secret scanning: dry-runs for enterprise-level custom patterns (cloud)",
+              "to": "Secret scanning: dry-runs for enterprise-level custom patterns"
+            },
+            "performed_via_github_app": null
+          },
+          {
+            "url": "https://api.github.com/repos/github/roadmap/issues/comments/1130876857",
+            "html_url": "https://github.com/github/roadmap/issues/493#issuecomment-1130876857",
+            "issue_url": "https://api.github.com/repos/github/roadmap/issues/493",
+            "id": 1130876857,
+            "node_id": "IC_kwDODwFebM5DZ8-5",
+            "user": {
+              "login": "octocat",
+              "id": 94867353,
+              "node_id": "U_kgDOBaePmQ",
+              "avatar_url": "https://avatars.githubusercontent.com/u/94867353?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": true
+            },
+            "created_at": "2022-05-19T00:52:15Z",
+            "updated_at": "2022-05-19T00:52:15Z",
+            "author_association": "COLLABORATOR",
+            "body": "🚢  Shipped to the cloud: https://github.blog/changelog/2022-05-12-secret-scanning-dry-runs-for-enterprise-level-custom-patterns/",
+            "reactions": {
+              "url": "https://api.github.com/repos/github/roadmap/issues/comments/1130876857/reactions",
+              "total_count": 0,
+              "+1": 0,
+              "-1": 0,
+              "laugh": 0,
+              "hooray": 0,
+              "confused": 0,
+              "heart": 0,
+              "rocket": 0,
+              "eyes": 0
+            },
+            "performed_via_github_app": null,
+            "event": "commented",
+            "actor": {
+              "login": "octocat",
+              "id": 94867353,
+              "node_id": "U_kgDOBaePmQ",
+              "avatar_url": "https://avatars.githubusercontent.com/u/94867353?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": true
+            }
           }
         ]
       },
@@ -84732,28 +85442,6 @@
         "required": false,
         "schema": { "type": "string" }
       },
-      "secret-scanning-alert-sort": {
-        "name": "sort",
-        "description": "The property to sort the results by. `created` means when the alert was created. `updated` means when the alert was updated or resolved.",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": ["created", "updated"],
-          "default": "created"
-        }
-      },
-      "direction": {
-        "name": "direction",
-        "description": "The direction to sort the results by.",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": ["asc", "desc"],
-          "default": "desc"
-        }
-      },
       "pagination-before": {
         "name": "before",
         "description": "A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
@@ -84788,6 +85476,17 @@
         "in": "query",
         "required": false,
         "schema": { "type": "string" }
+      },
+      "direction": {
+        "name": "direction",
+        "description": "The direction to sort the results by.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
       },
       "account-id": {
         "name": "account_id",
