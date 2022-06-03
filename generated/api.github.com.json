@@ -13371,6 +13371,12 @@
                     "type": "boolean"
                   }
                 }
+              },
+              "examples": {
+                "default": {
+                  "summary": "Change the note on the card",
+                  "value": { "note": "Add payload for delete Project column" }
+                }
               }
             }
           }
@@ -13472,6 +13478,12 @@
                 },
                 "required": ["position"],
                 "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Move the card to the bottom of the column",
+                  "value": { "column_id": 42, "position": "bottom" }
+                }
               }
             }
           }
@@ -13485,7 +13497,8 @@
                   "type": "object",
                   "properties": {},
                   "additionalProperties": false
-                }
+                },
+                "examples": { "default": { "value": null } }
               }
             }
           },
@@ -13613,6 +13626,12 @@
                 },
                 "required": ["name"],
                 "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Rename the project column",
+                  "value": { "name": "To Do" }
+                }
               }
             }
           }
@@ -13767,6 +13786,12 @@
                     "required": ["content_id", "content_type"]
                   }
                 ]
+              },
+              "examples": {
+                "default": {
+                  "summary": "Create a new card",
+                  "value": { "note": "Add payload for delete Project column" }
+                }
               }
             }
           }
@@ -13860,6 +13885,12 @@
                 },
                 "required": ["position"],
                 "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Move the column to the end of the board",
+                  "value": { "position": "last" }
+                }
               }
             }
           }
@@ -13873,7 +13904,8 @@
                   "type": "object",
                   "properties": {},
                   "additionalProperties": false
-                }
+                },
+                "examples": { "default": { "value": null } }
               }
             }
           },
@@ -13969,6 +14001,16 @@
                   }
                 },
                 "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Change the name, state, and permissions for a project",
+                  "value": {
+                    "name": "Week One Sprint",
+                    "state": "open",
+                    "organization_permission": "write"
+                  }
+                }
               }
             }
           }
@@ -41043,17 +41085,7 @@
           "category": "migrations",
           "subcategory": "users"
         },
-        "x-octokit": {
-          "changes": [
-            {
-              "type": "OPERATION",
-              "date": "2021-10-05",
-              "before": {
-                "operationId": "users/get-public-ssh-key-for-authenticated"
-              }
-            }
-          ]
-        }
+        "x-octokit": {}
       },
       "delete": {
         "summary": "Delete a public SSH key for the authenticated user",
@@ -41178,8 +41210,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "apps",
-          "subcategory": "marketplace"
+          "category": "orgs",
+          "subcategory": null
         },
         "x-octokit": {}
       }
@@ -41196,8 +41228,8 @@
         },
         "parameters": [
           {
-            "name": "state",
-            "description": "Indicates the state of the memberships to return. Can be either `active` or `pending`. If not specified, the API returns both active and pending memberships.",
+            "name": "package_type",
+            "description": "The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry.",
             "in": "query",
             "required": false,
             "schema": { "type": "string", "enum": ["active", "pending"] }
@@ -41231,8 +41263,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "orgs",
-          "subcategory": "members"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       }
@@ -41266,8 +41298,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "orgs",
-          "subcategory": "members"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       },
@@ -41321,8 +41353,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "orgs",
-          "subcategory": "members"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       }
@@ -41364,8 +41396,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       },
@@ -41474,8 +41506,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       }
@@ -41519,8 +41551,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       }
@@ -41545,8 +41577,570 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
+          "category": "packages",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-10-05",
+              "before": {
+                "operationId": "users/get-public-ssh-key-for-authenticated"
+              }
+            }
+          ]
+        }
+      },
+      "delete": {
+        "summary": "Delete a public SSH key for the authenticated user",
+        "description": "Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).",
+        "tags": ["users"],
+        "operationId": "users/delete-public-ssh-key-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/users#delete-a-public-ssh-key-for-the-authenticated-user"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/key-id" }],
+        "responses": {
+          "204": { "description": "Response" },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "packages",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-10-05",
+              "before": {
+                "operationId": "users/delete-public-ssh-key-for-authenticated"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/user/marketplace_purchases": {
+      "get": {
+        "summary": "List subscriptions for the authenticated user",
+        "description": "Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).",
+        "tags": ["apps"],
+        "operationId": "apps/list-subscriptions-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/projects#create-a-user-project"
+        },
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "Name of the project",
+                    "example": "Week One Sprint",
+                    "type": "string"
+                  },
+                  "body": {
+                    "description": "Body of the project",
+                    "example": "This project represents the sprint of the first week in January",
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "required": ["name"],
+                "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Create a new project",
+                  "value": {
+                    "name": "My Projects",
+                    "body": "A board to manage my personal projects."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/user-marketplace-purchase"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-marketplace-purchase-items"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "422": { "$ref": "#/components/responses/validation_failed_simple" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "apps",
+          "subcategory": "marketplace"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/marketplace_purchases/stubbed": {
+      "get": {
+        "summary": "List subscriptions for the authenticated user (stubbed)",
+        "description": "Lists the active subscriptions for the authenticated user. You must use a [user-to-server OAuth access token](https://docs.github.com/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint. . OAuth Apps must authenticate using an [OAuth token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/).",
+        "tags": ["apps"],
+        "operationId": "apps/list-subscriptions-for-authenticated-user-stubbed",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/apps#list-subscriptions-for-the-authenticated-user-stubbed"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/user-marketplace-purchase"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-marketplace-purchase-items"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "users",
+          "subcategory": "emails"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/memberships/orgs": {
+      "get": {
+        "summary": "List organization memberships for the authenticated user",
+        "description": "",
+        "tags": ["orgs"],
+        "operationId": "orgs/list-memberships-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/orgs#list-organization-memberships-for-the-authenticated-user"
+        },
+        "parameters": [
+          {
+            "name": "visibility",
+            "description": "Limit results to repositories with the specified visibility.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["all", "public", "private"],
+              "default": "all"
+            }
+          },
+          {
+            "name": "affiliation",
+            "description": "Comma-separated list of values. Can include:  \n\\* `owner`: Repositories that are owned by the authenticated user.  \n\\* `collaborator`: Repositories that the user has been added to as a collaborator.  \n\\* `organization_member`: Repositories that the user has access to through being a member of an organization. This includes every repository on every team that the user is on.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "owner,collaborator,organization_member"
+            }
+          },
+          {
+            "name": "type",
+            "description": "Limit results to repositories of the specified type. Will cause a `422` error if used in the same request as **visibility** or **affiliation**.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["all", "owner", "public", "private", "member"],
+              "default": "all"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "The property to sort the results by.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "pushed", "full_name"],
+              "default": "full_name"
+            }
+          },
+          {
+            "name": "direction",
+            "description": "The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "enum": ["active", "pending"] }
+          },
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/org-membership" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/org-membership-items"
+                  }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "repos",
+          "subcategory": null
+        },
+        "x-octokit": {}
+      },
+      "patch": {
+        "summary": "Update an organization membership for the authenticated user",
+        "description": "",
+        "tags": ["orgs"],
+        "operationId": "orgs/update-membership-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/org" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "description": "The state that the membership should be in. Only `\"active\"` will be accepted.",
+                    "enum": ["active"]
+                  }
+                },
+                "required": ["state"]
+              },
+              "examples": { "default": { "value": { "state": "active" } } }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/org-membership" },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/org-membership-2"
+                  }
+                }
+              }
+            }
+          },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "orgs",
+          "subcategory": "members"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/migrations": {
+      "get": {
+        "summary": "List user migrations",
+        "description": "Lists all migrations a user has started.",
+        "tags": ["migrations"],
+        "operationId": "migrations/list-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/migrations#list-user-migrations"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/per-page" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/migration" }
+                },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/migration-items" }
+                }
+              }
+            },
+            "headers": { "Link": { "$ref": "#/components/headers/link" } }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "repos",
+          "subcategory": "invitations"
+        },
+        "x-octokit": {}
+      },
+      "post": {
+        "summary": "Start a user migration",
+        "description": "Initiates the generation of a user migration archive.",
+        "tags": ["migrations"],
+        "operationId": "migrations/start-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/repos#accept-a-repository-invitation"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/invitation-id" }],
+        "responses": {
+          "204": { "description": "Response" },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" },
+          "409": { "$ref": "#/components/responses/conflict" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "repos",
+          "subcategory": "invitations"
+        },
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "lock_repositories": {
+                    "description": "Lock the repositories being migrated at the start of the migration",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_metadata": {
+                    "description": "Indicates whether metadata should be excluded and only git source should be included for the migration.",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_git_data": {
+                    "description": "Indicates whether the repository git data should be excluded from the migration.",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_attachments": {
+                    "description": "Do not include attachments in the migration",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_releases": {
+                    "description": "Do not include releases in the migration",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "exclude_owner_projects": {
+                    "description": "Indicates whether projects owned by the organization or users should be excluded.",
+                    "example": true,
+                    "readOnly": false,
+                    "type": "boolean"
+                  },
+                  "org_metadata_only": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Indicates whether this should only include organization metadata (repositories array should be empty and will ignore other flags).",
+                    "default": false
+                  },
+                  "exclude": {
+                    "description": "Exclude attributes from the API response to improve performance",
+                    "example": ["repositories"],
+                    "readOnly": false,
+                    "type": "array",
+                    "items": {
+                      "description": "Allowed values that can be passed to the exclude param.",
+                      "enum": ["repositories"],
+                      "example": "repositories",
+                      "type": "string"
+                    }
+                  },
+                  "repositories": {
+                    "type": "array",
+                    "items": {
+                      "description": "Repository path, owner and name",
+                      "example": "acme/widgets",
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["repositories"],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/migration" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/migration-2" }
+                }
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "repos",
+          "subcategory": "invitations"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/migrations/{migration_id}": {
+      "get": {
+        "summary": "Get a user migration status",
+        "description": "Fetches a single user migration. The response includes the `state` of the migration, which can be one of the following values:\n\n*   `pending` - the migration hasn't started yet.\n*   `exporting` - the migration is in progress.\n*   `exported` - the migration finished successfully.\n*   `failed` - the migration failed.\n\nOnce the migration has been `exported` you can [download the migration archive](https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive).",
+        "tags": ["migrations"],
+        "operationId": "migrations/get-status-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/migrations#get-a-user-migration-status"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/migration-id" },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "array", "items": { "type": "string" } }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/migration" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/migration" }
+                }
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "activity",
+          "subcategory": "starring"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/user/migrations/{migration_id}/archive": {
+      "get": {
+        "summary": "Download a user migration archive",
+        "description": "Fetches the URL to download the migration archive as a `tar.gz` file. Depending on the resources your repository uses, the migration archive can contain JSON files with data for these objects:\n\n*   attachments\n*   bases\n*   commit\\_comments\n*   issue\\_comments\n*   issue\\_events\n*   issues\n*   milestones\n*   organizations\n*   projects\n*   protected\\_branches\n*   pull\\_request\\_reviews\n*   pull\\_requests\n*   releases\n*   repositories\n*   review\\_comments\n*   schema\n*   users\n\nThe archive will also contain an `attachments` directory that includes all attachment files uploaded to GitHub.com and a `repositories` directory that contains the repository's Git data.",
+        "tags": ["migrations"],
+        "operationId": "migrations/get-archive-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/migrations#download-a-user-migration-archive"
+        },
+        "parameters": [{ "$ref": "#/components/parameters/migration-id" }],
+        "responses": {
+          "302": { "description": "Response" },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "401": { "$ref": "#/components/responses/requires_authentication" },
+          "403": { "$ref": "#/components/responses/forbidden" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "activity",
+          "subcategory": "starring"
         },
         "x-octokit": {}
       },
@@ -41570,8 +42164,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
+          "category": "activity",
+          "subcategory": "starring"
         },
         "x-octokit": {}
       }
@@ -41600,8 +42194,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
+          "category": "activity",
+          "subcategory": "starring"
         },
         "x-octokit": {}
       }
@@ -41644,8 +42238,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
+          "category": "activity",
+          "subcategory": "watching"
         },
         "x-octokit": {
           "changes": [
@@ -41699,7 +42293,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "orgs",
+          "category": "teams",
           "subcategory": null
         },
         "x-octokit": {}
@@ -41755,8 +42349,8 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
+          "enabledForGitHubApps": true,
+          "category": "users",
           "subcategory": null
         },
         "x-octokit": {}
@@ -41787,12 +42381,13 @@
                 }
               }
             }
-          }
+          },
+          "404": { "$ref": "#/components/responses/not_found" }
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
+          "enabledForGitHubApps": true,
+          "category": "users",
           "subcategory": null
         },
         "x-octokit": {}
@@ -41818,9 +42413,9 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
+          "enabledForGitHubApps": true,
+          "category": "activity",
+          "subcategory": "events"
         },
         "x-octokit": {}
       }
@@ -41855,8 +42450,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
+          "category": "activity",
+          "subcategory": "events"
         },
         "x-octokit": {}
       }
@@ -41911,9 +42506,9 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
+          "enabledForGitHubApps": true,
+          "category": "activity",
+          "subcategory": "events"
         },
         "x-octokit": {
           "changes": [
@@ -41960,9 +42555,9 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
+          "enabledForGitHubApps": true,
+          "category": "users",
+          "subcategory": "followers"
         },
         "x-octokit": {}
       },
@@ -41988,9 +42583,9 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
+          "enabledForGitHubApps": true,
+          "category": "users",
+          "subcategory": "followers"
         },
         "x-octokit": {}
       }
@@ -42018,9 +42613,9 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
+          "enabledForGitHubApps": true,
+          "category": "users",
+          "subcategory": "followers"
         },
         "x-octokit": {}
       }
@@ -42079,8 +42674,8 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "projects",
+          "enabledForGitHubApps": false,
+          "category": "gists",
           "subcategory": null
         },
         "x-octokit": {}
@@ -42123,7 +42718,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
+          "enabledForGitHubApps": true,
           "category": "users",
           "subcategory": "emails"
         },
@@ -42231,7 +42826,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "repos",
+          "category": "users",
           "subcategory": null
         },
         "x-octokit": {}
@@ -42384,7 +42979,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "repos",
+          "category": "apps",
           "subcategory": null
         },
         "x-octokit": {}
@@ -42423,27 +43018,23 @@
               }
             },
             "headers": { "Link": { "$ref": "#/components/headers/link" } }
-          },
-          "304": { "$ref": "#/components/responses/not_modified" },
-          "401": { "$ref": "#/components/responses/requires_authentication" },
-          "403": { "$ref": "#/components/responses/forbidden" },
-          "404": { "$ref": "#/components/responses/not_found" }
+          }
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "repos",
-          "subcategory": "invitations"
+          "enabledForGitHubApps": true,
+          "category": "users",
+          "subcategory": "keys"
         },
         "x-octokit": {}
       }
     },
-    "/user/repository_invitations/{invitation_id}": {
-      "patch": {
-        "summary": "Accept a repository invitation",
-        "description": "",
-        "tags": ["repos"],
-        "operationId": "repos/accept-invitation-for-authenticated-user",
+    "/users/{username}/orgs": {
+      "get": {
+        "summary": "List organizations for a user",
+        "description": "List [public organization memberships](https://docs.github.com/articles/publicizing-or-concealing-organization-membership) for the specified user.\n\nThis method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.",
+        "tags": ["orgs"],
+        "operationId": "orgs/list-for-user",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/repos#accept-a-repository-invitation"
@@ -42458,9 +43049,9 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "repos",
-          "subcategory": "invitations"
+          "enabledForGitHubApps": true,
+          "category": "orgs",
+          "subcategory": null
         },
         "x-octokit": {
           "changes": [
@@ -42517,10 +43108,25 @@
           "url": "https://docs.github.com/rest/reference/activity#list-repositories-starred-by-the-authenticated-user"
         },
         "parameters": [
-          { "$ref": "#/components/parameters/sort" },
-          { "$ref": "#/components/parameters/direction" },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
+          {
+            "name": "package_type",
+            "description": "The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry.",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "npm",
+                "maven",
+                "rubygems",
+                "docker",
+                "nuget",
+                "container"
+              ]
+            }
+          },
+          { "$ref": "#/components/parameters/package-visibility" },
+          { "$ref": "#/components/parameters/username" }
         ],
         "responses": {
           "200": {
@@ -42558,8 +43164,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "activity",
-          "subcategory": "starring"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       }
@@ -42597,8 +43203,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "activity",
-          "subcategory": "starring"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       },
@@ -42625,8 +43231,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "activity",
-          "subcategory": "starring"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       },
@@ -42653,8 +43259,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "activity",
-          "subcategory": "starring"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       }
@@ -42698,8 +43304,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "activity",
-          "subcategory": "watching"
+          "category": "packages",
+          "subcategory": null
         },
         "x-octokit": {}
       }
@@ -42741,7 +43347,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "teams",
+          "category": "packages",
           "subcategory": null
         },
         "x-octokit": {}
@@ -42788,8 +43394,8 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "users",
+          "enabledForGitHubApps": false,
+          "category": "packages",
           "subcategory": null
         },
         "x-octokit": {}
@@ -42832,8 +43438,8 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "users",
+          "enabledForGitHubApps": false,
+          "category": "packages",
           "subcategory": null
         },
         "x-octokit": {}
@@ -42907,7 +43513,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
+          "enabledForGitHubApps": true,
           "category": "activity",
           "subcategory": "events"
         },
@@ -42963,6 +43569,35 @@
         },
         "parameters": [
           { "$ref": "#/components/parameters/username" },
+          {
+            "name": "type",
+            "description": "Limit results to repositories of the specified type.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["all", "owner", "member"],
+              "default": "owner"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "The property to sort the results by.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created", "updated", "pushed", "full_name"],
+              "default": "full_name"
+            }
+          },
+          {
+            "name": "direction",
+            "description": "The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "enum": ["asc", "desc"] }
+          },
           { "$ref": "#/components/parameters/per-page" },
           { "$ref": "#/components/parameters/page" }
         ],
@@ -42996,10 +43631,10 @@
     },
     "/users/{username}/following": {
       "get": {
-        "summary": "List the people a user follows",
-        "description": "Lists the people who the specified user follows.",
-        "tags": ["users"],
-        "operationId": "users/list-following-for-user",
+        "summary": "Get GitHub Actions billing for a user",
+        "description": "Gets the summary of the free and paid GitHub Actions minutes used.\n\nPaid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see \"[Managing billing for GitHub Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)\".\n\nAccess tokens must have the `user` scope.",
+        "operationId": "billing/get-github-actions-billing-user",
+        "tags": ["billing"],
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/users#list-the-people-a-user-follows"
@@ -43030,19 +43665,19 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "users",
-          "subcategory": "followers"
+          "enabledForGitHubApps": false,
+          "category": "billing",
+          "subcategory": null
         },
         "x-octokit": {}
       }
     },
     "/users/{username}/following/{target_user}": {
       "get": {
-        "summary": "Check if a user follows another user",
-        "description": "",
-        "tags": ["users"],
-        "operationId": "users/check-following-for-user",
+        "summary": "Get GitHub Packages billing for a user",
+        "description": "Gets the free and paid storage used for GitHub Packages in gigabytes.\n\nPaid minutes only apply to packages stored for private repositories. For more information, see \"[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages).\"\n\nAccess tokens must have the `user` scope.",
+        "operationId": "billing/get-github-packages-billing-user",
+        "tags": ["billing"],
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/users#check-if-a-user-follows-another-user"
@@ -43064,19 +43699,19 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "users",
-          "subcategory": "followers"
+          "enabledForGitHubApps": false,
+          "category": "billing",
+          "subcategory": null
         },
         "x-octokit": {}
       }
     },
     "/users/{username}/gists": {
       "get": {
-        "summary": "List gists for a user",
-        "description": "Lists public gists for the specified user:",
-        "tags": ["gists"],
-        "operationId": "gists/list-for-user",
+        "summary": "Get shared storage billing for a user",
+        "description": "Gets the estimated paid and estimated total storage used for GitHub Actions and GitHub Packages.\n\nPaid minutes only apply to packages stored for private repositories. For more information, see \"[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages).\"\n\nAccess tokens must have the `user` scope.",
+        "operationId": "billing/get-shared-storage-billing-user",
+        "tags": ["billing"],
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/gists#list-gists-for-a-user"
@@ -43108,7 +43743,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "gists",
+          "category": "billing",
           "subcategory": null
         },
         "x-octokit": {}
@@ -43149,8 +43784,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "users",
-          "subcategory": "gpg-keys"
+          "category": "activity",
+          "subcategory": "starring"
         },
         "x-octokit": {}
       }
@@ -43202,9 +43837,9 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "users",
-          "subcategory": null
+          "enabledForGitHubApps": true,
+          "category": "activity",
+          "subcategory": "watching"
         },
         "x-octokit": {}
       }
@@ -43235,9 +43870,8 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "apps",
-          "subcategory": null
+          "enabledForGitHubApps": true,
+          "category": "meta"
         },
         "x-octokit": {}
       }
@@ -43285,112 +43919,7 @@
         "x-octokit": {}
       }
     },
-    "/users/{username}/orgs": {
-      "get": {
-        "summary": "List organizations for a user",
-        "description": "List [public organization memberships](https://docs.github.com/articles/publicizing-or-concealing-organization-membership) for the specified user.\n\nThis method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.",
-        "tags": ["orgs"],
-        "operationId": "orgs/list-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/orgs#list-organizations-for-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/username" },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/organization-simple"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/organization-simple-items"
-                  }
-                }
-              }
-            },
-            "headers": { "Link": { "$ref": "#/components/headers/link" } }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "orgs",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/packages": {
-      "get": {
-        "summary": "List packages for a user",
-        "description": "Lists all packages in a user's namespace for which the requesting user has access.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
-        "tags": ["packages"],
-        "operationId": "packages/list-packages-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/packages#list-packages-for-user"
-        },
-        "parameters": [
-          {
-            "name": "package_type",
-            "description": "The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry.",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "npm",
-                "maven",
-                "rubygems",
-                "docker",
-                "nuget",
-                "container"
-              ]
-            }
-          },
-          { "$ref": "#/components/parameters/package-visibility" },
-          { "$ref": "#/components/parameters/username" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/package" }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/packages-for-user"
-                  }
-                }
-              }
-            }
-          },
-          "401": { "$ref": "#/components/responses/requires_authentication" },
-          "403": { "$ref": "#/components/responses/forbidden" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/packages/{package_type}/{package_name}": {
+    "/repos/{owner}/{repo}/community/code_of_conduct": {
       "get": {
         "summary": "Get a package for a user",
         "description": "Gets a specific package metadata for a public package owned by a user.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
@@ -43412,7 +43941,7 @@
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/package" },
                 "examples": {
-                  "default": { "$ref": "#/components/examples/package-user" }
+                  "default": { "$ref": "#/components/examples/code-of-conduct" }
                 }
               }
             }
@@ -43452,717 +43981,6 @@
           "category": "packages",
           "subcategory": null
         },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/packages/{package_type}/{package_name}/restore": {
-      "post": {
-        "summary": "Restore a package for a user",
-        "description": "Restores an entire package for a user.\n\nYou can restore a deleted package under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.",
-        "tags": ["packages"],
-        "operationId": "packages/restore-package-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/packages#restore-a-package-for-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/package-type" },
-          { "$ref": "#/components/parameters/package-name" },
-          { "$ref": "#/components/parameters/username" },
-          {
-            "name": "token",
-            "description": "package token",
-            "schema": { "type": "string" },
-            "required": false,
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "204": { "description": "Response" },
-          "401": { "$ref": "#/components/responses/requires_authentication" },
-          "403": { "$ref": "#/components/responses/forbidden" },
-          "404": { "$ref": "#/components/responses/not_found" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/packages/{package_type}/{package_name}/versions": {
-      "get": {
-        "summary": "Get all package versions for a package owned by a user",
-        "description": "Returns all package versions for a public package owned by a specified user.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
-        "tags": ["packages"],
-        "operationId": "packages/get-all-package-versions-for-package-owned-by-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/packages#get-all-package-versions-for-a-package-owned-by-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/package-type" },
-          { "$ref": "#/components/parameters/package-name" },
-          { "$ref": "#/components/parameters/username" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/package-version" }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/package-versions-for-user"
-                  }
-                }
-              }
-            }
-          },
-          "401": { "$ref": "#/components/responses/requires_authentication" },
-          "403": { "$ref": "#/components/responses/forbidden" },
-          "404": { "$ref": "#/components/responses/not_found" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
-      "get": {
-        "summary": "Get a package version for a user",
-        "description": "Gets a specific package version for a public package owned by a specified user.\n\nAt this time, to use this endpoint, you must authenticate using an access token with the `packages:read` scope.\nIf `package_type` is not `container`, your token must also include the `repo` scope.",
-        "tags": ["packages"],
-        "operationId": "packages/get-package-version-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/packages#get-a-package-version-for-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/package-type" },
-          { "$ref": "#/components/parameters/package-name" },
-          { "$ref": "#/components/parameters/package-version-id" },
-          { "$ref": "#/components/parameters/username" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/package-version" },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/package-version-user"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      },
-      "delete": {
-        "summary": "Delete package version for a user",
-        "description": "Deletes a specific package version for a user. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container you want to delete.",
-        "tags": ["packages"],
-        "operationId": "packages/delete-package-version-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/packages#delete-a-package-version-for-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/package-type" },
-          { "$ref": "#/components/parameters/package-name" },
-          { "$ref": "#/components/parameters/username" },
-          { "$ref": "#/components/parameters/package-version-id" }
-        ],
-        "responses": {
-          "204": { "description": "Response" },
-          "401": { "$ref": "#/components/responses/requires_authentication" },
-          "403": { "$ref": "#/components/responses/forbidden" },
-          "404": { "$ref": "#/components/responses/not_found" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
-      "post": {
-        "summary": "Restore package version for a user",
-        "description": "Restores a specific package version for a user.\n\nYou can restore a deleted package under the following conditions:\n  - The package was deleted within the last 30 days.\n  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.\n\nTo use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:\n- If `package_type` is not `container`, your token must also include the `repo` scope.\n- If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.",
-        "tags": ["packages"],
-        "operationId": "packages/restore-package-version-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/packages#restore-a-package-version-for-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/package-type" },
-          { "$ref": "#/components/parameters/package-name" },
-          { "$ref": "#/components/parameters/username" },
-          { "$ref": "#/components/parameters/package-version-id" }
-        ],
-        "responses": {
-          "204": { "description": "Response" },
-          "401": { "$ref": "#/components/responses/requires_authentication" },
-          "403": { "$ref": "#/components/responses/forbidden" },
-          "404": { "$ref": "#/components/responses/not_found" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "packages",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/projects": {
-      "get": {
-        "summary": "List user projects",
-        "description": "",
-        "tags": ["projects"],
-        "operationId": "projects/list-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/projects#list-user-projects"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/username" },
-          {
-            "name": "state",
-            "description": "Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": ["open", "closed", "all"],
-              "default": "open"
-            }
-          },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/project" }
-                },
-                "examples": {
-                  "default": { "$ref": "#/components/examples/project-items-3" }
-                }
-              }
-            },
-            "headers": { "Link": { "$ref": "#/components/headers/link" } }
-          },
-          "422": { "$ref": "#/components/responses/validation_failed" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "projects",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/received_events": {
-      "get": {
-        "summary": "List events received by the authenticated user",
-        "description": "These are events that you've received by watching repos and following users. If you are authenticated as the given user, you will see private events. Otherwise, you'll only see public events.",
-        "tags": ["activity"],
-        "operationId": "activity/list-received-events-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/activity#list-events-received-by-the-authenticated-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/username" },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/event" }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "activity",
-          "subcategory": "events"
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/received_events/public": {
-      "get": {
-        "summary": "List public events received by a user",
-        "description": "",
-        "tags": ["activity"],
-        "operationId": "activity/list-received-public-events-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/activity#list-public-events-received-by-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/username" },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/event" }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "activity",
-          "subcategory": "events"
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/repos": {
-      "get": {
-        "summary": "List repositories for a user",
-        "description": "Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user.",
-        "tags": ["repos"],
-        "operationId": "repos/list-for-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/repos#list-repositories-for-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/username" },
-          {
-            "name": "type",
-            "description": "Limit results to repositories of the specified type.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": ["all", "owner", "member"],
-              "default": "owner"
-            }
-          },
-          {
-            "name": "sort",
-            "description": "The property to sort the results by.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": ["created", "updated", "pushed", "full_name"],
-              "default": "full_name"
-            }
-          },
-          {
-            "name": "direction",
-            "description": "The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "string", "enum": ["asc", "desc"] }
-          },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/minimal-repository" }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/minimal-repository-items"
-                  }
-                }
-              }
-            },
-            "headers": { "Link": { "$ref": "#/components/headers/link" } }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/settings/billing/actions": {
-      "get": {
-        "summary": "Get GitHub Actions billing for a user",
-        "description": "Gets the summary of the free and paid GitHub Actions minutes used.\n\nPaid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see \"[Managing billing for GitHub Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)\".\n\nAccess tokens must have the `user` scope.",
-        "operationId": "billing/get-github-actions-billing-user",
-        "tags": ["billing"],
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/billing#get-github-actions-billing-for-a-user"
-        },
-        "parameters": [{ "$ref": "#/components/parameters/username" }],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/actions-billing-usage"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/actions-billing-usage"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "billing",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/settings/billing/packages": {
-      "get": {
-        "summary": "Get GitHub Packages billing for a user",
-        "description": "Gets the free and paid storage used for GitHub Packages in gigabytes.\n\nPaid minutes only apply to packages stored for private repositories. For more information, see \"[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages).\"\n\nAccess tokens must have the `user` scope.",
-        "operationId": "billing/get-github-packages-billing-user",
-        "tags": ["billing"],
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/billing#get-github-packages-billing-for-a-user"
-        },
-        "parameters": [{ "$ref": "#/components/parameters/username" }],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/packages-billing-usage"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/packages-billing-usage"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "billing",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/settings/billing/shared-storage": {
-      "get": {
-        "summary": "Get shared storage billing for a user",
-        "description": "Gets the estimated paid and estimated total storage used for GitHub Actions and GitHub Packages.\n\nPaid minutes only apply to packages stored for private repositories. For more information, see \"[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages).\"\n\nAccess tokens must have the `user` scope.",
-        "operationId": "billing/get-shared-storage-billing-user",
-        "tags": ["billing"],
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/billing#get-shared-storage-billing-for-a-user"
-        },
-        "parameters": [{ "$ref": "#/components/parameters/username" }],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/combined-billing-usage"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/combined-billing-usage"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "billing",
-          "subcategory": null
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/starred": {
-      "get": {
-        "summary": "List repositories starred by a user",
-        "description": "Lists repositories a user has starred.\n\nYou can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:",
-        "tags": ["activity"],
-        "operationId": "activity/list-repos-starred-by-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/activity#list-repositories-starred-by-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/username" },
-          { "$ref": "#/components/parameters/sort" },
-          { "$ref": "#/components/parameters/direction" },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "anyOf": [
-                    {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/starred-repository"
-                      }
-                    },
-                    {
-                      "type": "array",
-                      "items": { "$ref": "#/components/schemas/repository" }
-                    }
-                  ]
-                },
-                "examples": {
-                  "default-response": {
-                    "$ref": "#/components/examples/repository-items-default-response"
-                  }
-                }
-              }
-            },
-            "headers": { "Link": { "$ref": "#/components/headers/link" } }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "activity",
-          "subcategory": "starring"
-        },
-        "x-octokit": {}
-      }
-    },
-    "/users/{username}/subscriptions": {
-      "get": {
-        "summary": "List repositories watched by a user",
-        "description": "Lists repositories a user is watching.",
-        "tags": ["activity"],
-        "operationId": "activity/list-repos-watched-by-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/activity#list-repositories-watched-by-a-user"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/username" },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/minimal-repository" }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/minimal-repository-items"
-                  }
-                }
-              }
-            },
-            "headers": { "Link": { "$ref": "#/components/headers/link" } }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "activity",
-          "subcategory": "watching"
-        },
-        "x-octokit": {}
-      }
-    },
-    "/zen": {
-      "get": {
-        "summary": "Get the Zen of GitHub",
-        "description": "Get a random sentence from the Zen of GitHub",
-        "tags": ["meta"],
-        "operationId": "meta/get-zen",
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": { "text/plain": { "schema": { "type": "string" } } }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "meta"
-        },
-        "x-octokit": {}
-      }
-    },
-    "/repos/{owner}/{repo}/compare/{base}...{head}": {
-      "get": {
-        "summary": "Compare two commits",
-        "description": "**Deprecated**: Use `repos.compareCommitsWithBasehead()` (`GET /repos/{owner}/{repo}/compare/{basehead}`) instead. Both `:base` and `:head` must be branch names in `:repo`. To compare branches across other repositories in the same network as `:repo`, use the format `<USERNAME>:branch`.\n\nThe response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.\n\nThe response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.\n\n**Working with large comparisons**\n\nTo process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see \"[Traversing with pagination](/rest/guides/traversing-with-pagination).\"\n\nWhen calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.\n\n**Signature verification object**\n\nThe response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:\n\n| Name | Type | Description |\n| ---- | ---- | ----------- |\n| `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |\n| `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |\n| `signature` | `string` | The signature that was extracted from the commit. |\n| `payload` | `string` | The value that was signed. |\n\nThese are the possible values for `reason` in the `verification` object:\n\n| Value | Description |\n| ----- | ----------- |\n| `expired_key` | The key that made the signature is expired. |\n| `not_signing_key` | The \"signing\" flag is not among the usage flags in the GPG key that made the signature. |\n| `gpgverify_error` | There was an error communicating with the signature verification service. |\n| `gpgverify_unavailable` | The signature verification service is currently unavailable. |\n| `unsigned` | The object does not include a signature. |\n| `unknown_signature_type` | A non-PGP signature was found in the commit. |\n| `no_user` | No user was associated with the `committer` email address in the commit. |\n| `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |\n| `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |\n| `unknown_key` | The key that made the signature has not been registered with any user's account. |\n| `malformed_signature` | There was an error parsing the signature. |\n| `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |\n| `valid` | None of the above errors applied, so the signature is considered to be verified. |",
-        "tags": ["repos"],
-        "operationId": "repos/compare-commits",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/repos#compare-two-commits"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/owner" },
-          { "$ref": "#/components/parameters/repo" },
-          {
-            "name": "base",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "head",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          { "$ref": "#/components/parameters/per-page" },
-          { "$ref": "#/components/parameters/page" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/commit-comparison" },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/commit-comparison"
-                  }
-                }
-              }
-            }
-          },
-          "404": { "$ref": "#/components/responses/not_found" },
-          "500": { "$ref": "#/components/responses/internal_error" }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "previews": [],
-          "category": "repos",
-          "subcategory": "commits"
-        },
-        "x-octokit": {}
-      }
-    },
-    "/repos/{owner}/{repo}/community/code_of_conduct": {
-      "get": {
-        "summary": "Get the code of conduct for a repository",
-        "description": "Returns the contents of the repository's code of conduct file, if one is detected.\n\nA code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.",
-        "tags": ["codes-of-conduct"],
-        "operationId": "codes-of-conduct/get-for-repo",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/codes-of-conduct#get-the-code-of-conduct-for-a-repository"
-        },
-        "parameters": [
-          { "$ref": "#/components/parameters/owner" },
-          { "$ref": "#/components/parameters/repo" }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/code-of-conduct" },
-                "examples": {
-                  "default": { "$ref": "#/components/examples/code-of-conduct" }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "previews": [
-            {
-              "required": true,
-              "name": "scarlet-witch",
-              "note": "The Codes of Conduct API is currently available for developers to preview.\n\nTo access the API during the preview period, you must provide a custom [media type](https://docs.github.com/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.scarlet-witch-preview+json\n```"
-            }
-          ],
-          "category": "codes-of-conduct",
-          "subcategory": null,
-          "removalDate": "2021-09-29",
-          "deprecationDate": "2021-09-29"
-        },
-        "deprecated": true,
         "x-octokit": {}
       }
     }
@@ -46601,6 +46419,10 @@
           },
           "contributors_url": {
             "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+          },
+          "languages_url": {
+            "type": "string",
             "format": "uri",
             "example": "http://api.github.com/repos/octocat/Hello-World/contributors"
           },
@@ -46818,7 +46640,7 @@
             "example": "2011-01-26T19:01:12Z",
             "nullable": true
           },
-          "created_at": {
+          "events_url": {
             "type": "string",
             "format": "date-time",
             "example": "2011-01-26T19:14:43Z",
@@ -47219,109 +47041,6 @@
           "stargazers_url": {
             "type": "string",
             "format": "date-time",
-            "example": "2013-02-12T13:22:01Z",
-            "nullable": true
-          },
-          "due_on": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2012-10-09T23:39:01Z",
-            "nullable": true
-          }
-        },
-        "required": [
-          "closed_issues",
-          "creator",
-          "description",
-          "due_on",
-          "closed_at",
-          "id",
-          "node_id",
-          "labels_url",
-          "html_url",
-          "number",
-          "open_issues",
-          "state",
-          "title",
-          "url",
-          "created_at",
-          "updated_at"
-        ],
-        "nullable": true
-      },
-      "nullable-integration": {
-        "title": "GitHub app",
-        "description": "GitHub apps are a new way to extend GitHub. They can be installed directly on organizations and user accounts and granted access to specific repositories. They come with granular permissions and built-in webhooks. GitHub apps are first class actors within GitHub.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "description": "Unique identifier of the GitHub app",
-            "example": 37,
-            "type": "integer"
-          },
-          "slug": {
-            "description": "The slug name of the GitHub app",
-            "example": "probot-owners",
-            "type": "string"
-          },
-          "node_id": {
-            "type": "string",
-            "example": "MDExOkludGVncmF0aW9uMQ=="
-          },
-          "owner": { "$ref": "#/components/schemas/nullable-simple-user" },
-          "name": {
-            "description": "The name of the GitHub app",
-            "example": "Probot Owners",
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "example": "The description of the app.",
-            "nullable": true
-          },
-          "external_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://example.com"
-          },
-          "html_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://github.com/apps/super-ci"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2017-07-08T16:18:44-04:00"
-          },
-          "clone_url": { "type": "string" },
-          "mirror_url": { "type": "string", "nullable": true },
-          "hooks_url": {
-            "type": "string",
-            "example": "\"Iv1.25b5d1e65ffc4022\""
-          },
-          "svn_url": { "type": "string" },
-          "homepage": { "type": "string", "nullable": true },
-          "language": { "type": "string", "nullable": true },
-          "forks_count": { "type": "integer" },
-          "stargazers_count": { "type": "integer" },
-          "watchers_count": { "type": "integer" },
-          "size": { "type": "integer" },
-          "default_branch": { "type": "string" },
-          "open_issues_count": { "type": "integer" },
-          "is_template": { "type": "boolean" },
-          "topics": { "type": "array", "items": { "type": "string" } },
-          "has_issues": { "type": "boolean" },
-          "has_projects": { "type": "boolean" },
-          "has_wiki": { "type": "boolean" },
-          "has_pages": { "type": "boolean" },
-          "has_downloads": { "type": "boolean" },
-          "archived": { "type": "boolean" },
-          "disabled": { "type": "boolean" },
-          "visibility": { "type": "string" },
-          "pushed_at": {
-            "type": "string",
-            "format": "date-time",
             "nullable": true
           },
           "created_at": { "type": "string", "format": "date-time" },
@@ -47399,6 +47118,53 @@
             "type": "string",
             "format": "date-time",
             "example": "2011-04-14T16:00:49Z"
+          },
+          "issue_url": { "type": "string", "format": "uri" },
+          "author_association": {
+            "$ref": "#/components/schemas/author_association"
+          },
+          "performed_via_github_app": {
+            "$ref": "#/components/schemas/nullable-integration"
+          },
+          "clone_url": { "type": "string" },
+          "mirror_url": { "type": "string", "nullable": true },
+          "hooks_url": {
+            "type": "string",
+            "example": "https://github.com/timeline"
+          },
+          "svn_url": { "type": "string" },
+          "homepage": { "type": "string", "nullable": true },
+          "language": { "type": "string", "nullable": true },
+          "forks_count": { "type": "integer" },
+          "stargazers_count": { "type": "integer" },
+          "watchers_count": { "type": "integer" },
+          "size": { "type": "integer" },
+          "default_branch": { "type": "string" },
+          "open_issues_count": { "type": "integer" },
+          "is_template": { "type": "boolean" },
+          "topics": { "type": "array", "items": { "type": "string" } },
+          "has_issues": { "type": "boolean" },
+          "has_projects": { "type": "boolean" },
+          "has_wiki": { "type": "boolean" },
+          "has_pages": { "type": "boolean" },
+          "has_downloads": { "type": "boolean" },
+          "archived": { "type": "boolean" },
+          "disabled": { "type": "boolean" },
+          "visibility": { "type": "string" },
+          "pushed_at": {
+            "type": "string",
+            "example": "https://github.com/octocat.private.actor?token=abc123"
+          },
+          "current_user_organization_url": {
+            "type": "string",
+            "example": "https://github.com/octocat-org"
+          },
+          "current_user_organization_urls": {
+            "type": "array",
+            "example": [
+              "https://github.com/organizations/github/octocat.private.atom?token=abc123"
+            ],
+            "items": { "type": "string", "format": "uri" }
           },
           "permissions": {
             "type": "object",
@@ -52286,6 +52052,19 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "workflow_run": {
+            "type": "object",
+            "properties": {
+              "id": { "example": 10, "type": "integer" },
+              "repository_id": { "example": 42, "type": "integer" },
+              "head_repository_id": { "example": 42, "type": "integer" },
+              "head_branch": { "example": "main", "type": "string" },
+              "head_sha": {
+                "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
+                "type": "string"
+              }
+            }
           }
         },
         "required": [
@@ -71212,19 +70991,33 @@
               "expired": false,
               "created_at": "2020-01-10T14:59:22Z",
               "expires_at": "2020-03-21T14:59:22Z",
-              "updated_at": "2020-02-21T14:59:22Z"
+              "updated_at": "2020-02-21T14:59:22Z",
+              "workflow_run": {
+                "id": 2332938,
+                "repository_id": 1296269,
+                "head_repository_id": 1296269,
+                "head_branch": "main",
+                "head_sha": "328faa0536e6fef19753d9d91dc96a9931694ce3"
+              }
             },
             {
               "id": 13,
               "node_id": "MDg6QXJ0aWZhY3QxMw==",
-              "name": "",
+              "name": "Test output",
               "size_in_bytes": 453,
               "url": "https://api.github.com/repos/octo-org/octo-docs/actions/artifacts/13",
               "archive_download_url": "https://api.github.com/repos/octo-org/octo-docs/actions/artifacts/13/zip",
               "expired": false,
               "created_at": "2020-01-10T14:59:22Z",
               "expires_at": "2020-03-21T14:59:22Z",
-              "updated_at": "2020-02-21T14:59:22Z"
+              "updated_at": "2020-02-21T14:59:22Z",
+              "workflow_run": {
+                "id": 2332942,
+                "repository_id": 1296269,
+                "head_repository_id": 1296269,
+                "head_branch": "main",
+                "head_sha": "178f4f6090b3fccad4a65b3e83d076a622d59652"
+              }
             }
           ]
         }
@@ -71240,7 +71033,21 @@
           "expired": false,
           "created_at": "2020-01-10T14:59:22Z",
           "expires_at": "2020-01-21T14:59:22Z",
-          "updated_at": "2020-01-21T14:59:22Z"
+          "updated_at": "2020-01-21T14:59:22Z",
+          "workflow_run": {
+            "id": 2332938,
+            "repository_id": 1296269,
+            "head_repository_id": 1296269,
+            "head_branch": "main",
+            "head_sha": "328faa0536e6fef19753d9d91dc96a9931694ce3"
+          }
+        }
+      },
+      "actions-cache-usage": {
+        "value": {
+          "full_name": "octo-org/Hello-World",
+          "active_caches_size_in_bytes": 2322142,
+          "active_caches_count": 3
         }
       },
       "actions-cache-usage": {
