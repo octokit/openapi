@@ -2151,6 +2151,64 @@
         }
       }
     },
+    "/enterprise-installation/{enterprise_or_org}/server-statistics": {
+      "get": {
+        "summary": "Get GitHub Enterprise Server statistics",
+        "description": "Returns aggregate usage metrics for your GitHub Enterprise Server 3.5+ instance for a specified time period up to 365 days.\n\nTo use this endpoint, your GitHub Enterprise Server instance must be connected to GitHub Enterprise Cloud using GitHub Connect. You must enable Server Statistics, and for the API request provide your enterprise account name or organization name connected to the GitHub Enterprise Server. For more information, see \"[Enabling Server Statistics for your enterprise](/admin/configuration/configuring-github-connect/enabling-server-statistics-for-your-enterprise)\" in the GitHub Enterprise Server documentation.\n\nYou'll need to use a personal access token:\n  - If you connected your GitHub Enterprise Server to an enterprise account and enabled Server Statistics, you'll need a personal access token with the `read:enterprise` permission.\n  - If you connected your GitHub Enterprise Server to an organization account and enabled Server Statistics, you'll need a personal access token with the `read:org` permission.\n\nFor more information on creating a personal access token, see \"[Creating a personal access token](/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\"",
+        "operationId": "enterprise-admin/get-server-statistics",
+        "tags": ["server-statistics", "enterprise-admin"],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/enterprise-admin#get-github-enterprise-server-statistics"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise_or_org"
+          },
+          {
+            "name": "date_start",
+            "description": "A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_end",
+            "description": "A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/server-statistics"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/server-statistics"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "enterprise-admin",
+          "subcategory": "admin-stats"
+        }
+      }
+    },
     "/enterprises/{enterprise}/actions/permissions": {
       "get": {
         "summary": "Get GitHub Actions permissions for an enterprise",
