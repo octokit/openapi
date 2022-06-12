@@ -16527,8 +16527,8 @@
     },
     "/repos/{owner}/{repo}/actions/permissions/selected-actions": {
       "get": {
-        "summary": "Get allowed actions for a repository",
-        "description": "Gets the settings for selected actions that are allowed in a repository. To use this endpoint, the repository policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository).\"\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.",
+        "summary": "Get allowed actions and reusable workflows for a repository",
+        "description": "Gets the settings for selected actions and reusable workflows that are allowed in a repository. To use this endpoint, the repository policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository).\"\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.",
         "operationId": "actions/get-allowed-actions-repository",
         "tags": ["actions"],
         "externalDocs": {
@@ -16568,8 +16568,8 @@
         }
       },
       "put": {
-        "summary": "Set allowed actions for a repository",
-        "description": "Sets the actions that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository).\"\n\nIf the repository belongs to an organization or enterprise that has `selected` actions set at the organization or enterprise levels, then you cannot override any of the allowed actions settings.\n\nTo use the `patterns_allowed` setting for private repositories, the repository must belong to an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories.\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.",
+        "summary": "Set allowed actions and reusable workflows for a repository",
+        "description": "Sets the actions and reusable workflows that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository).\"\n\nIf the repository belongs to an organization or enterprise that has `selected` actions and reusable workflows set at the organization or enterprise levels, then you cannot override any of the allowed actions and reusable workflows settings.\n\nTo use the `patterns_allowed` setting for private repositories, the repository must belong to an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories.\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.",
         "operationId": "actions/set-allowed-actions-repository",
         "tags": ["actions"],
         "externalDocs": {
@@ -17459,7 +17459,7 @@
           },
           {
             "name": "filter",
-            "description": "Filters jobs by their `completed_at` timestamp. Can be one of:  \n\\* `latest`: Returns jobs from the most recent execution of the workflow run.  \n\\* `all`: Returns all jobs for a workflow run, including from old executions of the workflow run.",
+            "description": "Filters jobs by their `completed_at` timestamp. `latest` returns jobs from the most recent execution of the workflow run. `all` returns all jobs for a workflow run, including from old executions of the workflow run.",
             "in": "query",
             "required": false,
             "schema": {
@@ -17677,7 +17677,7 @@
                   },
                   "state": {
                     "type": "string",
-                    "description": "Whether to approve or reject deployment to the specified environments. Must be one of: `approved` or `rejected`",
+                    "description": "Whether to approve or reject deployment to the specified environments.",
                     "enum": ["approved", "rejected"],
                     "example": "approved"
                   },
@@ -19039,7 +19039,8 @@
                       },
                       "contexts": {
                         "type": "array",
-                        "description": "The list of status checks to require in order to merge into this branch",
+                        "deprecated": true,
+                        "description": "**Deprecated**: The list of status checks to require in order to merge into this branch. If any of these checks have recently been set by a particular GitHub App, they will be required to come from that app in future for the branch to merge. Use `checks` instead of `contexts` for more fine-grained control.\n",
                         "items": {
                           "type": "string"
                         }
@@ -42166,7 +42167,7 @@
                 "properties": {
                   "role": {
                     "type": "string",
-                    "description": "The role that this user should have in the team. Can be one of:  \n\\* `member` - a normal member of the team.  \n\\* `maintainer` - a team maintainer. Able to add/remove other team members, promote other team members to team maintainer, and edit the team's name and description.",
+                    "description": "The role that this user should have in the team.",
                     "enum": ["member", "maintainer"],
                     "default": "member"
                   }
