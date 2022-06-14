@@ -21652,6 +21652,24 @@
                         "items": {
                           "type": "string"
                         }
+                      },
+                      "checks": {
+                        "type": "array",
+                        "description": "The list of status checks to require in order to merge into this branch.",
+                        "items": {
+                          "type": "object",
+                          "required": ["context"],
+                          "properties": {
+                            "context": {
+                              "type": "string",
+                              "description": "The name of the required check"
+                            },
+                            "app_id": {
+                              "type": "integer",
+                              "description": "The ID of the GitHub App that must provide this check. Omit this field to automatically select the GitHub App that has recently provided this check, or any app if it was not set by a GitHub App. Pass -1 to explicitly allow any app to set the status."
+                            }
+                          }
+                        }
                       }
                     },
                     "required": ["strict", "contexts"]
@@ -21683,6 +21701,13 @@
                             "items": {
                               "type": "string"
                             }
+                          },
+                          "apps": {
+                            "type": "array",
+                            "description": "The list of app `slug`s with dismissal access",
+                            "items": {
+                              "type": "string"
+                            }
                           }
                         }
                       },
@@ -21698,6 +21723,32 @@
                         "type": "integer",
                         "description": "Specify the number of reviewers required to approve pull requests. Use a number between 1 and 6 or 0 to not require reviewers."
                       },
+                      "bypass_pull_request_allowances": {
+                        "type": "object",
+                        "description": "Allow specific users, teams, or apps to bypass pull request requirements.",
+                        "properties": {
+                          "users": {
+                            "type": "array",
+                            "description": "The list of user `login`s allowed to bypass pull request requirements.",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "teams": {
+                            "type": "array",
+                            "description": "The list of team `slug`s allowed to bypass pull request requirements.",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "apps": {
+                            "type": "array",
+                            "description": "The list of app `slug`s allowed to bypass pull request requirements.",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
                       }
                     }
                   },
