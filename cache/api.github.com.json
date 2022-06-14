@@ -26085,6 +26085,93 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/codespaces/machines": {
+      "get": {
+        "summary": "List available machine types for a repository",
+        "description": "List the machine types available for a given repository based on its configuration.\n\nYou must authenticate using an access token with the `codespace` scope to use this endpoint.\n\nGitHub Apps must have write access to the `codespaces_metadata` repository permission to use this endpoint.",
+        "tags": ["codespaces"],
+        "operationId": "codespaces/repo-machines-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/codespaces#list-available-machine-types-for-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "name": "location",
+            "description": "The location to check for available machines. Assigned by IP if not provided.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "WestUs2"
+            }
+          },
+          {
+            "name": "client_ip",
+            "description": "IP for location auto-detection when proxying a request",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "machines"],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "machines": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/codespace-machine"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/codespace-machines-list"
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "500": {
+            "$ref": "#/components/responses/internal_error"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "codespaces",
+          "subcategory": "machines"
+        }
+      }
+    },
     "/repos/{owner}/{repo}/collaborators": {
       "get": {
         "summary": "List repository collaborators",
