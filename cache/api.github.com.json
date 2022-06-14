@@ -10075,6 +10075,123 @@
         }
       }
     },
+    "/orgs/{org}/dependabot/secrets/{secret_name}/repositories": {
+      "get": {
+        "summary": "List selected repositories for an organization secret",
+        "description": "Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.",
+        "tags": ["dependabot"],
+        "operationId": "dependabot/list-selected-repos-for-org-secret",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/dependabot#list-selected-repositories-for-an-organization-secret"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/secret-name"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "repositories"],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "repositories": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/minimal-repository"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/public-repository-paginated"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "dependabot",
+          "subcategory": "secrets"
+        }
+      },
+      "put": {
+        "summary": "Set selected repositories for an organization secret",
+        "description": "Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.",
+        "tags": ["dependabot"],
+        "operationId": "dependabot/set-selected-repos-for-org-secret",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/dependabot#set-selected-repositories-for-an-organization-secret"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/secret-name"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "selected_repository_ids": {
+                    "type": "array",
+                    "description": "An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/rest/reference/dependabot#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/rest/reference/dependabot#remove-selected-repository-from-an-organization-secret) endpoints.",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "required": ["selected_repository_ids"]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "selected_repository_ids": [64780797]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "dependabot",
+          "subcategory": "secrets"
+        }
+      }
+    },
     "/orgs/{org}/events": {
       "get": {
         "summary": "List public organization events",
