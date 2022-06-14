@@ -3629,8 +3629,203 @@
         "x-github": {
           "enabledForGitHubApps": false,
           "githubCloudOnly": false,
-          "category": "enterprise-admin",
-          "subcategory": "actions"
+        }
+      }
+    },
+    "/enterprises/{enterprise}/actions/runners/{runner_id}/labels": {
+      "get": {
+        "summary": "List labels for a self-hosted runner for an enterprise",
+        "description": "Lists all labels for a self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+        "tags": ["enterprise-admin"],
+        "operationId": "enterprise-admin/list-labels-for-self-hosted-runner-for-enterprise",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#list-labels-for-a-self-hosted-runner-for-an-enterprise"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise"
+          },
+          {
+            "$ref": "#/components/parameters/runner-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/actions_runner_labels"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": false,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        }
+      },
+      "post": {
+        "summary": "Add custom labels to a self-hosted runner for an enterprise",
+        "description": "Add custom labels to a self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+        "tags": ["enterprise-admin"],
+        "operationId": "enterprise-admin/add-custom-labels-to-self-hosted-runner-for-enterprise",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#add-custom-labels-to-a-self-hosted-runner-for-an-enterprise"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise"
+          },
+          {
+            "$ref": "#/components/parameters/runner-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["labels"],
+                "properties": {
+                  "labels": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "description": "The names of the custom labels to add to the runner.",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+      }
+    },
+              "examples": {
+                "default": {
+                  "value": {
+                    "labels": ["gpu", "accelerated"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/actions_runner_labels"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed_simple"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        }
+      },
+      "put": {
+        "summary": "Set custom labels for a self-hosted runner for an enterprise",
+        "description": "Remove all previous custom labels and set the new custom labels for a specific\nself-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+        "tags": ["enterprise-admin"],
+        "operationId": "enterprise-admin/set-custom-labels-for-self-hosted-runner-for-enterprise",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#set-custom-labels-for-a-self-hosted-runner-for-an-enterprise"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise"
+          },
+          {
+            "$ref": "#/components/parameters/runner-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["labels"],
+                "properties": {
+                  "labels": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 100,
+                    "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "labels": ["gpu", "accelerated"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/actions_runner_labels"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed_simple"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        }
+      },
+      "delete": {
+        "summary": "Remove all custom labels from a self-hosted runner for an enterprise",
+        "description": "Remove all custom labels from a self-hosted runner configured in an\nenterprise. Returns the remaining read-only labels from the runner.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+        "tags": ["enterprise-admin"],
+        "operationId": "enterprise-admin/remove-all-custom-labels-from-self-hosted-runner-for-enterprise",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#remove-all-custom-labels-from-a-self-hosted-runner-for-an-enterprise"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise"
+          },
+          {
+            "$ref": "#/components/parameters/runner-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/actions_runner_labels_readonly"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed_simple"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
         }
       }
     },
