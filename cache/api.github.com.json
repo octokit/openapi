@@ -15276,6 +15276,144 @@
         }
       }
     },
+    "/orgs/{org}/teams/{team_slug}/external-groups": {
+      "get": {
+        "summary": "List a connection between an external group and a team",
+        "description": "Lists a connection between a team and an external group.\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+        "tags": ["teams"],
+        "operationId": "teams/list-linked-external-idp-groups-to-team-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/teams#list-external-idp-group-team-connection"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/team-slug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/external-groups"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/external-groups"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": true,
+          "enabledForGitHubApps": true,
+          "category": "teams",
+          "subcategory": "external-groups"
+        }
+      },
+      "patch": {
+        "summary": "Update the connection between an external group and a team",
+        "description": "Creates a connection between a team and an external group.  Only one external group can be linked to a team.\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+        "tags": ["teams"],
+        "operationId": "teams/link-external-idp-group-to-team-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/teams#link-external-idp-group-team-connection"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/team-slug"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "group_id": {
+                    "type": "integer",
+                    "description": "External Group Id",
+                    "example": 1
+                  }
+                },
+                "required": ["group_id"]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "group_id": 123
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/external-group"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/external-group"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": true,
+          "enabledForGitHubApps": false,
+          "category": "teams",
+          "subcategory": "external-groups"
+        }
+      },
+      "delete": {
+        "summary": "Remove the connection between an external group and a team",
+        "description": "Deletes a connection between a team and an external group.\n\nYou can manage team membership with your IdP using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
+        "tags": ["teams"],
+        "operationId": "teams/unlink-external-idp-group-from-team-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/teams#unlink-external-idp-group-team-connection"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/team-slug"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": true,
+          "enabledForGitHubApps": false,
+          "category": "teams",
+          "subcategory": "external-groups"
+        }
+      }
+    },
     "/orgs/{org}/teams/{team_slug}/invitations": {
       "get": {
         "summary": "List pending team invitations",
