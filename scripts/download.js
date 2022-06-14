@@ -3,6 +3,7 @@ const fs = require("fs");
 
 const { Octokit } = require("@octokit/core");
 const { getCurrentVersions } = require("github-enterprise-server-versions");
+const prettier = require("prettier");
 
 run().then(() => console.log("done"), console.error);
 
@@ -61,7 +62,9 @@ async function run() {
     );
   }
 
-  const currentGhesVersions = await getCurrentVersions();
+  // temporarily hardcode versions until we unblock automated updates
+  // const currentGhesVersions = await getCurrentVersions();
+  const currentGhesVersions = [3, 3.1, 3.2];
 
   for (const folder of data) {
     const { name } = folder;
@@ -83,7 +86,7 @@ async function run() {
   }
 }
 
-function download(name, remotePath) {
+async function download(name, remotePath) {
   const path = `cache/${name}.json`;
 
   const file = fs.createWriteStream(path);
@@ -91,7 +94,7 @@ function download(name, remotePath) {
 
   console.log("Downloading %s", url);
 
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     get(url, (response) => {
       response.pipe(file);
       file
@@ -105,4 +108,14 @@ function download(name, remotePath) {
         .on("error", (error) => reject(error.message));
     });
   });
+
+  console.log("Formatting %s", path);
+
+  const content = fs.readFileSync(path, "utf-8");
+  fs.writeFileSync(
+    path,
+    prettier.format(content, {
+      parser: "json",
+    })
+  );
 }

@@ -41,12 +41,21 @@
       "description": "Insight into codes of conduct for your communities."
     },
     {
+      "name": "codespaces",
+      "description": "Endpoints to manage Codespaces using the REST API."
+    },
+    {
       "name": "emojis",
       "description": "List emojis available to use on GitHub."
     },
     {
       "name": "enterprise-admin",
       "description": "Administer a GitHub enterprise."
+    },
+    { "name": "dependabot", "description": "Endpoints to manage Dependabot." },
+    {
+      "name": "dependency-graph",
+      "description": "Endpoints to access Dependency Graph features."
     },
     { "name": "gists", "description": "View, modify your gists." },
     { "name": "git", "description": "Raw Git functionality." },
@@ -57,7 +66,7 @@
     },
     { "name": "issues", "description": "Interact with GitHub Issues." },
     { "name": "licenses", "description": "View various OSS licenses." },
-    { "name": "markdown", "description": "Render Github flavored markdown" },
+    { "name": "markdown", "description": "Render GitHub flavored markdown" },
     {
       "name": "meta",
       "description": "Endpoints that give information about the API."
@@ -66,6 +75,10 @@
     {
       "name": "oauth-authorizations",
       "description": "Manage access of OAuth applications"
+    },
+    {
+      "name": "oidc",
+      "description": "Endpoints to manage GitHub OIDC configuration using the REST API."
     },
     { "name": "orgs", "description": "Interact with GitHub Orgs." },
     {
@@ -155,7 +168,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "enterprise-admin",
           "subcategory": "users"
         },
@@ -174,8 +186,19 @@
         },
         "parameters": [{ "$ref": "#/components/parameters/username" }],
         "responses": {
+          "200": {
+            "description": "Response when getting an existing impersonation OAuth token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/authorization" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/authorization" }
+                }
+              }
+            }
+          },
           "201": {
-            "description": "Response",
+            "description": "Response when creating a new impersonation OAuth token",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/authorization" },
@@ -206,7 +229,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "enterprise-admin",
           "subcategory": "users"
         },
@@ -225,6 +247,7 @@
         },
         "parameters": [{ "$ref": "#/components/parameters/installation-id" }],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -243,6 +266,14 @@
                   },
                   "permissions": {
                     "$ref": "#/components/schemas/app-permissions"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "respoitory": "Hello-World",
+                    "permissions": { "issues": "write", "contents": "read" }
                   }
                 }
               }
@@ -266,13 +297,11 @@
           "401": { "$ref": "#/components/responses/requires_authentication" },
           "403": { "$ref": "#/components/responses/forbidden" },
           "404": { "$ref": "#/components/responses/not_found" },
-          "415": { "$ref": "#/components/responses/preview_header_missing" },
           "422": { "$ref": "#/components/responses/validation_failed" }
         },
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "apps",
           "subcategory": null
         },
@@ -303,6 +332,13 @@
                 },
                 "required": ["access_token"],
                 "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a"
+                  }
+                }
               }
             }
           }
@@ -327,7 +363,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "apps",
           "subcategory": "oauth-applications"
         },
@@ -356,6 +391,13 @@
                 },
                 "required": ["access_token"],
                 "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a"
+                  }
+                }
               }
             }
           }
@@ -379,7 +421,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "apps",
           "subcategory": "oauth-applications"
         },
@@ -435,6 +476,19 @@
                   }
                 },
                 "required": ["access_token"]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "access_token": "e72e16c7e42f292c6912e7710c838347ae178b4a",
+                    "target": "octocat",
+                    "permissions": {
+                      "metadata": "read",
+                      "issues": "write",
+                      "contents": "read"
+                    }
+                  }
+                }
               }
             }
           }
@@ -459,7 +513,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "apps",
           "subcategory": "oauth-applications"
         },
@@ -501,7 +554,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "removalDate": "2021-05-05",
           "deprecationDate": "2020-02-14",
           "category": "apps",
@@ -541,7 +593,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "removalDate": "2021-05-05",
           "deprecationDate": "2020-02-14",
           "category": "apps",
@@ -598,7 +649,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "removalDate": "2020-11-13",
           "deprecationDate": "2020-02-14",
           "category": "oauth-authorizations",
@@ -609,7 +659,7 @@
       },
       "post": {
         "summary": "Create a new authorization",
-        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.1/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.1/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.1/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\n**Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.1/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).\n\nCreates OAuth tokens using [Basic Authentication](https://docs.github.com/enterprise-server@3.1/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see \"[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.1/rest/overview/other-authentication-methods#working-with-two-factor-authentication).\"\n\nTo create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.\n\nYou can also create tokens on GitHub Enterprise Server from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://help.github.com/articles/creating-an-access-token-for-command-line-use).\n\nOrganizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://help.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.1/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.1/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.1/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\n**Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.1/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).\n\nCreates OAuth tokens using [Basic Authentication](https://docs.github.com/enterprise-server@3.1/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see \"[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.1/rest/overview/other-authentication-methods#working-with-two-factor-authentication).\"\n\nTo create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.\n\nYou can also create tokens on GitHub Enterprise Server from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://docs.github.com/articles/creating-an-access-token-for-command-line-use).\n\nOrganizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://docs.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).",
         "tags": ["oauth-authorizations"],
         "operationId": "oauth-authorizations/create-authorization",
         "externalDocs": {
@@ -618,6 +668,7 @@
         },
         "parameters": [],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -685,7 +736,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "removalDate": "2020-11-13",
           "deprecationDate": "2020-02-14",
           "category": "oauth-authorizations",
@@ -789,7 +839,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "removalDate": "2020-11-13",
           "deprecationDate": "2020-02-14",
           "category": "oauth-authorizations",
@@ -894,7 +943,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "removalDate": "2020-11-13",
           "deprecationDate": "2020-02-14",
           "category": "oauth-authorizations",
@@ -934,7 +982,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "removalDate": "2020-11-13",
           "deprecationDate": "2020-02-14",
           "category": "oauth-authorizations",
@@ -954,6 +1001,7 @@
         },
         "parameters": [{ "$ref": "#/components/parameters/authorization-id" }],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -1011,7 +1059,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "removalDate": "2020-11-13",
           "deprecationDate": "2020-02-14",
           "category": "oauth-authorizations",
@@ -1029,7 +1076,7 @@
         "tags": ["enterprise-admin"],
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.1/rest/reference/enterprise-admin#create-a-registration-token-for-an-enterprise"
+          "url": "https://docs.github.com/enterprise-server@3.1/rest/reference/actions#create-a-registration-token-for-an-enterprise"
         },
         "parameters": [{ "$ref": "#/components/parameters/enterprise" }],
         "responses": {
@@ -1052,9 +1099,8 @@
         "x-github": {
           "enabledForGitHubApps": false,
           "githubCloudOnly": false,
-          "previews": [],
-          "category": "enterprise-admin",
-          "subcategory": "actions"
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
         },
         "x-octokit": { "diff": { "ghes-3.2.json": { "type": "changed" } } }
       }
@@ -1067,7 +1113,7 @@
         "tags": ["enterprise-admin"],
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.1/rest/reference/enterprise-admin#create-a-remove-token-for-an-enterprise"
+          "url": "https://docs.github.com/enterprise-server@3.1/rest/reference/actions#create-a-remove-token-for-an-enterprise"
         },
         "parameters": [{ "$ref": "#/components/parameters/enterprise" }],
         "responses": {
@@ -1090,9 +1136,8 @@
         "x-github": {
           "enabledForGitHubApps": false,
           "githubCloudOnly": false,
-          "previews": [],
-          "category": "enterprise-admin",
-          "subcategory": "actions"
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
         },
         "x-octokit": { "diff": { "ghes-3.2.json": { "type": "changed" } } }
       }
@@ -1130,7 +1175,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -1187,15 +1231,15 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
+          "category": "apps",
+          "subcategory": "installations",
           "previews": [
             {
               "required": false,
               "name": "mercy",
               "note": "The `topics` property for repositories on GitHub is currently available for developers to preview. To view the `topics` property in calls that return repository results, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.1/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.mercy-preview+json\n```"
             }
-          ],
-          "category": "apps",
-          "subcategory": "installations"
+          ]
         },
         "x-octokit": { "diff": { "ghes-3.2.json": { "type": "changed" } } }
       }
@@ -1213,7 +1257,7 @@
         "parameters": [
           {
             "name": "filter",
-            "description": "Indicates which sorts of issues to return. Can be one of:  \n\\* `assigned`: Issues assigned to you  \n\\* `created`: Issues created by you  \n\\* `mentioned`: Issues mentioning you  \n\\* `subscribed`: Issues you're subscribed to updates for  \n\\* `all` or `repos`: All issues the authenticated user can see, regardless of participation or creation",
+            "description": "Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation.",
             "in": "query",
             "required": false,
             "schema": {
@@ -1359,7 +1403,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -1408,7 +1451,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "activity",
           "subcategory": "notifications"
         },
@@ -1445,7 +1487,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "activity",
           "subcategory": "notifications"
         },
@@ -1495,7 +1536,6 @@
         "x-github": {
           "enabledForGitHubApps": true,
           "githubCloudOnly": false,
-          "previews": [],
           "category": "actions",
           "subcategory": "permissions"
         },
@@ -1548,7 +1588,6 @@
         "x-github": {
           "enabledForGitHubApps": true,
           "githubCloudOnly": false,
-          "previews": [],
           "category": "actions",
           "subcategory": "self-hosted-runner-groups"
         },
@@ -1586,7 +1625,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "actions",
           "subcategory": "self-hosted-runners"
         },
@@ -1624,7 +1662,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "actions",
           "subcategory": "self-hosted-runners"
         },
@@ -1677,7 +1714,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "actions",
           "subcategory": "secrets"
         },
@@ -1715,7 +1751,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -1758,7 +1793,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "orgs",
           "subcategory": "webhooks"
         },
@@ -1826,13 +1860,17 @@
                 },
                 "required": ["name", "config"]
               },
-              "example": {
-                "name": "web",
-                "active": true,
-                "events": ["push", "pull_request"],
-                "config": {
-                  "url": "http://example.com/webhook",
-                  "content_type": "json"
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "web",
+                    "active": true,
+                    "events": ["push", "pull_request"],
+                    "config": {
+                      "url": "http://example.com/webhook",
+                      "content_type": "json"
+                    }
+                  }
                 }
               }
             }
@@ -1862,7 +1900,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "orgs",
           "subcategory": "webhooks"
         },
@@ -1900,7 +1937,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "orgs",
           "subcategory": "webhooks"
         },
@@ -1920,6 +1956,7 @@
           { "$ref": "#/components/parameters/hook-id" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -1958,7 +1995,11 @@
                   "name": { "type": "string", "example": "\"web\"" }
                 }
               },
-              "example": { "active": true, "events": ["pull_request"] }
+              "examples": {
+                "default": {
+                  "value": { "active": true, "events": ["pull_request"] }
+                }
+              }
             }
           }
         },
@@ -1980,7 +2021,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "orgs",
           "subcategory": "webhooks"
         },
@@ -2001,7 +2041,7 @@
           { "$ref": "#/components/parameters/org" },
           {
             "name": "filter",
-            "description": "Indicates which sorts of issues to return. Can be one of:  \n\\* `assigned`: Issues assigned to you  \n\\* `created`: Issues created by you  \n\\* `mentioned`: Issues mentioning you  \n\\* `subscribed`: Issues you're subscribed to updates for  \n\\* `all` or `repos`: All issues the authenticated user can see, regardless of participation or creation",
+            "description": "Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation.",
             "in": "query",
             "required": false,
             "schema": {
@@ -2099,7 +2139,7 @@
           { "$ref": "#/components/parameters/org" },
           {
             "name": "type",
-            "description": "Specifies the types of repositories you want returned. Can be one of `all`, `public`, `private`, `forks`, `sources`, `member`, `internal`. Note: For GitHub AE, can be one of `all`, `private`, `forks`, `sources`, `member`, `internal`. Default: `all`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `type` can also be `internal`. However, the `internal` value is not yet supported when a GitHub App calls this API with an installation access token.",
+            "description": "Specifies the types of repositories you want returned. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `type` can also be `internal`. However, the `internal` value is not yet supported when a GitHub App calls this API with an installation access token.",
             "in": "query",
             "required": false,
             "schema": {
@@ -2117,7 +2157,7 @@
           },
           {
             "name": "sort",
-            "description": "Can be one of `created`, `updated`, `pushed`, `full_name`.",
+            "description": "The property to sort the results by.",
             "in": "query",
             "required": false,
             "schema": {
@@ -2128,7 +2168,7 @@
           },
           {
             "name": "direction",
-            "description": "Can be one of `asc` or `desc`. Default: when using `full_name`: `asc`, otherwise `desc`",
+            "description": "The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.",
             "in": "query",
             "required": false,
             "schema": { "type": "string", "enum": ["asc", "desc"] }
@@ -2210,8 +2250,8 @@
                   },
                   "visibility": {
                     "type": "string",
-                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see \"[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)\" in the GitHub Help documentation.  \nThe `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.",
-                    "enum": ["public", "private", "visibility", "internal"]
+                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see \"[Creating an internal repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)\" in the GitHub Help documentation.  \nThe `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.",
+                    "enum": ["public", "private", "internal"]
                   },
                   "has_issues": {
                     "type": "boolean",
@@ -2248,7 +2288,7 @@
                   },
                   "license_template": {
                     "type": "string",
-                    "description": "Choose an [open source license template](https://choosealicense.com/) that best suits your needs, and then use the [license keyword](https://help.github.com/articles/licensing-a-repository/#searching-github-by-license-type) as the `license_template` string. For example, \"mit\" or \"mpl-2.0\"."
+                    "description": "Choose an [open source license template](https://choosealicense.com/) that best suits your needs, and then use the [license keyword](https://docs.github.com/articles/licensing-a-repository/#searching-github-by-license-type) as the `license_template` string. For example, \"mit\" or \"mpl-2.0\"."
                   },
                   "allow_squash_merge": {
                     "type": "boolean",
@@ -2269,18 +2309,27 @@
                     "type": "boolean",
                     "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.",
                     "default": false
+                  },
+                  "use_squash_pr_title_as_default": {
+                    "type": "boolean",
+                    "description": "Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.",
+                    "default": false
                   }
                 },
                 "required": ["name"]
               },
-              "example": {
-                "name": "Hello-World",
-                "description": "This is your first repository",
-                "homepage": "https://github.com",
-                "private": false,
-                "has_issues": true,
-                "has_projects": true,
-                "has_wiki": true
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "Hello-World",
+                    "description": "This is your first repository",
+                    "homepage": "https://github.com",
+                    "private": false,
+                    "has_issues": true,
+                    "has_projects": true,
+                    "has_wiki": true
+                  }
+                }
               }
             }
           }
@@ -2364,7 +2413,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "teams",
           "subcategory": null
         },
@@ -2411,7 +2459,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "teams",
           "subcategory": null
         },
@@ -2486,6 +2533,7 @@
           { "$ref": "#/components/parameters/repo" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -2505,13 +2553,13 @@
                   },
                   "private": {
                     "type": "boolean",
-                    "description": "Either `true` to make the repository private or `false` to make it public. Default: `false`.  \n**Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://help.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://help.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.",
+                    "description": "Either `true` to make the repository private or `false` to make it public. Default: `false`.  \n**Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.",
                     "default": false
                   },
                   "visibility": {
                     "type": "string",
-                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`.\"",
-                    "enum": ["public", "private", "visibility", "internal"]
+                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. The `visibility` parameter overrides the `private` parameter when you use both along with the `nebula-preview` preview header.",
+                    "enum": ["public", "private", "internal"]
                   },
                   "has_issues": {
                     "type": "boolean",
@@ -2557,6 +2605,16 @@
                     "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.",
                     "default": false
                   },
+                  "allow_update_branch": {
+                    "type": "boolean",
+                    "description": "Either `true` to always allow a pull request head branch that is behind its base branch to be updated even if it is not required to be up to date before merging, or false otherwise.",
+                    "default": false
+                  },
+                  "use_squash_pr_title_as_default": {
+                    "type": "boolean",
+                    "description": "Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.",
+                    "default": false
+                  },
                   "archived": {
                     "type": "boolean",
                     "description": "`true` to archive this repository. **Note**: You cannot unarchive repositories through the API.",
@@ -2569,14 +2627,18 @@
                   }
                 }
               },
-              "example": {
-                "name": "Hello-World",
-                "description": "This is your first repository",
-                "homepage": "https://github.com",
-                "private": true,
-                "has_issues": true,
-                "has_projects": true,
-                "has_wiki": true
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "Hello-World",
+                    "description": "This is your first repository",
+                    "homepage": "https://github.com",
+                    "private": true,
+                    "has_issues": true,
+                    "has_projects": true,
+                    "has_wiki": true
+                  }
+                }
               }
             }
           }
@@ -2652,7 +2714,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "actions",
           "subcategory": "self-hosted-runners"
         },
@@ -2693,7 +2754,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "actions",
           "subcategory": "self-hosted-runners"
         },
@@ -2751,7 +2811,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "actions",
           "subcategory": "workflow-runs"
         },
@@ -2790,7 +2849,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "actions",
           "subcategory": "workflow-runs"
         },
@@ -2849,7 +2907,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "actions",
           "subcategory": "workflow-runs"
         },
@@ -2884,15 +2941,19 @@
                 },
                 "required": ["head_sha"]
               },
-              "example": {
-                "head_sha": "d6fde92930d4715a2b49857d24b940956b26d2d3"
+              "examples": {
+                "default": {
+                  "value": {
+                    "head_sha": "d6fde92930d4715a2b49857d24b940956b26d2d3"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "when the suite already existed",
+            "description": "Response when the suite already exists",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/check-suite" },
@@ -2917,7 +2978,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "checks",
           "subcategory": "suites"
         },
@@ -2966,8 +3026,12 @@
                   }
                 }
               },
-              "example": {
-                "auto_trigger_checks": [{ "app_id": 4, "setting": false }]
+              "examples": {
+                "default": {
+                  "value": {
+                    "auto_trigger_checks": [{ "app_id": 4, "setting": false }]
+                  }
+                }
               }
             }
           }
@@ -2992,7 +3056,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "checks",
           "subcategory": "suites"
         },
@@ -3030,7 +3093,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "checks",
           "subcategory": "suites"
         },
@@ -3077,7 +3139,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "code-scanning",
           "subcategory": null
         },
@@ -3123,9 +3184,14 @@
                 },
                 "required": ["state"]
               },
-              "example": {
-                "state": "dismissed",
-                "dismissed_reason": "false positive"
+              "examples": {
+                "default": {
+                  "value": {
+                    "state": "dismissed",
+                    "dismissed_reason": "false positive",
+                    "dismissed_comment": "This alert is not actually correct, because there's a sanitizer included in the library."
+                  }
+                }
               }
             }
           }
@@ -3155,7 +3221,6 @@
         "x-github": {
           "enabledForGitHubApps": true,
           "githubCloudOnly": false,
-          "previews": [],
           "category": "code-scanning"
         },
         "x-octokit": { "diff": { "ghes-3.2.json": { "type": "changed" } } }
@@ -3164,7 +3229,7 @@
     "/repos/{owner}/{repo}/collaborators/{username}": {
       "put": {
         "summary": "Add a repository collaborator",
-        "description": "This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.1/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.\n\nFor more information the permission levels, see \"[Repository permission levels for an organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)\".\n\nNote that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#http-verbs).\"\n\nThe invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/enterprise-server@3.1/rest/reference/repos#invitations).\n\n**Rate limits**\n\nYou are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.",
+        "description": "This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.1/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.1/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.\n\nFor more information on permission levels, see \"[Repository permission levels for an organization](https://docs.github.com/enterprise-server@3.1/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)\". There are restrictions on which permissions can be granted to organization members when an organization base role is in place. In this case, the permission being given must be equal to or higher than the org base permission. Otherwise, the request will fail with:\n\n```\nCannot assign {member} permission of {role name}\n```\n\nNote that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#http-verbs).\"\n\nThe invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/enterprise-server@3.1/rest/reference/repos#invitations).\n\n**Updating an existing collaborator's permission level**\n\nThe endpoint can also be used to change the permissions of an existing collaborator without first removing and re-adding the collaborator. To change the permissions, use the same endpoint and pass a different `permission` parameter. The response will be a `204`, with no other indication that the permission level changed.\n\n**Rate limits**\n\nYou are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.",
         "tags": ["repos"],
         "operationId": "repos/add-collaborator",
         "externalDocs": {
@@ -3177,6 +3242,7 @@
           { "$ref": "#/components/parameters/username" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -3184,11 +3250,16 @@
                 "properties": {
                   "permission": {
                     "type": "string",
-                    "description": "The permission to grant the collaborator. **Only valid on organization-owned repositories.** Can be one of:  \n\\* `pull` - can pull, but not push to or administer this repository.  \n\\* `push` - can pull and push, but not administer this repository.  \n\\* `admin` - can pull, push and administer this repository.  \n\\* `maintain` - Recommended for project managers who need to manage the repository without access to sensitive or destructive actions.  \n\\* `triage` - Recommended for contributors who need to proactively manage issues and pull requests without write access. \n\\* custom repository role name - Can assign a custom repository role if the owning organization has defined any.",
+                    "description": "The permission to grant the collaborator. **Only valid on organization-owned repositories.**",
                     "enum": ["pull", "push", "admin", "maintain", "triage"],
                     "default": "push"
-                  },
-                  "permissions": { "type": "string", "example": "\"push\"" }
+                  }
+                }
+              },
+              "examples": {
+                "new-invitation-is-created": {
+                  "summary": "Add a collaborator with triage permissions",
+                  "value": { "permission": "triage" }
                 }
               }
             }
@@ -3203,7 +3274,7 @@
                   "$ref": "#/components/schemas/repository-invitation"
                 },
                 "examples": {
-                  "response-when-a-new-invitation-is-created": {
+                  "new-invitation-is-created": {
                     "$ref": "#/components/examples/repository-invitation-response-when-a-new-invitation-is-created"
                   }
                 }
@@ -3211,7 +3282,7 @@
             }
           },
           "204": {
-            "description": "Response when person is already a collaborator"
+            "description": "Response when:\n- an existing collaborator is added as a collaborator\n- an organization member is added as an individual collaborator\n- an existing team member (whose team is also a repository collaborator) is added as an individual collaborator"
           },
           "403": { "$ref": "#/components/responses/forbidden" },
           "422": { "$ref": "#/components/responses/validation_failed" }
@@ -3220,7 +3291,6 @@
           "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "collaborators"
         },
@@ -3343,7 +3413,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "checks",
           "subcategory": "suites"
         },
@@ -3353,7 +3422,7 @@
     "/repos/{owner}/{repo}/commits/{ref}/status": {
       "get": {
         "summary": "Get the combined status for a specific reference",
-        "description": "Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name.\n\nThe most recent status for each context is returned, up to 100. This field [paginates](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#pagination) if there are over 100 contexts.\n\nAdditionally, a combined `state` is returned. The `state` is one of:\n\n*   **failure** if any of the contexts report as `error` or `failure`\n*   **pending** if there are no statuses or a context is `pending`\n*   **success** if the latest status for all contexts is `success`",
+        "description": "Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name.\n\n\nAdditionally, a combined `state` is returned. The `state` is one of:\n\n*   **failure** if any of the contexts report as `error` or `failure`\n*   **pending** if there are no statuses or a context is `pending`\n*   **success** if the latest status for all contexts is `success`",
         "tags": ["repos"],
         "operationId": "repos/get-combined-status-for-ref",
         "externalDocs": {
@@ -3395,7 +3464,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "statuses"
         },
@@ -3443,7 +3511,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "commits"
         },
@@ -3482,7 +3549,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -3539,7 +3605,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "forks"
         },
@@ -3559,6 +3624,7 @@
           { "$ref": "#/components/parameters/repo" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -3594,7 +3660,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "forks"
         },
@@ -3638,7 +3703,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "webhooks"
         },
@@ -3658,6 +3722,7 @@
           { "$ref": "#/components/parameters/repo" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -3702,14 +3767,18 @@
                 },
                 "additionalProperties": false
               },
-              "example": {
-                "name": "web",
-                "active": true,
-                "events": ["push", "pull_request"],
-                "config": {
-                  "url": "https://example.com/webhook",
-                  "content_type": "json",
-                  "insecure_ssl": "0"
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "web",
+                    "active": true,
+                    "events": ["push", "pull_request"],
+                    "config": {
+                      "url": "https://example.com/webhook",
+                      "content_type": "json",
+                      "insecure_ssl": "0"
+                    }
+                  }
                 }
               }
             }
@@ -3740,7 +3809,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "webhooks"
         },
@@ -3779,7 +3847,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "webhooks"
         },
@@ -3800,6 +3867,7 @@
           { "$ref": "#/components/parameters/hook-id" }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -3855,7 +3923,11 @@
                   }
                 }
               },
-              "example": { "active": true, "add_events": ["pull_request"] }
+              "examples": {
+                "default": {
+                  "value": { "active": true, "add_events": ["pull_request"] }
+                }
+              }
             }
           }
         },
@@ -3877,7 +3949,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "webhooks"
         },
@@ -3924,7 +3995,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "invitations"
         },
@@ -3947,6 +4017,7 @@
           { "$ref": "#/components/parameters/invitation-id" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -3982,7 +4053,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "invitations"
         },
@@ -4099,7 +4169,7 @@
       },
       "post": {
         "summary": "Create an issue",
-        "description": "Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://help.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.\n\nThis endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.1/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
+        "description": "Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://docs.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.\n\nThis endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.1/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.1/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
         "tags": ["issues"],
         "operationId": "issues/create",
         "externalDocs": {
@@ -4169,12 +4239,16 @@
                 },
                 "required": ["title"]
               },
-              "example": {
-                "title": "Found a bug",
-                "body": "I'm having a problem with this.",
-                "assignees": ["octocat"],
-                "milestone": 1,
-                "labels": ["bug"]
+              "examples": {
+                "default": {
+                  "value": {
+                    "title": "Found a bug",
+                    "body": "I'm having a problem with this.",
+                    "assignees": ["octocat"],
+                    "milestone": 1,
+                    "labels": ["bug"]
+                  }
+                }
               }
             }
           }
@@ -4207,7 +4281,6 @@
           "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "issues",
           "subcategory": null
         },
@@ -4259,7 +4332,7 @@
             {
               "required": false,
               "name": "starfox",
-              "note": "Project card details are now shown in REST API v3 responses for project-related issue and timeline events. This feature is now available for developers to preview. For details, see the [blog post](https://developer.github.com/changes/2018-09-05-project-card-events).\n\nTo receive the `project_card` attribute, project boards must be [enabled](https://help.github.com/articles/disabling-project-boards-in-a-repository) for a repository, and you must provide a custom [media type](https://docs.github.com/enterprise-server@3.1/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.starfox-preview+json\n```"
+              "note": "Project card details are now shown in REST API v3 responses for project-related issue and timeline events. This feature is now available for developers to preview. For details, see the [blog post](https://developer.github.com/changes/2018-09-05-project-card-events).\n\nTo receive the `project_card` attribute, project boards must be [enabled](https://docs.github.com/articles/disabling-project-boards-in-a-repository) for a repository, and you must provide a custom [media type](https://docs.github.com/enterprise-server@3.1/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.starfox-preview+json\n```"
             }
           ]
         },
@@ -4311,7 +4384,7 @@
             {
               "required": false,
               "name": "starfox",
-              "note": "Project card details are now shown in REST API v3 responses for project-related issue and timeline events. This feature is now available for developers to preview. For details, see the [blog post](https://developer.github.com/changes/2018-09-05-project-card-events).\n\nTo receive the `project_card` attribute, project boards must be [enabled](https://help.github.com/articles/disabling-project-boards-in-a-repository) for a repository, and you must provide a custom [media type](https://docs.github.com/enterprise-server@3.1/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.starfox-preview+json\n```"
+              "note": "Project card details are now shown in REST API v3 responses for project-related issue and timeline events. This feature is now available for developers to preview. For details, see the [blog post](https://developer.github.com/changes/2018-09-05-project-card-events).\n\nTo receive the `project_card` attribute, project boards must be [enabled](https://docs.github.com/articles/disabling-project-boards-in-a-repository) for a repository, and you must provide a custom [media type](https://docs.github.com/enterprise-server@3.1/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.starfox-preview+json\n```"
             }
           ]
         },
@@ -4321,7 +4394,7 @@
     "/repos/{owner}/{repo}/issues/{issue_number}": {
       "get": {
         "summary": "Get an issue",
-        "description": "The API returns a [`301 Moved Permanently` status](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was\n[transferred](https://help.github.com/articles/transferring-an-issue-to-another-repository/) to another repository. If\nthe issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API\nreturns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read\naccess, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe\nto the [`issues`](https://docs.github.com/enterprise-server@3.1/webhooks/event-payloads/#issues) webhook.\n\n**Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.1/rest/reference/pulls#list-pull-requests)\" endpoint.",
+        "description": "The API returns a [`301 Moved Permanently` status](https://docs.github.com/enterprise-server@3.1/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was\n[transferred](https://docs.github.com/articles/transferring-an-issue-to-another-repository/) to another repository. If\nthe issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API\nreturns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read\naccess, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe\nto the [`issues`](https://docs.github.com/enterprise-server@3.1/webhooks/event-payloads/#issues) webhook.\n\n**Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.1/rest/reference/pulls#list-pull-requests)\" endpoint.",
         "tags": ["issues"],
         "operationId": "issues/get",
         "externalDocs": {
@@ -4379,6 +4452,7 @@
           { "$ref": "#/components/parameters/issue-number" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -4442,13 +4516,17 @@
                   }
                 }
               },
-              "example": {
-                "title": "Found a bug",
-                "body": "I'm having a problem with this.",
-                "assignees": ["octocat"],
-                "milestone": 1,
-                "state": "open",
-                "labels": ["bug"]
+              "examples": {
+                "default": {
+                  "value": {
+                    "title": "Found a bug",
+                    "body": "I'm having a problem with this.",
+                    "assignees": ["octocat"],
+                    "milestone": 1,
+                    "state": "open",
+                    "labels": ["bug"]
+                  }
+                }
               }
             }
           }
@@ -4475,7 +4553,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "issues",
           "subcategory": null
         },
@@ -4498,6 +4575,7 @@
           { "$ref": "#/components/parameters/issue-number" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -4510,7 +4588,9 @@
                   }
                 }
               },
-              "example": { "assignees": ["hubot", "other_user"] }
+              "examples": {
+                "default": { "value": { "assignees": ["hubot", "other_user"] } }
+              }
             }
           }
         },
@@ -4530,7 +4610,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "issues",
           "subcategory": "assignees"
         },
@@ -4577,7 +4656,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "activity",
           "subcategory": "notifications"
         },
@@ -4587,7 +4665,7 @@
     "/repos/{owner}/{repo}/pulls": {
       "get": {
         "summary": "List pull requests",
-        "description": "Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
+        "description": "Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
         "tags": ["pulls"],
         "operationId": "pulls/list",
         "externalDocs": {
@@ -4669,7 +4747,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "pulls",
           "subcategory": null
         },
@@ -4692,6 +4769,7 @@
           { "$ref": "#/components/parameters/pull-number" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -4713,9 +4791,13 @@
                   { "required": ["team_reviewers"] }
                 ]
               },
-              "example": {
-                "reviewers": ["octocat", "hubot", "other_user"],
-                "team_reviewers": ["justice-league"]
+              "examples": {
+                "default": {
+                  "value": {
+                    "reviewers": ["octocat", "hubot", "other_user"],
+                    "team_reviewers": ["justice-league"]
+                  }
+                }
               }
             }
           }
@@ -4745,7 +4827,6 @@
           "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "pulls",
           "subcategory": "review-requests"
         },
@@ -4789,7 +4870,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "releases"
         },
@@ -4844,13 +4924,17 @@
                 },
                 "required": ["tag_name"]
               },
-              "example": {
-                "tag_name": "v1.0.0",
-                "target_commitish": "master",
-                "name": "v1.0.0",
-                "body": "Description of the release",
-                "draft": false,
-                "prerelease": false
+              "examples": {
+                "default": {
+                  "value": {
+                    "tag_name": "v1.0.0",
+                    "target_commitish": "master",
+                    "name": "v1.0.0",
+                    "body": "Description of the release",
+                    "draft": false,
+                    "prerelease": false
+                  }
+                }
               }
             }
           }
@@ -4879,7 +4963,6 @@
           "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "releases"
         },
@@ -4916,7 +4999,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "releases"
         },
@@ -4962,7 +5044,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "releases"
         },
@@ -5001,7 +5082,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "releases"
         },
@@ -5022,6 +5102,7 @@
           { "$ref": "#/components/parameters/release-id" }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -5053,13 +5134,17 @@
                   }
                 }
               },
-              "example": {
-                "tag_name": "v1.0.0",
-                "target_commitish": "master",
-                "name": "v1.0.0",
-                "body": "Description of the release",
-                "draft": false,
-                "prerelease": false
+              "examples": {
+                "default": {
+                  "value": {
+                    "tag_name": "v1.0.0",
+                    "target_commitish": "master",
+                    "name": "v1.0.0",
+                    "body": "Description of the release",
+                    "draft": false,
+                    "prerelease": false
+                  }
+                }
               }
             }
           }
@@ -5080,7 +5165,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": "releases"
         },
@@ -5090,7 +5174,7 @@
     "/repos/{owner}/{repo}/transfer": {
       "post": {
         "summary": "Transfer a repository",
-        "description": "A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://help.github.com/articles/about-repository-transfers/).",
+        "description": "A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://docs.github.com/articles/about-repository-transfers/).",
         "tags": ["repos"],
         "operationId": "repos/transfer",
         "externalDocs": {
@@ -5120,7 +5204,11 @@
                 },
                 "required": ["new_owner"]
               },
-              "example": { "new_owner": "github", "team_ids": [12, 345] }
+              "examples": {
+                "default": {
+                  "value": { "new_owner": "github", "team_ids": [12, 345] }
+                }
+              }
             }
           }
         },
@@ -5142,7 +5230,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": null
         },
@@ -5205,12 +5292,16 @@
                 },
                 "required": ["name"]
               },
-              "example": {
-                "owner": "octocat",
-                "name": "Hello-World",
-                "description": "This is your first repository",
-                "include_all_branches": false,
-                "private": false
+              "examples": {
+                "default": {
+                  "value": {
+                    "owner": "octocat",
+                    "name": "Hello-World",
+                    "description": "This is your first repository",
+                    "include_all_branches": false,
+                    "private": false
+                  }
+                }
               }
             }
           }
@@ -5263,7 +5354,7 @@
           { "$ref": "#/components/parameters/since-repo" },
           {
             "name": "visibility",
-            "description": "Specifies the types of repositories to return. Can be one of `all` or `public`. Default: `public`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise.",
+            "description": "Specifies the types of repositories to return. This endpoint will only list repositories available to all users on the enterprise.",
             "in": "query",
             "required": false,
             "schema": {
@@ -5303,7 +5394,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "repos",
           "subcategory": null
         },
@@ -5323,7 +5413,7 @@
         "parameters": [
           {
             "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.1/rest/reference/search#constructing-a-search-query). See \"[Searching code](https://help.github.com/articles/searching-code/)\" for a detailed list of qualifiers.",
+            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.1/rest/reference/search#constructing-a-search-query). See \"[Searching code](https://docs.github.com/enterprise-server@3.1/search-github/searching-on-github/searching-code)\" for a detailed list of qualifiers.",
             "in": "query",
             "required": true,
             "schema": { "type": "string" }
@@ -5374,7 +5464,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "search",
           "subcategory": null
         },
@@ -5394,7 +5483,7 @@
         "parameters": [
           {
             "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.1/rest/reference/search#constructing-a-search-query). See \"[Searching commits](https://help.github.com/articles/searching-commits/)\" for a detailed list of qualifiers.",
+            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.1/rest/reference/search#constructing-a-search-query). See \"[Searching commits](https://docs.github.com/enterprise-server@3.1/search-github/searching-on-github/searching-commits)\" for a detailed list of qualifiers.",
             "in": "query",
             "required": true,
             "schema": { "type": "string" }
@@ -5470,7 +5559,7 @@
         "parameters": [
           {
             "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.1/rest/reference/search#constructing-a-search-query). See \"[Searching issues and pull requests](https://help.github.com/articles/searching-issues-and-pull-requests/)\" for a detailed list of qualifiers.",
+            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.1/rest/reference/search#constructing-a-search-query). See \"[Searching issues and pull requests](https://docs.github.com/enterprise-server@3.1/search-github/searching-on-github/searching-issues-and-pull-requests)\" for a detailed list of qualifiers.",
             "in": "query",
             "required": true,
             "schema": { "type": "string" }
@@ -5536,7 +5625,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "search",
           "subcategory": null
         },
@@ -5556,7 +5644,7 @@
         "parameters": [
           {
             "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.1/rest/reference/search#constructing-a-search-query). See \"[Searching for repositories](https://help.github.com/articles/searching-for-repositories/)\" for a detailed list of qualifiers.",
+            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.1/rest/reference/search#constructing-a-search-query). See \"[Searching for repositories](https://docs.github.com/articles/searching-for-repositories/)\" for a detailed list of qualifiers.",
             "in": "query",
             "required": true,
             "schema": { "type": "string" }
@@ -5609,15 +5697,14 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
+          "category": "search",
           "previews": [
             {
               "required": false,
               "name": "mercy",
               "note": "The `topics` property for repositories on GitHub is currently available for developers to preview. To view the `topics` property in calls that return repository results, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.1/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.mercy-preview+json\n```"
             }
-          ],
-          "category": "search",
-          "subcategory": null
+          ]
         },
         "x-octokit": { "diff": { "ghes-3.2.json": { "type": "changed" } } }
       }
@@ -5660,7 +5747,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "removalDate": "2021-02-01",
           "deprecationDate": "2020-01-21",
           "category": "teams",
@@ -5709,7 +5795,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "removalDate": "2021-02-01",
           "deprecationDate": "2020-01-21",
           "category": "teams",
@@ -5767,15 +5852,15 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
+          "category": "apps",
+          "subcategory": "installations",
           "previews": [
             {
               "required": false,
               "name": "mercy",
               "note": "The `topics` property for repositories on GitHub is currently available for developers to preview. To view the `topics` property in calls that return repository results, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.1/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.mercy-preview+json\n```"
             }
-          ],
-          "category": "apps",
-          "subcategory": "installations"
+          ]
         },
         "x-octokit": { "diff": { "ghes-3.2.json": { "type": "changed" } } }
       }
@@ -5793,7 +5878,7 @@
         "parameters": [
           {
             "name": "filter",
-            "description": "Indicates which sorts of issues to return. Can be one of:  \n\\* `assigned`: Issues assigned to you  \n\\* `created`: Issues created by you  \n\\* `mentioned`: Issues mentioning you  \n\\* `subscribed`: Issues you're subscribed to updates for  \n\\* `all` or `repos`: All issues the authenticated user can see, regardless of participation or creation",
+            "description": "Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation.",
             "in": "query",
             "required": false,
             "schema": {
@@ -5891,7 +5976,7 @@
         "parameters": [
           {
             "name": "visibility",
-            "description": "Can be one of `all`, `public`, or `private`. Note: For GitHub AE, can be one of `all`, `internal`, or `private`.",
+            "description": "Limit results to repositories with the specified visibility.",
             "in": "query",
             "required": false,
             "schema": {
@@ -5912,7 +5997,7 @@
           },
           {
             "name": "type",
-            "description": "Can be one of `all`, `owner`, `public`, `private`, `member`. Note: For GitHub AE, can be one of `all`, `owner`, `internal`, `private`, `member`. Default: `all`  \n  \nWill cause a `422` error if used in the same request as **visibility** or **affiliation**. Will cause a `422` error if used in the same request as **visibility** or **affiliation**.",
+            "description": "Limit results to repositories of the specified type. Will cause a `422` error if used in the same request as **visibility** or **affiliation**.",
             "in": "query",
             "required": false,
             "schema": {
@@ -5923,7 +6008,7 @@
           },
           {
             "name": "sort",
-            "description": "Can be one of `created`, `updated`, `pushed`, `full_name`.",
+            "description": "The property to sort the results by.",
             "in": "query",
             "required": false,
             "schema": {
@@ -5934,7 +6019,7 @@
           },
           {
             "name": "direction",
-            "description": "Can be one of `asc` or `desc`. Default: `asc` when using `full_name`, otherwise `desc`",
+            "description": "The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.",
             "in": "query",
             "required": false,
             "schema": { "type": "string", "enum": ["asc", "desc"] }
@@ -5969,7 +6054,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "repos",
           "subcategory": null
         },
@@ -6176,7 +6260,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "repos",
           "subcategory": "invitations"
         },
@@ -6235,7 +6318,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "activity",
           "subcategory": "starring"
         },
@@ -6281,7 +6363,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "activity",
           "subcategory": "watching"
         },
@@ -6319,7 +6400,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -6358,7 +6438,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -6396,7 +6475,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -6434,7 +6512,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -6472,7 +6549,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "events"
         },
@@ -6493,7 +6569,7 @@
           { "$ref": "#/components/parameters/username" },
           {
             "name": "type",
-            "description": "Can be one of `all`, `owner`, `member`.",
+            "description": "Limit results to repositories of the specified type.",
             "in": "query",
             "required": false,
             "schema": {
@@ -6504,7 +6580,7 @@
           },
           {
             "name": "sort",
-            "description": "Can be one of `created`, `updated`, `pushed`, `full_name`.",
+            "description": "The property to sort the results by.",
             "in": "query",
             "required": false,
             "schema": {
@@ -6515,7 +6591,7 @@
           },
           {
             "name": "direction",
-            "description": "Can be one of `asc` or `desc`. Default: `asc` when using `full_name`, otherwise `desc`",
+            "description": "The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.",
             "in": "query",
             "required": false,
             "schema": { "type": "string", "enum": ["asc", "desc"] }
@@ -6594,7 +6670,6 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "previews": [],
           "category": "activity",
           "subcategory": "watching"
         },
@@ -6606,7 +6681,7 @@
     "parameters": {
       "per-page": {
         "name": "per_page",
-        "description": "Results per page (max 100)",
+        "description": "The number of results per page (max 100).",
         "in": "query",
         "schema": { "type": "integer", "default": 30 }
       },
@@ -6618,23 +6693,26 @@
       },
       "username": {
         "name": "username",
+        "description": "The handle for the GitHub user account.",
         "in": "path",
         "required": true,
         "schema": { "type": "string" }
       },
       "installation-id": {
         "name": "installation_id",
-        "description": "installation_id parameter",
+        "description": "The unique identifier of the installation.",
         "in": "path",
         "required": true,
-        "schema": { "type": "integer" }
+        "schema": { "type": "integer" },
+        "examples": { "default": { "value": 1 } }
       },
       "client-id": {
         "name": "client_id",
         "in": "path",
         "required": true,
-        "description": "The client ID of your GitHub app.",
-        "schema": { "type": "string" }
+        "description": "The client ID of the GitHub app.",
+        "schema": { "type": "string" },
+        "examples": { "default": { "value": "Iv1.8a61f9b3a7aba766" } }
       },
       "access-token": {
         "name": "access_token",
@@ -6644,7 +6722,7 @@
       },
       "authorization-id": {
         "name": "authorization_id",
-        "description": "authorization_id parameter",
+        "description": "The unique identifier of the authorization.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
@@ -6665,7 +6743,7 @@
       },
       "direction": {
         "name": "direction",
-        "description": "One of `asc` (ascending) or `desc` (descending).",
+        "description": "The direction to sort the results by.",
         "in": "query",
         "required": false,
         "schema": {
@@ -6683,12 +6761,14 @@
       },
       "owner": {
         "name": "owner",
+        "description": "The account owner of the repository. The name is not case sensitive.",
         "in": "path",
         "required": true,
         "schema": { "type": "string" }
       },
       "repo": {
         "name": "repo",
+        "description": "The name of the repository. The name is not case sensitive.",
         "in": "path",
         "required": true,
         "schema": { "type": "string" }
@@ -6716,13 +6796,14 @@
       },
       "thread-id": {
         "name": "thread_id",
-        "description": "thread_id parameter",
+        "description": "The unique identifier of the thread.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
       },
       "org": {
         "name": "org",
+        "description": "The organization name. The name is not case sensitive.",
         "in": "path",
         "required": true,
         "schema": { "type": "string" }
@@ -6736,20 +6817,21 @@
       },
       "secret-name": {
         "name": "secret_name",
-        "description": "secret_name parameter",
+        "description": "The name of the secret.",
         "in": "path",
         "required": true,
         "schema": { "type": "string" }
       },
       "hook-id": {
         "name": "hook_id",
+        "description": "The unique identifier of the hook.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
       },
       "team-slug": {
         "name": "team_slug",
-        "description": "team_slug parameter",
+        "description": "The slug of the team name.",
         "in": "path",
         "required": true,
         "schema": { "type": "string" }
@@ -6770,7 +6852,7 @@
       },
       "event": {
         "name": "event",
-        "description": "Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see \"[Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows).\"",
+        "description": "Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see \"[Events that trigger workflows](https://docs.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows).\"",
         "in": "query",
         "required": false,
         "schema": { "type": "string" }
@@ -6801,6 +6883,7 @@
       },
       "created": {
         "name": "created",
+        "description": "Returns workflow runs created within the given date-time range. For more information on the syntax, see \"[Understanding the search syntax](https://docs.github.com/enterprise-server@3.1/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates).\"",
         "in": "query",
         "required": false,
         "schema": { "type": "string", "format": "date-time" }
@@ -6814,7 +6897,7 @@
       },
       "run-id": {
         "name": "run_id",
-        "description": "The id of the workflow run.",
+        "description": "The unique identifier of the workflow run.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
@@ -6828,7 +6911,7 @@
       },
       "check-suite-id": {
         "name": "check_suite_id",
-        "description": "check_suite_id parameter",
+        "description": "The unique identifier of the check suite.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
@@ -6842,7 +6925,7 @@
       },
       "commit-sha": {
         "name": "commit_sha",
-        "description": "commit_sha parameter",
+        "description": "The SHA of the commit.",
         "in": "path",
         "required": true,
         "schema": { "type": "string" },
@@ -6857,27 +6940,28 @@
       },
       "invitation-id": {
         "name": "invitation_id",
-        "description": "invitation_id parameter",
+        "description": "The unique identifier of the invitation.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
       },
       "issue-number": {
         "name": "issue_number",
-        "description": "issue_number parameter",
+        "description": "The number that identifies the issue.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
       },
       "pull-number": {
         "name": "pull_number",
+        "description": "The number that identifies the pull request.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
       },
       "release-id": {
         "name": "release_id",
-        "description": "release_id parameter",
+        "description": "The unique identifier of the release.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
@@ -6902,13 +6986,14 @@
       },
       "team-id": {
         "name": "team_id",
+        "description": "The unique identifier of the team.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
       },
       "sort": {
         "name": "sort",
-        "description": "One of `created` (when the repository was starred) or `updated` (when it was last pushed to).",
+        "description": "The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to.",
         "in": "query",
         "required": false,
         "schema": {
@@ -6977,157 +7062,157 @@
         "properties": {
           "actions": {
             "type": "string",
-            "description": "The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts.",
             "enum": ["read", "write"]
           },
           "administration": {
             "type": "string",
-            "description": "The level of permission to grant the access token for repository creation, deletion, settings, teams, and collaborators creation. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for repository creation, deletion, settings, teams, and collaborators creation.",
             "enum": ["read", "write"]
           },
           "checks": {
             "type": "string",
-            "description": "The level of permission to grant the access token for checks on code. Can be one of: `read` or `write`.",
-            "enum": ["read", "write"]
-          },
-          "content_references": {
-            "type": "string",
-            "description": "The level of permission to grant the access token for notification of content references and creation content attachments. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for checks on code.",
             "enum": ["read", "write"]
           },
           "contents": {
             "type": "string",
-            "description": "The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges.",
             "enum": ["read", "write"]
           },
           "deployments": {
             "type": "string",
-            "description": "The level of permission to grant the access token for deployments and deployment statuses. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for deployments and deployment statuses.",
             "enum": ["read", "write"]
           },
           "environments": {
             "type": "string",
-            "description": "The level of permission to grant the access token for managing repository environments. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for managing repository environments.",
             "enum": ["read", "write"]
           },
           "issues": {
             "type": "string",
-            "description": "The level of permission to grant the access token for issues and related comments, assignees, labels, and milestones. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for issues and related comments, assignees, labels, and milestones.",
             "enum": ["read", "write"]
           },
           "metadata": {
             "type": "string",
-            "description": "The level of permission to grant the access token to search repositories, list collaborators, and access repository metadata. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to search repositories, list collaborators, and access repository metadata.",
             "enum": ["read", "write"]
           },
           "packages": {
             "type": "string",
-            "description": "The level of permission to grant the access token for packages published to GitHub Packages. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for packages published to GitHub Packages.",
             "enum": ["read", "write"]
           },
           "pages": {
             "type": "string",
-            "description": "The level of permission to grant the access token to retrieve Pages statuses, configuration, and builds, as well as create new builds. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to retrieve Pages statuses, configuration, and builds, as well as create new builds.",
             "enum": ["read", "write"]
           },
           "pull_requests": {
             "type": "string",
-            "description": "The level of permission to grant the access token for pull requests and related comments, assignees, labels, milestones, and merges. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for pull requests and related comments, assignees, labels, milestones, and merges.",
             "enum": ["read", "write"]
           },
           "repository_hooks": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage the post-receive hooks for a repository. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to manage the post-receive hooks for a repository.",
             "enum": ["read", "write"]
           },
           "repository_projects": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage repository projects, columns, and cards. Can be one of: `read`, `write`, or `admin`.",
+            "description": "The level of permission to grant the access token to manage repository projects, columns, and cards.",
             "enum": ["read", "write", "admin"]
           },
           "secret_scanning_alerts": {
             "type": "string",
-            "description": "The level of permission to grant the access token to view and manage secret scanning alerts. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to view and manage secret scanning alerts.",
             "enum": ["read", "write"]
           },
           "secrets": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage repository secrets. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to manage repository secrets.",
             "enum": ["read", "write"]
           },
           "security_events": {
             "type": "string",
-            "description": "The level of permission to grant the access token to view and manage security events like code scanning alerts. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to view and manage security events like code scanning alerts.",
             "enum": ["read", "write"]
           },
           "single_file": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage just a single file. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to manage just a single file.",
             "enum": ["read", "write"]
           },
           "statuses": {
             "type": "string",
-            "description": "The level of permission to grant the access token for commit statuses. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for commit statuses.",
             "enum": ["read", "write"]
           },
           "vulnerability_alerts": {
             "type": "string",
-            "description": "The level of permission to grant the access token to retrieve Dependabot alerts. Can be one of: `read`.",
-            "enum": ["read"]
+            "description": "The level of permission to grant the access token to manage Dependabot alerts.",
+            "enum": ["read", "write"]
           },
           "workflows": {
             "type": "string",
-            "description": "The level of permission to grant the access token to update GitHub Actions workflow files. Can be one of: `write`.",
+            "description": "The level of permission to grant the access token to update GitHub Actions workflow files.",
             "enum": ["write"]
           },
           "members": {
             "type": "string",
-            "description": "The level of permission to grant the access token for organization teams and members. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for organization teams and members.",
             "enum": ["read", "write"]
           },
           "organization_administration": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage access to an organization. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to manage access to an organization.",
             "enum": ["read", "write"]
           },
           "organization_hooks": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization.",
             "enum": ["read", "write"]
           },
           "organization_plan": {
             "type": "string",
-            "description": "The level of permission to grant the access token for viewing an organization's plan. Can be one of: `read`.",
+            "description": "The level of permission to grant the access token for viewing an organization's plan.",
             "enum": ["read"]
           },
           "organization_projects": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage organization projects, columns, and cards. Can be one of: `read`, `write`, or `admin`.",
+            "description": "The level of permission to grant the access token to manage organization projects and projects beta (where available).",
             "enum": ["read", "write", "admin"]
           },
           "organization_packages": {
             "type": "string",
-            "description": "The level of permission to grant the access token for organization packages published to GitHub Packages. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token for organization packages published to GitHub Packages.",
             "enum": ["read", "write"]
           },
           "organization_secrets": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage organization secrets. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to manage organization secrets.",
             "enum": ["read", "write"]
           },
           "organization_self_hosted_runners": {
             "type": "string",
-            "description": "The level of permission to grant the access token to view and manage GitHub Actions self-hosted runners available to an organization. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to view and manage GitHub Actions self-hosted runners available to an organization.",
             "enum": ["read", "write"]
           },
           "organization_user_blocking": {
             "type": "string",
-            "description": "The level of permission to grant the access token to view and manage users blocked by the organization. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to view and manage users blocked by the organization.",
             "enum": ["read", "write"]
           },
           "team_discussions": {
             "type": "string",
-            "description": "The level of permission to grant the access token to manage team discussions and related comments. Can be one of: `read` or `write`.",
+            "description": "The level of permission to grant the access token to manage team discussions and related comments.",
+            "enum": ["read", "write"]
+          },
+          "content_references": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for notification of content references and creation content attachments.",
             "enum": ["read", "write"]
           }
         },
@@ -7748,6 +7833,7 @@
               "temp_clone_token": { "type": "string" },
               "allow_squash_merge": { "type": "boolean" },
               "delete_branch_on_merge": { "type": "boolean" },
+              "allow_update_branch": { "type": "boolean" },
               "allow_merge_commit": { "type": "boolean" },
               "subscribers_count": { "type": "integer" },
               "network_count": { "type": "integer" }
@@ -7762,6 +7848,12 @@
           },
           "delete_branch_on_merge": {
             "description": "Whether to delete head branches when pull requests are merged",
+            "default": false,
+            "type": "boolean",
+            "example": false
+          },
+          "allow_update_branch": {
+            "description": "Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.",
             "default": false,
             "type": "boolean",
             "example": false
@@ -7890,6 +7982,12 @@
             "example": "open",
             "type": "string"
           },
+          "state_reason": {
+            "description": "The reason for the current state",
+            "example": "not_planned",
+            "type": "string",
+            "nullable": true
+          },
           "title": {
             "description": "Title of the issue",
             "example": "Widget creation fails in Safari on OS X 10.8",
@@ -7968,6 +8066,7 @@
           },
           "created_at": { "type": "string", "format": "date-time" },
           "updated_at": { "type": "string", "format": "date-time" },
+          "draft": { "type": "boolean" },
           "closed_by": { "$ref": "#/components/schemas/nullable-simple-user" },
           "body_html": { "type": "string" },
           "body_text": { "type": "string" },
@@ -9151,6 +9250,7 @@
           "allow_squash_merge": { "type": "boolean", "example": true },
           "delete_branch_on_merge": { "type": "boolean", "example": false },
           "allow_merge_commit": { "type": "boolean", "example": true },
+          "allow_update_branch": { "type": "boolean", "example": true },
           "allow_forking": { "type": "boolean", "example": true },
           "subscribers_count": { "type": "integer", "example": 42 },
           "network_count": { "type": "integer", "example": 0 },
@@ -9284,7 +9384,7 @@
             "example": "master"
           },
           "head_sha": {
-            "description": "The SHA of the head commit that points to the version of the worflow being run.",
+            "description": "The SHA of the head commit that points to the version of the workflow being run.",
             "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
             "type": "string"
           },
@@ -9292,11 +9392,6 @@
             "type": "integer",
             "description": "The auto incrementing run number for the workflow run.",
             "example": 106
-          },
-          "run_attempt": {
-            "type": "integer",
-            "description": "Attempt number of the run, 1 for first attempt and higher if the workflow was re-run.",
-            "example": 1
           },
           "event": { "type": "string", "example": "push" },
           "status": {
@@ -9330,11 +9425,6 @@
           },
           "created_at": { "type": "string", "format": "date-time" },
           "updated_at": { "type": "string", "format": "date-time" },
-          "run_started_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The start time of the latest run. Resets on re-run."
-          },
           "jobs_url": {
             "description": "The URL to the jobs for the workflow run.",
             "type": "string",
@@ -9365,12 +9455,6 @@
             "type": "string",
             "example": "https://api.github.com/repos/github/hello-world/actions/runs/5/rerun"
           },
-          "previous_attempt_url": {
-            "nullable": true,
-            "description": "The URL to the previous attempted run of this workflow, if one exists.",
-            "type": "string",
-            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5/attempts/3"
-          },
           "workflow_url": {
             "description": "The URL to the workflow.",
             "type": "string",
@@ -9394,6 +9478,7 @@
           "status",
           "conclusion",
           "head_sha",
+          "path",
           "workflow_id",
           "url",
           "html_url",
@@ -9483,7 +9568,9 @@
           },
           "head_commit": { "$ref": "#/components/schemas/simple-commit" },
           "latest_check_runs_count": { "type": "integer" },
-          "check_runs_url": { "type": "string" }
+          "check_runs_url": { "type": "string" },
+          "rerequestable": { "type": "boolean" },
+          "runs_rerequestable": { "type": "boolean" }
         },
         "required": [
           "id",
@@ -9575,13 +9662,13 @@
         ]
       },
       "code-scanning-alert-set-state": {
-        "description": "Sets the state of the code scanning alert. Can be one of `open` or `dismissed`. You must provide `dismissed_reason` when you set the state to `dismissed`.",
+        "description": "Sets the state of the code scanning alert. You must provide `dismissed_reason` when you set the state to `dismissed`.",
         "type": "string",
         "enum": ["open", "dismissed"]
       },
       "code-scanning-alert-dismissed-reason": {
         "type": "string",
-        "description": "**Required when the state is dismissed.** The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`.",
+        "description": "**Required when the state is dismissed.** The reason for dismissing or closing the alert.",
         "nullable": true,
         "enum": [null, "false positive", "won't fix", "used in tests"]
       },
@@ -9717,7 +9804,16 @@
                 "description": { "type": "string" },
                 "color": { "type": "string" },
                 "default": { "type": "boolean" }
-              }
+              },
+              "required": [
+                "id",
+                "node_id",
+                "url",
+                "name",
+                "description",
+                "color",
+                "default"
+              ]
             }
           },
           "milestone": { "$ref": "#/components/schemas/nullable-milestone" },
@@ -10067,7 +10163,7 @@
             "format": "date-time",
             "example": "2011-04-14T16:00:49Z"
           },
-          "issue": { "$ref": "#/components/schemas/issue" },
+          "issue": { "$ref": "#/components/schemas/nullable-issue" },
           "label": { "$ref": "#/components/schemas/issue-event-label" },
           "assignee": { "$ref": "#/components/schemas/nullable-simple-user" },
           "assigner": { "$ref": "#/components/schemas/nullable-simple-user" },
@@ -10336,6 +10432,7 @@
             }
           },
           "state": { "type": "string" },
+          "state_reason": { "type": "string", "nullable": true },
           "assignee": { "$ref": "#/components/schemas/nullable-simple-user" },
           "milestone": { "$ref": "#/components/schemas/nullable-milestone" },
           "comments": { "type": "integer" },
@@ -11667,6 +11764,7 @@
               "temp_clone_token": { "type": "string" },
               "allow_squash_merge": { "type": "boolean" },
               "delete_branch_on_merge": { "type": "boolean" },
+              "allow_update_branch": { "type": "boolean" },
               "allow_merge_commit": { "type": "boolean" },
               "subscribers_count": { "type": "integer" },
               "network_count": { "type": "integer" }
@@ -11681,6 +11779,12 @@
           },
           "delete_branch_on_merge": {
             "description": "Whether to delete head branches when pull requests are merged",
+            "default": false,
+            "type": "boolean",
+            "example": false
+          },
+          "allow_update_branch": {
+            "description": "Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.",
             "default": false,
             "type": "boolean",
             "example": false
@@ -11945,36 +12049,31 @@
       "alert-number": {
         "type": "integer",
         "description": "The security alert number.",
-        "readOnly": true,
-        "nullable": false
+        "readOnly": true
       },
       "alert-created-at": {
         "type": "string",
         "description": "The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
         "format": "date-time",
-        "readOnly": true,
-        "nullable": false
+        "readOnly": true
       },
       "alert-url": {
         "type": "string",
         "description": "The REST API URL of the alert resource.",
         "format": "uri",
-        "readOnly": true,
-        "nullable": false
+        "readOnly": true
       },
       "alert-html-url": {
         "type": "string",
         "description": "The GitHub URL of the alert resource.",
         "format": "uri",
-        "readOnly": true,
-        "nullable": false
+        "readOnly": true
       },
       "alert-instances-url": {
         "type": "string",
         "description": "The REST API URL for fetching the list of instances for an alert.",
         "format": "uri",
-        "readOnly": true,
-        "nullable": false
+        "readOnly": true
       },
       "code-scanning-alert-state": {
         "type": "string",
@@ -12405,31 +12504,7 @@
           },
           "files": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "filename": { "type": "string" },
-                "additions": { "type": "integer" },
-                "deletions": { "type": "integer" },
-                "changes": { "type": "integer" },
-                "status": { "type": "string" },
-                "raw_url": { "type": "string" },
-                "blob_url": { "type": "string" },
-                "patch": { "type": "string" },
-                "sha": {
-                  "type": "string",
-                  "example": "\"1e8e60ce9733d5283f7836fa602b6365a66b2567\""
-                },
-                "contents_url": {
-                  "type": "string",
-                  "example": "\"https://api.github.com/repos/owner-3d68404b07d25daeb2d4a6bf/AAA_Public_Repo/contents/geometry.js?ref=c3956841a7cb7e8ba4a6fd923568d86958f01573\""
-                },
-                "previous_filename": {
-                  "type": "string",
-                  "example": "\"subdir/before_name.txt\""
-                }
-              }
-            }
+            "items": { "$ref": "#/components/schemas/diff-entry" }
           }
         },
         "required": [
@@ -12550,6 +12625,157 @@
           "message": { "type": "string", "nullable": true }
         },
         "required": ["code", "status", "message"]
+      },
+      "nullable-issue": {
+        "title": "Issue",
+        "description": "Issues are a great way to keep track of tasks, enhancements, and bugs for your projects.",
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "node_id": { "type": "string" },
+          "url": {
+            "description": "URL for the issue",
+            "example": "https://api.github.com/repositories/42/issues/1",
+            "type": "string",
+            "format": "uri"
+          },
+          "repository_url": { "type": "string", "format": "uri" },
+          "labels_url": { "type": "string" },
+          "comments_url": { "type": "string", "format": "uri" },
+          "events_url": { "type": "string", "format": "uri" },
+          "html_url": { "type": "string", "format": "uri" },
+          "number": {
+            "description": "Number uniquely identifying the issue within its repository",
+            "example": 42,
+            "type": "integer"
+          },
+          "state": {
+            "description": "State of the issue; either 'open' or 'closed'",
+            "example": "open",
+            "type": "string"
+          },
+          "state_reason": {
+            "description": "The reason for the current state",
+            "example": "not_planned",
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "description": "Title of the issue",
+            "example": "Widget creation fails in Safari on OS X 10.8",
+            "type": "string"
+          },
+          "body": {
+            "description": "Contents of the issue",
+            "example": "It looks like the new widget form is broken on Safari. When I try and create the widget, Safari crashes. This is reproducible on 10.8, but not 10.9. Maybe a browser bug?",
+            "type": "string",
+            "nullable": true
+          },
+          "user": { "$ref": "#/components/schemas/nullable-simple-user" },
+          "labels": {
+            "description": "Labels to associate with this issue; pass one or more label names to replace the set of labels on this issue; send an empty array to clear all labels from the issue; note that the labels are silently dropped for users without push access to the repository",
+            "example": ["bug", "registration"],
+            "type": "array",
+            "items": {
+              "oneOf": [
+                { "type": "string" },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer", "format": "int64" },
+                    "node_id": { "type": "string" },
+                    "url": { "type": "string", "format": "uri" },
+                    "name": { "type": "string" },
+                    "description": { "type": "string", "nullable": true },
+                    "color": { "type": "string", "nullable": true },
+                    "default": { "type": "boolean" }
+                  }
+                }
+              ]
+            }
+          },
+          "assignee": { "$ref": "#/components/schemas/nullable-simple-user" },
+          "assignees": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/simple-user" },
+            "nullable": true
+          },
+          "milestone": { "$ref": "#/components/schemas/nullable-milestone" },
+          "locked": { "type": "boolean" },
+          "active_lock_reason": { "type": "string", "nullable": true },
+          "comments": { "type": "integer" },
+          "pull_request": {
+            "type": "object",
+            "properties": {
+              "merged_at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "diff_url": {
+                "type": "string",
+                "format": "uri",
+                "nullable": true
+              },
+              "html_url": {
+                "type": "string",
+                "format": "uri",
+                "nullable": true
+              },
+              "patch_url": {
+                "type": "string",
+                "format": "uri",
+                "nullable": true
+              },
+              "url": { "type": "string", "format": "uri", "nullable": true }
+            },
+            "required": ["diff_url", "html_url", "patch_url", "url"]
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "draft": { "type": "boolean" },
+          "closed_by": { "$ref": "#/components/schemas/nullable-simple-user" },
+          "body_html": { "type": "string" },
+          "body_text": { "type": "string" },
+          "timeline_url": { "type": "string", "format": "uri" },
+          "repository": { "$ref": "#/components/schemas/repository" },
+          "performed_via_github_app": {
+            "$ref": "#/components/schemas/nullable-integration"
+          },
+          "author_association": {
+            "$ref": "#/components/schemas/author_association"
+          },
+          "reactions": { "$ref": "#/components/schemas/reaction-rollup" }
+        },
+        "required": [
+          "assignee",
+          "closed_at",
+          "comments",
+          "comments_url",
+          "events_url",
+          "html_url",
+          "id",
+          "node_id",
+          "labels",
+          "labels_url",
+          "milestone",
+          "number",
+          "repository_url",
+          "state",
+          "locked",
+          "title",
+          "url",
+          "user",
+          "author_association",
+          "created_at",
+          "updated_at"
+        ],
+        "nullable": true
       },
       "issue-event-label": {
         "title": "Issue Event Label",
@@ -14167,118 +14393,7 @@
             "created_at": "2011-01-26T19:01:12Z",
             "updated_at": "2011-01-26T19:14:43Z",
             "permissions": { "admin": false, "push": false, "pull": true },
-            "template_repository": {
-              "id": 1296269,
-              "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
-              "name": "Hello-World-Template",
-              "full_name": "octocat/Hello-World-Template",
-              "owner": {
-                "login": "octocat",
-                "id": 1,
-                "node_id": "MDQ6VXNlcjE=",
-                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-                "gravatar_id": "",
-                "url": "https://api.github.com/users/octocat",
-                "html_url": "https://github.com/octocat",
-                "followers_url": "https://api.github.com/users/octocat/followers",
-                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
-                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
-                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
-                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
-                "organizations_url": "https://api.github.com/users/octocat/orgs",
-                "repos_url": "https://api.github.com/users/octocat/repos",
-                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
-                "received_events_url": "https://api.github.com/users/octocat/received_events",
-                "type": "User",
-                "site_admin": false
-              },
-              "private": false,
-              "html_url": "https://github.com/octocat/Hello-World-Template",
-              "description": "This your first repo!",
-              "fork": false,
-              "url": "https://api.github.com/repos/octocat/Hello-World-Template",
-              "archive_url": "https://api.github.com/repos/octocat/Hello-World-Template/{archive_format}{/ref}",
-              "assignees_url": "https://api.github.com/repos/octocat/Hello-World-Template/assignees{/user}",
-              "blobs_url": "https://api.github.com/repos/octocat/Hello-World-Template/git/blobs{/sha}",
-              "branches_url": "https://api.github.com/repos/octocat/Hello-World-Template/branches{/branch}",
-              "collaborators_url": "https://api.github.com/repos/octocat/Hello-World-Template/collaborators{/collaborator}",
-              "comments_url": "https://api.github.com/repos/octocat/Hello-World-Template/comments{/number}",
-              "commits_url": "https://api.github.com/repos/octocat/Hello-World-Template/commits{/sha}",
-              "compare_url": "https://api.github.com/repos/octocat/Hello-World-Template/compare/{base}...{head}",
-              "contents_url": "https://api.github.com/repos/octocat/Hello-World-Template/contents/{+path}",
-              "contributors_url": "https://api.github.com/repos/octocat/Hello-World-Template/contributors",
-              "deployments_url": "https://api.github.com/repos/octocat/Hello-World-Template/deployments",
-              "downloads_url": "https://api.github.com/repos/octocat/Hello-World-Template/downloads",
-              "events_url": "https://api.github.com/repos/octocat/Hello-World-Template/events",
-              "forks_url": "https://api.github.com/repos/octocat/Hello-World-Template/forks",
-              "git_commits_url": "https://api.github.com/repos/octocat/Hello-World-Template/git/commits{/sha}",
-              "git_refs_url": "https://api.github.com/repos/octocat/Hello-World-Template/git/refs{/sha}",
-              "git_tags_url": "https://api.github.com/repos/octocat/Hello-World-Template/git/tags{/sha}",
-              "git_url": "git:github.com/octocat/Hello-World-Template.git",
-              "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World-Template/issues/comments{/number}",
-              "issue_events_url": "https://api.github.com/repos/octocat/Hello-World-Template/issues/events{/number}",
-              "issues_url": "https://api.github.com/repos/octocat/Hello-World-Template/issues{/number}",
-              "keys_url": "https://api.github.com/repos/octocat/Hello-World-Template/keys{/key_id}",
-              "labels_url": "https://api.github.com/repos/octocat/Hello-World-Template/labels{/name}",
-              "languages_url": "https://api.github.com/repos/octocat/Hello-World-Template/languages",
-              "merges_url": "https://api.github.com/repos/octocat/Hello-World-Template/merges",
-              "milestones_url": "https://api.github.com/repos/octocat/Hello-World-Template/milestones{/number}",
-              "notifications_url": "https://api.github.com/repos/octocat/Hello-World-Template/notifications{?since,all,participating}",
-              "pulls_url": "https://api.github.com/repos/octocat/Hello-World-Template/pulls{/number}",
-              "releases_url": "https://api.github.com/repos/octocat/Hello-World-Template/releases{/id}",
-              "ssh_url": "git@github.com:octocat/Hello-World-Template.git",
-              "stargazers_url": "https://api.github.com/repos/octocat/Hello-World-Template/stargazers",
-              "statuses_url": "https://api.github.com/repos/octocat/Hello-World-Template/statuses/{sha}",
-              "subscribers_url": "https://api.github.com/repos/octocat/Hello-World-Template/subscribers",
-              "subscription_url": "https://api.github.com/repos/octocat/Hello-World-Template/subscription",
-              "tags_url": "https://api.github.com/repos/octocat/Hello-World-Template/tags",
-              "teams_url": "https://api.github.com/repos/octocat/Hello-World-Template/teams",
-              "trees_url": "https://api.github.com/repos/octocat/Hello-World-Template/git/trees{/sha}",
-              "clone_url": "https://github.com/octocat/Hello-World-Template.git",
-              "mirror_url": "git:git.example.com/octocat/Hello-World-Template",
-              "hooks_url": "https://api.github.com/repos/octocat/Hello-World-Template/hooks",
-              "svn_url": "https://svn.github.com/octocat/Hello-World-Template",
-              "homepage": "https://github.com",
-              "language": null,
-              "forks": 9,
-              "forks_count": 9,
-              "stargazers_count": 80,
-              "watchers_count": 80,
-              "watchers": 80,
-              "size": 108,
-              "default_branch": "master",
-              "open_issues": 0,
-              "open_issues_count": 0,
-              "is_template": true,
-              "license": {
-                "key": "mit",
-                "name": "MIT License",
-                "url": "https://api.github.com/licenses/mit",
-                "spdx_id": "MIT",
-                "node_id": "MDc6TGljZW5zZW1pdA==",
-                "html_url": "https://api.github.com/licenses/mit"
-              },
-              "topics": ["octocat", "atom", "electron", "api"],
-              "has_issues": true,
-              "has_projects": true,
-              "has_wiki": true,
-              "has_pages": false,
-              "has_downloads": true,
-              "archived": false,
-              "disabled": false,
-              "visibility": "public",
-              "pushed_at": "2011-01-26T19:06:43Z",
-              "created_at": "2011-01-26T19:01:12Z",
-              "updated_at": "2011-01-26T19:14:43Z",
-              "permissions": { "admin": false, "push": false, "pull": true },
-              "allow_rebase_merge": true,
-              "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
-              "allow_squash_merge": true,
-              "delete_branch_on_merge": true,
-              "allow_merge_commit": true,
-              "subscribers_count": 42,
-              "network_count": 0
-            }
+            "template_repository": null
           }
         ]
       },
@@ -14487,7 +14602,13 @@
           "pushed_at": "2011-01-26T19:06:43Z",
           "created_at": "2011-01-26T19:01:12Z",
           "updated_at": "2011-01-26T19:14:43Z",
-          "permissions": { "admin": false, "push": false, "pull": true },
+          "permissions": {
+            "admin": false,
+            "maintain": false,
+            "push": false,
+            "triage": false,
+            "pull": true
+          },
           "allow_rebase_merge": true,
           "template_repository": {
             "id": 1296269,
@@ -14591,7 +14712,13 @@
             "pushed_at": "2011-01-26T19:06:43Z",
             "created_at": "2011-01-26T19:01:12Z",
             "updated_at": "2011-01-26T19:14:43Z",
-            "permissions": { "admin": false, "push": false, "pull": true },
+            "permissions": {
+              "pull": true,
+              "triage": false,
+              "push": false,
+              "maintain": false,
+              "admin": false
+            },
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
@@ -16032,6 +16159,8 @@
               "id": 30433642,
               "name": "Build",
               "node_id": "MDEyOldvcmtmbG93IFJ1bjI2OTI4OQ==",
+              "check_suite_id": 42,
+              "check_suite_node_id": "MDEwOkNoZWNrU3VpdGU0Mg==",
               "head_branch": "master",
               "head_sha": "acb5820ced9479c074f688cc328bf03f341a511d",
               "run_number": 562,
@@ -16206,12 +16335,12 @@
           "node_id": "MDEyOldvcmtmbG93IFJ1bjI2OTI4OQ==",
           "check_suite_id": 42,
           "check_suite_node_id": "MDEwOkNoZWNrU3VpdGU0Mg==",
-          "head_branch": "master",
+          "head_branch": "main",
           "head_sha": "acb5820ced9479c074f688cc328bf03f341a511d",
+          "path": ".github/workflows/build.yml@main",
           "run_number": 562,
           "event": "push",
           "status": "queued",
-          "conclusion": null,
           "workflow_id": 159038,
           "url": "https://api.github.com/repos/octo-org/octo-repo/actions/runs/30433642",
           "html_url": "https://github.com/octo-org/octo-repo/actions/runs/30433642",
@@ -16892,7 +17021,6 @@
           "rule": {
             "id": "js/zipslip",
             "severity": "error",
-            "security_severity_level": "high",
             "description": "Arbitrary file write during zip extraction (\"Zip Slip\")",
             "name": "js/zipslip",
             "full_description": "Extracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten.",
@@ -16953,7 +17081,6 @@
           "rule": {
             "id": "js/zipslip",
             "severity": "error",
-            "security_severity_level": "high",
             "description": "Arbitrary file write during zip extraction (\"Zip Slip\")",
             "name": "js/zipslip",
             "full_description": "Extracting files from a malicious zip archive without validating that the destination file path is within the destination directory can cause files outside the destination directory to be overwritten.",
@@ -20832,7 +20959,13 @@
           "pushed_at": "2011-01-26T19:06:43Z",
           "created_at": "2011-01-26T19:01:12Z",
           "updated_at": "2011-01-26T19:14:43Z",
-          "permissions": { "admin": false, "push": false, "pull": true },
+          "permissions": {
+            "admin": false,
+            "maintain": false,
+            "push": false,
+            "triage": false,
+            "pull": true
+          },
           "allow_rebase_merge": true,
           "template_repository": {
             "id": 1296269,
@@ -20936,7 +21069,13 @@
             "pushed_at": "2011-01-26T19:06:43Z",
             "created_at": "2011-01-26T19:01:12Z",
             "updated_at": "2011-01-26T19:14:43Z",
-            "permissions": { "admin": false, "push": false, "pull": true },
+            "permissions": {
+              "pull": true,
+              "triage": false,
+              "push": false,
+              "maintain": false,
+              "admin": false
+            },
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
@@ -21232,21 +21371,6 @@
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/basic-error" }
-          }
-        }
-      },
-      "preview_header_missing": {
-        "description": "Preview header missing",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": ["message", "documentation_url"],
-              "properties": {
-                "message": { "type": "string" },
-                "documentation_url": { "type": "string" }
-              }
-            }
           }
         }
       },

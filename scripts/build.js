@@ -18,8 +18,10 @@ if (!process.env.GITHUB_ACTIONS && !process.env.ANICCA_REPOSITORY_PATH) {
 run();
 
 async function run() {
-  const ghesVersions = await getCurrentVersions();
-  const latestGhesVersion = ghesVersions.reverse()[0];
+  // disable loading GHES version until we unblock automated updates
+  // const ghesVersions = await getCurrentVersions();
+  // const latestGhesVersion = ghesVersions.reverse()[0];
+  const latestGhesVersion = "3.2";
 
   const schemaFileNames = readdirSync("cache");
   const changeFileNames = readdirSync("changes");
