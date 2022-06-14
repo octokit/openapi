@@ -27991,6 +27991,9 @@
           },
           "500": {
             "$ref": "#/components/responses/internal_error"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
           }
         },
         "x-github": {
@@ -27998,110 +28001,6 @@
           "enabledForGitHubApps": true,
           "category": "repos",
           "subcategory": "commits"
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments": {
-      "post": {
-        "summary": "Create a content attachment",
-        "description": "Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.\n\nThe app must create a content attachment within six hours of the content reference URL being posted. See \"[Using content attachments](https://docs.github.com/apps/using-content-attachments/)\" for details about content attachments.\n\nYou must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.",
-        "tags": ["apps"],
-        "operationId": "apps/create-content-attachment",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/rest/reference/apps#create-a-content-attachment"
-        },
-        "parameters": [
-          {
-            "name": "owner",
-            "description": "The owner of the repository. Determined from the `repository` `full_name` of the `content_reference` event.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "repo",
-            "description": "The name of the repository. Determined from the `repository` `full_name` of the `content_reference` event.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "content_reference_id",
-            "description": "The `id` of the `content_reference` event.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "title": {
-                    "description": "The title of the attachment",
-                    "example": "Title of the attachment",
-                    "type": "string",
-                    "maxLength": 1024
-                  },
-                  "body": {
-                    "description": "The body of the attachment",
-                    "example": "Body of the attachment",
-                    "type": "string",
-                    "maxLength": 262144
-                  }
-                },
-                "required": ["title", "body"],
-                "type": "object"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/content-reference-attachment"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/content-reference-attachment"
-                  }
-                }
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          },
-          "410": {
-            "$ref": "#/components/responses/gone"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "apps",
-          "subcategory": "installations"
         }
       }
     },
