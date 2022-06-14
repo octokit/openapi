@@ -41462,6 +41462,129 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/tags/protection": {
+      "get": {
+        "summary": "List tag protection states for a repository",
+        "description": "This returns the tag protection states of a repository.\n\nThis information is only available to repository administrators.",
+        "tags": ["repos"],
+        "operationId": "repos/list-tag-protection",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/repos#list-tag-protection-state-of-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/tag-protection"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/tag-protection-items"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "tags"
+        }
+      },
+      "post": {
+        "summary": "Create a tag protection state for a repository",
+        "description": "This creates a tag protection state for a repository.\nThis endpoint is only available to repository administrators.",
+        "tags": ["repos"],
+        "operationId": "repos/create-tag-protection",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/repos#create-tag-protection-state-for-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pattern": {
+                    "type": "string",
+                    "description": "An optional glob pattern to match against when enforcing tag protection."
+                  }
+                },
+                "required": ["pattern"]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "pattern": "v1.*"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tag-protection"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/tag-protection"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "tags"
+        }
+      }
+    },
     "/repos/{owner}/{repo}/tarball/{ref}": {
       "get": {
         "summary": "Download a repository archive (tar)",
