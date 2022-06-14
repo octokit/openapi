@@ -10192,6 +10192,88 @@
         }
       }
     },
+    "/orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}": {
+      "put": {
+        "summary": "Add selected repository to an organization secret",
+        "description": "Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.",
+        "tags": ["dependabot"],
+        "operationId": "dependabot/add-selected-repo-to-org-secret",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/dependabot#add-selected-repository-to-an-organization-secret"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/secret-name"
+          },
+          {
+            "name": "repository_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content when repository was added to the selected list"
+          },
+          "409": {
+            "description": "Conflict when visibility type is not set to selected"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "dependabot",
+          "subcategory": "secrets"
+        }
+      },
+      "delete": {
+        "summary": "Remove selected repository from an organization secret",
+        "description": "Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.",
+        "tags": ["dependabot"],
+        "operationId": "dependabot/remove-selected-repo-from-org-secret",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/dependabot#remove-selected-repository-from-an-organization-secret"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/secret-name"
+          },
+          {
+            "name": "repository_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response when repository was removed from the selected list"
+          },
+          "409": {
+            "description": "Conflict when visibility type not set to selected"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "dependabot",
+          "subcategory": "secrets"
+        }
+      }
+    },
     "/orgs/{org}/events": {
       "get": {
         "summary": "List public organization events",
