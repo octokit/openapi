@@ -4051,6 +4051,55 @@
         }
       }
     },
+    "/enterprises/{enterprise}/settings/billing/advanced-security": {
+      "get": {
+        "summary": "Get GitHub Advanced Security active committers for an enterprise",
+        "description": "Gets the GitHub Advanced Security active committers for an enterprise per repository.\nEach distinct user login across all repositories is counted as a single Advanced Security seat, so the total_advanced_security_committers is not the sum of active_users for each repository.",
+        "tags": ["billing"],
+        "operationId": "billing/get-github-advanced-security-billing-ghe",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/billing#export-advanced-security-active-committers-data-for-enterprise"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/advanced-security-active-committers"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/advanced-security-active-committers"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "enterprise-admin",
+          "subcategory": "billing"
+        }
+      }
+    },
     "/enterprises/{enterprise}/settings/billing/packages": {
       "get": {
         "summary": "Get GitHub Packages billing for an enterprise",
