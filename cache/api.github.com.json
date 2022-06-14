@@ -10361,6 +10361,73 @@
         }
       }
     },
+    "/orgs/{org}/external-groups": {
+      "get": {
+        "summary": "List external groups in an organization",
+        "description": "Lists external groups available in an organization. You can query the groups using the `display_name` parameter, only groups with a `group_name` containing the text provided in the `display_name` parameter will be returned.  You can also limit your page results using the `per_page` parameter. GitHub generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see \"[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89).\"\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+        "tags": ["teams"],
+        "operationId": "teams/list-external-idp-groups-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/teams#list-external-idp-groups-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "name": "page",
+            "description": "Page token",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "display_name",
+            "description": "Limits the list to groups containing the text in the group name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/external-groups"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/external-groups"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "example": "<https://api.github.com/resource?per_page=2&page=url-encoded-next-page-token>; rel=\"next\"",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": true,
+          "enabledForGitHubApps": true,
+          "category": "teams",
+          "subcategory": "external-groups"
+        }
+      }
+    },
     "/orgs/{org}/failed_invitations": {
       "get": {
         "summary": "List failed organization invitations",
