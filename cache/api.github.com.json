@@ -26000,6 +26000,91 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/codespaces/devcontainers": {
+      "get": {
+        "summary": "List devcontainer configurations in a repository for the authenticated user",
+        "description": "Lists the devcontainer.json files associated with a specified repository and the authenticated user. These files\nspecify launchpoint configurations for codespaces created within the repository.\n\nYou must authenticate using an access token with the `codespace` scope to use this endpoint.\n\nGitHub Apps must have read access to the `codespaces_metadata` repository permission to use this endpoint.",
+        "tags": ["codespaces"],
+        "operationId": "codespaces/list-devcontainers-in-repository-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/codespaces#list-devcontainers-in-a-repository-for-the-authenticated-user"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "devcontainers"],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "devcontainers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["path"],
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/codespaces-list-devcontainers-for-repository"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/internal_error"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "codespaces",
+          "subcategory": null
+        }
+      }
+    },
     "/repos/{owner}/{repo}/collaborators": {
       "get": {
         "summary": "List repository collaborators",
