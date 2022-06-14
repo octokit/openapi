@@ -40314,6 +40314,77 @@
       }
     },
     "/repos/{owner}/{repo}/releases/{release_id}/reactions": {
+      "get": {
+        "summary": "List reactions for a release",
+        "description": "List the reactions to a [release](https://docs.github.com/rest/reference/repos#releases).",
+        "tags": ["reactions"],
+        "operationId": "reactions/list-for-release",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/reactions/#list-reactions-for-a-release"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/release-id"
+          },
+          {
+            "name": "content",
+            "description": "Returns a single [reaction type](https://docs.github.com/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a release.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["+1", "laugh", "heart", "hooray", "rocket", "eyes"]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/reaction"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/reaction-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "reactions",
+          "subcategory": null
+        }
+      },
       "post": {
         "summary": "Create reaction for a release",
         "description": "Create a reaction to a [release](https://docs.github.com/rest/reference/repos#releases). A response with a `Status: 200 OK` means that you already added the reaction type to this release.",
