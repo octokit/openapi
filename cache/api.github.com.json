@@ -18450,6 +18450,68 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/actions/jobs/{job_id}/rerun": {
+      "post": {
+        "summary": "Re-run a job from a workflow run",
+        "description": "Re-run a job and its dependent jobs in a workflow run. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/re-run-job-for-workflow-run",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#re-run-job-for-workflow-run"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/job-id"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "enable_debug_logging": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether to enable debug logging for the re-run."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/empty-object"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "workflow-runs"
+        }
+      }
+    },
     "/repos/{owner}/{repo}/actions/permissions": {
       "get": {
         "summary": "Get GitHub Actions permissions for a repository",
