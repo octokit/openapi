@@ -3933,6 +3933,84 @@
         }
       }
     },
+    "/enterprises/{enterprise}/secret-scanning/alerts": {
+      "get": {
+        "summary": "List secret scanning alerts for an enterprise",
+        "description": "Lists secret scanning alerts for eligible repositories in an enterprise, from newest to oldest.\nTo use this endpoint, you must be a member of the enterprise, and you must use an access token with the `repo` scope or `security_events` scope. Alerts are only returned for organizations in the enterprise for which you are an organization owner or a [security manager](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).",
+        "tags": ["secret-scanning"],
+        "operationId": "secret-scanning/list-alerts-for-enterprise",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/secret-scanning#list-secret-scanning-alerts-for-an-enterprise"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise"
+          },
+          {
+            "$ref": "#/components/parameters/secret-scanning-alert-state"
+          },
+          {
+            "$ref": "#/components/parameters/secret-scanning-alert-secret-type"
+          },
+          {
+            "$ref": "#/components/parameters/secret-scanning-alert-resolution"
+          },
+          {
+            "$ref": "#/components/parameters/secret-scanning-alert-sort"
+          },
+          {
+            "$ref": "#/components/parameters/direction"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/pagination-before"
+          },
+          {
+            "$ref": "#/components/parameters/pagination-after"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/organization-secret-scanning-alert"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/organization-secret-scanning-alert-list"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "503": {
+            "$ref": "#/components/responses/service_unavailable"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "secret-scanning",
+          "subcategory": null
+        }
+      }
+    },
     "/enterprises/{enterprise}/settings/billing/actions": {
       "get": {
         "summary": "Get GitHub Actions billing for an enterprise",
