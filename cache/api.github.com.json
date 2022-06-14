@@ -7268,6 +7268,69 @@
         }
       }
     },
+    "/orgs/{org}/actions/cache/usage-by-repository": {
+      "get": {
+        "summary": "List repositories with GitHub Actions cache usage for an organization",
+        "description": "Lists repositories and their GitHub Actions cache usage for an organization.\nThe data fetched using this API is refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.\nYou must authenticate using an access token with the `read:org` scope to use this endpoint. GitHub Apps must have the `organization_admistration:read` permission to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/get-actions-cache-usage-by-repo-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#list-repositories-with-github-actions-cache-usage-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "repository_cache_usages"],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "repository_cache_usages": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/actions-cache-usage-by-repository"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/org-actions-cache-usage-by-repo"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "cache"
+        }
+      }
+    },
     "/orgs/{org}/actions/permissions": {
       "get": {
         "summary": "Get GitHub Actions permissions for an organization",
