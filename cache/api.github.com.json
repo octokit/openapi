@@ -25805,6 +25805,201 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/codespaces": {
+      "get": {
+        "summary": "List codespaces in a repository for the authenticated user",
+        "description": "Lists the codespaces associated to a specified repository and the authenticated user.\n\nYou must authenticate using an access token with the `codespace` scope to use this endpoint.\n\nGitHub Apps must have read access to the `codespaces` repository permission to use this endpoint.",
+        "tags": ["codespaces"],
+        "operationId": "codespaces/list-in-repository-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/codespaces#list-codespaces-in-a-repository-for-the-authenticated-user"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["total_count", "codespaces"],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "codespaces": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/codespace"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/codespaces-list-for-repository"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/internal_error"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "codespaces",
+          "subcategory": null
+        }
+      },
+      "post": {
+        "summary": "Create a codespace in a repository",
+        "description": "Creates a codespace owned by the authenticated user in the specified repository.\n\nYou must authenticate using an access token with the `codespace` scope to use this endpoint.\n\nGitHub Apps must have write access to the `codespaces` repository permission to use this endpoint.",
+        "tags": ["codespaces"],
+        "operationId": "codespaces/create-with-repo-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/codespaces#create-a-codespace-in-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "ref": {
+                    "description": "Git ref (typically a branch name) for this codespace",
+                    "type": "string"
+                  },
+                  "location": {
+                    "description": "Location for this codespace. Assigned by IP if not provided",
+                    "type": "string"
+                  },
+                  "client_ip": {
+                    "description": "IP for location auto-detection when proxying a request",
+                    "type": "string"
+                  },
+                  "machine": {
+                    "description": "Machine type to use for this codespace",
+                    "type": "string"
+                  },
+                  "devcontainer_path": {
+                    "description": "Path to devcontainer.json config to use for this codespace",
+                    "type": "string"
+                  },
+                  "multi_repo_permissions_opt_out": {
+                    "description": "Whether to authorize requested permissions from devcontainer.json",
+                    "type": "boolean"
+                  },
+                  "working_directory": {
+                    "description": "Working directory for this codespace",
+                    "type": "string"
+                  },
+                  "idle_timeout_minutes": {
+                    "description": "Time in minutes before codespace stops from inactivity",
+                    "type": "integer"
+                  },
+                  "display_name": {
+                    "description": "Display name for this codespace",
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "repository_id": 1,
+                    "ref": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response when the codespace was successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/codespace"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/codespace"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Response when the codespace creation partially failed but is being retried in the background",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/codespace"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/codespace"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "codespaces",
+          "subcategory": null
+        }
+      }
+    },
     "/repos/{owner}/{repo}/collaborators": {
       "get": {
         "summary": "List repository collaborators",
