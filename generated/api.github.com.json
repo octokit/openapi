@@ -290,7 +290,7 @@
           "url": "https://docs.github.com/rest/reference/apps#update-a-webhook-configuration-for-an-app"
         },
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -3481,6 +3481,11 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/event" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/public-events-items"
+                  }
                 }
               }
             }
@@ -5242,6 +5247,11 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/event" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/public-repo-events-items"
+                  }
                 }
               }
             }
@@ -5325,13 +5335,21 @@
                 "type": "object",
                 "properties": {
                   "last_read_at": {
-                    "description": "Describes the last point that notifications were checked.",
+                    "description": "Describes the last point that notifications were checked. Anything updated since this time will not be marked as read. If you omit this parameter, all notifications are marked as read. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. Default: The current timestamp.",
                     "type": "string",
                     "format": "date-time"
                   },
                   "read": {
                     "description": "Whether the notification has been read.",
                     "type": "boolean"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "last_read_at": "2022-06-10T00:00:00Z",
+                    "read": true
                   }
                 }
               }
@@ -5346,6 +5364,11 @@
                 "schema": {
                   "type": "object",
                   "properties": { "message": { "type": "string" } }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/notifications-mark-read"
+                  }
                 }
               }
             }
@@ -5485,7 +5508,8 @@
                   }
                 },
                 "type": "object"
-              }
+              },
+              "examples": { "default": { "value": { "ignored": false } } }
             }
           }
         },
@@ -23507,6 +23531,78 @@
         "x-octokit": {}
       }
     },
+    "/repos/{owner}/{repo}/dependency-graph/snapshots": {
+      "post": {
+        "summary": "Create a snapshot of dependencies for a repository",
+        "description": "Create a new snapshot of a repository's dependencies. You must authenticate using an access token with the `repo` scope to use this endpoint for a repository that the requesting user has access to.",
+        "tags": ["dependency-graph"],
+        "operationId": "dependency-graph/create-repository-snapshot",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/dependency-graph#create-a-snapshot-of-dependencies-for-a-repository"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/snapshot" },
+              "examples": {
+                "example-of-a-dependency-submission": {
+                  "$ref": "#/components/examples/dependency-graph-create-snapshot-request"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "created_at", "result", "message"],
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the created snapshot."
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "The time at which the snapshot was created."
+                    },
+                    "result": {
+                      "type": "string",
+                      "description": "Either \"SUCCESS\", \"ACCEPTED\", or \"INVALID\". \"SUCCESS\" indicates that the snapshot was successfully created and the repository's dependencies were updated. \"ACCEPTED\" indicates that the snapshot was successfully created, but the repository's dependencies were not updated. \"INVALID\" indicates that the snapshot was malformed."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "A message providing further details about the result, such as why the dependencies were not updated."
+                    }
+                  }
+                },
+                "examples": {
+                  "example-of-a-dependency-submission": {
+                    "$ref": "#/components/examples/dependency-graph-create-snapshot-success"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": true,
+          "enabledForGitHubApps": true,
+          "category": "dependency-graph",
+          "subcategory": "dependency-submission"
+        },
+        "x-octokit": {}
+      }
+    },
     "/repos/{owner}/{repo}/deployments": {
       "get": {
         "summary": "List deployments",
@@ -34210,7 +34306,7 @@
     "/repos/{owner}/{repo}/vulnerability-alerts": {
       "get": {
         "summary": "Check if vulnerability alerts are enabled for a repository",
-        "description": "Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin access to the repository. For more information, see \"[About security alerts for vulnerable dependencies](https://docs.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)\".",
+        "description": "Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin read access to the repository. For more information, see \"[About security alerts for vulnerable dependencies](https://docs.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)\".",
         "tags": ["repos"],
         "operationId": "repos/check-vulnerability-alerts",
         "externalDocs": {
@@ -37627,6 +37723,12 @@
                     "enum": ["member", "maintainer"],
                     "default": "member"
                   }
+                }
+              },
+              "examples": {
+                "default": {
+                  "summary": "Assign the member role for a user in a team",
+                  "value": { "role": "member" }
                 }
               }
             }
@@ -42474,6 +42576,11 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/event" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-events-items"
+                  }
                 }
               }
             }
@@ -42512,6 +42619,11 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/event" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-org-events-items"
+                  }
                 }
               }
             }
@@ -42549,6 +42661,11 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/event" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-public-events-items"
+                  }
                 }
               }
             }
@@ -43325,6 +43442,11 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/event" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-received-events-items"
+                  }
                 }
               }
             }
@@ -43362,6 +43484,11 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/event" }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/user-received-public-events-items"
+                  }
                 }
               }
             }
@@ -55910,6 +56037,166 @@
           ]
         }
       },
+      "metadata": {
+        "title": "metadata",
+        "description": "User-defined metadata to store domain-specific information limited to 8 keys with scalar values.",
+        "type": "object",
+        "maxProperties": 8,
+        "additionalProperties": {
+          "nullable": true,
+          "anyOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        }
+      },
+      "dependency": {
+        "title": "Dependency",
+        "description": "A single package dependency.",
+        "type": "object",
+        "properties": {
+          "package_url": {
+            "type": "string",
+            "description": "Package-url (PURL) of dependency. See https://github.com/package-url/purl-spec for more details.",
+            "example": "pkg:/npm/%40actions/http-client@1.0.11",
+            "pattern": "^pkg"
+          },
+          "metadata": { "$ref": "#/components/schemas/metadata" },
+          "relationship": {
+            "type": "string",
+            "description": "A notation of whether a dependency is requested directly by this manifest or is a dependency of another dependency.",
+            "example": "direct",
+            "enum": ["direct", "indirect"]
+          },
+          "scope": {
+            "type": "string",
+            "description": "A notation of whether the dependency is required for the primary build artifact (runtime) or is only used for development. Future versions of this specification may allow for more granular scopes.",
+            "example": "runtime",
+            "enum": ["runtime", "development"]
+          },
+          "dependencies": {
+            "type": "array",
+            "description": "Array of package-url (PURLs) of direct child dependencies.",
+            "example": "@actions/http-client",
+            "items": { "type": "string" }
+          }
+        },
+        "additionalProperties": false
+      },
+      "manifest": {
+        "title": "manifest",
+        "description": "A collection of related dependencies declared in a file or representing a logical group of dependencies.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the manifest.",
+            "example": "package-lock.json"
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "source_location": {
+                "type": "string",
+                "description": "The path of the manifest file relative to the root of the Git repository.",
+                "example": "/src/build/package-lock.json"
+              }
+            },
+            "additionalProperties": false
+          },
+          "metadata": { "$ref": "#/components/schemas/metadata" },
+          "resolved": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/dependency"
+            }
+          }
+        },
+        "required": ["name"],
+        "additionalProperties": false
+      },
+      "snapshot": {
+        "title": "snapshot",
+        "description": "Create a new snapshot of a repository's dependencies.",
+        "type": "object",
+        "properties": {
+          "version": {
+            "description": "The version of the repository snapshot submission.",
+            "type": "integer"
+          },
+          "job": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The external ID of the job.",
+                "example": "5622a2b0-63f6-4732-8c34-a1ab27e102a11"
+              },
+              "correlator": {
+                "type": "string",
+                "description": "Correlator provides a key that is used to group snapshots submitted over time. Only the \"latest\" submitted snapshot for a given combination of `job.correlator` and `detector.name` will be considered when calculating a repository's current dependencies. Correlator should be as unique as it takes to distinguish all detection runs for a given \"wave\" of CI workflow you run. If you're using GitHub Actions, a good default value for this could be the environment variables GITHUB_WORKFLOW and GITHUB_JOB concatenated together. If you're using a build matrix, then you'll also need to add additional key(s) to distinguish between each submission inside a matrix variation.",
+                "example": "yourworkflowname_yourjobname"
+              },
+              "html_url": {
+                "type": "string",
+                "description": "The url for the job.",
+                "example": "http://example.com/build"
+              }
+            },
+            "required": ["id", "correlator"],
+            "additionalProperties": false
+          },
+          "sha": {
+            "description": "The commit SHA associated with this dependency snapshot.",
+            "type": "string",
+            "example": "ddc951f4b1293222421f2c8df679786153acf689",
+            "minLength": 40
+          },
+          "ref": {
+            "description": "The repository branch that triggered this snapshot.",
+            "type": "string",
+            "pattern": "^refs/",
+            "example": "refs/heads/main"
+          },
+          "detector": {
+            "type": "object",
+            "description": "A description of the detector used.",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the detector used.",
+                "example": "docker buildtime detector"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the detector used.",
+                "example": "1.0.0"
+              },
+              "url": {
+                "type": "string",
+                "description": "The url of the detector used.",
+                "example": "http://example.com/docker-buildtimer-detector"
+              }
+            },
+            "required": ["name", "version", "url"],
+            "additionalProperties": false
+          },
+          "metadata": { "$ref": "#/components/schemas/metadata" },
+          "manifests": {
+            "type": "object",
+            "description": "A collection of package manifests",
+            "additionalProperties": { "$ref": "#/components/schemas/manifest" }
+          },
+          "scanned": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time at which the snapshot was scanned.",
+            "example": "2020-06-13T14:52:50-05:00"
+          }
+        },
+        "required": ["detector", "version", "ref", "sha", "job", "scanned"],
+        "additionalProperties": false
+      },
       "deployment-status": {
         "title": "Deployment Status",
         "description": "The status of a deployment.",
@@ -65219,6 +65506,69 @@
           "estimated_storage_for_month": 40
         }
       },
+      "public-events-items": {
+        "value": [
+          {
+            "id": "22249084947",
+            "type": "WatchEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": { "action": "started" },
+            "public": true,
+            "created_at": "2022-06-09T12:47:28Z"
+          },
+          {
+            "id": "22249084964",
+            "type": "PushEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "push_id": 10115855396,
+              "size": 1,
+              "distinct_size": 1,
+              "ref": "refs/heads/master",
+              "head": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+              "before": "883efe034920928c47fe18598c01249d1a9fdabd",
+              "commits": [
+                {
+                  "sha": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+                  "author": {
+                    "email": "octocat@github.com",
+                    "name": "Monalisa Octocat"
+                  },
+                  "message": "commit",
+                  "distinct": true,
+                  "url": "https://api.github.com/repos/octocat/Hello-World/commits/7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300"
+                }
+              ]
+            },
+            "public": true,
+            "created_at": "2022-06-07T07:50:26Z"
+          }
+        ]
+      },
       "feed": {
         "value": {
           "timeline_url": "https://github.com/timeline",
@@ -66147,6 +66497,69 @@
           "dependabot": ["54.158.161.132"]
         }
       },
+      "public-repo-events-items": {
+        "value": [
+          {
+            "id": "22249084964",
+            "type": "PushEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "push_id": 10115855396,
+              "size": 1,
+              "distinct_size": 1,
+              "ref": "refs/heads/master",
+              "head": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+              "before": "883efe034920928c47fe18598c01249d1a9fdabd",
+              "commits": [
+                {
+                  "sha": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+                  "author": {
+                    "email": "octocat@github.com",
+                    "name": "Monalisa Octocat"
+                  },
+                  "message": "commit",
+                  "distinct": true,
+                  "url": "https://api.github.com/repos/octocat/Hello-World/commits/7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300"
+                }
+              ]
+            },
+            "public": true,
+            "created_at": "2022-06-09T12:47:28Z"
+          },
+          {
+            "id": "22237752260",
+            "type": "WatchEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/rrubenich",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": { "action": "started" },
+            "public": true,
+            "created_at": "2022-06-08T23:29:25Z"
+          }
+        ]
+      },
       "thread-items": {
         "value": [
           {
@@ -66234,6 +66647,11 @@
             "subscription_url": "https://api.github.com/notifications/threads/1/subscription"
           }
         ]
+      },
+      "notifications-mark-read": {
+        "value": {
+          "message": "Unread notifications couldn't be marked in a single request. Notifications are being marked as read in the background."
+        }
       },
       "thread": {
         "value": {
@@ -76026,6 +76444,48 @@
           }
         ]
       },
+      "dependency-graph-create-snapshot-request": {
+        "value": {
+          "version": 0,
+          "sha": "ce587453ced02b1526dfb4cb910479d431683101",
+          "ref": "refs/heads/main",
+          "job": {
+            "correlator": "yourworkflowname_youractionname",
+            "id": "yourrunid"
+          },
+          "detector": {
+            "name": "octo-detector",
+            "version": "0.0.1",
+            "url": "https://github.com/octo-org/octo-repo"
+          },
+          "scanned": "2022-06-14T20:25:00Z",
+          "manifests": {
+            "package-lock.json": {
+              "name": "package-lock.json",
+              "file": { "source_location": "src/package-lock.json" },
+              "resolved": {
+                "@actions/core": {
+                  "package_url": "pkg:/npm/%40actions/core@1.1.9",
+                  "dependencies": ["@actions/http-client"]
+                },
+                "@actions/http-client": {
+                  "package_url": "pkg:/npm/%40actions/http-client@1.0.7",
+                  "dependencies": ["tunnel"]
+                },
+                "tunnel": { "package_url": "pkg:/npm/tunnel@0.0.6" }
+              }
+            }
+          }
+        }
+      },
+      "dependency-graph-create-snapshot-success": {
+        "value": {
+          "id": 12345,
+          "created_at": "2018-05-04T01:14:52Z",
+          "message": "Dependency results for the repo have been successfully updated.",
+          "result": "SUCCESS"
+        }
+      },
       "deployment-simple-example": {
         "summary": "Simple example",
         "value": {
@@ -84564,6 +85024,208 @@
           }
         }
       },
+      "user-events-items": {
+        "value": [
+          {
+            "id": "22249084947",
+            "type": "WatchEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": { "action": "started" },
+            "public": true,
+            "created_at": "2022-06-09T12:47:28Z"
+          },
+          {
+            "id": "22249084964",
+            "type": "PushEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "push_id": 10115855396,
+              "size": 1,
+              "distinct_size": 1,
+              "ref": "refs/heads/master",
+              "head": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+              "before": "883efe034920928c47fe18598c01249d1a9fdabd",
+              "commits": [
+                {
+                  "sha": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+                  "author": {
+                    "email": "octocat@github.com",
+                    "name": "Monalisa Octocat"
+                  },
+                  "message": "commit",
+                  "distinct": true,
+                  "url": "https://api.github.com/repos/octocat/Hello-World/commits/7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300"
+                }
+              ]
+            },
+            "public": false,
+            "created_at": "2022-06-07T07:50:26Z"
+          }
+        ]
+      },
+      "user-org-events-items": {
+        "value": [
+          {
+            "id": "22249084964",
+            "type": "PushEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "push_id": 10115855396,
+              "size": 1,
+              "distinct_size": 1,
+              "ref": "refs/heads/master",
+              "head": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+              "before": "883efe034920928c47fe18598c01249d1a9fdabd",
+              "commits": [
+                {
+                  "sha": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+                  "author": {
+                    "email": "octocat@github.com",
+                    "name": "Monalisa Octocat"
+                  },
+                  "message": "commit",
+                  "distinct": true,
+                  "url": "https://api.github.com/repos/octocat/Hello-World/commits/7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300"
+                }
+              ]
+            },
+            "public": false,
+            "created_at": "2022-06-09T12:47:28Z"
+          },
+          {
+            "id": "22196946742",
+            "type": "CreateEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "ref": null,
+              "ref_type": "repository",
+              "master_branch": "master",
+              "description": null,
+              "pusher_type": "user"
+            },
+            "public": false,
+            "created_at": "2022-06-07T07:50:26Z",
+            "org": {
+              "id": 9919,
+              "login": "github",
+              "gravatar_id": "",
+              "url": "https://api.github.com/orgs/github",
+              "avatar_url": "https://avatars.githubusercontent.com/u/9919?"
+            }
+          }
+        ]
+      },
+      "user-public-events-items": {
+        "value": [
+          {
+            "id": "22249084947",
+            "type": "WatchEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": { "action": "started" },
+            "public": true,
+            "created_at": "2022-06-09T12:47:28Z"
+          },
+          {
+            "id": "22249084964",
+            "type": "PushEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "push_id": 10115855396,
+              "size": 1,
+              "distinct_size": 1,
+              "ref": "refs/heads/master",
+              "head": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+              "before": "883efe034920928c47fe18598c01249d1a9fdabd",
+              "commits": [
+                {
+                  "sha": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+                  "author": {
+                    "email": "octocat@github.com",
+                    "name": "Monalisa Octocat"
+                  },
+                  "message": "commit",
+                  "distinct": true,
+                  "url": "https://api.github.com/repos/octocat/Hello-World/commits/7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300"
+                }
+              ]
+            },
+            "public": true,
+            "created_at": "2022-06-08T23:29:25Z"
+          }
+        ]
+      },
       "hovercard": {
         "value": {
           "contexts": [{ "message": "Owns this repository", "octicon": "repo" }]
@@ -84658,6 +85320,158 @@
             },
             "created_at": "2011-04-10T20:09:31Z",
             "updated_at": "2014-03-03T18:58:10Z"
+          }
+        ]
+      },
+      "user-received-events-items": {
+        "value": [
+          {
+            "id": "22249084964",
+            "type": "PushEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "push_id": 10115855396,
+              "size": 1,
+              "distinct_size": 1,
+              "ref": "refs/heads/master",
+              "head": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+              "before": "883efe034920928c47fe18598c01249d1a9fdabd",
+              "commits": [
+                {
+                  "sha": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+                  "author": {
+                    "email": "octocat@github.com",
+                    "name": "Monalisa Octocat"
+                  },
+                  "message": "commit",
+                  "distinct": true,
+                  "url": "https://api.github.com/repos/octocat/Hello-World/commits/7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300"
+                }
+              ]
+            },
+            "public": true,
+            "created_at": "2022-06-09T12:47:28Z"
+          },
+          {
+            "id": "22196946742",
+            "type": "CreateEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "ref": null,
+              "ref_type": "repository",
+              "master_branch": "master",
+              "description": null,
+              "pusher_type": "user"
+            },
+            "public": false,
+            "created_at": "2022-06-07T07:50:26Z",
+            "org": {
+              "id": 9919,
+              "login": "github",
+              "gravatar_id": "",
+              "url": "https://api.github.com/orgs/github",
+              "avatar_url": "https://avatars.githubusercontent.com/u/9919?"
+            }
+          }
+        ]
+      },
+      "user-received-public-events-items": {
+        "value": [
+          {
+            "id": "22249084964",
+            "type": "PushEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "push_id": 10115855396,
+              "size": 1,
+              "distinct_size": 1,
+              "ref": "refs/heads/master",
+              "head": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+              "before": "883efe034920928c47fe18598c01249d1a9fdabd",
+              "commits": [
+                {
+                  "sha": "7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300",
+                  "author": {
+                    "email": "octocat@github.com",
+                    "name": "Monalisa Octocat"
+                  },
+                  "message": "commit",
+                  "distinct": true,
+                  "url": "https://api.github.com/repos/octocat/Hello-World/commits/7a8f3ac80e2ad2f6842cb86f576d4bfe2c03e300"
+                }
+              ]
+            },
+            "public": true,
+            "created_at": "2022-06-09T12:47:28Z"
+          },
+          {
+            "id": "22196946742",
+            "type": "CreateEvent",
+            "actor": {
+              "id": 583231,
+              "login": "octocat",
+              "display_login": "octocat",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+            },
+            "repo": {
+              "id": 1296269,
+              "name": "octocat/Hello-World",
+              "url": "https://api.github.com/repos/octocat/Hello-World"
+            },
+            "payload": {
+              "ref": null,
+              "ref_type": "repository",
+              "master_branch": "master",
+              "description": null,
+              "pusher_type": "user"
+            },
+            "public": false,
+            "created_at": "2022-06-07T07:50:26Z",
+            "org": {
+              "id": 9919,
+              "login": "github",
+              "gravatar_id": "",
+              "url": "https://api.github.com/orgs/github",
+              "avatar_url": "https://avatars.githubusercontent.com/u/9919?"
+            }
           }
         ]
       }
@@ -85218,7 +86032,7 @@
       },
       "thread-id": {
         "name": "thread_id",
-        "description": "The unique identifier of the thread.",
+        "description": "The unique identifier of the pull request thread.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
