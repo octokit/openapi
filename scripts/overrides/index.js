@@ -94,7 +94,7 @@ function overrides(file, schema) {
     }
   }
 
-  if (ghesVersion === 3.2 || ghesVersion === 3.3 || file.startsWith("api.github.com") || file.startsWith("github.ae")) {
+  if (ghesVersion === 3.2 || ghesVersion === 3.3) {
     if (isDeferenced(file)) {
       addOperation(schema, "/repos/{owner}/{repo}/community/code_of_conduct", "get", "./codes-of-conduct-get-for-repo.deref.json");
     } else {
