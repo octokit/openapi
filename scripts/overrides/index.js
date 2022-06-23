@@ -1,3 +1,5 @@
+const SUPPORTED_GHES_OPERATIONS = [3.2, 3.3, 3.4, 3.5];
+
 module.exports = overrides;
 
 function isDeferenced(filename) {
@@ -41,6 +43,12 @@ function overrides(file, schema) {
   const ghesVersion = isGHES
     ? Number(file.match(/(?<=^ghes-)\d\.\d/)[0])
     : null;
+
+  if (isGHES && SUPPORTED_GHES_OPERATIONS.indexOf(ghesVersion) !== -1) {
+    throw `GHES version ${ghesVersion} is not yet supported. Please check the overrides ` +
+          `in \`scripts/overrides/index.js\` to check if they are relevant to this version, ` +
+          `and then update \`SUPPORTED_GHES_VERSION\`.`;
+  }  
 
   // remove `{ "type": "array", ...}` entries from `requestBody.content["aplication/json"].schema.anyOf
   // Octokit requires the request body to be set to an object in order to derive the variable name
