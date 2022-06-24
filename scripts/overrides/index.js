@@ -38,6 +38,21 @@ function addOperation(schema, path, httpMethod, overridePath) {
   schema.paths[path][httpMethod] = require(overridePath);
 }
 
+// Replaces a given operation using JSON data stored in a file. 
+//
+// Throws an error if an operation is not found for the specified path and HTTP method.
+function replaceOperation(schema, path, httpMethod, overridePath) {
+  if (!schema.paths[path]) {
+    throw `Path ${path} found not found in schema`;
+  }
+
+  if (!schema.paths[path][httpMethod]) {
+    throw `HTTP method ${httpMethod} not found for path ${path} in schema`;
+  }
+
+  schema.paths[path][httpMethod] = require(overridePath);
+}
+
 function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
   const ghesVersion = isGHES
@@ -100,5 +115,13 @@ function overrides(file, schema) {
     } else {
       addOperation(schema, "/repos/{owner}/{repo}/community/code_of_conduct", "get", "./codes-of-conduct-get-for-repo.json");
     }
+  }
+
+  // Mark `assignees` parameter - and in fact, the whole request body - as required for the
+  // "Remove assignees" API.
+  if (isDeferenced(file)) {
+    replaceOperation(schema, "/repos/{owner}/{repo}/issues/{issue_number}/assignees", "delete", "./issues-remove-assignees.deref.json");
+  } else {
+    replaceOperation(schema, "/repos/{owner}/{repo}/issues/{issue_number}/assignees", "delete", "./issues-remove-assignees.json");
   }
 }
