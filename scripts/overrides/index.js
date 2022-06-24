@@ -44,7 +44,7 @@ function overrides(file, schema) {
     ? Number(file.match(/(?<=^ghes-)\d\.\d/)[0])
     : null;
 
-  if (isGHES && SUPPORTED_GHES_OPERATIONS.indexOf(ghesVersion) !== -1) {
+  if (isGHES && SUPPORTED_GHES_OPERATIONS.indexOf(ghesVersion) == -1) {
     throw `GHES version ${ghesVersion} is not yet supported. Please check the overrides ` +
           `in \`scripts/overrides/index.js\` to check if they are relevant to this version, ` +
           `and then update \`SUPPORTED_GHES_VERSION\`.`;
