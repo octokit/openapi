@@ -43,7 +43,7 @@ function addOperation(schema, path, httpMethod, overridePath) {
 // Throws an error if an operation is not found for the specified path and HTTP method.
 function replaceOperation(schema, path, httpMethod, overridePath) {
   if (!schema.paths[path]) {
-    throw `Path ${path} found not found in schema`;
+    throw `Path ${path} not found in schema`;
   }
 
   if (!schema.paths[path][httpMethod]) {
