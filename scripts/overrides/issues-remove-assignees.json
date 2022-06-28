@@ -1,0 +1,56 @@
+{
+  "summary": "Remove assignees from an issue",
+  "description": "Removes one or more assignees from an issue.",
+  "tags": ["issues"],
+  "operationId": "issues/remove-assignees",
+  "externalDocs": {
+    "description": "API method documentation",
+    "url": "https://docs.github.com/rest/reference/issues#remove-assignees-from-an-issue"
+  },
+  "parameters": [
+    { "$ref": "#/components/parameters/owner" },
+    { "$ref": "#/components/parameters/repo" },
+    { "$ref": "#/components/parameters/issue-number" }
+  ],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "assignees": {
+              "type": "array",
+              "description": "Usernames of assignees to remove from an issue. _NOTE: Only users with push access can remove assignees from an issue. Assignees are silently ignored otherwise._",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["assignees"]
+        },
+        "examples": {
+          "default": { "value": { "assignees": ["hubot", "other_user"] } }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Response",
+      "content": {
+        "application/json": {
+          "schema": { "$ref": "#/components/schemas/issue" },
+          "examples": {
+            "default": { "$ref": "#/components/examples/issue" }
+          }
+        }
+      }
+    }
+  },
+  "x-github": {
+    "githubCloudOnly": false,
+    "enabledForGitHubApps": true,
+    "category": "issues",
+    "subcategory": "assignees"
+  },
+  "x-octokit": {}
+}
