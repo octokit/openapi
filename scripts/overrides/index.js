@@ -55,6 +55,7 @@ function replaceOperation(schema, path, httpMethod, overridePath) {
 
 function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
+  const isAE = file.startsWith("github.ae");
   const ghesVersion = isGHES
     ? Number(file.match(/(?<=^ghes-)\d\.\d/)[0])
     : null;
@@ -98,8 +99,6 @@ function overrides(file, schema) {
   }
 
   if (ghesVersion === 3.2 || ghesVersion === 3.3) {
-    console.log('Doing 3.2 and 3.3 content ref rewrites');
-
     rewriteOperationId(schema, "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments", "post", "apps/create-content-attachment-for-repo");
 
     if (isDeferenced(file)) {
@@ -123,5 +122,23 @@ function overrides(file, schema) {
     replaceOperation(schema, "/repos/{owner}/{repo}/issues/{issue_number}/assignees", "delete", "./issues-remove-assignees.deref.json");
   } else {
     replaceOperation(schema, "/repos/{owner}/{repo}/issues/{issue_number}/assignees", "delete", "./issues-remove-assignees.json");
+  }
+
+  // The APIs we're touching is only available in GitHub.com and GHES 3.4 onwards.
+  if (ghesVersion != 3.2 && ghesVersion != 3.3 && !isAE) {
+    // Allow the `selected_repository_ids` request body parameter to be a string or an integer.
+    // The schema type has been updated from `string` to `integer`, but in fact the API still
+    // supports both. This avoids a breaking change.
+    if (isDeferenced(file)) {
+      replaceOperation(schema, "/orgs/{org}/dependabot/secrets/{secret_name}", "put", "./dependabot-create-or-update-org-secret.deref.json");
+    } else {
+      replaceOperation(schema, "/orgs/{org}/dependabot/secrets/{secret_name}", "put", "./dependabot-create-or-update-org-secret.json");
+    }
+
+    if (isDeferenced(file)) {
+      replaceOperation(schema, "/orgs/{org}/actions/secrets/{secret_name}", "put", "./actions-create-or-update-org-secret.deref.json");
+    } else {
+      replaceOperation(schema, "/orgs/{org}/actions/secrets/{secret_name}", "put", "./actions-create-or-update-org-secret.json");
+    }
   }
 }
