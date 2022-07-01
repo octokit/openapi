@@ -5617,6 +5617,160 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/autolinks": {
+      "get": {
+        "summary": "List all autolinks of a repository",
+        "description": "This returns a list of autolinks configured for the given repository.\n\nInformation about autolinks are only available to repository administrators.",
+        "tags": ["repos"],
+        "operationId": "repos/list-autolinks",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.5/v3/repos#list-autolinks"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/page" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/autolink" }
+                },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/autolink-items" }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "autolinks"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      },
+      "post": {
+        "summary": "Create an autolink reference for a repository",
+        "description": "Users with admin access to the repository can create an autolink.",
+        "tags": ["repos"],
+        "operationId": "repos/create-autolink",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.5/v3/repos#create-an-autolink"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "key_prefix": {
+                    "type": "string",
+                    "description": "The prefix appended by a number will generate a link any time it is found in an issue, pull request, or commit."
+                  },
+                  "url_template": {
+                    "type": "string",
+                    "description": "The URL must contain `<num>` for the reference number."
+                  }
+                },
+                "required": ["key_prefix", "url_template"]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "key_prefix": "TICKET-",
+                    "url_template": "https://example.com/TICKET?query=<num>"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/autolink" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/autolink" }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/repos/octocat/Hello-World/autolinks/1",
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "422": { "$ref": "#/components/responses/validation_failed" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "autolinks"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/autolinks/{autolink_id}": {
+      "get": {
+        "summary": "Get an autolink reference of a repository",
+        "description": "This returns a single autolink reference by ID that was configured for the given repository.\n\nInformation about autolinks are only available to repository administrators.",
+        "tags": ["repos"],
+        "operationId": "repos/get-autolink",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.5/v3/repos#get-autolink"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/autolink-id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/autolink" },
+                "examples": {
+                  "default": { "$ref": "#/components/examples/autolink" }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "autolinks"
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      }
+    },
     "/repos/{owner}/{repo}/check-suites": {
       "post": {
         "summary": "Create a check suite",
@@ -11183,6 +11337,13 @@
         "required": true,
         "schema": { "oneOf": [{ "type": "integer" }, { "type": "string" }] }
       },
+      "autolink-id": {
+        "name": "autolink_id",
+        "description": "The unique identifier of the autolink.",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" }
+      },
       "check-suite-id": {
         "name": "check_suite_id",
         "description": "The unique identifier of the check suite.",
@@ -13124,7 +13285,7 @@
             "$ref": "#/components/schemas/nullable-integration"
           },
           "author_association": {
-            "$ref": "#/components/schemas/author_association"
+            "$ref": "#/components/schemas/author-association"
           },
           "reactions": { "$ref": "#/components/schemas/reaction-rollup" }
         },
@@ -15122,6 +15283,25 @@
           "pull_requests"
         ]
       },
+      "autolink": {
+        "title": "Autolink reference",
+        "description": "An autolink reference.",
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 3 },
+          "key_prefix": {
+            "description": "The prefix of a key that is linkified.",
+            "example": "TICKET-",
+            "type": "string"
+          },
+          "url_template": {
+            "description": "A template for the target URL that is generated if a key was found.",
+            "example": "https://example.com/TICKET?query=<num>",
+            "type": "string"
+          }
+        },
+        "required": ["id", "key_prefix", "url_template"]
+      },
       "check-suite": {
         "title": "CheckSuite",
         "description": "A suite of checks performed on the code of a given code change",
@@ -15706,9 +15886,9 @@
             ]
           },
           "author_association": {
-            "$ref": "#/components/schemas/author_association"
+            "$ref": "#/components/schemas/author-association"
           },
-          "auto_merge": { "$ref": "#/components/schemas/auto_merge" },
+          "auto_merge": { "$ref": "#/components/schemas/auto-merge" },
           "draft": {
             "description": "Indicates whether or not the pull request is a draft.",
             "example": false,
@@ -15824,7 +16004,7 @@
           },
           "rename": { "$ref": "#/components/schemas/issue-event-rename" },
           "author_association": {
-            "$ref": "#/components/schemas/author_association"
+            "$ref": "#/components/schemas/author-association"
           },
           "lock_reason": { "type": "string", "nullable": true },
           "performed_via_github_app": {
@@ -16180,7 +16360,7 @@
           "body": { "type": "string" },
           "score": { "type": "number" },
           "author_association": {
-            "$ref": "#/components/schemas/author_association"
+            "$ref": "#/components/schemas/author-association"
           },
           "draft": { "type": "boolean" },
           "repository": { "$ref": "#/components/schemas/repository" },
@@ -17088,7 +17268,7 @@
           },
           "issue_url": { "type": "string", "format": "uri" },
           "author_association": {
-            "$ref": "#/components/schemas/author_association"
+            "$ref": "#/components/schemas/author-association"
           },
           "performed_via_github_app": {
             "$ref": "#/components/schemas/nullable-integration"
@@ -17107,7 +17287,7 @@
           "updated_at"
         ]
       },
-      "author_association": {
+      "author-association": {
         "title": "author_association",
         "type": "string",
         "example": "OWNER",
@@ -18550,7 +18730,7 @@
         "properties": { "href": { "type": "string" } },
         "required": ["href"]
       },
-      "auto_merge": {
+      "auto-merge": {
         "title": "Auto merge",
         "description": "The status of auto merging a pull request.",
         "type": "object",
@@ -18742,7 +18922,7 @@
             "$ref": "#/components/schemas/nullable-integration"
           },
           "author_association": {
-            "$ref": "#/components/schemas/author_association"
+            "$ref": "#/components/schemas/author-association"
           },
           "reactions": { "$ref": "#/components/schemas/reaction-rollup" }
         },
@@ -23803,6 +23983,22 @@
             "releases_url": "https://api.github.com/repos/octo-org/octo-repo/releases{/id}",
             "deployments_url": "https://api.github.com/repos/octo-org/octo-repo/deployments"
           }
+        }
+      },
+      "autolink-items": {
+        "value": [
+          {
+            "id": 1,
+            "key_prefix": "TICKET-",
+            "url_template": "https://example.com/TICKET?query=<num>"
+          }
+        ]
+      },
+      "autolink": {
+        "value": {
+          "id": 1,
+          "key_prefix": "TICKET-",
+          "url_template": "https://example.com/TICKET?query=<num>"
         }
       },
       "check-suite": {
