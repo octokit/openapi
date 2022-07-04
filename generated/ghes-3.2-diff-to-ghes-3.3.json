@@ -717,7 +717,6 @@
           "200": {
             "description": "Response",
             "content": {
-              "application/json+sarif": { "schema": { "type": "string" } },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/code-scanning-analysis"
@@ -725,6 +724,14 @@
                 "examples": {
                   "response": {
                     "$ref": "#/components/examples/code-scanning-analysis-default"
+                  }
+                }
+              },
+              "application/json+sarif": {
+                "schema": { "type": "object", "additionalProperties": true },
+                "examples": {
+                  "response": {
+                    "$ref": "#/components/examples/code-scanning-analysis-sarif"
                   }
                 }
               }
@@ -2775,7 +2782,7 @@
         ]
       },
       "code-scanning-analysis-default": {
-        "summary": "Default response",
+        "summary": "application/json response",
         "value": {
           "ref": "refs/heads/main",
           "commit_sha": "c18c69115654ff0166991962832dc2bd7756e655",
@@ -2792,6 +2799,49 @@
           "tool": { "name": "CodeQL", "guid": null, "version": "2.4.0" },
           "deletable": true,
           "warning": ""
+        }
+      },
+      "code-scanning-analysis-sarif": {
+        "summary": "application/json+sarif response",
+        "value": {
+          "runs": [
+            {
+              "tool": {
+                "driver": {
+                  "name": "CodeQL",
+                  "organization": "GitHub",
+                  "semanticVersion": "1.0.0",
+                  "rules": [
+                    {
+                      "id": "js/unused-local-variable",
+                      "name": "js/unused-local-variable"
+                    }
+                  ]
+                }
+              },
+              "results": [
+                {
+                  "guid": "326aa09f-9af8-13cf-9851-3d0e5183ec38",
+                  "message": { "text": "Unused variable foo." },
+                  "locations": [
+                    {
+                      "physicalLocation": {
+                        "artifactLocation": { "uri": "file1.js" },
+                        "region": { "startLine": 1 }
+                      }
+                    }
+                  ],
+                  "ruleId": "js/unused-local-variable",
+                  "properties": [
+                    { "github/alertNumber": 2 },
+                    {
+                      "github/alertUrl": "https://api.github.com/repos/monalisa/monalisa/code-scanning/alerts/2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       },
       "reaction": {
