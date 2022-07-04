@@ -56,6 +56,7 @@ function replaceOperation(schema, path, httpMethod, overridePath) {
 function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
   const isAE = file.startsWith("github.ae");
+  const isDotcom = file.startsWith("api.github.com");
   const ghesVersion = isGHES
     ? Number(file.match(/(?<=^ghes-)\d\.\d/)[0])
     : null;
@@ -122,6 +123,17 @@ function overrides(file, schema) {
     replaceOperation(schema, "/repos/{owner}/{repo}/issues/{issue_number}/assignees", "delete", "./issues-remove-assignees.deref.json");
   } else {
     replaceOperation(schema, "/repos/{owner}/{repo}/issues/{issue_number}/assignees", "delete", "./issues-remove-assignees.json");
+  }
+
+  // Keep the `number` value as an accepted enum value for `sort`, even though it has been removed
+  // from the OpenAPI spec. (As it happens, sending the now-deprecated `number` value still
+  // works, and still has the same behaviour.)
+  if (isDotcom || (isGHES && ghesVersion >= 3.4)) {
+    if (isDeferenced(file)) {
+      replaceOperation(schema, "/repos/{owner}/{repo}/code-scanning/alerts", "get", "./code-scanning-list-alerts-for-repo.deref.json");
+    } else {
+      replaceOperation(schema, "/repos/{owner}/{repo}/code-scanning/alerts", "get", "./code-scanning-list-alerts-for-repo.json");
+    }
   }
 
   // The APIs we're touching is only available in GitHub.com and GHES 3.4 onwards.
