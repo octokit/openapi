@@ -3679,6 +3679,58 @@
         }
       }
     },
+    "/rate_limit": {
+      "get": {
+        "summary": "Get rate limit status for the authenticated user",
+        "description": "**Note:** Accessing this endpoint does not count against your REST API rate limit.\n\n**Note:** The `rate` object is deprecated. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.",
+        "tags": ["rate-limit"],
+        "operationId": "rate-limit/get",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/github-ae@latest/rest/reference/rate-limit#get-rate-limit-status-for-the-authenticated-user"
+        },
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/rate-limit-overview"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/rate-limit-overview"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/x-rate-limit-limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/x-rate-limit-remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/x-rate-limit-reset"
+              }
+            }
+          },
+          "304": { "$ref": "#/components/responses/not_modified" },
+          "404": { "$ref": "#/components/responses/not_found" }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "rate-limit",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "diff": { "api.github.com.json": { "type": "changed" } }
+        }
+      }
+    },
     "/repos/{owner}/{repo}": {
       "get": {
         "summary": "Get a repository",
@@ -11281,6 +11333,35 @@
           "updated_at"
         ]
       },
+      "rate-limit-overview": {
+        "title": "Rate Limit Overview",
+        "description": "Rate Limit Overview",
+        "type": "object",
+        "properties": {
+          "resources": {
+            "type": "object",
+            "properties": {
+              "core": { "$ref": "#/components/schemas/rate-limit" },
+              "graphql": { "$ref": "#/components/schemas/rate-limit" },
+              "search": { "$ref": "#/components/schemas/rate-limit" },
+              "source_import": { "$ref": "#/components/schemas/rate-limit" },
+              "integration_manifest": {
+                "$ref": "#/components/schemas/rate-limit"
+              },
+              "code_scanning_upload": {
+                "$ref": "#/components/schemas/rate-limit"
+              },
+              "actions_runner_registration": {
+                "$ref": "#/components/schemas/rate-limit"
+              },
+              "scim": { "$ref": "#/components/schemas/rate-limit" }
+            },
+            "required": ["core", "search"]
+          },
+          "rate": { "$ref": "#/components/schemas/rate-limit" }
+        },
+        "required": ["rate", "resources"]
+      },
       "full-repository": {
         "title": "Full Repository",
         "description": "Full Repository",
@@ -14277,6 +14358,17 @@
           "html_url": { "type": "string", "format": "uri", "nullable": true }
         },
         "required": ["url", "html_url", "key", "name"]
+      },
+      "rate-limit": {
+        "title": "Rate Limit",
+        "type": "object",
+        "properties": {
+          "limit": { "type": "integer" },
+          "remaining": { "type": "integer" },
+          "reset": { "type": "integer" },
+          "used": { "type": "integer" }
+        },
+        "required": ["limit", "remaining", "reset", "used"]
       },
       "code-of-conduct-simple": {
         "title": "Code Of Conduct Simple",
@@ -17730,6 +17822,48 @@
           "forks": 1,
           "open_issues": 1,
           "watchers": 1
+        }
+      },
+      "rate-limit-overview": {
+        "value": {
+          "resources": {
+            "core": {
+              "limit": 5000,
+              "remaining": 4999,
+              "reset": 1372700873,
+              "used": 1
+            },
+            "search": {
+              "limit": 30,
+              "remaining": 18,
+              "reset": 1372697452,
+              "used": 12
+            },
+            "graphql": {
+              "limit": 5000,
+              "remaining": 4993,
+              "reset": 1372700389,
+              "used": 7
+            },
+            "integration_manifest": {
+              "limit": 5000,
+              "remaining": 4999,
+              "reset": 1551806725,
+              "used": 1
+            },
+            "code_scanning_upload": {
+              "limit": 500,
+              "remaining": 499,
+              "reset": 1551806725,
+              "used": 1
+            }
+          },
+          "rate": {
+            "limit": 5000,
+            "remaining": 4999,
+            "reset": 1372700873,
+            "used": 1
+          }
         }
       },
       "full-repository-default-response": {
@@ -24333,6 +24467,18 @@
       "link": {
         "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
         "schema": { "type": "string" }
+      },
+      "x-rate-limit-limit": {
+        "example": 5000,
+        "schema": { "type": "integer" }
+      },
+      "x-rate-limit-remaining": {
+        "example": 4999,
+        "schema": { "type": "integer" }
+      },
+      "x-rate-limit-reset": {
+        "example": 1590701888,
+        "schema": { "type": "integer", "format": "timestamp" }
       }
     },
     "responses": {
