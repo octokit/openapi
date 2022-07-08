@@ -67,6 +67,19 @@ function overrides(file, schema) {
           `and then update \`SUPPORTED_GHES_VERSION\`.`;
   }  
 
+
+  // Fix for the `GET /repos/{owner}/{repo}/contents/{path}` endpoint.
+  // This is so we can discriminate between the different response types.
+  // ref: https://github.com/github/rest-api-description/issues/165
+  // ref: https://github.com/octokit/rest.js/issues/32
+  const defenitions = schema.components.schemas;
+
+  defenitions['content-file'].items.properties.type.enum = ["file"];
+  defenitions['content-symlink'].items.properties.name.enum = ["symlink"];
+  defenitions['content-submodule'].title = "Submodule Content";
+  defenitions['content-submodule'].description = "An object describing a submodule.";
+  defenitions['content-submodule'].items.properties.type.enum = ["submodule"];
+
   // remove `{ "type": "array", ...}` entries from `requestBody.content["aplication/json"].schema.anyOf
   // Octokit requires the request body to be set to an object in order to derive the variable name
   for (const [path, methods] of Object.entries(schema.paths)) {
