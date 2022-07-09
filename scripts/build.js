@@ -239,7 +239,7 @@ function toDiffFilename(path, latestGhesVersion) {
 }
 
 function filenameToVersion(filename) {
-  return filename.replace(/^generated\//, "").replace(/\.deref\.json$/, "");
+  return filename.replace(/^generated\//, "").replace(/(\.deref)?\.json$/, "");
 }
 
 function removeUnchangedKeys(key, value) {
@@ -382,22 +382,27 @@ function addRemovedOperations(
         ...diffOperation
       } = diffSchema.paths[path][method];
 
-      let toVersionGhes;
+      let toVersionOutput = toVersion;
       if (toVersion.startsWith("ghes-")) {
-        toVersionGhes = `GitHub Enterprise Server ${toVersion.replace(
+        toVersionOutput = `GitHub Enterprise Server ${toVersion.replace(
           "ghes-",
           ""
         )}`;
+      } else if (toVersion.indexOf("github.ae") >= 0) {
+        toVersionOutput = `GitHub AE`;
       }
 
-      let fromVersionGhes;
+      let fromVersionOutput = fromVersion;
       if (fromVersion.startsWith("ghes-")) {
-        fromVersionGhes = fromVersion.replace("ghes-", "");
+        fromVersionOutput = fromVersion.replace("ghes-", "");
       }
 
-      const description = `This endpoint does not exist in ${
-        toVersionGhes ?? toVersion
-      }. It was added in ${fromVersionGhes ?? fromVersion}`;
+      let description;
+      if (toVersion.startsWith("ghes-")) {
+        description = `This endpoint does not exist in ${toVersionOutput}. It was added in ${fromVersionOutput}`;
+      } else {
+        description = `This endpoint is currently not supported by ${toVersionOutput}. It only exist in ${fromVersionOutput} right now.`;
+      }
 
       schema.paths[path][method] = {
         ...diffOperation,
