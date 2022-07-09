@@ -382,6 +382,23 @@ function addRemovedOperations(
         ...diffOperation
       } = diffSchema.paths[path][method];
 
+      let toVersionGhes;
+      if (toVersion.startsWith("ghes-")) {
+        toVersionGhes = `GitHub Enterprise Server ${toVersion.replace(
+          "ghes-",
+          ""
+        )}`;
+      }
+
+      let fromVersionGhes;
+      if (fromVersion.startsWith("ghes-")) {
+        fromVersionGhes = fromVersion.replace("ghes-", "");
+      }
+
+      const description = `This endpoint does not exist in ${
+        toVersionGhes ?? toVersion
+      }. It was added in ${fromVersionGhes ?? fromVersion}`;
+
       schema.paths[path][method] = {
         ...diffOperation,
         responses: {
@@ -389,7 +406,7 @@ function addRemovedOperations(
             description: "Not Implemented",
           },
         },
-        description: `This endpoint does not exist ${toVersion}. It was added in ${fromVersion}`,
+        description,
         "x-octokit": {
           [fromVersion]: "removed",
         },
