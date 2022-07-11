@@ -19,7 +19,7 @@ function rewriteOperationId(schema, path, httpMethod, operationId) {
   if (!schema.paths[path][httpMethod]) {
     throw `HTTP method ${httpMethod} not found for path ${path} in schema`;
   }
-  
+
   schema.paths[path][httpMethod].operationId = operationId;
 }
 
@@ -38,7 +38,7 @@ function addOperation(schema, path, httpMethod, overridePath) {
   schema.paths[path][httpMethod] = require(overridePath);
 }
 
-// Replaces a given operation using JSON data stored in a file. 
+// Replaces a given operation using JSON data stored in a file.
 //
 // Throws an error if an operation is not found for the specified path and HTTP method.
 function replaceOperation(schema, path, httpMethod, overridePath) {
@@ -62,10 +62,12 @@ function overrides(file, schema) {
     : null;
 
   if (isGHES && SUPPORTED_GHES_OPERATIONS.indexOf(ghesVersion) == -1) {
-    throw `GHES version ${ghesVersion} is not yet supported. Please check the overrides ` +
-          `in \`scripts/overrides/index.js\` to check if they are relevant to this version, ` +
-          `and then update \`SUPPORTED_GHES_VERSION\`.`;
-  }  
+    throw (
+      `GHES version ${ghesVersion} is not yet supported. Please check the overrides ` +
+      `in \`scripts/overrides/index.js\` to check if they are relevant to this version, ` +
+      `and then update \`SUPPORTED_GHES_VERSION\`.`
+    );
+  }
 
   // remove `{ "type": "array", ...}` entries from `requestBody.content["aplication/json"].schema.anyOf
   // Octokit requires the request body to be set to an object in order to derive the variable name
@@ -91,38 +93,88 @@ function overrides(file, schema) {
     }
   }
 
-  rewriteOperationId(schema, "/repos/{owner}/{repo}/compare/{basehead}", 'get', 'repos/compare-commits-with-basehead')
+  rewriteOperationId(
+    schema,
+    "/repos/{owner}/{repo}/compare/{basehead}",
+    "get",
+    "repos/compare-commits-with-basehead"
+  );
 
   if (isDeferenced(file)) {
-    addOperation(schema, "/repos/{owner}/{repo}/compare/{base}...{head}", "get", "./repos-compare-commits.deref.json");
+    addOperation(
+      schema,
+      "/repos/{owner}/{repo}/compare/{base}...{head}",
+      "get",
+      "./repos-compare-commits.deref.json"
+    );
   } else {
-    addOperation(schema, "/repos/{owner}/{repo}/compare/{base}...{head}", "get", "./repos-compare-commits.json");
+    addOperation(
+      schema,
+      "/repos/{owner}/{repo}/compare/{base}...{head}",
+      "get",
+      "./repos-compare-commits.json"
+    );
   }
 
   if (ghesVersion === 3.2 || ghesVersion === 3.3) {
-    rewriteOperationId(schema, "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments", "post", "apps/create-content-attachment-for-repo");
+    rewriteOperationId(
+      schema,
+      "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments",
+      "post",
+      "apps/create-content-attachment-for-repo"
+    );
 
     if (isDeferenced(file)) {
-      addOperation(schema, "/content_references/{content_reference_id}/attachments", "post", "./apps-create-content-attachment.deref.json");
+      addOperation(
+        schema,
+        "/content_references/{content_reference_id}/attachments",
+        "post",
+        "./apps-create-content-attachment.deref.json"
+      );
     } else {
-      addOperation(schema, "/content_references/{content_reference_id}/attachments", "post", "./apps-create-content-attachment.json")
+      addOperation(
+        schema,
+        "/content_references/{content_reference_id}/attachments",
+        "post",
+        "./apps-create-content-attachment.json"
+      );
     }
   }
 
   if (ghesVersion === 3.2 || ghesVersion === 3.3) {
     if (isDeferenced(file)) {
-      addOperation(schema, "/repos/{owner}/{repo}/community/code_of_conduct", "get", "./codes-of-conduct-get-for-repo.deref.json");
+      addOperation(
+        schema,
+        "/repos/{owner}/{repo}/community/code_of_conduct",
+        "get",
+        "./codes-of-conduct-get-for-repo.deref.json"
+      );
     } else {
-      addOperation(schema, "/repos/{owner}/{repo}/community/code_of_conduct", "get", "./codes-of-conduct-get-for-repo.json");
+      addOperation(
+        schema,
+        "/repos/{owner}/{repo}/community/code_of_conduct",
+        "get",
+        "./codes-of-conduct-get-for-repo.json"
+      );
     }
   }
 
   // Mark `assignees` parameter - and in fact, the whole request body - as required for the
   // "Remove assignees" API.
   if (isDeferenced(file)) {
-    replaceOperation(schema, "/repos/{owner}/{repo}/issues/{issue_number}/assignees", "delete", "./issues-remove-assignees.deref.json");
+    replaceOperation(
+      schema,
+      "/repos/{owner}/{repo}/issues/{issue_number}/assignees",
+      "delete",
+      "./issues-remove-assignees.deref.json"
+    );
   } else {
-    replaceOperation(schema, "/repos/{owner}/{repo}/issues/{issue_number}/assignees", "delete", "./issues-remove-assignees.json");
+    replaceOperation(
+      schema,
+      "/repos/{owner}/{repo}/issues/{issue_number}/assignees",
+      "delete",
+      "./issues-remove-assignees.json"
+    );
   }
 
   // Keep the `number` value as an accepted enum value for `sort`, even though it has been removed
@@ -130,9 +182,19 @@ function overrides(file, schema) {
   // works, and still has the same behaviour.)
   if (isDotcom || (isGHES && ghesVersion >= 3.4)) {
     if (isDeferenced(file)) {
-      replaceOperation(schema, "/repos/{owner}/{repo}/code-scanning/alerts", "get", "./code-scanning-list-alerts-for-repo.deref.json");
+      replaceOperation(
+        schema,
+        "/repos/{owner}/{repo}/code-scanning/alerts",
+        "get",
+        "./code-scanning-list-alerts-for-repo.deref.json"
+      );
     } else {
-      replaceOperation(schema, "/repos/{owner}/{repo}/code-scanning/alerts", "get", "./code-scanning-list-alerts-for-repo.json");
+      replaceOperation(
+        schema,
+        "/repos/{owner}/{repo}/code-scanning/alerts",
+        "get",
+        "./code-scanning-list-alerts-for-repo.json"
+      );
     }
   }
 
@@ -142,15 +204,35 @@ function overrides(file, schema) {
     // The schema type has been updated from `string` to `integer`, but in fact the API still
     // supports both. This avoids a breaking change.
     if (isDeferenced(file)) {
-      replaceOperation(schema, "/orgs/{org}/dependabot/secrets/{secret_name}", "put", "./dependabot-create-or-update-org-secret.deref.json");
+      replaceOperation(
+        schema,
+        "/orgs/{org}/dependabot/secrets/{secret_name}",
+        "put",
+        "./dependabot-create-or-update-org-secret.deref.json"
+      );
     } else {
-      replaceOperation(schema, "/orgs/{org}/dependabot/secrets/{secret_name}", "put", "./dependabot-create-or-update-org-secret.json");
+      replaceOperation(
+        schema,
+        "/orgs/{org}/dependabot/secrets/{secret_name}",
+        "put",
+        "./dependabot-create-or-update-org-secret.json"
+      );
     }
 
     if (isDeferenced(file)) {
-      replaceOperation(schema, "/orgs/{org}/actions/secrets/{secret_name}", "put", "./actions-create-or-update-org-secret.deref.json");
+      replaceOperation(
+        schema,
+        "/orgs/{org}/actions/secrets/{secret_name}",
+        "put",
+        "./actions-create-or-update-org-secret.deref.json"
+      );
     } else {
-      replaceOperation(schema, "/orgs/{org}/actions/secrets/{secret_name}", "put", "./actions-create-or-update-org-secret.json");
+      replaceOperation(
+        schema,
+        "/orgs/{org}/actions/secrets/{secret_name}",
+        "put",
+        "./actions-create-or-update-org-secret.json"
+      );
     }
   }
 }
