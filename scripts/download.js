@@ -65,7 +65,6 @@ async function run() {
   // temporarily hardcode versions until we unblock automated updates
   const currentGhesVersions = await getCurrentVersions();
 
-
   for (const folder of data) {
     const { name } = folder;
     const ref = getDescriptionsOptions.ref;
