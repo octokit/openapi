@@ -401,7 +401,7 @@ function addRemovedOperations(
       if (toVersion.startsWith("ghes-")) {
         description = `This endpoint does not exist in ${toVersionOutput}. It was added in ${fromVersionOutput}`;
       } else {
-        description = `This endpoint is currently not supported by ${toVersionOutput}. It only exist in ${fromVersionOutput} right now.`;
+        description = `This endpoint is currently not supported by ${toVersionOutput}. It only exists in ${fromVersionOutput} right now.`;
       }
 
       schema.paths[path][method] = {
