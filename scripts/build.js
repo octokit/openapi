@@ -239,7 +239,7 @@ function toDiffFilename(path, latestGhesVersion) {
 }
 
 function filenameToVersion(filename) {
-  return filename.replace(/^generated\//, "").replace(/\.deref\.json$/, "");
+  return filename.replace(/^generated\//, "").replace(/(\.deref)?\.json$/, "");
 }
 
 function removeUnchangedKeys(key, value) {
@@ -382,6 +382,28 @@ function addRemovedOperations(
         ...diffOperation
       } = diffSchema.paths[path][method];
 
+      let toVersionOutput = toVersion;
+      if (toVersion.startsWith("ghes-")) {
+        toVersionOutput = `GitHub Enterprise Server ${toVersion.replace(
+          "ghes-",
+          ""
+        )}`;
+      } else if (toVersion.indexOf("github.ae") >= 0) {
+        toVersionOutput = `GitHub AE`;
+      }
+
+      let fromVersionOutput = fromVersion;
+      if (fromVersion.startsWith("ghes-")) {
+        fromVersionOutput = fromVersion.replace("ghes-", "");
+      }
+
+      let description;
+      if (toVersion.startsWith("ghes-")) {
+        description = `This endpoint does not exist in ${toVersionOutput}. It was added in ${fromVersionOutput}`;
+      } else {
+        description = `This endpoint is currently not supported by ${toVersionOutput}. It only exists in ${fromVersionOutput} right now.`;
+      }
+
       schema.paths[path][method] = {
         ...diffOperation,
         responses: {
@@ -389,7 +411,7 @@ function addRemovedOperations(
             description: "Not Implemented",
           },
         },
-        description: `This endpoint does not exist ${toVersion}. It was added in ${fromVersion}`,
+        description,
         "x-octokit": {
           [fromVersion]: "removed",
         },
