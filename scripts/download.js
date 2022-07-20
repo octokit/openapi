@@ -3,7 +3,6 @@ const fs = require("fs");
 
 const { Octokit } = require("@octokit/core");
 const { getCurrentVersions } = require("github-enterprise-server-versions");
-const prettier = require("prettier");
 
 run().then(() => console.log("done"), console.error);
 
@@ -111,10 +110,5 @@ async function download(name, remotePath) {
   console.log("Formatting %s", path);
 
   const content = fs.readFileSync(path, "utf-8");
-  fs.writeFileSync(
-    path,
-    prettier.format(content, {
-      parser: "json",
-    })
-  );
+  fs.writeFileSync(path, JSON.stringify(JSON.parse(content), null, 2));
 }
