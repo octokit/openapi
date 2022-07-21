@@ -59,10 +59,7 @@ async function run() {
       "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs";
     schema.info.contact.url = "https://github.com/octokit/openapi";
 
-    writeFileSync(
-      `generated/${file}`,
-      prettier.format(JSON.stringify(schema), { parser: "json" })
-    );
+    writeFileSync(`generated/${file}`, JSON.stringify(schema, null, 2));
     console.log(`generated/${file} written`);
   }
 
@@ -143,12 +140,7 @@ async function run() {
 
     const sortedJson = sortKeys(minimalJson, { deep: true });
 
-    writeFileSync(
-      diffPath,
-      prettier.format(JSON.stringify(sortedJson), {
-        parser: "json",
-      })
-    );
+    writeFileSync(diffPath, JSON.stringify(sortedJson, null, 2));
 
     console.log(`${diffPath} re-formatted, keys sorted, and simplified`);
 
@@ -432,12 +424,7 @@ function addDiffExtensions(diffJson, fromPath, toPath) {
   addDiffToOperations(from, toJson, changed, "changed");
   addRemovedOperations(from, to, toJson, fromJson, removed);
 
-  writeFileSync(
-    toPath,
-    prettier.format(JSON.stringify(toJson), {
-      parser: "json",
-    })
-  );
+  writeFileSync(toPath, JSON.stringify(toJson, null, 2));
 
   console.log(`"x-octokit".diff extension added to ${toPath}`);
 }
@@ -475,10 +462,7 @@ function createDiffVersion(path, latestGhesVersion) {
 
   const newPath = "generated/" + toDiffFilename(path, latestGhesVersion);
 
-  writeFileSync(
-    newPath,
-    prettier.format(JSON.stringify(schema), { parser: "json" })
-  );
+  writeFileSync(newPath, JSON.stringify(schema, null, 2));
 
   console.log("%s updated", newPath);
 }
