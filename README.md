@@ -17,7 +17,7 @@ Download from https://unpkg.com/browse/@octokit/openapi/generated/
 ```js
 const { schemas } = require("@octokit/openapi");
 const version = schemas["api.github.com"].info.version;
-const paths = Object.keys(schemas["api.github.com"].paths.sort());
+const paths = Object.keys(schemas["api.github.com"].paths).sort();
 ```
 
 ## GitHub Actions usage
