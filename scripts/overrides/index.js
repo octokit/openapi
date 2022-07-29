@@ -1,4 +1,4 @@
-const SUPPORTED_GHES_OPERATIONS = [3.2, 3.3, 3.4, 3.5];
+const SUPPORTED_GHES_OPERATIONS = [3.2, 3.3, 3.4, 3.5, 3.6];
 
 module.exports = overrides;
 
