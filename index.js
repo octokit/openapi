@@ -10,6 +10,8 @@ module.exports = {
     ["ghes-3.4"]: require("./generated/ghes-3.4.json"),
     ["ghes-3.5.deref"]: require("./generated/ghes-3.5.deref.json"),
     ["ghes-3.5"]: require("./generated/ghes-3.5.json"),
+    ["ghes-3.6.deref"]: require("./generated/ghes-3.6.deref.json"),
+    ["ghes-3.6"]: require("./generated/ghes-3.6.json"),
     ["github.ae.deref"]: require("./generated/github.ae.deref.json"),
     ["github.ae"]: require("./generated/github.ae.json"),
   },
