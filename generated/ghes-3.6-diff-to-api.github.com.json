@@ -104,10 +104,6 @@
       "description": "Move projects to or from GitHub."
     },
     {
-      "name": "oauth-authorizations",
-      "description": "Manage access of OAuth applications"
-    },
-    {
       "name": "oidc",
       "description": "Endpoints to manage GitHub OIDC configuration using the REST API."
     },
@@ -2431,6 +2427,925 @@
           "category": "enterprise-admin",
           "subcategory": "users"
         },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/applications/grants": {
+      "get": {
+        "summary": "List your grants",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\nYou can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `[\"repo\", \"user\"]`.",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/list-grants",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#list-your-grants"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": false,
+            "description": "The client ID of your GitHub app.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/application-grant"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/application-grant-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/applications/grants/{grant_id}": {
+      "get": {
+        "summary": "Get a single grant",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/get-grant",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#get-a-single-grant"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/grant-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/application-grant"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/application-grant"
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a grant",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\nDeleting an OAuth application's grant will also delete all OAuth tokens associated with the application for your user. Once deleted, the application has no access to your account and is no longer listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/delete-grant",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#delete-a-grant"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/grant-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/authorizations": {
+      "get": {
+        "summary": "List your authorizations",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/list-authorizations",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#list-your-authorizations"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": false,
+            "description": "The client ID of your GitHub app.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/authorization"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/authorization-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new authorization",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\n**Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).\n\nCreates OAuth tokens using [Basic Authentication](https://docs.github.com/enterprise-server@3.6/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see \"[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.6/rest/overview/other-authentication-methods#working-with-two-factor-authentication).\"\n\nTo create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.\n\nYou can also create tokens on GitHub Enterprise Server from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://docs.github.com/articles/creating-an-access-token-for-command-line-use).\n\nOrganizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://docs.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/create-authorization",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#create-a-new-authorization"
+        },
+        "parameters": [],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "scopes": {
+                    "description": "A list of scopes that this authorization is in.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "public_repo",
+                      "user"
+                    ],
+                    "nullable": true
+                  },
+                  "note": {
+                    "description": "A note to remind you what the OAuth token is for.",
+                    "type": "string",
+                    "example": "Update all gems"
+                  },
+                  "note_url": {
+                    "description": "A URL to remind you what app the OAuth token is for.",
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "description": "The OAuth app client key for which to create the token.",
+                    "maxLength": 20,
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "description": "The OAuth app client secret for which to create the token.",
+                    "maxLength": 40,
+                    "type": "string"
+                  },
+                  "fingerprint": {
+                    "description": "A unique string to distinguish an authorization from others created for the same client ID and user.",
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "summary": "Create an authorization",
+                  "value": {
+                    "scopes": [
+                      "public_repo"
+                    ],
+                    "note": "optional note",
+                    "note_url": "http://optional/note/url",
+                    "client_id": "abcde12345fghij67890",
+                    "client_secret": "3ef4ad510c59ad37bac6bb4f80047fb3aee3cc7f"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authorization"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/authorization"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/authorizations/1",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "410": {
+            "$ref": "#/components/responses/gone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/authorizations/clients/{client_id}": {
+      "put": {
+        "summary": "Get-or-create an authorization for a specific app",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\n**Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).\n\nCreates a new authorization for the specified OAuth application, only if an authorization for that application doesn't already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.\n\nIf you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see \"[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.6/rest/overview/other-authentication-methods#working-with-two-factor-authentication).\"\n\n**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/get-or-create-authorization-for-app",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#get-or-create-an-authorization-for-a-specific-app"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/oauth-client-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "client_secret": {
+                    "description": "The OAuth app client secret for which to create the token.",
+                    "maxLength": 40,
+                    "type": "string"
+                  },
+                  "scopes": {
+                    "description": "A list of scopes that this authorization is in.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "public_repo",
+                      "user"
+                    ],
+                    "nullable": true
+                  },
+                  "note": {
+                    "description": "A note to remind you what the OAuth token is for.",
+                    "type": "string",
+                    "example": "Update all gems"
+                  },
+                  "note_url": {
+                    "description": "A URL to remind you what app the OAuth token is for.",
+                    "type": "string"
+                  },
+                  "fingerprint": {
+                    "description": "A unique string to distinguish an authorization from others created for the same client ID and user.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "client_secret"
+                ],
+                "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Create an authorization for an app",
+                  "value": {
+                    "client_secret": "3ef4ad510c59ad37bac6bb4f80047fb3aee3cc7f",
+                    "scopes": [
+                      "public_repo"
+                    ],
+                    "note": "optional note",
+                    "note_url": "http://optional/note/url"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "if returning an existing token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authorization"
+                },
+                "examples": {
+                  "response-if-returning-an-existing-token": {
+                    "$ref": "#/components/examples/authorization-response-if-returning-an-existing-token-2"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/authorizations/1",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "**Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authorization"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/authorization"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/authorizations/1",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/authorizations/clients/{client_id}/{fingerprint}": {
+      "put": {
+        "summary": "Get-or-create an authorization for a specific app and fingerprint",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\n**Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).\n\nThis method will create a new authorization for the specified OAuth application, only if an authorization for that application and fingerprint do not already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. `fingerprint` is a unique string to distinguish an authorization from others created for the same client ID and user. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.\n\nIf you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see \"[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.6/rest/overview/other-authentication-methods#working-with-two-factor-authentication).\"",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/get-or-create-authorization-for-app-and-fingerprint",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#get-or-create-an-authorization-for-a-specific-app-and-fingerprint"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/oauth-client-id"
+          },
+          {
+            "name": "fingerprint",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "client_secret": {
+                    "description": "The OAuth app client secret for which to create the token.",
+                    "maxLength": 40,
+                    "type": "string"
+                  },
+                  "scopes": {
+                    "description": "A list of scopes that this authorization is in.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "public_repo",
+                      "user"
+                    ],
+                    "nullable": true
+                  },
+                  "note": {
+                    "description": "A note to remind you what the OAuth token is for.",
+                    "type": "string",
+                    "example": "Update all gems"
+                  },
+                  "note_url": {
+                    "description": "A URL to remind you what app the OAuth token is for.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "client_secret"
+                ],
+                "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Create an authorization for an app and fingerprint",
+                  "value": {
+                    "client_secret": "3ef4ad510c59ad37bac6bb4f80047fb3aee3cc7f",
+                    "scopes": [
+                      "public_repo"
+                    ],
+                    "note": "optional note",
+                    "note_url": "http://optional/note/url"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "if returning an existing token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authorization"
+                },
+                "examples": {
+                  "response-if-returning-an-existing-token": {
+                    "$ref": "#/components/examples/authorization-response-if-returning-an-existing-token"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/authorizations/1",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Response if returning a new token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authorization"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/authorization-3"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/authorizations/1",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/authorizations/{authorization_id}": {
+      "get": {
+        "summary": "Get a single authorization",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/get-authorization",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#get-a-single-authorization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authorization-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authorization"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/authorization-2"
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an existing authorization",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\nIf you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see \"[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.6/rest/overview/other-authentication-methods#working-with-two-factor-authentication).\"\n\nYou can only send one of these scope keys at a time.",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/update-authorization",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#update-an-existing-authorization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authorization-id"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "scopes": {
+                    "description": "A list of scopes that this authorization is in.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "public_repo",
+                      "user"
+                    ],
+                    "nullable": true
+                  },
+                  "add_scopes": {
+                    "description": "A list of scopes to add to this authorization.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "remove_scopes": {
+                    "description": "A list of scopes to remove from this authorization.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "note": {
+                    "description": "A note to remind you what the OAuth token is for.",
+                    "type": "string",
+                    "example": "Update all gems"
+                  },
+                  "note_url": {
+                    "description": "A URL to remind you what app the OAuth token is for.",
+                    "type": "string"
+                  },
+                  "fingerprint": {
+                    "description": "A unique string to distinguish an authorization from others created for the same client ID and user.",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authorization"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/authorization-2"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an authorization",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).",
+        "tags": [
+          "oauth-authorizations"
+        ],
+        "operationId": "oauth-authorizations/delete-authorization",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/oauth-authorizations#delete-an-authorization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/authorization-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "removalDate": "2020-11-13",
+          "deprecationDate": "2020-02-14",
+          "category": "oauth-authorizations",
+          "subcategory": null
+        },
+        "deprecated": true,
         "x-octokit": {
           "diff": {
             "api.github.com": {
@@ -6866,6 +7781,38 @@
           "type": "integer"
         }
       },
+      "grant-id": {
+        "name": "grant_id",
+        "description": "The unique identifier of the grant.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "oauth-client-id": {
+        "name": "client_id",
+        "in": "path",
+        "required": true,
+        "description": "The client ID of the OAuth app.",
+        "schema": {
+          "type": "string"
+        },
+        "examples": {
+          "default": {
+            "value": "abcde12345fghij67890"
+          }
+        }
+      },
+      "authorization-id": {
+        "name": "authorization_id",
+        "description": "The unique identifier of the authorization.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
       "enterprise": {
         "name": "enterprise",
         "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
@@ -7911,6 +8858,72 @@
           "subscriptions_url",
           "type",
           "url"
+        ]
+      },
+      "application-grant": {
+        "title": "Application Grant",
+        "description": "The authorization associated with an OAuth Access.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/applications/grants/1"
+          },
+          "app": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "client_id",
+              "name",
+              "url"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-09-06T17:26:27Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-09-06T20:39:23Z"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "public_repo"
+            ]
+          },
+          "user": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          }
+        },
+        "required": [
+          "app",
+          "id",
+          "scopes",
+          "url",
+          "created_at",
+          "updated_at"
         ]
       },
       "announcement": {
@@ -11292,18 +12305,6 @@
           "single_file": "read"
         }
       },
-      "announcement-message": {
-        "type": "string",
-        "description": "The announcement text in GitHub Flavored Markdown. For more information about GitHub Flavored Markdown, see \"[Basic writing and formatting syntax](https://docs.github.com/enterprise-server@3.6/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).\"",
-        "example": "Very **important** announcement about _nothing_."
-      },
-      "announcement-expiration": {
-        "type": "string",
-        "format": "date-time",
-        "description": "The time at which the announcement expires. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. To set an announcement that never expires, omit this parameter, set it to `null`, or set it to an empty string.",
-        "example": "\"2021-01-01T00:00:00.000-07:00\"",
-        "nullable": true
-      },
       "basic-error": {
         "title": "Basic Error",
         "description": "Basic Error",
@@ -11322,6 +12323,18 @@
             "type": "string"
           }
         }
+      },
+      "announcement-message": {
+        "type": "string",
+        "description": "The announcement text in GitHub Flavored Markdown. For more information about GitHub Flavored Markdown, see \"[Basic writing and formatting syntax](https://docs.github.com/enterprise-server@3.6/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).\"",
+        "example": "Very **important** announcement about _nothing_."
+      },
+      "announcement-expiration": {
+        "type": "string",
+        "format": "date-time",
+        "description": "The time at which the announcement expires. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. To set an announcement that never expires, omit this parameter, set it to `null`, or set it to an empty string.",
+        "example": "\"2021-01-01T00:00:00.000-07:00\"",
+        "nullable": true
       },
       "alert-number": {
         "type": "integer",
@@ -14360,6 +15373,132 @@
           "fingerprint": "jklmnop12345678"
         }
       },
+      "application-grant-items": {
+        "value": [
+          {
+            "id": 1,
+            "url": "https://api.github.com/applications/grants/1",
+            "app": {
+              "url": "http://my-github-app.com",
+              "name": "my github app",
+              "client_id": "abcde12345fghij67890"
+            },
+            "created_at": "2011-09-06T17:26:27Z",
+            "updated_at": "2011-09-06T20:39:23Z",
+            "scopes": [
+              "public_repo"
+            ]
+          }
+        ]
+      },
+      "application-grant": {
+        "value": {
+          "id": 1,
+          "url": "https://api.github.com/applications/grants/1",
+          "app": {
+            "url": "http://my-github-app.com",
+            "name": "my github app",
+            "client_id": "abcde12345fghij67890"
+          },
+          "created_at": "2011-09-06T17:26:27Z",
+          "updated_at": "2011-09-06T20:39:23Z",
+          "scopes": [
+            "public_repo"
+          ]
+        }
+      },
+      "authorization-response-if-returning-an-existing-token-2": {
+        "value": {
+          "id": 1,
+          "url": "https://api.github.com/authorizations/1",
+          "scopes": [
+            "public_repo"
+          ],
+          "token": "ghu_16C7e42F292c6912E7710c838347Ae178B4a",
+          "token_last_eight": "Ae178B4a",
+          "hashed_token": "25f94a2a5c7fbaf499c665bc73d67c1c87e496da8985131633ee0a95819db2e8",
+          "app": {
+            "url": "http://my-github-app.com",
+            "name": "my github app",
+            "client_id": "abcde12345fghij67890"
+          },
+          "note": "optional note",
+          "note_url": "http://optional/note/url",
+          "updated_at": "2011-09-06T20:39:23Z",
+          "created_at": "2011-09-06T17:26:27Z",
+          "expires_at": "2011-10-06T17:26:27Z",
+          "fingerprint": ""
+        }
+      },
+      "authorization-response-if-returning-an-existing-token": {
+        "value": {
+          "id": 1,
+          "url": "https://api.github.com/authorizations/1",
+          "scopes": [
+            "public_repo"
+          ],
+          "token": "ghu_16C7e42F292c6912E7710c838347Ae178B4a",
+          "token_last_eight": "Ae178B4a",
+          "hashed_token": "25f94a2a5c7fbaf499c665bc73d67c1c87e496da8985131633ee0a95819db2e8",
+          "app": {
+            "url": "http://my-github-app.com",
+            "name": "my github app",
+            "client_id": "abcde12345fghij67890"
+          },
+          "note": "optional note",
+          "note_url": "http://optional/note/url",
+          "updated_at": "2011-09-06T20:39:23Z",
+          "created_at": "2011-09-06T17:26:27Z",
+          "expires_at": "2011-10-06T17:26:27Z",
+          "fingerprint": "jklmnop12345678"
+        }
+      },
+      "authorization-3": {
+        "value": {
+          "id": 1,
+          "url": "https://api.github.com/authorizations/1",
+          "scopes": [
+            "public_repo"
+          ],
+          "token": "ghu_16C7e42F292c6912E7710c838347Ae178B4a",
+          "token_last_eight": "Ae178B4a",
+          "hashed_token": "25f94a2a5c7fbaf499c665bc73d67c1c87e496da8985131633ee0a95819db2e8",
+          "app": {
+            "url": "http://my-github-app.com",
+            "name": "my github app",
+            "client_id": "abcde12345fghij67890"
+          },
+          "note": "optional note",
+          "note_url": "http://optional/note/url",
+          "updated_at": "2011-09-06T20:39:23Z",
+          "created_at": "2011-09-06T17:26:27Z",
+          "expires_at": "2012-10-06T17:26:27Z",
+          "fingerprint": "jklmnop12345678"
+        }
+      },
+      "authorization-2": {
+        "value": {
+          "id": 1,
+          "url": "https://api.github.com/authorizations/1",
+          "scopes": [
+            "public_repo"
+          ],
+          "token": "ghu_16C7e42F292c6912E7710c838347Ae178B4a",
+          "token_last_eight": "Ae178B4a",
+          "hashed_token": "25f94a2a5c7fbaf499c665bc73d67c1c87e496da8985131633ee0a95819db2e8",
+          "app": {
+            "url": "http://my-github-app.com",
+            "name": "my github app",
+            "client_id": "abcde12345fghij67890"
+          },
+          "note": "optional note",
+          "note_url": "http://optional/note/url",
+          "updated_at": "2011-09-06T20:39:23Z",
+          "created_at": "2011-09-06T17:26:27Z",
+          "expires_at": "2011-10-06T17:26:27Z",
+          "fingerprint": "jklmnop12345678"
+        }
+      },
       "announcement": {
         "summary": "Default response",
         "value": {
@@ -16146,8 +17285,18 @@
       "not_modified": {
         "description": "Not modified"
       },
-      "conflict": {
-        "description": "Conflict",
+      "requires_authentication": {
+        "description": "Requires authentication",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "forbidden": {
+        "description": "Forbidden",
         "content": {
           "application/json": {
             "schema": {
@@ -16158,6 +17307,36 @@
       },
       "not_found": {
         "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "gone": {
+        "description": "Gone",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "validation_failed": {
+        "description": "Validation failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/validation-error"
+            }
+          }
+        }
+      },
+      "conflict": {
+        "description": "Conflict",
         "content": {
           "application/json": {
             "schema": {
@@ -16183,26 +17362,6 @@
                   "type": "string"
                 }
               }
-            }
-          }
-        }
-      },
-      "forbidden": {
-        "description": "Forbidden",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/basic-error"
-            }
-          }
-        }
-      },
-      "validation_failed": {
-        "description": "Validation failed",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/validation-error"
             }
           }
         }
