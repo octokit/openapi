@@ -92,16 +92,16 @@
       "description": "Render GitHub flavored markdown"
     },
     {
+      "name": "merge-queue",
+      "description": "Interact with GitHub Merge Queues."
+    },
+    {
       "name": "meta",
       "description": "Endpoints that give information about the API."
     },
     {
       "name": "migrations",
       "description": "Move projects to or from GitHub."
-    },
-    {
-      "name": "oauth-authorizations",
-      "description": "Manage access of OAuth applications"
     },
     {
       "name": "oidc",
@@ -2839,7 +2839,7 @@
               "examples": {
                 "default": {
                   "value": {
-                    "respoitory": "Hello-World",
+                    "repository": "Hello-World",
                     "permissions": {
                       "issues": "write",
                       "contents": "read"
@@ -7887,7 +7887,7 @@
       },
       "post": {
         "summary": "Fork a gist",
-        "description": "**Note**: This was previously `/gists/:gist_id/fork`.",
+        "description": "",
         "tags": [
           "gists"
         ],
@@ -8887,10 +8887,16 @@
             "$ref": "#/components/parameters/before"
           },
           {
-            "$ref": "#/components/parameters/per-page"
+            "$ref": "#/components/parameters/page"
           },
           {
-            "$ref": "#/components/parameters/page"
+            "name": "per_page",
+            "description": "The number of results per page (max 50).",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
           }
         ],
         "responses": {
@@ -9438,7 +9444,7 @@
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/organization-custom-repository-role-example"
+                    "$ref": "#/components/examples/organization-custom-repository-role-example-old"
                   }
                 }
               }
@@ -19223,7 +19229,7 @@
                   },
                   "private": {
                     "type": "boolean",
-                    "description": "Either `true` to make the repository private or `false` to make it public. Default: `false`.  \n**Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.",
+                    "description": "Either `true` to make the repository private or `false` to make it public. Default: `false`.  \n**Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.",
                     "default": false
                   },
                   "visibility": {
@@ -19237,7 +19243,7 @@
                   },
                   "security_and_analysis": {
                     "type": "object",
-                    "description": "Specify which security and analysis features to enable or disable. For example, to enable GitHub Advanced Security, use this data in the body of the PATCH request: `{\"security_and_analysis\": {\"advanced_security\": {\"status\": \"enabled\"}}}`. If you have admin permissions for a private repository covered by an Advanced Security license, you can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
+                    "description": "Specify which security and analysis features to enable or disable for the repository.\n\nTo use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.4/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n\nFor example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:\n`{ \"security_and_analysis\": {\"advanced_security\": { \"status\": \"enabled\" } } }`.\n\nYou can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
                     "nullable": true,
                     "properties": {
                       "advanced_security": {
@@ -26914,7 +26920,7 @@
         "operationId": "repos/list-collaborators",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-repository-collaborators"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/collaborators#list-repository-collaborators"
         },
         "parameters": [
           {
@@ -26976,8 +26982,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {
           "diff": {
@@ -26998,7 +27003,7 @@
         "operationId": "repos/check-collaborator",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#check-if-a-user-is-a-repository-collaborator"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/collaborators#check-if-a-user-is-a-repository-collaborator"
         },
         "parameters": [
           {
@@ -27022,8 +27027,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {}
       },
@@ -27036,7 +27040,7 @@
         "operationId": "repos/add-collaborator",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#add-a-repository-collaborator"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/collaborators#add-a-repository-collaborator"
         },
         "parameters": [
           {
@@ -27111,8 +27115,7 @@
           "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {
           "diff": {
@@ -27131,7 +27134,7 @@
         "operationId": "repos/remove-collaborator",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#remove-a-repository-collaborator"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/collaborators#remove-a-repository-collaborator"
         },
         "parameters": [
           {
@@ -27152,8 +27155,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {}
       }
@@ -27168,7 +27170,7 @@
         "operationId": "repos/get-collaborator-permission-level",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-repository-permissions-for-a-user"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/collaborators#get-repository-permissions-for-a-user"
         },
         "parameters": [
           {
@@ -27204,8 +27206,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {
           "diff": {
@@ -27226,7 +27227,7 @@
         "operationId": "repos/list-commit-comments-for-repo",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-commit-comments-for-a-repository"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/comments#list-commit-comments-for-a-repository"
         },
         "parameters": [
           {
@@ -27270,7 +27271,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "comments"
         },
         "x-octokit": {}
@@ -27286,7 +27287,7 @@
         "operationId": "repos/get-commit-comment",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-a-commit-comment"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/comments#get-a-commit-comment"
         },
         "parameters": [
           {
@@ -27322,7 +27323,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "comments"
         },
         "x-octokit": {}
@@ -27336,7 +27337,7 @@
         "operationId": "repos/update-commit-comment",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#update-a-commit-comment"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/comments#update-a-commit-comment"
         },
         "parameters": [
           {
@@ -27398,7 +27399,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "comments"
         },
         "x-octokit": {}
@@ -27412,7 +27413,7 @@
         "operationId": "repos/delete-commit-comment",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#delete-a-commit-comment"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/comments#delete-a-commit-comment"
         },
         "parameters": [
           {
@@ -27436,7 +27437,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "comments"
         },
         "x-octokit": {}
@@ -27678,7 +27679,7 @@
         "operationId": "repos/list-commits",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-commits"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/commits#list-commits"
         },
         "parameters": [
           {
@@ -27774,8 +27775,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "commits"
+          "category": "commits"
         },
         "x-octokit": {}
       }
@@ -27790,7 +27790,7 @@
         "operationId": "repos/list-branches-for-head-commit",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-branches-for-head-commit"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/commits#list-branches-for-head-commit"
         },
         "parameters": [
           {
@@ -27829,8 +27829,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "commits"
+          "category": "commits"
         },
         "x-octokit": {}
       }
@@ -27845,7 +27844,7 @@
         "operationId": "repos/list-comments-for-commit",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-commit-comments"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/comments#list-commit-comments"
         },
         "parameters": [
           {
@@ -27892,7 +27891,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "comments"
         },
         "x-octokit": {}
@@ -27906,7 +27905,7 @@
         "operationId": "repos/create-commit-comment",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#create-a-commit-comment"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/comments#create-a-commit-comment"
         },
         "parameters": [
           {
@@ -27995,7 +27994,7 @@
           "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "comments"
         },
         "x-octokit": {}
@@ -28011,7 +28010,7 @@
         "operationId": "repos/list-pull-requests-associated-with-commit",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-pull-requests-associated-with-a-commit"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/commits#list-pull-requests-associated-with-a-commit"
         },
         "parameters": [
           {
@@ -28058,8 +28057,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "commits"
+          "category": "commits"
         },
         "x-octokit": {}
       }
@@ -28074,7 +28072,7 @@
         "operationId": "repos/get-commit",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-a-commit"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/commits#get-a-commit"
         },
         "parameters": [
           {
@@ -28129,8 +28127,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "commits"
+          "category": "commits"
         },
         "x-octokit": {}
       }
@@ -28356,7 +28353,7 @@
         "operationId": "repos/get-combined-status-for-ref",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-the-combined-status-for-a-specific-reference"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/statuses#get-the-combined-status-for-a-specific-reference"
         },
         "parameters": [
           {
@@ -28405,7 +28402,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "statuses"
         },
         "x-octokit": {
@@ -28427,7 +28424,7 @@
         "operationId": "repos/list-commit-statuses-for-ref",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-commit-statuses-for-a-reference"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/statuses#list-commit-statuses-for-a-reference"
         },
         "parameters": [
           {
@@ -28484,7 +28481,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "statuses"
         },
         "x-octokit": {}
@@ -28500,7 +28497,7 @@
         "operationId": "repos/compare-commits-with-basehead",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#compare-two-commits"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/commits#compare-two-commits"
         },
         "parameters": [
           {
@@ -28551,8 +28548,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "commits"
+          "category": "commits"
         },
         "x-octokit": {}
       }
@@ -28600,7 +28596,7 @@
           "200": {
             "description": "Response",
             "content": {
-              "application/vnd.github.v3.object": {
+              "application/vnd.github.object": {
                 "schema": {
                   "$ref": "#/components/schemas/content-tree"
                 }
@@ -30870,12 +30866,6 @@
               "type": "string"
             },
             "x-multi-segment": true
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
           }
         ],
         "responses": {
@@ -31085,9 +31075,10 @@
           },
           {
             "name": "ref",
-            "description": "ref parameter",
+            "description": "The name of the fully qualified reference to update. For example, `refs/heads/master`. If the value doesn't start with `refs` and have at least two slashes, it will be rejected.",
             "in": "path",
             "required": true,
+            "example": "refs/head/master",
             "schema": {
               "type": "string"
             },
@@ -31394,7 +31385,7 @@
     "/repos/{owner}/{repo}/git/trees": {
       "post": {
         "summary": "Create a tree",
-        "description": "The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.\n\nIf you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see \"[Create a commit](https://docs.github.com/enterprise-server@3.4/rest/reference/git#create-a-commit)\" and \"[Update a reference](https://docs.github.com/enterprise-server@3.4/rest/reference/git#update-a-reference).\"",
+        "description": "The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.\n\nIf you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see \"[Create a commit](https://docs.github.com/enterprise-server@3.4/rest/reference/git#create-a-commit)\" and \"[Update a reference](https://docs.github.com/enterprise-server@3.4/rest/reference/git#update-a-reference).\"\n\nReturns an error if you try to delete a file that does not exist.",
         "tags": [
           "git"
         ],
@@ -31613,7 +31604,7 @@
         "operationId": "repos/list-webhooks",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-repository-webhooks"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repos#list-repository-webhooks"
         },
         "parameters": [
           {
@@ -31660,8 +31651,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repos"
         },
         "x-octokit": {}
       },
@@ -31674,7 +31665,7 @@
         "operationId": "repos/create-webhook",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#create-a-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repos#create-a-repository-webhook"
         },
         "parameters": [
           {
@@ -31797,8 +31788,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repos"
         },
         "x-octokit": {}
       }
@@ -31813,7 +31804,7 @@
         "operationId": "repos/get-webhook",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-a-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repos#get-a-repository-webhook"
         },
         "parameters": [
           {
@@ -31849,8 +31840,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repos"
         },
         "x-octokit": {}
       },
@@ -31863,7 +31854,7 @@
         "operationId": "repos/update-webhook",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#update-a-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repos#update-a-repository-webhook"
         },
         "parameters": [
           {
@@ -31982,8 +31973,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repos"
         },
         "x-octokit": {}
       },
@@ -31996,7 +31987,7 @@
         "operationId": "repos/delete-webhook",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#delete-a-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repos#delete-a-repository-webhook"
         },
         "parameters": [
           {
@@ -32020,8 +32011,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repos"
         },
         "x-octokit": {}
       }
@@ -32036,7 +32027,7 @@
         "operationId": "repos/get-webhook-config-for-repo",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-a-webhook-configuration-for-a-repository"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repo-config#get-a-webhook-configuration-for-a-repository"
         },
         "parameters": [
           {
@@ -32069,8 +32060,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repo-config"
         },
         "x-octokit": {}
       },
@@ -32083,7 +32074,7 @@
         "operationId": "repos/update-webhook-config-for-repo",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#update-a-webhook-configuration-for-a-repository"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repo-config#update-a-webhook-configuration-for-a-repository"
         },
         "parameters": [
           {
@@ -32147,8 +32138,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repo-config"
         },
         "x-octokit": {}
       }
@@ -32163,7 +32154,7 @@
         "operationId": "repos/list-webhook-deliveries",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-deliveries-for-a-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repo-deliveries#list-deliveries-for-a-repository-webhook"
         },
         "parameters": [
           {
@@ -32211,8 +32202,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repo-deliveries"
         },
         "x-octokit": {}
       }
@@ -32227,7 +32218,7 @@
         "operationId": "repos/get-webhook-delivery",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-a-delivery-for-a-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repo-deliveries#get-a-delivery-for-a-repository-webhook"
         },
         "parameters": [
           {
@@ -32269,8 +32260,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repo-deliveries"
         },
         "x-octokit": {}
       }
@@ -32285,7 +32276,7 @@
         "operationId": "repos/redeliver-webhook-delivery",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#redeliver-a-delivery-for-a-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repo-deliveries#redeliver-a-delivery-for-a-repository-webhook"
         },
         "parameters": [
           {
@@ -32315,8 +32306,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repo-deliveries"
         },
         "x-octokit": {}
       }
@@ -32331,7 +32322,7 @@
         "operationId": "repos/ping-webhook",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#ping-a-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repos#ping-a-repository-webhook"
         },
         "parameters": [
           {
@@ -32355,8 +32346,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repos"
         },
         "x-octokit": {}
       }
@@ -32371,7 +32362,7 @@
         "operationId": "repos/test-push-webhook",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#test-the-push-repository-webhook"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/webhooks/repos#test-the-push-repository-webhook"
         },
         "parameters": [
           {
@@ -32395,8 +32386,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "webhooks"
+          "category": "webhooks",
+          "subcategory": "repos"
         },
         "x-octokit": {}
       }
@@ -32463,7 +32454,7 @@
         "operationId": "repos/list-invitations",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-repository-invitations"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/invitations#list-repository-invitations"
         },
         "parameters": [
           {
@@ -32507,7 +32498,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -32529,7 +32520,7 @@
         "operationId": "repos/update-invitation",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#update-a-repository-invitation"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/invitations#update-a-repository-invitation"
         },
         "parameters": [
           {
@@ -32585,7 +32576,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -32605,7 +32596,7 @@
         "operationId": "repos/delete-invitation",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#delete-a-repository-invitation"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/invitations#delete-a-repository-invitation"
         },
         "parameters": [
           {
@@ -32626,7 +32617,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {}
@@ -36498,7 +36489,7 @@
         "operationId": "repos/get-pages",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-a-github-pages-site"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/pages#get-a-github-pages-site"
         },
         "parameters": [
           {
@@ -36531,8 +36522,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "pages"
+          "category": "pages"
         },
         "x-octokit": {}
       },
@@ -36545,7 +36535,7 @@
         "operationId": "repos/create-pages-site",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#create-a-github-pages-site"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/pages#create-a-github-pages-site"
         },
         "parameters": [
           {
@@ -36564,6 +36554,14 @@
                 "description": "The source branch and directory used to publish your Pages site.",
                 "nullable": true,
                 "properties": {
+                  "build_type": {
+                    "type": "string",
+                    "description": "The process in which the Page will be built. Possible values are `\"legacy\"` and `\"workflow\"`.",
+                    "enum": [
+                      "legacy",
+                      "workflow"
+                    ]
+                  },
                   "source": {
                     "type": "object",
                     "description": "The source branch and directory used to publish your Pages site.",
@@ -36591,6 +36589,11 @@
                   {
                     "required": [
                       "source"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "build_type"
                     ]
                   }
                 ]
@@ -36634,8 +36637,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "pages"
+          "category": "pages"
         },
         "x-octokit": {}
       },
@@ -36648,7 +36650,7 @@
         "operationId": "repos/update-information-about-pages-site",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#update-information-about-a-github-pages-site"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/pages#update-information-about-a-github-pages-site"
         },
         "parameters": [
           {
@@ -36677,6 +36679,14 @@
                   "public": {
                     "type": "boolean",
                     "description": "Configures access controls for the GitHub Pages site. If public is set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site. This includes anyone in your Enterprise if the repository is set to `internal` visibility. This feature is only available to repositories in an organization on an Enterprise plan."
+                  },
+                  "build_type": {
+                    "type": "string",
+                    "description": "The process by which the GitHub Pages site will be built. `workflow` means that the site is built by a custom GitHub Actions workflow. `legacy` means that the site is built by GitHub when changes are pushed to a specific branch.",
+                    "enum": [
+                      "legacy",
+                      "workflow"
+                    ]
                   },
                   "source": {
                     "anyOf": [
@@ -36715,6 +36725,11 @@
                   }
                 },
                 "anyOf": [
+                  {
+                    "required": [
+                      "build_type"
+                    ]
+                  },
                   {
                     "required": [
                       "source"
@@ -36765,8 +36780,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "pages"
+          "category": "pages"
         },
         "x-octokit": {}
       },
@@ -36779,7 +36793,7 @@
         "operationId": "repos/delete-pages-site",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#delete-a-github-pages-site"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/pages#delete-a-github-pages-site"
         },
         "parameters": [
           {
@@ -36803,8 +36817,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "pages"
+          "category": "pages"
         },
         "x-octokit": {}
       }
@@ -36819,7 +36832,7 @@
         "operationId": "repos/list-pages-builds",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-github-pages-builds"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/pages#list-github-pages-builds"
         },
         "parameters": [
           {
@@ -36863,8 +36876,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "pages"
+          "category": "pages"
         },
         "x-octokit": {}
       },
@@ -36877,7 +36889,7 @@
         "operationId": "repos/request-pages-build",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#request-a-github-pages-build"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/pages#request-a-github-pages-build"
         },
         "parameters": [
           {
@@ -36907,8 +36919,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "pages"
+          "category": "pages"
         },
         "x-octokit": {}
       }
@@ -36923,7 +36934,7 @@
         "operationId": "repos/get-latest-pages-build",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-latest-pages-build"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/pages#get-latest-pages-build"
         },
         "parameters": [
           {
@@ -36953,8 +36964,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "pages"
+          "category": "pages"
         },
         "x-octokit": {}
       }
@@ -36969,7 +36979,7 @@
         "operationId": "repos/get-pages-build",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-github-pages-build"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/pages#get-github-pages-build"
         },
         "parameters": [
           {
@@ -37007,8 +37017,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "pages"
+          "category": "pages"
         },
         "x-octokit": {}
       }
@@ -37564,7 +37573,7 @@
       },
       "post": {
         "summary": "Create a pull request",
-        "description": "Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nTo open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.\n\nYou can create a new pull request.\n\nThis endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.4/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.4/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)\" for details.",
+        "description": "Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nTo open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.\n\nThis endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.4/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.4/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)\" for details.",
         "tags": [
           "pulls"
         ],
@@ -37590,7 +37599,7 @@
                 "properties": {
                   "title": {
                     "type": "string",
-                    "description": "The title of the new pull request."
+                    "description": "The title of the new pull request. Required unless `issue` is specified."
                   },
                   "head": {
                     "type": "string",
@@ -37614,7 +37623,8 @@
                   },
                   "issue": {
                     "type": "integer",
-                    "example": 1
+                    "example": 1,
+                    "description": "An issue in the repository to convert to a pull request. The issue title, body, and comments will become the title, body, and comments on the new pull request. Required unless `title` is specified."
                   }
                 },
                 "required": [
@@ -38473,7 +38483,10 @@
                   }
                 },
                 "required": [
-                  "body"
+                  "body",
+                  "commit_id",
+                  "path",
+                  "line"
                 ]
               },
               "examples": {
@@ -38939,15 +38952,15 @@
     },
     "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers": {
       "get": {
-        "summary": "List requested reviewers for a pull request",
-        "description": "Lists the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/enterprise-server@3.4/rest/pulls/reviews#list-reviews-for-a-pull-request) operation.",
+        "summary": "Get all requested reviewers for a pull request",
+        "description": "Gets the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/enterprise-server@3.4/rest/pulls/reviews#list-reviews-for-a-pull-request) operation.",
         "tags": [
           "pulls"
         ],
         "operationId": "pulls/list-requested-reviewers",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/pulls#list-requested-reviewers-for-a-pull-request"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/pulls#get-all-requested-reviewers-for-a-pull-request"
         },
         "parameters": [
           {
@@ -38958,12 +38971,6 @@
           },
           {
             "$ref": "#/components/parameters/pull-number"
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
           }
         ],
         "responses": {
@@ -39174,6 +39181,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/pull-request-simple"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/pull-request-simple"
+                  }
                 }
               }
             }
@@ -39255,7 +39267,7 @@
       },
       "post": {
         "summary": "Create a review for a pull request",
-        "description": "This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.4/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.4/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.\n\nPull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.\n\n**Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@3.4/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@3.4/rest/reference/pulls#get-a-pull-request) endpoint.\n\nThe `position` value equals the number of lines down from the first \"@@\" hunk header in the file you want to add a comment. The line just below the \"@@\" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.",
+        "description": "This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.4/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.4/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.\n\nPull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see \"[Submit a review for a pull request](https://docs.github.com/enterprise-server@3.4/rest/pulls#submit-a-review-for-a-pull-request).\"\n\n**Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@3.4/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@3.4/rest/reference/pulls#get-a-pull-request) endpoint.\n\nThe `position` value equals the number of lines down from the first \"@@\" hunk header in the file you want to add a comment. The line just below the \"@@\" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.",
         "tags": [
           "pulls"
         ],
@@ -39292,7 +39304,7 @@
                   },
                   "event": {
                     "type": "string",
-                    "description": "The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/enterprise-server@3.4/rest/reference/pulls#submit-a-review-for-a-pull-request) when you are ready.",
+                    "description": "The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/enterprise-server@3.4/rest/pulls#submit-a-review-for-a-pull-request) when you are ready.",
                     "enum": [
                       "APPROVE",
                       "REQUEST_CHANGES",
@@ -39692,12 +39704,23 @@
                   },
                   "event": {
                     "type": "string",
-                    "example": "\"APPROVE\""
+                    "example": "\"DISMISS\"",
+                    "enum": [
+                      "DISMISS"
+                    ]
                   }
                 },
                 "required": [
                   "message"
                 ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "message": "You are dismissed",
+                    "event": "DISMISS"
+                  }
+                }
               }
             }
           }
@@ -39737,7 +39760,7 @@
     "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events": {
       "post": {
         "summary": "Submit a review for a pull request",
-        "description": "",
+        "description": "Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see \"[Create a review for a pull request](https://docs.github.com/enterprise-server@3.4/rest/pulls#create-a-review-for-a-pull-request).\"",
         "tags": [
           "pulls"
         ],
@@ -39784,6 +39807,14 @@
                 "required": [
                   "event"
                 ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "body": "Here is the body for the review.",
+                    "event": "REQUEST_CHANGES"
+                  }
+                }
               }
             }
           }
@@ -40248,7 +40279,7 @@
         ],
         "responses": {
           "200": {
-            "description": "To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/enterprise-server@3.4/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response.",
+            "description": "Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -41649,7 +41680,7 @@
         "operationId": "repos/get-code-frequency-stats",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-the-weekly-commit-activity"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/metrics/statistics#get-the-weekly-commit-activity"
         },
         "parameters": [
           {
@@ -41688,7 +41719,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "metrics",
           "subcategory": "statistics"
         },
         "x-octokit": {}
@@ -41704,7 +41735,7 @@
         "operationId": "repos/get-commit-activity-stats",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-the-last-year-of-commit-activity"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/metrics/statistics#get-the-last-year-of-commit-activity"
         },
         "parameters": [
           {
@@ -41743,7 +41774,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "metrics",
           "subcategory": "statistics"
         },
         "x-octokit": {}
@@ -41759,7 +41790,7 @@
         "operationId": "repos/get-contributors-stats",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-all-contributor-commit-activity"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/metrics/statistics#get-all-contributor-commit-activity"
         },
         "parameters": [
           {
@@ -41771,7 +41802,7 @@
         ],
         "responses": {
           "200": {
-            "description": "*   `w` - Start of the week, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).\n*   `a` - Number of additions\n*   `d` - Number of deletions\n*   `c` - Number of commits",
+            "description": "Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -41798,7 +41829,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "metrics",
           "subcategory": "statistics"
         },
         "x-octokit": {}
@@ -41814,7 +41845,7 @@
         "operationId": "repos/get-participation-stats",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-the-weekly-commit-count"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/metrics/statistics#get-the-weekly-commit-count"
         },
         "parameters": [
           {
@@ -41847,7 +41878,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "metrics",
           "subcategory": "statistics"
         },
         "x-octokit": {}
@@ -41863,7 +41894,7 @@
         "operationId": "repos/get-punch-card-stats",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#get-the-hourly-commit-count-for-each-day"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/statistics/repos#get-the-hourly-commit-count-for-each-day"
         },
         "parameters": [
           {
@@ -41899,7 +41930,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "metrics",
           "subcategory": "statistics"
         },
         "x-octokit": {}
@@ -41915,7 +41946,7 @@
         "operationId": "repos/create-commit-status",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#create-a-commit-status"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/commits/statuses#create-a-commit-status"
         },
         "parameters": [
           {
@@ -41953,10 +41984,12 @@
                   },
                   "target_url": {
                     "type": "string",
+                    "nullable": true,
                     "description": "The target URL to associate with this status. This URL will be linked from the GitHub UI to allow users to easily see the source of the status.  \nFor example, if your continuous integration system is posting build status, you would want to provide the deep link for the build output for this specific SHA:  \n`http://ci.example.com/user/repo/build/sha`"
                   },
                   "description": {
                     "type": "string",
+                    "nullable": true,
                     "description": "A short description of the status."
                   },
                   "context": {
@@ -42010,7 +42043,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "statuses"
         },
         "x-octokit": {}
@@ -42635,7 +42668,7 @@
     "/repos/{owner}/{repo}/zipball/{ref}": {
       "get": {
         "summary": "Download a repository archive (zip)",
-        "description": "Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually\n`master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use\nthe `Location` header to make a second `GET` request.\n**Note**: For private repositories, these links are temporary and expire after five minutes.",
+        "description": "Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually\n`master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use\nthe `Location` header to make a second `GET` request.\n\n**Note**: For private repositories, these links are temporary and expire after five minutes. If the repository is empty, you will receive a 404 when you follow the redirect.",
         "tags": [
           "repos"
         ],
@@ -43785,7 +43818,7 @@
     "/search/users": {
       "get": {
         "summary": "Search users",
-        "description": "Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.4/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.4/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.4/rest/reference/search#text-match-metadata).\n\nFor example, if you're looking for a list of popular users, you might try this query:\n\n`q=tom+repos:%3E42+followers:%3E1000`\n\nThis query searches for users with the name `tom`. The results are restricted to users with more than 42 repositories and over 1,000 followers.",
+        "description": "Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.4/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.4/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.4/rest/reference/search#text-match-metadata).\n\nFor example, if you're looking for a list of popular users, you might try this query:\n\n`q=tom+repos:%3E42+followers:%3E1000`\n\nThis query searches for users with the name `tom`. The results are restricted to users with more than 42 repositories and over 1,000 followers.",
         "tags": [
           "search"
         ],
@@ -49360,7 +49393,7 @@
         "operationId": "repos/list-invitations-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#list-repository-invitations-for-the-authenticated-user"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/invitations#list-repository-invitations-for-the-authenticated-user"
         },
         "parameters": [
           {
@@ -49410,7 +49443,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -49432,7 +49465,7 @@
         "operationId": "repos/accept-invitation-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#accept-a-repository-invitation"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/invitations#accept-a-repository-invitation"
         },
         "parameters": [
           {
@@ -49459,7 +49492,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -49483,7 +49516,7 @@
         "operationId": "repos/decline-invitation-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/repos#decline-a-repository-invitation"
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/collaborators/invitations#decline-a-repository-invitation"
         },
         "parameters": [
           {
@@ -49510,7 +49543,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -52118,11 +52151,6 @@
             "type": "boolean"
           },
           "created_at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "last_used": {
-            "nullable": true,
             "type": "string",
             "format": "date-time"
           }
@@ -59345,9 +59373,11 @@
         "type": "object",
         "properties": {
           "id": {
+            "description": "The unique identifier of the custom role.",
             "type": "integer"
           },
           "name": {
+            "description": "The name of the custom role.",
             "type": "string"
           }
         },
@@ -66245,7 +66275,8 @@
           },
           "target_url": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "nullable": true
           },
           "required": {
             "type": "boolean",
@@ -66346,10 +66377,12 @@
             "type": "string"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "target_url": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "context": {
             "type": "string"
@@ -80561,7 +80594,7 @@
           }
         ]
       },
-      "organization-custom-repository-role-example": {
+      "organization-custom-repository-role-example-old": {
         "value": {
           "total_count": 2,
           "custom_roles": [
@@ -91134,17 +91167,7 @@
         ]
       },
       "deploy-key-items": {
-        "value": [
-          {
-            "id": 1,
-            "key": "ssh-rsa AAA...",
-            "url": "https://api.github.com/repos/octocat/Hello-World/keys/1",
-            "title": "octocat@octomac",
-            "verified": true,
-            "created_at": "2014-12-10T15:53:42Z",
-            "read_only": true
-          }
-        ]
+        "value": {}
       },
       "deploy-key": {
         "value": {
@@ -92817,6 +92840,526 @@
                 "spdx_id": "MIT",
                 "node_id": "MDc6TGljZW5zZW1pdA==",
                 "html_url": "https://api.github.com/licenses/mit"
+              },
+              "forks": 1,
+              "open_issues": 1,
+              "watchers": 1
+            }
+          },
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
+            },
+            "html": {
+              "href": "https://github.com/octocat/Hello-World/pull/1347"
+            },
+            "issue": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/issues/1347"
+            },
+            "comments": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
+            },
+            "review_comments": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments"
+            },
+            "review_comment": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}"
+            },
+            "commits": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits"
+            },
+            "statuses": {
+              "href": "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e"
+            }
+          },
+          "author_association": "OWNER",
+          "auto_merge": null,
+          "draft": false
+        }
+      },
+      "pull-request-simple": {
+        "value": {
+          "url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347",
+          "id": 1,
+          "node_id": "MDExOlB1bGxSZXF1ZXN0MQ==",
+          "html_url": "https://github.com/octocat/Hello-World/pull/1347",
+          "diff_url": "https://github.com/octocat/Hello-World/pull/1347.diff",
+          "patch_url": "https://github.com/octocat/Hello-World/pull/1347.patch",
+          "issue_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
+          "commits_url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits",
+          "review_comments_url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments",
+          "review_comment_url": "https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}",
+          "comments_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments",
+          "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e",
+          "number": 1347,
+          "state": "open",
+          "locked": true,
+          "title": "Amazing new feature",
+          "user": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "body": "Please pull these awesome changes in!",
+          "labels": [
+            {
+              "id": 208045946,
+              "node_id": "MDU6TGFiZWwyMDgwNDU5NDY=",
+              "url": "https://api.github.com/repos/octocat/Hello-World/labels/bug",
+              "name": "bug",
+              "description": "Something isn't working",
+              "color": "f29513",
+              "default": true
+            }
+          ],
+          "milestone": {
+            "url": "https://api.github.com/repos/octocat/Hello-World/milestones/1",
+            "html_url": "https://github.com/octocat/Hello-World/milestones/v1.0",
+            "labels_url": "https://api.github.com/repos/octocat/Hello-World/milestones/1/labels",
+            "id": 1002604,
+            "node_id": "MDk6TWlsZXN0b25lMTAwMjYwNA==",
+            "number": 1,
+            "state": "open",
+            "title": "v1.0",
+            "description": "Tracking milestone for version 1.0",
+            "creator": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "open_issues": 4,
+            "closed_issues": 8,
+            "created_at": "2011-04-10T20:09:31Z",
+            "updated_at": "2014-03-03T18:58:10Z",
+            "closed_at": "2013-02-12T13:22:01Z",
+            "due_on": "2012-10-09T23:39:01Z"
+          },
+          "active_lock_reason": "too heated",
+          "created_at": "2011-01-26T19:01:12Z",
+          "updated_at": "2011-01-26T19:01:12Z",
+          "closed_at": "2011-01-26T19:01:12Z",
+          "merged_at": "2011-01-26T19:01:12Z",
+          "merge_commit_sha": "e5bd3914e2e596debea16f433f57875b5b90bcd6",
+          "assignee": {
+            "login": "octocat",
+            "id": 1,
+            "node_id": "MDQ6VXNlcjE=",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/octocat",
+            "html_url": "https://github.com/octocat",
+            "followers_url": "https://api.github.com/users/octocat/followers",
+            "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+            "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+            "organizations_url": "https://api.github.com/users/octocat/orgs",
+            "repos_url": "https://api.github.com/users/octocat/repos",
+            "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/octocat/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "assignees": [
+            {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            {
+              "login": "hubot",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/hubot_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/hubot",
+              "html_url": "https://github.com/hubot",
+              "followers_url": "https://api.github.com/users/hubot/followers",
+              "following_url": "https://api.github.com/users/hubot/following{/other_user}",
+              "gists_url": "https://api.github.com/users/hubot/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/hubot/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/hubot/subscriptions",
+              "organizations_url": "https://api.github.com/users/hubot/orgs",
+              "repos_url": "https://api.github.com/users/hubot/repos",
+              "events_url": "https://api.github.com/users/hubot/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/hubot/received_events",
+              "type": "User",
+              "site_admin": true
+            }
+          ],
+          "requested_reviewers": [
+            {
+              "login": "other_user",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/other_user_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/other_user",
+              "html_url": "https://github.com/other_user",
+              "followers_url": "https://api.github.com/users/other_user/followers",
+              "following_url": "https://api.github.com/users/other_user/following{/other_user}",
+              "gists_url": "https://api.github.com/users/other_user/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/other_user/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/other_user/subscriptions",
+              "organizations_url": "https://api.github.com/users/other_user/orgs",
+              "repos_url": "https://api.github.com/users/other_user/repos",
+              "events_url": "https://api.github.com/users/other_user/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/other_user/received_events",
+              "type": "User",
+              "site_admin": false
+            }
+          ],
+          "requested_teams": [
+            {
+              "id": 1,
+              "node_id": "MDQ6VGVhbTE=",
+              "url": "https://api.github.com/teams/1",
+              "html_url": "https://github.com/orgs/github/teams/justice-league",
+              "name": "Justice League",
+              "slug": "justice-league",
+              "description": "A great team.",
+              "privacy": "closed",
+              "permission": "admin",
+              "members_url": "https://api.github.com/teams/1/members{/member}",
+              "repositories_url": "https://api.github.com/teams/1/repos",
+              "parent": null
+            }
+          ],
+          "head": {
+            "label": "octocat:new-topic",
+            "ref": "new-topic",
+            "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "user": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "repo": {
+              "id": 1296269,
+              "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+              "name": "Hello-World",
+              "full_name": "octocat/Hello-World",
+              "owner": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "private": false,
+              "html_url": "https://github.com/octocat/Hello-World",
+              "description": "This your first repo!",
+              "fork": false,
+              "url": "https://api.github.com/repos/octocat/Hello-World",
+              "archive_url": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+              "assignees_url": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+              "blobs_url": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+              "branches_url": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+              "collaborators_url": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+              "comments_url": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+              "commits_url": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+              "compare_url": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+              "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+              "contributors_url": "https://api.github.com/repos/octocat/Hello-World/contributors",
+              "deployments_url": "https://api.github.com/repos/octocat/Hello-World/deployments",
+              "downloads_url": "https://api.github.com/repos/octocat/Hello-World/downloads",
+              "events_url": "https://api.github.com/repos/octocat/Hello-World/events",
+              "forks_url": "https://api.github.com/repos/octocat/Hello-World/forks",
+              "git_commits_url": "https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+              "git_refs_url": "https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+              "git_tags_url": "https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+              "git_url": "git:github.com/octocat/Hello-World.git",
+              "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+              "issue_events_url": "https://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+              "issues_url": "https://api.github.com/repos/octocat/Hello-World/issues{/number}",
+              "keys_url": "https://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+              "labels_url": "https://api.github.com/repos/octocat/Hello-World/labels{/name}",
+              "languages_url": "https://api.github.com/repos/octocat/Hello-World/languages",
+              "merges_url": "https://api.github.com/repos/octocat/Hello-World/merges",
+              "milestones_url": "https://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+              "notifications_url": "https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+              "pulls_url": "https://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+              "releases_url": "https://api.github.com/repos/octocat/Hello-World/releases{/id}",
+              "ssh_url": "git@github.com:octocat/Hello-World.git",
+              "stargazers_url": "https://api.github.com/repos/octocat/Hello-World/stargazers",
+              "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+              "subscribers_url": "https://api.github.com/repos/octocat/Hello-World/subscribers",
+              "subscription_url": "https://api.github.com/repos/octocat/Hello-World/subscription",
+              "tags_url": "https://api.github.com/repos/octocat/Hello-World/tags",
+              "teams_url": "https://api.github.com/repos/octocat/Hello-World/teams",
+              "trees_url": "https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+              "clone_url": "https://github.com/octocat/Hello-World.git",
+              "mirror_url": "git:git.example.com/octocat/Hello-World",
+              "hooks_url": "https://api.github.com/repos/octocat/Hello-World/hooks",
+              "svn_url": "https://svn.github.com/octocat/Hello-World",
+              "homepage": "https://github.com",
+              "language": null,
+              "forks_count": 9,
+              "stargazers_count": 80,
+              "watchers_count": 80,
+              "size": 108,
+              "default_branch": "master",
+              "open_issues_count": 0,
+              "is_template": true,
+              "topics": [
+                "octocat",
+                "atom",
+                "electron",
+                "api"
+              ],
+              "has_issues": true,
+              "has_projects": true,
+              "has_wiki": true,
+              "has_pages": false,
+              "has_downloads": true,
+              "archived": false,
+              "disabled": false,
+              "visibility": "public",
+              "pushed_at": "2011-01-26T19:06:43Z",
+              "created_at": "2011-01-26T19:01:12Z",
+              "updated_at": "2011-01-26T19:14:43Z",
+              "permissions": {
+                "admin": false,
+                "push": false,
+                "pull": true
+              },
+              "allow_rebase_merge": true,
+              "template_repository": null,
+              "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
+              "allow_squash_merge": true,
+              "allow_auto_merge": false,
+              "delete_branch_on_merge": true,
+              "allow_merge_commit": true,
+              "subscribers_count": 42,
+              "network_count": 0,
+              "license": {
+                "key": "mit",
+                "name": "MIT License",
+                "url": "https://api.github.com/licenses/mit",
+                "spdx_id": "MIT",
+                "node_id": "MDc6TGljZW5zZW1pdA==",
+                "html_url": "https://github.com/licenses/mit"
+              },
+              "forks": 1,
+              "open_issues": 1,
+              "watchers": 1
+            }
+          },
+          "base": {
+            "label": "octocat:master",
+            "ref": "master",
+            "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "user": {
+              "login": "octocat",
+              "id": 1,
+              "node_id": "MDQ6VXNlcjE=",
+              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/octocat",
+              "html_url": "https://github.com/octocat",
+              "followers_url": "https://api.github.com/users/octocat/followers",
+              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+              "organizations_url": "https://api.github.com/users/octocat/orgs",
+              "repos_url": "https://api.github.com/users/octocat/repos",
+              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/octocat/received_events",
+              "type": "User",
+              "site_admin": false
+            },
+            "repo": {
+              "id": 1296269,
+              "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+              "name": "Hello-World",
+              "full_name": "octocat/Hello-World",
+              "owner": {
+                "login": "octocat",
+                "id": 1,
+                "node_id": "MDQ6VXNlcjE=",
+                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/octocat",
+                "html_url": "https://github.com/octocat",
+                "followers_url": "https://api.github.com/users/octocat/followers",
+                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                "repos_url": "https://api.github.com/users/octocat/repos",
+                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                "type": "User",
+                "site_admin": false
+              },
+              "private": false,
+              "html_url": "https://github.com/octocat/Hello-World",
+              "description": "This your first repo!",
+              "fork": false,
+              "url": "https://api.github.com/repos/octocat/Hello-World",
+              "archive_url": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+              "assignees_url": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+              "blobs_url": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+              "branches_url": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+              "collaborators_url": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+              "comments_url": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+              "commits_url": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+              "compare_url": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+              "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+              "contributors_url": "https://api.github.com/repos/octocat/Hello-World/contributors",
+              "deployments_url": "https://api.github.com/repos/octocat/Hello-World/deployments",
+              "downloads_url": "https://api.github.com/repos/octocat/Hello-World/downloads",
+              "events_url": "https://api.github.com/repos/octocat/Hello-World/events",
+              "forks_url": "https://api.github.com/repos/octocat/Hello-World/forks",
+              "git_commits_url": "https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+              "git_refs_url": "https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+              "git_tags_url": "https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+              "git_url": "git:github.com/octocat/Hello-World.git",
+              "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+              "issue_events_url": "https://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+              "issues_url": "https://api.github.com/repos/octocat/Hello-World/issues{/number}",
+              "keys_url": "https://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+              "labels_url": "https://api.github.com/repos/octocat/Hello-World/labels{/name}",
+              "languages_url": "https://api.github.com/repos/octocat/Hello-World/languages",
+              "merges_url": "https://api.github.com/repos/octocat/Hello-World/merges",
+              "milestones_url": "https://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+              "notifications_url": "https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+              "pulls_url": "https://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+              "releases_url": "https://api.github.com/repos/octocat/Hello-World/releases{/id}",
+              "ssh_url": "git@github.com:octocat/Hello-World.git",
+              "stargazers_url": "https://api.github.com/repos/octocat/Hello-World/stargazers",
+              "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+              "subscribers_url": "https://api.github.com/repos/octocat/Hello-World/subscribers",
+              "subscription_url": "https://api.github.com/repos/octocat/Hello-World/subscription",
+              "tags_url": "https://api.github.com/repos/octocat/Hello-World/tags",
+              "teams_url": "https://api.github.com/repos/octocat/Hello-World/teams",
+              "trees_url": "https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+              "clone_url": "https://github.com/octocat/Hello-World.git",
+              "mirror_url": "git:git.example.com/octocat/Hello-World",
+              "hooks_url": "https://api.github.com/repos/octocat/Hello-World/hooks",
+              "svn_url": "https://svn.github.com/octocat/Hello-World",
+              "homepage": "https://github.com",
+              "language": null,
+              "forks_count": 9,
+              "stargazers_count": 80,
+              "watchers_count": 80,
+              "size": 108,
+              "default_branch": "master",
+              "open_issues_count": 0,
+              "is_template": true,
+              "topics": [
+                "octocat",
+                "atom",
+                "electron",
+                "api"
+              ],
+              "has_issues": true,
+              "has_projects": true,
+              "has_wiki": true,
+              "has_pages": false,
+              "has_downloads": true,
+              "archived": false,
+              "disabled": false,
+              "visibility": "public",
+              "pushed_at": "2011-01-26T19:06:43Z",
+              "created_at": "2011-01-26T19:01:12Z",
+              "updated_at": "2011-01-26T19:14:43Z",
+              "permissions": {
+                "admin": false,
+                "push": false,
+                "pull": true
+              },
+              "allow_rebase_merge": true,
+              "template_repository": null,
+              "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
+              "allow_squash_merge": true,
+              "allow_auto_merge": false,
+              "delete_branch_on_merge": true,
+              "allow_merge_commit": true,
+              "subscribers_count": 42,
+              "network_count": 0,
+              "license": {
+                "key": "mit",
+                "name": "MIT License",
+                "url": "https://api.github.com/licenses/mit",
+                "spdx_id": "MIT",
+                "node_id": "MDc6TGljZW5zZW1pdA==",
+                "html_url": "https://github.com/licenses/mit"
               },
               "forks": 1,
               "open_issues": 1,
@@ -97608,7 +98151,7 @@
       },
       "workflow-run-status": {
         "name": "status",
-        "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see \"[Create a check run](https://docs.github.com/enterprise-server@3.4/rest/reference/checks#create-a-check-run).\"",
+        "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`.",
         "in": "query",
         "required": false,
         "schema": {
