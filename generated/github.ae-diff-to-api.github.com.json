@@ -92,16 +92,16 @@
       "description": "Render GitHub flavored markdown"
     },
     {
+      "name": "merge-queue",
+      "description": "Interact with GitHub Merge Queues."
+    },
+    {
       "name": "meta",
       "description": "Endpoints that give information about the API."
     },
     {
       "name": "migrations",
       "description": "Move projects to or from GitHub."
-    },
-    {
-      "name": "oauth-authorizations",
-      "description": "Manage access of OAuth applications"
     },
     {
       "name": "oidc",
@@ -1703,7 +1703,7 @@
               "examples": {
                 "default": {
                   "value": {
-                    "respoitory": "Hello-World",
+                    "repository": "Hello-World",
                     "permissions": {
                       "issues": "write",
                       "contents": "read"
@@ -3218,10 +3218,16 @@
             "$ref": "#/components/parameters/before"
           },
           {
-            "$ref": "#/components/parameters/per-page"
+            "$ref": "#/components/parameters/page"
           },
           {
-            "$ref": "#/components/parameters/page"
+            "name": "per_page",
+            "description": "The number of results per page (max 50).",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
           }
         ],
         "responses": {
@@ -5070,7 +5076,7 @@
                   },
                   "private": {
                     "type": "boolean",
-                    "description": "Either `true` to make the repository private or `false` to make it public. Default: `false`.  \n**Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.",
+                    "description": "Either `true` to make the repository private or `false` to make it public. Default: `false`.  \n**Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.",
                     "default": false
                   },
                   "visibility": {
@@ -5084,7 +5090,7 @@
                   },
                   "security_and_analysis": {
                     "type": "object",
-                    "description": "Specify which security and analysis features to enable or disable. For example, to enable GitHub Advanced Security, use this data in the body of the PATCH request: `{\"security_and_analysis\": {\"advanced_security\": {\"status\": \"enabled\"}}}`. If you have admin permissions for a private repository covered by an Advanced Security license, you can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
+                    "description": "Specify which security and analysis features to enable or disable for the repository.\n\nTo use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/github-ae@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n\nFor example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:\n`{ \"security_and_analysis\": {\"advanced_security\": { \"status\": \"enabled\" } } }`.\n\nYou can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
                     "nullable": true,
                     "properties": {
                       "advanced_security": {
@@ -6449,7 +6455,7 @@
         "operationId": "repos/list-collaborators",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#list-repository-collaborators"
+          "url": "https://docs.github.com/github-ae@latest/rest/collaborators/collaborators#list-repository-collaborators"
         },
         "parameters": [
           {
@@ -6511,8 +6517,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {
           "diff": {
@@ -6533,7 +6538,7 @@
         "operationId": "repos/add-collaborator",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#add-a-repository-collaborator"
+          "url": "https://docs.github.com/github-ae@latest/rest/collaborators/collaborators#add-a-repository-collaborator"
         },
         "parameters": [
           {
@@ -6608,8 +6613,7 @@
           "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {
           "diff": {
@@ -6630,7 +6634,7 @@
         "operationId": "repos/get-collaborator-permission-level",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#get-repository-permissions-for-a-user"
+          "url": "https://docs.github.com/github-ae@latest/rest/collaborators/collaborators#get-repository-permissions-for-a-user"
         },
         "parameters": [
           {
@@ -6666,8 +6670,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {
           "diff": {
@@ -6806,7 +6809,7 @@
         "operationId": "repos/list-pull-requests-associated-with-commit",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#list-pull-requests-associated-with-a-commit"
+          "url": "https://docs.github.com/github-ae@latest/rest/commits/commits#list-pull-requests-associated-with-a-commit"
         },
         "parameters": [
           {
@@ -6853,8 +6856,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "commits"
+          "category": "commits"
         },
         "x-octokit": {
           "diff": {
@@ -6976,7 +6978,7 @@
         "operationId": "repos/get-combined-status-for-ref",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#get-the-combined-status-for-a-specific-reference"
+          "url": "https://docs.github.com/github-ae@latest/rest/commits/statuses#get-the-combined-status-for-a-specific-reference"
         },
         "parameters": [
           {
@@ -7025,7 +7027,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "statuses"
         },
         "x-octokit": {
@@ -7272,7 +7274,7 @@
         "operationId": "repos/list-invitations",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#list-repository-invitations"
+          "url": "https://docs.github.com/github-ae@latest/rest/collaborators/invitations#list-repository-invitations"
         },
         "parameters": [
           {
@@ -7316,7 +7318,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -7338,7 +7340,7 @@
         "operationId": "repos/update-invitation",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#update-a-repository-invitation"
+          "url": "https://docs.github.com/github-ae@latest/rest/collaborators/invitations#update-a-repository-invitation"
         },
         "parameters": [
           {
@@ -7394,7 +7396,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -8186,6 +8188,227 @@
           "enabledForGitHubApps": true,
           "category": "issues",
           "subcategory": "assignees"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/keys": {
+      "get": {
+        "summary": "List deploy keys",
+        "description": "",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/list-deploy-keys",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#list-deploy-keys"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/deploy-key"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/deploy-key-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "keys"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a deploy key",
+        "description": "You can create a read-only deploy key.",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/create-deploy-key",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#create-a-deploy-key"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "A name for the key."
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The contents of the key."
+                  },
+                  "read_only": {
+                    "type": "boolean",
+                    "description": "If `true`, the key will only be able to read repository contents. Otherwise, the key will be able to read and write.  \n  \nDeploy keys with write access can perform the same actions as an organization member with admin access, or a collaborator on a personal repository. For more information, see \"[Repository permission levels for an organization](https://docs.github.com/articles/repository-permission-levels-for-an-organization/)\" and \"[Permission levels for a user account repository](https://docs.github.com/articles/permission-levels-for-a-user-account-repository/).\""
+                  }
+                },
+                "required": [
+                  "key"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "title": "octocat@octomac",
+                    "key": "ssh-rsa AAA...",
+                    "read_only": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/deploy-key"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/deploy-key"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/repos/octocat/Hello-World/keys/1",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "keys"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/keys/{key_id}": {
+      "get": {
+        "summary": "Get a deploy key",
+        "description": "",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/get-deploy-key",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#get-a-deploy-key"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/key-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/deploy-key"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/deploy-key"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "keys"
         },
         "x-octokit": {
           "diff": {
@@ -10805,7 +11028,7 @@
         "operationId": "repos/list-invitations-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/github-ae@latest/rest/reference/repos#list-repository-invitations-for-the-authenticated-user"
+          "url": "https://docs.github.com/github-ae@latest/rest/collaborators/invitations#list-repository-invitations-for-the-authenticated-user"
         },
         "parameters": [
           {
@@ -10855,7 +11078,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -11795,7 +12018,7 @@
       },
       "workflow-run-status": {
         "name": "status",
-        "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see \"[Create a check run](https://docs.github.com/github-ae@latest/rest/reference/checks#create-a-check-run).\"",
+        "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`.",
         "in": "query",
         "required": false,
         "schema": {
@@ -11965,6 +12188,15 @@
       "issue-number": {
         "name": "issue_number",
         "description": "The number that identifies the issue.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "key-id": {
+        "name": "key_id",
+        "description": "The unique identifier of the key.",
         "in": "path",
         "required": true,
         "schema": {
@@ -12199,11 +12431,6 @@
             "type": "boolean"
           },
           "created_at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "last_used": {
-            "nullable": true,
             "type": "string",
             "format": "date-time"
           }
@@ -17545,6 +17772,43 @@
           "created_at"
         ]
       },
+      "deploy-key": {
+        "title": "Deploy Key",
+        "description": "An SSH key granting access to a single repository.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "key": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "read_only": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "url",
+          "title",
+          "verified",
+          "created_at",
+          "read_only"
+        ]
+      },
       "release": {
         "title": "Release",
         "description": "A release.",
@@ -20873,7 +21137,8 @@
           },
           "target_url": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "nullable": true
           },
           "required": {
             "type": "boolean",
@@ -28571,6 +28836,20 @@
             "updated_at": "2011-04-22T13:33:48Z",
             "author_association": "COLLABORATOR"
           }
+        }
+      },
+      "deploy-key-items": {
+        "value": {}
+      },
+      "deploy-key": {
+        "value": {
+          "id": 1,
+          "key": "ssh-rsa AAA...",
+          "url": "https://api.github.com/repos/octocat/Hello-World/keys/1",
+          "title": "octocat@octomac",
+          "verified": true,
+          "created_at": "2014-12-10T15:53:42Z",
+          "read_only": true
         }
       },
       "pull-request-review-request": {
