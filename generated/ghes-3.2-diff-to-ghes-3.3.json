@@ -92,16 +92,16 @@
       "description": "Render GitHub flavored markdown"
     },
     {
+      "name": "merge-queue",
+      "description": "Interact with GitHub Merge Queues."
+    },
+    {
       "name": "meta",
       "description": "Endpoints that give information about the API."
     },
     {
       "name": "migrations",
       "description": "Move projects to or from GitHub."
-    },
-    {
-      "name": "oauth-authorizations",
-      "description": "Manage access of OAuth applications"
     },
     {
       "name": "oidc",
@@ -556,7 +556,7 @@
               "examples": {
                 "default": {
                   "value": {
-                    "respoitory": "Hello-World",
+                    "repository": "Hello-World",
                     "permissions": {
                       "issues": "write",
                       "contents": "read"
@@ -1133,10 +1133,16 @@
             "$ref": "#/components/parameters/before"
           },
           {
-            "$ref": "#/components/parameters/per-page"
+            "$ref": "#/components/parameters/page"
           },
           {
-            "$ref": "#/components/parameters/page"
+            "name": "per_page",
+            "description": "The number of results per page (max 50).",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
           }
         ],
         "responses": {
@@ -2308,7 +2314,7 @@
                   },
                   "private": {
                     "type": "boolean",
-                    "description": "Either `true` to make the repository private or `false` to make it public. Default: `false`.  \n**Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.",
+                    "description": "Either `true` to make the repository private or `false` to make it public. Default: `false`.  \n**Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.",
                     "default": false
                   },
                   "visibility": {
@@ -2322,7 +2328,7 @@
                   },
                   "security_and_analysis": {
                     "type": "object",
-                    "description": "Specify which security and analysis features to enable or disable. For example, to enable GitHub Advanced Security, use this data in the body of the PATCH request: `{\"security_and_analysis\": {\"advanced_security\": {\"status\": \"enabled\"}}}`. If you have admin permissions for a private repository covered by an Advanced Security license, you can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
+                    "description": "Specify which security and analysis features to enable or disable for the repository.\n\nTo use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.2/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n\nFor example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:\n`{ \"security_and_analysis\": {\"advanced_security\": { \"status\": \"enabled\" } } }`.\n\nYou can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
                     "nullable": true,
                     "properties": {
                       "advanced_security": {
@@ -3595,7 +3601,7 @@
         "operationId": "repos/add-collaborator",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#add-a-repository-collaborator"
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/collaborators/collaborators#add-a-repository-collaborator"
         },
         "parameters": [
           {
@@ -3670,8 +3676,7 @@
           "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "collaborators"
+          "category": "collaborators"
         },
         "x-octokit": {
           "diff": {
@@ -3810,7 +3815,7 @@
         "operationId": "repos/list-pull-requests-associated-with-commit",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#list-pull-requests-associated-with-a-commit"
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/commits/commits#list-pull-requests-associated-with-a-commit"
         },
         "parameters": [
           {
@@ -3857,8 +3862,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "commits",
+          "category": "commits",
           "previews": [
             {
               "required": true,
@@ -3987,7 +3991,7 @@
         "operationId": "repos/get-combined-status-for-ref",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#get-the-combined-status-for-a-specific-reference"
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/commits/statuses#get-the-combined-status-for-a-specific-reference"
         },
         "parameters": [
           {
@@ -4036,7 +4040,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "commits",
           "subcategory": "statuses"
         },
         "x-octokit": {
@@ -4283,7 +4287,7 @@
         "operationId": "repos/list-invitations",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#list-repository-invitations"
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/collaborators/invitations#list-repository-invitations"
         },
         "parameters": [
           {
@@ -4327,7 +4331,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -4349,7 +4353,7 @@
         "operationId": "repos/update-invitation",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#update-a-repository-invitation"
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/collaborators/invitations#update-a-repository-invitation"
         },
         "parameters": [
           {
@@ -4405,7 +4409,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -7454,7 +7458,7 @@
         "operationId": "repos/list-invitations-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.2/rest/reference/repos#list-repository-invitations-for-the-authenticated-user"
+          "url": "https://docs.github.com/enterprise-server@3.2/rest/collaborators/invitations#list-repository-invitations-for-the-authenticated-user"
         },
         "parameters": [
           {
@@ -7504,7 +7508,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
-          "category": "repos",
+          "category": "collaborators",
           "subcategory": "invitations"
         },
         "x-octokit": {
@@ -15638,7 +15642,8 @@
           },
           "target_url": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "nullable": true
           },
           "required": {
             "type": "boolean",
@@ -25695,7 +25700,7 @@
       },
       "workflow-run-status": {
         "name": "status",
-        "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see \"[Create a check run](https://docs.github.com/enterprise-server@3.2/rest/reference/checks#create-a-check-run).\"",
+        "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`.",
         "in": "query",
         "required": false,
         "schema": {
