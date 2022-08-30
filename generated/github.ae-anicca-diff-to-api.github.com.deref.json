@@ -2334,14 +2334,6 @@
                                   ],
                                   "type": "string"
                                 },
-                                "organization_custom_roles": {
-                                  "description": "The level of permission to grant the access token for custom roles management.",
-                                  "enum": [
-                                    "read",
-                                    "write"
-                                  ],
-                                  "type": "string"
-                                },
                                 "organization_hooks": {
                                   "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization.",
                                   "enum": [
@@ -3181,14 +3173,6 @@
                                 ],
                                 "type": "string"
                               },
-                              "organization_custom_roles": {
-                                "description": "The level of permission to grant the access token for custom roles management.",
-                                "enum": [
-                                  "read",
-                                  "write"
-                                ],
-                                "type": "string"
-                              },
                               "organization_hooks": {
                                 "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization.",
                                 "enum": [
@@ -3846,14 +3830,6 @@
                               },
                               "organization_administration": {
                                 "description": "The level of permission to grant the access token to manage access to an organization.",
-                                "enum": [
-                                  "read",
-                                  "write"
-                                ],
-                                "type": "string"
-                              },
-                              "organization_custom_roles": {
-                                "description": "The level of permission to grant the access token for custom roles management.",
                                 "enum": [
                                   "read",
                                   "write"
@@ -4587,14 +4563,6 @@
                               },
                               "organization_administration": {
                                 "description": "The level of permission to grant the access token to manage access to an organization.",
-                                "enum": [
-                                  "read",
-                                  "write"
-                                ],
-                                "type": "string"
-                              },
-                              "organization_custom_roles": {
-                                "description": "The level of permission to grant the access token for custom roles management.",
                                 "enum": [
                                   "read",
                                   "write"
@@ -6159,8 +6127,89 @@
       }
     },
     "changed": {
+      "/app/installations": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "changed": {
+                              "permissions": {
+                                "properties_changed": {
+                                  "removed": [
+                                    "organization_custom_roles"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/app/installations/{installation_id}": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "permissions": {
+                              "properties_changed": {
+                                "removed": [
+                                  "organization_custom_roles"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/app/installations/{installation_id}/access_tokens": {
         "post": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "changed": {
+                        "permissions": {
+                          "properties_changed": {
+                            "removed": [
+                              "organization_custom_roles"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "responses": {
             "changed": {
               "201": {
@@ -6170,6 +6219,13 @@
                       "schema_changed": {
                         "properties_changed": {
                           "changed": {
+                            "permissions": {
+                              "properties_changed": {
+                                "removed": [
+                                  "organization_custom_roles"
+                                ]
+                              }
+                            },
                             "repositories": {
                               "items_changed": {
                                 "properties_changed": {
@@ -6193,6 +6249,74 @@
                                     "squash_merge_commit_title",
                                     "use_squash_pr_title_as_default"
                                   ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/applications/{client_id}/token": {
+        "patch": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "installation": {
+                              "properties_changed": {
+                                "changed": {
+                                  "permissions": {
+                                    "properties_changed": {
+                                      "removed": [
+                                        "organization_custom_roles"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "installation": {
+                              "properties_changed": {
+                                "changed": {
+                                  "permissions": {
+                                    "properties_changed": {
+                                      "removed": [
+                                        "organization_custom_roles"
+                                      ]
+                                    }
+                                  }
                                 }
                               }
                             }
@@ -7107,6 +7231,72 @@
                 "style": "form"
               }
             ]
+          }
+        }
+      },
+      "/orgs/{org}/installation": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "permissions": {
+                              "properties_changed": {
+                                "removed": [
+                                  "organization_custom_roles"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orgs/{org}/installations": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "installations": {
+                              "items_changed": {
+                                "properties_changed": {
+                                  "changed": {
+                                    "permissions": {
+                                      "properties_changed": {
+                                        "removed": [
+                                          "organization_custom_roles"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -9070,6 +9260,7 @@
                   "schema_changed": {
                     "properties_changed": {
                       "removed": [
+                        "default_branch_only",
                         "name"
                       ]
                     }
@@ -9166,6 +9357,35 @@
                             "squash_merge_commit_message",
                             "squash_merge_commit_title"
                           ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/installation": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "permissions": {
+                              "properties_changed": {
+                                "removed": [
+                                  "organization_custom_roles"
+                                ]
+                              }
+                            }
+                          }
                         }
                       }
                     }
@@ -10611,6 +10831,43 @@
           }
         }
       },
+      "/user/installations": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "installations": {
+                              "items_changed": {
+                                "properties_changed": {
+                                  "changed": {
+                                    "permissions": {
+                                      "properties_changed": {
+                                        "removed": [
+                                          "organization_custom_roles"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/user/installations/{installation_id}/repositories": {
         "get": {
           "responses": {
@@ -11292,6 +11549,35 @@
                             "removed": [
                               "revoked"
                             ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{username}/installation": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "permissions": {
+                              "properties_changed": {
+                                "removed": [
+                                  "organization_custom_roles"
+                                ]
+                              }
+                            }
                           }
                         }
                       }
