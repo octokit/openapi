@@ -9553,8 +9553,9 @@
                           },
                           "use_squash_pr_title_as_default": {
                             "type": "boolean",
-                            "description": "Whether a squash merge commit can use the pull request title as default.",
-                            "default": false
+                            "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                            "default": false,
+                            "deprecated": true
                           },
                           "squash_merge_commit_title": {
                             "type": "string",
@@ -21783,6 +21784,102 @@
         }
       }
     },
+    "/organizations/{organization_id}/custom_roles": {
+      "get": {
+        "summary": "List custom repository roles in an organization",
+        "description": "List the custom repository roles available in this organization. In order to see custom\nrepository roles in an organization, the authenticated user must be an organization owner.\n\nTo use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organizaiton and must use an access token with `admin:org repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[Managing custom repository roles for an organization](https://docs.github.com/enterprise-server@3.6/organizations/managing-peoples-access-to-your-organization-with-roles/managing-custom-repository-roles-for-an-organization)\".",
+        "tags": [
+          "orgs"
+        ],
+        "operationId": "orgs/list-custom-roles",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/orgs#list-custom-repository-roles-in-an-organization"
+        },
+        "parameters": [
+          {
+            "name": "organization_id",
+            "description": "The unique identifier of the organization.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response - list of custom role names",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_count": {
+                      "description": "The number of custom roles in this organization",
+                      "example": 3,
+                      "type": "integer"
+                    },
+                    "custom_roles": {
+                      "type": "array",
+                      "items": {
+                        "title": "Organization Custom Repository Role",
+                        "description": "Custom repository roles created by organization administrators",
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "description": "The unique identifier of the custom role.",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "The name of the custom role.",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "total_count": 2,
+                      "custom_roles": [
+                        {
+                          "id": 8030,
+                          "name": "Developer"
+                        },
+                        {
+                          "id": 8031,
+                          "name": "Designer"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "orgs",
+          "subcategory": "custom_roles"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
     "/orgs/{org}": {
       "get": {
         "summary": "Get an organization",
@@ -30100,8 +30197,9 @@
                                   },
                                   "use_squash_pr_title_as_default": {
                                     "type": "boolean",
-                                    "description": "Whether a squash merge commit can use the pull request title as default.",
-                                    "default": false
+                                    "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                                    "default": false,
+                                    "deprecated": true
                                   },
                                   "squash_merge_commit_title": {
                                     "type": "string",
@@ -31866,8 +31964,9 @@
                                   },
                                   "use_squash_pr_title_as_default": {
                                     "type": "boolean",
-                                    "description": "Whether a squash merge commit can use the pull request title as default.",
-                                    "default": false
+                                    "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                                    "default": false,
+                                    "deprecated": true
                                   },
                                   "squash_merge_commit_title": {
                                     "type": "string",
@@ -32448,7 +32547,7 @@
     },
     "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs": {
       "get": {
-        "summary": "List workflow runs",
+        "summary": "List workflow runs for a workflow",
         "description": "List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#parameters).\n\nAnyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.",
         "tags": [
           "actions"
@@ -34640,8 +34739,9 @@
                                   },
                                   "use_squash_pr_title_as_default": {
                                     "type": "boolean",
-                                    "description": "Whether a squash merge commit can use the pull request title as default.",
-                                    "default": false
+                                    "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                                    "default": false,
+                                    "deprecated": true
                                   },
                                   "squash_merge_commit_title": {
                                     "type": "string",
@@ -36406,8 +36506,9 @@
                                   },
                                   "use_squash_pr_title_as_default": {
                                     "type": "boolean",
-                                    "description": "Whether a squash merge commit can use the pull request title as default.",
-                                    "default": false
+                                    "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                                    "default": false,
+                                    "deprecated": true
                                   },
                                   "squash_merge_commit_title": {
                                     "type": "string",
@@ -39910,8 +40011,9 @@
                         },
                         "use_squash_pr_title_as_default": {
                           "type": "boolean",
-                          "description": "Whether a squash merge commit can use the pull request title as default.",
-                          "default": false
+                          "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                          "default": false,
+                          "deprecated": true
                         },
                         "squash_merge_commit_title": {
                           "type": "string",
@@ -41348,8 +41450,9 @@
                         },
                         "use_squash_pr_title_as_default": {
                           "type": "boolean",
-                          "description": "Whether a squash merge commit can use the pull request title as default.",
-                          "default": false
+                          "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                          "default": false,
+                          "deprecated": true
                         },
                         "squash_merge_commit_title": {
                           "type": "string",
@@ -42541,8 +42644,9 @@
                         },
                         "use_squash_pr_title_as_default": {
                           "type": "boolean",
-                          "description": "Whether a squash merge commit can use the pull request title as default.",
-                          "default": false
+                          "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                          "default": false,
+                          "deprecated": true
                         },
                         "squash_merge_commit_title": {
                           "type": "string",
@@ -51539,8 +51643,9 @@
                           },
                           "use_squash_pr_title_as_default": {
                             "type": "boolean",
-                            "description": "Whether a squash merge commit can use the pull request title as default.",
-                            "default": false
+                            "description": "Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.",
+                            "default": false,
+                            "deprecated": true
                           },
                           "squash_merge_commit_title": {
                             "type": "string",
