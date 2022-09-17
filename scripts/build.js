@@ -189,6 +189,10 @@ function toFromFilename(path, latestGhesVersion) {
     return "api.github.com.deref.json";
   }
 
+  if (filename.startsWith("ghec")) {
+    return "api.github.com.deref.json";
+  }
+
   if (filename.startsWith(`ghes-${latestGhesVersion}`)) {
     return "api.github.com.deref.json";
   }
