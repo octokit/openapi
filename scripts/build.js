@@ -476,7 +476,13 @@ function findRefs(obj) {
   mapObj(
     obj,
     (key, value) => {
-      if (key === "$ref") {
+      // In our SCIM APIs, we have actual attributes called `$ref` which aren't
+      // references to be unfurled.
+      if (
+        key === "$ref" &&
+        typeof value === "string" &&
+        value.startsWith("#/")
+      ) {
         // value is e.g. "#/components/parameters/per-page"
         newRefs.add(value.substr(2).replace(/\//g, "."));
       }
