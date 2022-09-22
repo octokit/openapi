@@ -2,6 +2,8 @@ module.exports = {
   schemas: {
     ["api.github.com.deref"]: require("./generated/api.github.com.deref.json"),
     ["api.github.com"]: require("./generated/api.github.com.json"),
+    ["ghec.deref"]: require("./generated/ghec.deref.json"),
+    ["ghec"]: require("./generated/ghec.json"),
     ["ghes-3.2.deref"]: require("./generated/ghes-3.2.deref.json"),
     ["ghes-3.2"]: require("./generated/ghes-3.2.json"),
     ["ghes-3.3.deref"]: require("./generated/ghes-3.3.deref.json"),

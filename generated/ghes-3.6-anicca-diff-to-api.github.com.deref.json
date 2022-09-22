@@ -8439,7 +8439,7 @@
                   }
                 }
               },
-              "description": "Validation failed"
+              "description": "Validation failed, or the endpoint has been spammed."
             }
           },
           "summary": "Create a new authorization",
@@ -10010,7 +10010,7 @@
                   }
                 }
               },
-              "description": "Validation failed"
+              "description": "Validation failed, or the endpoint has been spammed."
             }
           },
           "summary": "Get-or-create an authorization for a specific app",
@@ -11532,7 +11532,7 @@
                   }
                 }
               },
-              "description": "Validation failed"
+              "description": "Validation failed, or the endpoint has been spammed."
             }
           },
           "summary": "Get-or-create an authorization for a specific app and fingerprint",
@@ -13200,7 +13200,7 @@
                   }
                 }
               },
-              "description": "Validation failed"
+              "description": "Validation failed, or the endpoint has been spammed."
             }
           },
           "summary": "Update an existing authorization",
@@ -14417,6 +14417,1220 @@
           }
         }
       },
+      "/enterprises/{enterprise}/audit-log": {
+        "get": {
+          "deprecated": null,
+          "description": "Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#get-the-audit-log-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/get-audit-log",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.6/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).",
+              "in": "query",
+              "name": "phrase",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The event types to include:\n\n- `web` - returns web (non-Git) events.\n- `git` - returns Git events.\n- `all` - returns both web and Git events.\n\nThe default is `web`.",
+              "in": "query",
+              "name": "include",
+              "required": false,
+              "schema": {
+                "enum": [
+                  "web",
+                  "git",
+                  "all"
+                ],
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.",
+              "in": "query",
+              "name": "after",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
+              "in": "query",
+              "name": "before",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The order of audit log events. To list newest events first, specify `desc`. To list oldest events first, specify `asc`.\n\nThe default is `desc`.",
+              "in": "query",
+              "name": "order",
+              "required": false,
+              "schema": {
+                "enum": [
+                  "desc",
+                  "asc"
+                ],
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "@timestamp": 1635940599755,
+                          "action": "pull_request.merge",
+                          "actor": "mona-admin",
+                          "actor_id": 7,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business": "github",
+                          "business_id": 1,
+                          "created_at": 1635940599755,
+                          "data": {
+                            "actor_session": 1,
+                            "category_type": "Resource Management",
+                            "client_id": 322299977.1635936,
+                            "controller_action": "merge",
+                            "method": "POST",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/pull/1",
+                            "request_category": "other",
+                            "request_id": "e4dabc4d-ba16-4bca-1234-649be7ae1188",
+                            "server_id": "5d17aab5-fd9f-abcd-a820-16bed246441b",
+                            "url": "https://example.com/octo-org/octo-repo/pull/1/merge",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_requests#merge",
+                          "operation_type": "modify",
+                          "org": "octo-org",
+                          "org_id": 8,
+                          "repo": "octo-org/octo-repo",
+                          "repo_id": 17
+                        },
+                        {
+                          "@timestamp": 1635940593079,
+                          "action": "pull_request_review.submit",
+                          "actor": "mona-admin",
+                          "actor_id": 7,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business_id": 1,
+                          "created_at": 1635940593079,
+                          "data": {
+                            "actor_session": 1,
+                            "allowed": true,
+                            "body": null,
+                            "category_type": "Resource Management",
+                            "client_id": 322299977.1635936,
+                            "controller_action": "create",
+                            "id": 1,
+                            "issue_id": 1,
+                            "method": "PUT",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/pull/1/files",
+                            "request_category": "other",
+                            "request_id": "c0f63bb7-17b6-4796-940c-12345c5a581b",
+                            "review_id": 1,
+                            "server_id": "2abc1234-f651-43e3-9696-e942ad5f8c89",
+                            "spammy": false,
+                            "state": 40,
+                            "url": "https://example.com/octo-org/octo-repo/pull/1/reviews",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_request_review_events#create",
+                          "operation_type": "modify",
+                          "org_id": 8
+                        },
+                        {
+                          "@timestamp": 1635940554161,
+                          "action": "pull_request.create",
+                          "actor": "mona",
+                          "actor_id": 9,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business": "github",
+                          "business_id": 1,
+                          "created_at": 1635940554161,
+                          "data": {
+                            "actor_session": 2,
+                            "category_type": "Resource Management",
+                            "client_id": 386351111.163594,
+                            "controller_action": "create",
+                            "method": "POST",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/compare/main...mona:patch-1",
+                            "request_category": "other",
+                            "request_id": "2773abeb-477f-4ebf-a017-f8e8a206c305",
+                            "server_id": "796e3115-4ce8-4606-8fd0-99ea57a2e12b",
+                            "url": "https://example.com/octo-org/octo-repo/pull/create?base=octo-org%3Amain&head=mona%3Apatch-1",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_requests#create",
+                          "operation_type": "create",
+                          "org": "octo-org",
+                          "org_id": 8,
+                          "repo": "octo-org/octo-repo",
+                          "repo_id": 17,
+                          "user_id": 9
+                        }
+                      ]
+                    }
+                  },
+                  "schema": {
+                    "items": {
+                      "properties": {
+                        "@timestamp": {
+                          "description": "The time the audit log event occurred, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).",
+                          "type": "integer"
+                        },
+                        "_document_id": {
+                          "description": "A unique identifier for an audit event.",
+                          "type": "string"
+                        },
+                        "action": {
+                          "description": "The name of the action that was performed, for example `user.login` or `repo.create`.",
+                          "type": "string"
+                        },
+                        "active": {
+                          "type": "boolean"
+                        },
+                        "active_was": {
+                          "type": "boolean"
+                        },
+                        "actor": {
+                          "description": "The actor who performed the action.",
+                          "type": "string"
+                        },
+                        "actor_id": {
+                          "description": "The id of the actor who performed the action.",
+                          "type": "integer"
+                        },
+                        "actor_location": {
+                          "properties": {
+                            "country_name": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "blocked_user": {
+                          "description": "The username of the account being blocked.",
+                          "type": "string"
+                        },
+                        "business": {
+                          "type": "string"
+                        },
+                        "config": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "config_was": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "content_type": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "description": "The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).",
+                          "type": "integer"
+                        },
+                        "data": {
+                          "additionalProperties": true,
+                          "type": "object"
+                        },
+                        "deploy_key_fingerprint": {
+                          "type": "string"
+                        },
+                        "emoji": {
+                          "type": "string"
+                        },
+                        "events": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "events_were": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "explanation": {
+                          "type": "string"
+                        },
+                        "fingerprint": {
+                          "type": "string"
+                        },
+                        "hook_id": {
+                          "type": "integer"
+                        },
+                        "limited_availability": {
+                          "type": "boolean"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "old_user": {
+                          "type": "string"
+                        },
+                        "openssh_public_key": {
+                          "type": "string"
+                        },
+                        "org": {
+                          "type": "string"
+                        },
+                        "org_id": {
+                          "type": "integer"
+                        },
+                        "previous_visibility": {
+                          "type": "string"
+                        },
+                        "read_only": {
+                          "type": "boolean"
+                        },
+                        "repo": {
+                          "description": "The name of the repository.",
+                          "type": "string"
+                        },
+                        "repository": {
+                          "description": "The name of the repository.",
+                          "type": "string"
+                        },
+                        "repository_public": {
+                          "type": "boolean"
+                        },
+                        "target_login": {
+                          "type": "string"
+                        },
+                        "team": {
+                          "type": "string"
+                        },
+                        "transport_protocol": {
+                          "description": "The type of protocol (for example, HTTP or SSH) used to transfer Git data.",
+                          "type": "integer"
+                        },
+                        "transport_protocol_name": {
+                          "description": "A human readable name for the protocol (for example, HTTP or SSH) used to transfer Git data.",
+                          "type": "string"
+                        },
+                        "user": {
+                          "description": "The user that was affected by the action performed (if available).",
+                          "type": "string"
+                        },
+                        "visibility": {
+                          "description": "The repository visibility, for example `public` or `private`.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get the audit log for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": true,
+            "subcategory": "audit-log"
+          },
+          "x-octokit": {
+            "changes": [
+              {
+                "before": {
+                  "operationId": "audit-log/get-audit-log"
+                },
+                "date": "2021-04-30",
+                "type": "OPERATION"
+              }
+            ]
+          }
+        }
+      },
+      "/orgs/{org}/audit-log": {
+        "get": {
+          "deprecated": null,
+          "description": "Gets the audit log for an organization. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/enterprise-server@3.6/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization).\"\n\nTo use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.\n\nBy default, the response includes up to 30 events from the past three months. Use the `phrase` parameter to filter results and retrieve older events. For example, use the `phrase` parameter with the `created` qualifier to filter events based on when the events occurred. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/enterprise-server@3.6/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).\"\n\nUse pagination to retrieve fewer or more than 30 events. For more information, see \"[Resources in the REST API](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/orgs#get-audit-log"
+          },
+          "operationId": "orgs/get-audit-log",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.6/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).",
+              "in": "query",
+              "name": "phrase",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The event types to include:\n\n- `web` - returns web (non-Git) events.\n- `git` - returns Git events.\n- `all` - returns both web and Git events.\n\nThe default is `web`.",
+              "in": "query",
+              "name": "include",
+              "required": false,
+              "schema": {
+                "enum": [
+                  "web",
+                  "git",
+                  "all"
+                ],
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.",
+              "in": "query",
+              "name": "after",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
+              "in": "query",
+              "name": "before",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The order of audit log events. To list newest events first, specify `desc`. To list oldest events first, specify `asc`.\n\nThe default is `desc`.",
+              "in": "query",
+              "name": "order",
+              "required": false,
+              "schema": {
+                "enum": [
+                  "desc",
+                  "asc"
+                ],
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "@timestamp": 1635940599755,
+                          "action": "pull_request.merge",
+                          "actor": "mona-admin",
+                          "actor_id": 7,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business": "github",
+                          "business_id": 1,
+                          "created_at": 1635940599755,
+                          "data": {
+                            "actor_session": 1,
+                            "category_type": "Resource Management",
+                            "client_id": 322299977.1635936,
+                            "controller_action": "merge",
+                            "method": "POST",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/pull/1",
+                            "request_category": "other",
+                            "request_id": "e4dabc4d-ba16-4bca-1234-649be7ae1188",
+                            "server_id": "5d17aab5-fd9f-abcd-a820-16bed246441b",
+                            "url": "https://example.com/octo-org/octo-repo/pull/1/merge",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_requests#merge",
+                          "operation_type": "modify",
+                          "org": "octo-org",
+                          "org_id": 8,
+                          "repo": "octo-org/octo-repo",
+                          "repo_id": 17
+                        },
+                        {
+                          "@timestamp": 1635940593079,
+                          "action": "pull_request_review.submit",
+                          "actor": "mona-admin",
+                          "actor_id": 7,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business_id": 1,
+                          "created_at": 1635940593079,
+                          "data": {
+                            "actor_session": 1,
+                            "allowed": true,
+                            "body": null,
+                            "category_type": "Resource Management",
+                            "client_id": 322299977.1635936,
+                            "controller_action": "create",
+                            "id": 1,
+                            "issue_id": 1,
+                            "method": "PUT",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/pull/1/files",
+                            "request_category": "other",
+                            "request_id": "c0f63bb7-17b6-4796-940c-12345c5a581b",
+                            "review_id": 1,
+                            "server_id": "2abc1234-f651-43e3-9696-e942ad5f8c89",
+                            "spammy": false,
+                            "state": 40,
+                            "url": "https://example.com/octo-org/octo-repo/pull/1/reviews",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_request_review_events#create",
+                          "operation_type": "modify",
+                          "org_id": 8
+                        },
+                        {
+                          "@timestamp": 1635940554161,
+                          "action": "pull_request.create",
+                          "actor": "mona",
+                          "actor_id": 9,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business": "github",
+                          "business_id": 1,
+                          "created_at": 1635940554161,
+                          "data": {
+                            "actor_session": 2,
+                            "category_type": "Resource Management",
+                            "client_id": 386351111.163594,
+                            "controller_action": "create",
+                            "method": "POST",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/compare/main...mona:patch-1",
+                            "request_category": "other",
+                            "request_id": "2773abeb-477f-4ebf-a017-f8e8a206c305",
+                            "server_id": "796e3115-4ce8-4606-8fd0-99ea57a2e12b",
+                            "url": "https://example.com/octo-org/octo-repo/pull/create?base=octo-org%3Amain&head=mona%3Apatch-1",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_requests#create",
+                          "operation_type": "create",
+                          "org": "octo-org",
+                          "org_id": 8,
+                          "repo": "octo-org/octo-repo",
+                          "repo_id": 17,
+                          "user_id": 9
+                        }
+                      ]
+                    }
+                  },
+                  "schema": {
+                    "items": {
+                      "properties": {
+                        "@timestamp": {
+                          "description": "The time the audit log event occurred, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).",
+                          "type": "integer"
+                        },
+                        "_document_id": {
+                          "description": "A unique identifier for an audit event.",
+                          "type": "string"
+                        },
+                        "action": {
+                          "description": "The name of the action that was performed, for example `user.login` or `repo.create`.",
+                          "type": "string"
+                        },
+                        "active": {
+                          "type": "boolean"
+                        },
+                        "active_was": {
+                          "type": "boolean"
+                        },
+                        "actor": {
+                          "description": "The actor who performed the action.",
+                          "type": "string"
+                        },
+                        "actor_id": {
+                          "description": "The id of the actor who performed the action.",
+                          "type": "integer"
+                        },
+                        "actor_location": {
+                          "properties": {
+                            "country_name": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "blocked_user": {
+                          "description": "The username of the account being blocked.",
+                          "type": "string"
+                        },
+                        "business": {
+                          "type": "string"
+                        },
+                        "config": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "config_was": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "content_type": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "description": "The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).",
+                          "type": "integer"
+                        },
+                        "data": {
+                          "additionalProperties": true,
+                          "type": "object"
+                        },
+                        "deploy_key_fingerprint": {
+                          "type": "string"
+                        },
+                        "emoji": {
+                          "type": "string"
+                        },
+                        "events": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "events_were": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "explanation": {
+                          "type": "string"
+                        },
+                        "fingerprint": {
+                          "type": "string"
+                        },
+                        "hook_id": {
+                          "type": "integer"
+                        },
+                        "limited_availability": {
+                          "type": "boolean"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "old_user": {
+                          "type": "string"
+                        },
+                        "openssh_public_key": {
+                          "type": "string"
+                        },
+                        "org": {
+                          "type": "string"
+                        },
+                        "org_id": {
+                          "type": "integer"
+                        },
+                        "previous_visibility": {
+                          "type": "string"
+                        },
+                        "read_only": {
+                          "type": "boolean"
+                        },
+                        "repo": {
+                          "description": "The name of the repository.",
+                          "type": "string"
+                        },
+                        "repository": {
+                          "description": "The name of the repository.",
+                          "type": "string"
+                        },
+                        "repository_public": {
+                          "type": "boolean"
+                        },
+                        "target_login": {
+                          "type": "string"
+                        },
+                        "team": {
+                          "type": "string"
+                        },
+                        "transport_protocol": {
+                          "description": "The type of protocol (for example, HTTP or SSH) used to transfer Git data.",
+                          "type": "integer"
+                        },
+                        "transport_protocol_name": {
+                          "description": "A human readable name for the protocol (for example, HTTP or SSH) used to transfer Git data.",
+                          "type": "string"
+                        },
+                        "user": {
+                          "description": "The user that was affected by the action performed (if available).",
+                          "type": "string"
+                        },
+                        "visibility": {
+                          "description": "The repository visibility, for example `public` or `private`.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get the audit log for an organization",
+          "tags": [
+            "orgs"
+          ],
+          "x-github": {
+            "category": "orgs",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": null
+          }
+        }
+      },
+      "/orgs/{org}/external-group/{group_id}": {
+        "get": {
+          "deprecated": null,
+          "description": "Displays information about the specific group's usage.  Provides a list of the group's external members as well as a list of teams that this group is connected to.\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams#external-idp-group-info-for-an-organization"
+          },
+          "operationId": "teams/external-idp-group-info-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the group.",
+              "in": "path",
+              "name": "group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "group_id": "123",
+                        "group_name": "Octocat admins",
+                        "members": [
+                          {
+                            "member_email": "mona_lisa@github.com",
+                            "member_id": 1,
+                            "member_login": "mona-lisa_eocsaxrs",
+                            "member_name": "Mona Lisa"
+                          },
+                          {
+                            "member_email": "octo_lisa@github.com",
+                            "member_id": 2,
+                            "member_login": "octo-lisa_eocsaxrs",
+                            "member_name": "Octo Lisa"
+                          }
+                        ],
+                        "teams": [
+                          {
+                            "team_id": 1,
+                            "team_name": "team-test"
+                          },
+                          {
+                            "team_id": 2,
+                            "team_name": "team-test2"
+                          }
+                        ],
+                        "updated_at": "2021-01-24T11:31:04-06:00"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "Information about an external group's usage and its members",
+                    "properties": {
+                      "group_id": {
+                        "description": "The internal ID of the group",
+                        "example": 1,
+                        "type": "integer"
+                      },
+                      "group_name": {
+                        "description": "The display name for the group",
+                        "example": "group-azuread-test",
+                        "type": "string"
+                      },
+                      "members": {
+                        "description": "An array of external members linked to this group",
+                        "example": [
+                          {
+                            "member_email": "mona_lisa@github.com",
+                            "member_id": 1,
+                            "member_login": "mona-lisa_eocsaxrs",
+                            "member_name": "Mona Lisa"
+                          },
+                          {
+                            "member_email": "octo_lisa@github.com",
+                            "member_id": 2,
+                            "member_login": "octo-lisa_eocsaxrs",
+                            "member_name": "Octo Lisa"
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "member_email": {
+                              "description": "An email attached to a user",
+                              "example": "mona_lisa@github.com",
+                              "type": "string"
+                            },
+                            "member_id": {
+                              "description": "The internal user ID of the identity",
+                              "example": 1,
+                              "type": "integer"
+                            },
+                            "member_login": {
+                              "description": "The handle/login for the user",
+                              "example": "mona-lisa_eocsaxrs",
+                              "type": "string"
+                            },
+                            "member_name": {
+                              "description": "The user display name/profile name",
+                              "example": "Mona Lisa",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "member_id",
+                            "member_login",
+                            "member_name",
+                            "member_email"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "teams": {
+                        "description": "An array of teams linked to this group",
+                        "example": [
+                          {
+                            "team_id": 1,
+                            "team_name": "team-test"
+                          },
+                          {
+                            "team_id": 2,
+                            "team_name": "team-test2"
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "team_id": {
+                              "description": "The id for a team",
+                              "example": 1,
+                              "type": "integer"
+                            },
+                            "team_name": {
+                              "description": "The name of the team",
+                              "example": "team-test",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "team_id",
+                            "team_name"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "updated_at": {
+                        "description": "The date when the group was last updated_at",
+                        "example": "2021-01-03 22:27:15:000 -700",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "group_id",
+                      "group_name",
+                      "teams",
+                      "members"
+                    ],
+                    "title": "ExternalGroup",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get an external group",
+          "tags": [
+            "teams"
+          ],
+          "x-github": {
+            "category": "teams",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "external-groups"
+          }
+        }
+      },
+      "/orgs/{org}/external-groups": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists external groups available in an organization. You can query the groups using the `display_name` parameter, only groups with a `group_name` containing the text provided in the `display_name` parameter will be returned.  You can also limit your page results using the `per_page` parameter. GitHub Enterprise Server generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see \"[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89).\"\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams#list-external-idp-groups-for-an-organization"
+          },
+          "operationId": "teams/list-external-idp-groups-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page token",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Limits the list to groups containing the text in the group name",
+              "in": "query",
+              "name": "display_name",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "groups": [
+                          {
+                            "group_id": "123",
+                            "group_name": "Octocat admins",
+                            "updated_at": "2021-01-24T11:31:04-06:00"
+                          },
+                          {
+                            "group_id": "456",
+                            "group_name": "Octocat docs members",
+                            "updated_at": "2021-03-24T11:31:04-06:00"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "A list of external groups available to be connected to a team",
+                    "properties": {
+                      "groups": {
+                        "description": "An array of external groups available to be mapped to a team",
+                        "example": [
+                          {
+                            "group_id": 1,
+                            "group_name": "group-azuread-test",
+                            "updated_at": "2021-01-03 22:27:15:000 -700"
+                          },
+                          {
+                            "group_id": 2,
+                            "group_name": "group-azuread-test2",
+                            "updated_at": "2021-06-03 22:27:15:000 -700"
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "group_id": {
+                              "description": "The internal ID of the group",
+                              "example": 1,
+                              "type": "integer"
+                            },
+                            "group_name": {
+                              "description": "The display name of the group",
+                              "example": "group-azuread-test",
+                              "type": "string"
+                            },
+                            "updated_at": {
+                              "description": "The time of the last update for this group",
+                              "example": "2019-06-03 22:27:15:000 -700",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "group_id",
+                            "group_name",
+                            "updated_at"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "title": "ExternalGroups",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response",
+              "headers": {
+                "Link": {
+                  "example": "<https://api.github.com/resource?per_page=2&page=url-encoded-next-page-token>; rel=\"next\"",
+                  "required": null,
+                  "schema": {
+                    "type": "string"
+                  },
+                  "style": "simple"
+                }
+              }
+            }
+          },
+          "summary": "List external groups in an organization",
+          "tags": [
+            "teams"
+          ],
+          "x-github": {
+            "category": "teams",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "external-groups"
+          }
+        }
+      },
       "/orgs/{org}/pre-receive-hooks": {
         "get": {
           "deprecated": null,
@@ -14821,6 +16035,390 @@
             "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": "org-pre-receive-hooks"
+          }
+        }
+      },
+      "/orgs/{org}/teams/{team_slug}/external-groups": {
+        "delete": {
+          "deprecated": null,
+          "description": "Deletes a connection between a team and an external group.\n\nYou can manage team membership with your IdP using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams#unlink-external-idp-group-team-connection"
+          },
+          "operationId": "teams/unlink-external-idp-group-from-team-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The slug of the team name.",
+              "in": "path",
+              "name": "team_slug",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Remove the connection between an external group and a team",
+          "tags": [
+            "teams"
+          ],
+          "x-github": {
+            "category": "teams",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": true,
+            "subcategory": "external-groups"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "description": "Lists a connection between a team and an external group.\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams#list-external-idp-group-team-connection"
+          },
+          "operationId": "teams/list-linked-external-idp-groups-to-team-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The slug of the team name.",
+              "in": "path",
+              "name": "team_slug",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "groups": [
+                          {
+                            "group_id": "123",
+                            "group_name": "Octocat admins",
+                            "updated_at": "2021-01-24T11:31:04-06:00"
+                          },
+                          {
+                            "group_id": "456",
+                            "group_name": "Octocat docs members",
+                            "updated_at": "2021-03-24T11:31:04-06:00"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "A list of external groups available to be connected to a team",
+                    "properties": {
+                      "groups": {
+                        "description": "An array of external groups available to be mapped to a team",
+                        "example": [
+                          {
+                            "group_id": 1,
+                            "group_name": "group-azuread-test",
+                            "updated_at": "2021-01-03 22:27:15:000 -700"
+                          },
+                          {
+                            "group_id": 2,
+                            "group_name": "group-azuread-test2",
+                            "updated_at": "2021-06-03 22:27:15:000 -700"
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "group_id": {
+                              "description": "The internal ID of the group",
+                              "example": 1,
+                              "type": "integer"
+                            },
+                            "group_name": {
+                              "description": "The display name of the group",
+                              "example": "group-azuread-test",
+                              "type": "string"
+                            },
+                            "updated_at": {
+                              "description": "The time of the last update for this group",
+                              "example": "2019-06-03 22:27:15:000 -700",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "group_id",
+                            "group_name",
+                            "updated_at"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "title": "ExternalGroups",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "List a connection between an external group and a team",
+          "tags": [
+            "teams"
+          ],
+          "x-github": {
+            "category": "teams",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "external-groups"
+          }
+        },
+        "patch": {
+          "deprecated": null,
+          "description": "Creates a connection between a team and an external group.  Only one external group can be linked to a team.\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams#link-external-idp-group-team-connection"
+          },
+          "operationId": "teams/link-external-idp-group-to-team-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The slug of the team name.",
+              "in": "path",
+              "name": "team_slug",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "group_id": 123
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "group_id": {
+                      "description": "External Group Id",
+                      "example": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "group_id"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "group_id": "123",
+                        "group_name": "Octocat admins",
+                        "members": [
+                          {
+                            "member_email": "mona_lisa@github.com",
+                            "member_id": 1,
+                            "member_login": "mona-lisa_eocsaxrs",
+                            "member_name": "Mona Lisa"
+                          },
+                          {
+                            "member_email": "octo_lisa@github.com",
+                            "member_id": 2,
+                            "member_login": "octo-lisa_eocsaxrs",
+                            "member_name": "Octo Lisa"
+                          }
+                        ],
+                        "teams": [
+                          {
+                            "team_id": 1,
+                            "team_name": "team-test"
+                          },
+                          {
+                            "team_id": 2,
+                            "team_name": "team-test2"
+                          }
+                        ],
+                        "updated_at": "2021-01-24T11:31:04-06:00"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "Information about an external group's usage and its members",
+                    "properties": {
+                      "group_id": {
+                        "description": "The internal ID of the group",
+                        "example": 1,
+                        "type": "integer"
+                      },
+                      "group_name": {
+                        "description": "The display name for the group",
+                        "example": "group-azuread-test",
+                        "type": "string"
+                      },
+                      "members": {
+                        "description": "An array of external members linked to this group",
+                        "example": [
+                          {
+                            "member_email": "mona_lisa@github.com",
+                            "member_id": 1,
+                            "member_login": "mona-lisa_eocsaxrs",
+                            "member_name": "Mona Lisa"
+                          },
+                          {
+                            "member_email": "octo_lisa@github.com",
+                            "member_id": 2,
+                            "member_login": "octo-lisa_eocsaxrs",
+                            "member_name": "Octo Lisa"
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "member_email": {
+                              "description": "An email attached to a user",
+                              "example": "mona_lisa@github.com",
+                              "type": "string"
+                            },
+                            "member_id": {
+                              "description": "The internal user ID of the identity",
+                              "example": 1,
+                              "type": "integer"
+                            },
+                            "member_login": {
+                              "description": "The handle/login for the user",
+                              "example": "mona-lisa_eocsaxrs",
+                              "type": "string"
+                            },
+                            "member_name": {
+                              "description": "The user display name/profile name",
+                              "example": "Mona Lisa",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "member_id",
+                            "member_login",
+                            "member_name",
+                            "member_email"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "teams": {
+                        "description": "An array of teams linked to this group",
+                        "example": [
+                          {
+                            "team_id": 1,
+                            "team_name": "team-test"
+                          },
+                          {
+                            "team_id": 2,
+                            "team_name": "team-test2"
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "team_id": {
+                              "description": "The id for a team",
+                              "example": 1,
+                              "type": "integer"
+                            },
+                            "team_name": {
+                              "description": "The name of the team",
+                              "example": "team-test",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "team_id",
+                            "team_name"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "updated_at": {
+                        "description": "The date when the group was last updated_at",
+                        "example": "2021-01-03 22:27:15:000 -700",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "group_id",
+                      "group_name",
+                      "teams",
+                      "members"
+                    ],
+                    "title": "ExternalGroup",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Update the connection between an external group and a team",
+          "tags": [
+            "teams"
+          ],
+          "x-github": {
+            "category": "teams",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": true,
+            "subcategory": "external-groups"
           }
         }
       },
@@ -15610,6 +17208,2284 @@
             "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": null
+          }
+        }
+      },
+      "/scim/v2/enterprises/{enterprise}/Groups": {
+        "get": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#list-provisioned-scim-groups-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/list-provisioned-groups-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "Used for pagination: the index of the first result to return.",
+              "in": "query",
+              "name": "startIndex",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Used for pagination: the number of results to return.",
+              "in": "query",
+              "name": "count",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "filter results",
+              "in": "query",
+              "name": "filter",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "attributes to exclude",
+              "in": "query",
+              "name": "excludedAttributes",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "Resources": [
+                          {
+                            "displayName": "octo-org",
+                            "externalId": null,
+                            "id": "abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                            "members": [
+                              {
+                                "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                                "display": "octocat@github.com",
+                                "value": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc"
+                              },
+                              {
+                                "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5",
+                                "display": "hubot@example.com",
+                                "value": "aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5"
+                              }
+                            ],
+                            "meta": {
+                              "created": "2020-06-09T03:10:17.000+10:00",
+                              "lastModified": "2020-06-09T03:10:17.000+10:00",
+                              "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Groups/abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                              "resourceType": "Group"
+                            },
+                            "schemas": [
+                              "urn:ietf:params:scim:schemas:core:2.0:Group"
+                            ]
+                          },
+                          {
+                            "displayName": "octo-docs-org",
+                            "externalId": null,
+                            "id": "5e75bbbb-aa1a-11ea-8644-75ff655cdddd",
+                            "members": [
+                              {
+                                "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                                "display": "octocat@github.com",
+                                "value": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc"
+                              }
+                            ],
+                            "meta": {
+                              "created": "2020-06-09T16:28:01.000+10:00",
+                              "lastModified": "2020-06-09T16:28:01.000+10:00",
+                              "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Groups/5e75bbbb-aa1a-11ea-8644-75ff655cdddd",
+                              "resourceType": "Group"
+                            },
+                            "schemas": [
+                              "urn:ietf:params:scim:schemas:core:2.0:Group"
+                            ]
+                          }
+                        ],
+                        "itemsPerPage": 2,
+                        "schemas": [
+                          "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+                        ],
+                        "startIndex": 1,
+                        "totalResults": 2
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "Resources": {
+                        "items": {
+                          "properties": {
+                            "displayName": {
+                              "type": "string"
+                            },
+                            "externalId": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string"
+                            },
+                            "members": {
+                              "items": {
+                                "properties": {
+                                  "$ref": {
+                                    "type": "string"
+                                  },
+                                  "display": {
+                                    "type": "string"
+                                  },
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "meta": {
+                              "properties": {
+                                "created": {
+                                  "type": "string"
+                                },
+                                "lastModified": {
+                                  "type": "string"
+                                },
+                                "location": {
+                                  "type": "string"
+                                },
+                                "resourceType": {
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "schemas": {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            }
+                          },
+                          "required": [
+                            "schemas",
+                            "id"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "itemsPerPage": {
+                        "type": "number"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "startIndex": {
+                        "type": "number"
+                      },
+                      "totalResults": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "totalResults",
+                      "itemsPerPage",
+                      "startIndex",
+                      "Resources"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "List provisioned SCIM groups for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        },
+        "post": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.\n\nProvision an enterprise group, and invite users to the group. This sends invitation emails to the email address of the invited users to join the GitHub organization that the SCIM group corresponds to.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#provision-a-scim-enterprise-group-and-invite-users"
+          },
+          "operationId": "enterprise-admin/provision-and-invite-enterprise-group",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "displayName": "octo-org",
+                      "members": [
+                        {
+                          "value": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc"
+                        },
+                        {
+                          "value": "aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5"
+                        }
+                      ],
+                      "schemas": [
+                        "urn:ietf:params:scim:schemas:core:2.0:Group"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "displayName": {
+                      "description": "The name of the SCIM group. This must match the GitHub organization that the group maps to.",
+                      "type": "string"
+                    },
+                    "members": {
+                      "items": {
+                        "properties": {
+                          "value": {
+                            "description": "The SCIM user ID for a user.",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "value"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "schemas": {
+                      "description": "The SCIM schema URIs.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "schemas",
+                    "displayName"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "displayName": "octo-org",
+                        "externalId": null,
+                        "id": "abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                        "members": [
+                          {
+                            "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                            "display": "octocat@github.com",
+                            "value": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc"
+                          },
+                          {
+                            "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5",
+                            "display": "hubot@example.com",
+                            "value": "aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5"
+                          }
+                        ],
+                        "meta": {
+                          "created": "2020-06-09T03:10:17.000+10:0",
+                          "lastModified": "2020-06-09T03:10:17.000+10:00",
+                          "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Groups/abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                          "resourceType": "Group"
+                        },
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:Group"
+                        ]
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "externalId": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "members": {
+                        "items": {
+                          "properties": {
+                            "$ref": {
+                              "type": "string"
+                            },
+                            "display": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "meta": {
+                        "properties": {
+                          "created": {
+                            "type": "string"
+                          },
+                          "lastModified": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "resourceType": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Provision a SCIM enterprise group and invite users",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        }
+      },
+      "/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#delete-a-scim-group-from-an-enterprise"
+          },
+          "operationId": "enterprise-admin/delete-scim-group-from-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Identifier generated by the GitHub SCIM endpoint.",
+              "in": "path",
+              "name": "scim_group_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Delete a SCIM group from an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#get-scim-provisioning-information-for-an-enterprise-group"
+          },
+          "operationId": "enterprise-admin/get-provisioning-information-for-enterprise-group",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Identifier generated by the GitHub SCIM endpoint.",
+              "in": "path",
+              "name": "scim_group_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "Attributes to exclude.",
+              "in": "query",
+              "name": "excludedAttributes",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "displayName": "octo-org",
+                        "externalId": null,
+                        "id": "abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                        "members": [
+                          {
+                            "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                            "display": "octocat@github.com",
+                            "value": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc"
+                          },
+                          {
+                            "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5",
+                            "display": "hubot@example.com",
+                            "value": "aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5"
+                          }
+                        ],
+                        "meta": {
+                          "created": "2020-06-09T03:10:17.000+10:0",
+                          "lastModified": "2020-06-09T03:10:17.000+10:00",
+                          "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Groups/abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                          "resourceType": "Group"
+                        },
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:Group"
+                        ]
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "externalId": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "members": {
+                        "items": {
+                          "properties": {
+                            "$ref": {
+                              "type": "string"
+                            },
+                            "display": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "meta": {
+                        "properties": {
+                          "created": {
+                            "type": "string"
+                          },
+                          "lastModified": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "resourceType": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get SCIM provisioning information for an enterprise group",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        },
+        "patch": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.\n\nAllows you to change a provisioned group’s individual attributes. To change a group’s values, you must provide a specific Operations JSON format that contains at least one of the add, remove, or replace operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#update-an-attribute-for-a-scim-enterprise-group"
+          },
+          "operationId": "enterprise-admin/update-attribute-for-enterprise-group",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Identifier generated by the GitHub SCIM endpoint.",
+              "in": "path",
+              "name": "scim_group_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "Operations": [
+                        {
+                          "op": "remove",
+                          "path": "members",
+                          "value": [
+                            {
+                              "value": "aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5"
+                            }
+                          ]
+                        }
+                      ],
+                      "schemas": [
+                        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "Operations": {
+                      "description": "Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2).",
+                      "items": {
+                        "properties": {
+                          "op": {
+                            "enum": [
+                              "add",
+                              "Add",
+                              "remove",
+                              "Remove",
+                              "replace",
+                              "Replace"
+                            ],
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "description": "Can be any value - string, number, array or object."
+                          }
+                        },
+                        "required": [
+                          "op"
+                        ],
+                        "type": "object"
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "schemas": {
+                      "description": "The SCIM schema URIs.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "schemas",
+                    "Operations"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "displayName": "octo-org",
+                        "externalId": null,
+                        "id": "abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                        "members": [
+                          {
+                            "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                            "display": "octocat@github.com",
+                            "value": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc"
+                          }
+                        ],
+                        "meta": {
+                          "created": "2020-06-09T03:10:17.000+10:00",
+                          "lastModified": "2020-06-09T03:10:17.000+10:00",
+                          "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Groups/abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                          "resourceType": "Group"
+                        },
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:Group"
+                        ]
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "externalId": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "members": {
+                        "items": {
+                          "properties": {
+                            "$ref": {
+                              "type": "string"
+                            },
+                            "display": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "meta": {
+                        "properties": {
+                          "created": {
+                            "type": "string"
+                          },
+                          "lastModified": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "resourceType": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Update an attribute for a SCIM enterprise group",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.\n\nReplaces an existing provisioned group’s information. You must provide all the information required for the group as if you were provisioning it for the first time. Any existing group information that you don't provide will be removed, including group membership. If you want to only update a specific attribute, use the [Update an attribute for a SCIM enterprise group](#update-an-attribute-for-a-scim-enterprise-group) endpoint instead.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-group"
+          },
+          "operationId": "enterprise-admin/set-information-for-provisioned-enterprise-group",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Identifier generated by the GitHub SCIM endpoint.",
+              "in": "path",
+              "name": "scim_group_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "displayName": "octo-org",
+                      "members": [
+                        {
+                          "value": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc"
+                        },
+                        {
+                          "value": "aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5"
+                        }
+                      ],
+                      "schemas": [
+                        "urn:ietf:params:scim:schemas:core:2.0:Group"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "displayName": {
+                      "description": "The name of the SCIM group. This must match the GitHub organization that the group maps to.",
+                      "type": "string"
+                    },
+                    "members": {
+                      "items": {
+                        "properties": {
+                          "value": {
+                            "description": "The SCIM user ID for a user.",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "value"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "schemas": {
+                      "description": "The SCIM schema URIs.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "schemas",
+                    "displayName"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "displayName": "octo-org",
+                        "externalId": null,
+                        "id": "abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                        "members": [
+                          {
+                            "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                            "display": "octocat@github.com",
+                            "value": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc"
+                          },
+                          {
+                            "$ref": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5",
+                            "display": "hubot@example.com",
+                            "value": "aaaa8c34-a6b2-11ea-9d70-bbbbbd1c8fd5"
+                          }
+                        ],
+                        "meta": {
+                          "created": "2020-06-09T03:10:17.000+10:0",
+                          "lastModified": "2020-06-09T03:10:17.000+10:00",
+                          "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Groups/abcd27f8-a9aa-11ea-8221-f59b2be9cccc",
+                          "resourceType": "Group"
+                        },
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:Group"
+                        ]
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "externalId": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "members": {
+                        "items": {
+                          "properties": {
+                            "$ref": {
+                              "type": "string"
+                            },
+                            "display": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "meta": {
+                        "properties": {
+                          "created": {
+                            "type": "string"
+                          },
+                          "lastModified": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "resourceType": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Set SCIM information for a provisioned enterprise group",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        }
+      },
+      "/scim/v2/enterprises/{enterprise}/Users": {
+        "get": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.\n\nRetrieves a paginated list of all provisioned enterprise members, including pending invitations.\n\nWhen a user with a SAML-provisioned external identity leaves (or is removed from) an enterprise, the account's metadata is immediately removed. However, the returned list of user accounts might not always match the organization or enterprise member list you see on GitHub Enterprise Server. This can happen in certain cases where an external identity associated with an organization will not match an organization member:\n  - When a user with a SCIM-provisioned external identity is removed from an enterprise, the account's metadata is preserved to allow the user to re-join the organization in the future.\n  - When inviting a user to join an organization, you can expect to see their external identity in the results before they accept the invitation, or if the invitation is cancelled (or never accepted).\n  - When a user is invited over SCIM, an external identity is created that matches with the invitee's email address. However, this identity is only linked to a user account when the user accepts the invitation by going through SAML SSO.\n\nThe returned list of external identities can include an entry for a `null` user. These are unlinked SAML identities that are created when a user goes through the following Single Sign-On (SSO) process but does not sign in to their GitHub Enterprise Server account after completing SSO:\n\n1. The user is granted access by the IdP and is not a member of the GitHub Enterprise Server enterprise.\n\n1. The user attempts to access the GitHub Enterprise Server enterprise and initiates the SAML SSO process, and is not currently signed in to their GitHub Enterprise Server account.\n\n1. After successfully authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is prompted to sign in to their GitHub Enterprise Server account:\n   - If the user signs in, their GitHub Enterprise Server account is linked to this entry.\n   - If the user does not sign in (or does not create a new account when prompted), they are not added to the GitHub Enterprise Server enterprise, and the external identity `null` entry remains in place.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#list-scim-provisioned-identities-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/list-provisioned-identities-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "Used for pagination: the index of the first result to return.",
+              "in": "query",
+              "name": "startIndex",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Used for pagination: the number of results to return.",
+              "in": "query",
+              "name": "count",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "filter results",
+              "in": "query",
+              "name": "filter",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "Resources": [
+                          {
+                            "active": true,
+                            "emails": [
+                              {
+                                "primary": true,
+                                "type": "work",
+                                "value": "octocat@github.com"
+                              }
+                            ],
+                            "externalId": "00dowz5dr9oSfDFRA0h7",
+                            "groups": [
+                              {
+                                "value": "468dd3fa-a1d6-11ea-9031-15a1f0d7811d"
+                              }
+                            ],
+                            "id": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                            "meta": {
+                              "created": "2020-05-30T04:02:34.000+10:00",
+                              "lastModified": "2020-05-30T04:05:04.000+10:00",
+                              "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                              "resourceType": "User"
+                            },
+                            "name": {
+                              "familyName": "Octocat",
+                              "givenName": "Mona"
+                            },
+                            "schemas": [
+                              "urn:ietf:params:scim:schemas:core:2.0:User"
+                            ],
+                            "userName": "octocat@github.com"
+                          },
+                          {
+                            "active": true,
+                            "emails": [
+                              {
+                                "primary": true,
+                                "type": "work",
+                                "value": "hubot@example.com"
+                              }
+                            ],
+                            "externalId": "sdfoiausdofiua",
+                            "id": "e18b8c34-a6b2-11ea-9d70-54abbd1c8fd5",
+                            "meta": {
+                              "created": "2020-06-05T08:29:40.000+10:00",
+                              "lastModified": "2020-06-05T08:30:19.000+10:00",
+                              "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/e18b8c34-a6b2-11ea-9d70-54abbd1c8fd5",
+                              "resourceType": "User"
+                            },
+                            "name": {
+                              "familyName": "bot",
+                              "givenName": "hu"
+                            },
+                            "schemas": [
+                              "urn:ietf:params:scim:schemas:core:2.0:User"
+                            ],
+                            "userName": "hubot@example.com"
+                          }
+                        ],
+                        "itemsPerPage": 2,
+                        "schemas": [
+                          "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+                        ],
+                        "startIndex": 1,
+                        "totalResults": 2
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "Resources": {
+                        "items": {
+                          "properties": {
+                            "active": {
+                              "type": "boolean"
+                            },
+                            "emails": {
+                              "items": {
+                                "properties": {
+                                  "primary": {
+                                    "type": "boolean"
+                                  },
+                                  "type": {
+                                    "type": "string"
+                                  },
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "externalId": {
+                              "type": "string"
+                            },
+                            "groups": {
+                              "items": {
+                                "properties": {
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "id": {
+                              "type": "string"
+                            },
+                            "meta": {
+                              "properties": {
+                                "created": {
+                                  "type": "string"
+                                },
+                                "lastModified": {
+                                  "type": "string"
+                                },
+                                "location": {
+                                  "type": "string"
+                                },
+                                "resourceType": {
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "name": {
+                              "properties": {
+                                "familyName": {
+                                  "type": "string"
+                                },
+                                "givenName": {
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "schemas": {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "userName": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "schemas",
+                            "id"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "itemsPerPage": {
+                        "type": "number"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "startIndex": {
+                        "type": "number"
+                      },
+                      "totalResults": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "totalResults",
+                      "itemsPerPage",
+                      "startIndex",
+                      "Resources"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "List SCIM provisioned identities for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        },
+        "post": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.\n\nProvision enterprise membership for a user, and send organization invitation emails to the email address.\n\nYou can optionally include the groups a user will be invited to join. If you do not provide a list of `groups`, the user is provisioned for the enterprise, but no organization invitation emails will be sent.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#provision-and-invite-a-scim-enterprise-user"
+          },
+          "operationId": "enterprise-admin/provision-and-invite-enterprise-user",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "emails": [
+                        {
+                          "primary": true,
+                          "type": "work",
+                          "value": "mona.octocat@okta.example.com"
+                        }
+                      ],
+                      "groups": [
+                        {
+                          "value": "468dd3fa-a1d6-11ea-9031-15a1f0d7811d"
+                        }
+                      ],
+                      "name": {
+                        "familyName": "Octocat",
+                        "givenName": "Mona"
+                      },
+                      "schemas": [
+                        "urn:ietf:params:scim:schemas:core:2.0:User"
+                      ],
+                      "userName": "mona.octocat@okta.example.com"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "emails": {
+                      "description": "List of user emails.",
+                      "items": {
+                        "properties": {
+                          "primary": {
+                            "description": "Whether this email address is the primary address.",
+                            "type": "boolean"
+                          },
+                          "type": {
+                            "description": "The type of email address.",
+                            "type": "string"
+                          },
+                          "value": {
+                            "description": "The email address.",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "value",
+                          "type",
+                          "primary"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "groups": {
+                      "description": "List of SCIM group IDs the user is a member of.",
+                      "items": {
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "name": {
+                      "properties": {
+                        "familyName": {
+                          "description": "The last name of the user.",
+                          "type": "string"
+                        },
+                        "givenName": {
+                          "description": "The first name of the user.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "givenName",
+                        "familyName"
+                      ],
+                      "type": "object"
+                    },
+                    "schemas": {
+                      "description": "The SCIM schema URIs.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "userName": {
+                      "description": "The username for the user.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "schemas",
+                    "userName",
+                    "name",
+                    "emails"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "active": true,
+                        "emails": [
+                          {
+                            "primary": true,
+                            "type": "work",
+                            "value": "mona.octocat@okta.example.com"
+                          }
+                        ],
+                        "externalId": "00dowz5dr9oSfDFRA0h7",
+                        "groups": [
+                          {
+                            "value": "468dd3fa-a1d6-11ea-9031-15a1f0d7811d"
+                          }
+                        ],
+                        "id": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                        "meta": {
+                          "created": "2017-03-09T16:11:13-05:00",
+                          "lastModified": "2017-03-09T16:11:13-05:00",
+                          "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                          "resourceType": "User"
+                        },
+                        "name": {
+                          "familyName": "Octocat",
+                          "givenName": "Mona"
+                        },
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:User"
+                        ],
+                        "userName": "mona.octocat@okta.example.com"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "active": {
+                        "type": "boolean"
+                      },
+                      "emails": {
+                        "items": {
+                          "properties": {
+                            "primary": {
+                              "type": "boolean"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "externalId": {
+                        "type": "string"
+                      },
+                      "groups": {
+                        "items": {
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "properties": {
+                          "created": {
+                            "type": "string"
+                          },
+                          "lastModified": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "resourceType": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "name": {
+                        "properties": {
+                          "familyName": {
+                            "type": "string"
+                          },
+                          "givenName": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "userName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Provision and invite a SCIM enterprise user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        }
+      },
+      "/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#delete-a-scim-user-from-an-enterprise"
+          },
+          "operationId": "enterprise-admin/delete-user-from-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the SCIM user.",
+              "in": "path",
+              "name": "scim_user_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Delete a SCIM user from an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#get-scim-provisioning-information-for-an-enterprise-user"
+          },
+          "operationId": "enterprise-admin/get-provisioning-information-for-enterprise-user",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the SCIM user.",
+              "in": "path",
+              "name": "scim_user_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "active": true,
+                        "emails": [
+                          {
+                            "primary": true,
+                            "type": "work",
+                            "value": "mona.octocat@okta.example.com"
+                          }
+                        ],
+                        "externalId": "00dowz5dr9oSfDFRA0h7",
+                        "groups": [
+                          {
+                            "value": "468dd3fa-a1d6-11ea-9031-15a1f0d7811d"
+                          }
+                        ],
+                        "id": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                        "meta": {
+                          "created": "2017-03-09T16:11:13-05:00",
+                          "lastModified": "2017-03-09T16:11:13-05:00",
+                          "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                          "resourceType": "User"
+                        },
+                        "name": {
+                          "familyName": "Octocat",
+                          "givenName": "Mona"
+                        },
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:User"
+                        ],
+                        "userName": "mona.octocat@okta.example.com"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "active": {
+                        "type": "boolean"
+                      },
+                      "emails": {
+                        "items": {
+                          "properties": {
+                            "primary": {
+                              "type": "boolean"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "externalId": {
+                        "type": "string"
+                      },
+                      "groups": {
+                        "items": {
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "properties": {
+                          "created": {
+                            "type": "string"
+                          },
+                          "lastModified": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "resourceType": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "name": {
+                        "properties": {
+                          "familyName": {
+                            "type": "string"
+                          },
+                          "givenName": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "userName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get SCIM provisioning information for an enterprise user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        },
+        "patch": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.\n\nAllows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).\n\n**Note:** Complicated SCIM `path` selectors that include filters are not supported. For example, a `path` selector defined as `\"path\": \"emails[type eq \\\"work\\\"]\"` will not work.\n\n**Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it removes the user from the enterprise, deletes the external identity, and deletes the associated `:scim_user_id`.\n\n```\n{\n  \"Operations\":[{\n    \"op\":\"replace\",\n    \"value\":{\n      \"active\":false\n    }\n  }]\n}\n```",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#update-an-attribute-for-a-scim-enterprise-user"
+          },
+          "operationId": "enterprise-admin/update-attribute-for-enterprise-user",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the SCIM user.",
+              "in": "path",
+              "name": "scim_user_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "Operations": [
+                        {
+                          "op": "add",
+                          "path": "emails",
+                          "value": [
+                            {
+                              "type": "home",
+                              "value": "monalisa@octocat.github.com"
+                            }
+                          ]
+                        },
+                        {
+                          "op": "replace",
+                          "path": "name.givenName",
+                          "value": "Monalisa"
+                        }
+                      ],
+                      "schemas": [
+                        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "Operations": {
+                      "description": "Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2).",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "schemas": {
+                      "description": "The SCIM schema URIs.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "schemas",
+                    "Operations"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "active": true,
+                        "emails": [
+                          {
+                            "primary": true,
+                            "type": "work",
+                            "value": "mona.octocat@okta.example.com"
+                          },
+                          {
+                            "type": "home",
+                            "value": "monalisa@octocat.github.com"
+                          }
+                        ],
+                        "externalId": "00dowz5dr9oSfDFRA0h7",
+                        "groups": [
+                          {
+                            "value": "468dd3fa-a1d6-11ea-9031-15a1f0d7811d"
+                          }
+                        ],
+                        "id": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                        "meta": {
+                          "created": "2017-03-09T16:11:13-05:00",
+                          "lastModified": "2017-03-09T16:11:13-05:00",
+                          "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                          "resourceType": "User"
+                        },
+                        "name": {
+                          "familyName": "Octocat",
+                          "givenName": "Monalisa"
+                        },
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:User"
+                        ],
+                        "userName": "mona.octocat@okta.example.com"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "active": {
+                        "type": "boolean"
+                      },
+                      "emails": {
+                        "items": {
+                          "properties": {
+                            "primary": {
+                              "type": "boolean"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "externalId": {
+                        "type": "string"
+                      },
+                      "groups": {
+                        "items": {
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "properties": {
+                          "created": {
+                            "type": "string"
+                          },
+                          "lastModified": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "resourceType": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "name": {
+                        "properties": {
+                          "familyName": {
+                            "type": "string"
+                          },
+                          "givenName": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "userName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Update an attribute for a SCIM enterprise user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.\n\nReplaces an existing provisioned user's information. You must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](#update-an-attribute-for-an-enterprise-scim-user) endpoint instead.\n\nYou must at least provide the required values for the user: `userName`, `name`, and `emails`.\n\n**Warning:** Setting `active: false` removes the user from the enterprise, deletes the external identity, and deletes the associated `{scim_user_id}`.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-user"
+          },
+          "operationId": "enterprise-admin/set-information-for-provisioned-enterprise-user",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the SCIM user.",
+              "in": "path",
+              "name": "scim_user_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "emails": [
+                        {
+                          "primary": true,
+                          "type": "work",
+                          "value": "mona.octocat@okta.example.com"
+                        }
+                      ],
+                      "groups": [
+                        {
+                          "value": "468dd3fa-a1d6-11ea-9031-15a1f0d7811d"
+                        }
+                      ],
+                      "name": {
+                        "familyName": "Octocat",
+                        "givenName": "Mona"
+                      },
+                      "schemas": [
+                        "urn:ietf:params:scim:schemas:core:2.0:User"
+                      ],
+                      "userName": "mona.octocat@okta.example.com"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "emails": {
+                      "description": "List of user emails.",
+                      "items": {
+                        "properties": {
+                          "primary": {
+                            "description": "Whether this email address is the primary address.",
+                            "type": "boolean"
+                          },
+                          "type": {
+                            "description": "The type of email address.",
+                            "type": "string"
+                          },
+                          "value": {
+                            "description": "The email address.",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "value",
+                          "type",
+                          "primary"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "groups": {
+                      "description": "List of SCIM group IDs the user is a member of.",
+                      "items": {
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "name": {
+                      "properties": {
+                        "familyName": {
+                          "description": "The last name of the user.",
+                          "type": "string"
+                        },
+                        "givenName": {
+                          "description": "The first name of the user.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "givenName",
+                        "familyName"
+                      ],
+                      "type": "object"
+                    },
+                    "schemas": {
+                      "description": "The SCIM schema URIs.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "userName": {
+                      "description": "The username for the user.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "schemas",
+                    "userName",
+                    "name",
+                    "emails"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "active": true,
+                        "emails": [
+                          {
+                            "primary": true,
+                            "type": "work",
+                            "value": "mona.octocat@okta.example.com"
+                          }
+                        ],
+                        "externalId": "00dowz5dr9oSfDFRA0h7",
+                        "groups": [
+                          {
+                            "value": "468dd3fa-a1d6-11ea-9031-15a1f0d7811d"
+                          }
+                        ],
+                        "id": "92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                        "meta": {
+                          "created": "2017-03-09T16:11:13-05:00",
+                          "lastModified": "2017-03-09T16:11:13-05:00",
+                          "location": "https://api.github.com/scim/v2/enterprises/octo-corp/Users/92b58aaa-a1d6-11ea-8227-b9ce9e023ccc",
+                          "resourceType": "User"
+                        },
+                        "name": {
+                          "familyName": "Octocat",
+                          "givenName": "Mona"
+                        },
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:User"
+                        ],
+                        "userName": "mona.octocat@okta.example.com"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "active": {
+                        "type": "boolean"
+                      },
+                      "emails": {
+                        "items": {
+                          "properties": {
+                            "primary": {
+                              "type": "boolean"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "externalId": {
+                        "type": "string"
+                      },
+                      "groups": {
+                        "items": {
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "properties": {
+                          "created": {
+                            "type": "string"
+                          },
+                          "lastModified": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "resourceType": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "name": {
+                        "properties": {
+                          "familyName": {
+                            "type": "string"
+                          },
+                          "givenName": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "userName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "schemas",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Set SCIM information for a provisioned enterprise user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
           }
         }
       },
@@ -17528,6 +21404,31 @@
           }
         }
       },
+      "/enterprises/{enterprise}/secret-scanning/alerts": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "removed": [
+                              "resolution_comment"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/meta": {
         "get": {
           "responses": {
@@ -17732,25 +21633,6 @@
           }
         }
       },
-      "/orgs/{org}/audit-log": {
-        "get": {
-          "parameters": {
-            "added": [
-              {
-                "description": "Page number of the results to fetch.",
-                "in": "query",
-                "name": "page",
-                "required": false,
-                "schema": {
-                  "default": 1,
-                  "type": "integer"
-                },
-                "style": "form"
-              }
-            ]
-          }
-        }
-      },
       "/orgs/{org}/installation": {
         "get": {
           "responses": {
@@ -17842,6 +21724,27 @@
                 "style": "form"
               }
             ]
+          },
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "removed": [
+                              "resolution_comment"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -18262,6 +22165,36 @@
           }
         }
       },
+      "/repos/{owner}/{repo}/dependency-graph/compare/{basehead}": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "removed": [
+                              "scope"
+                            ]
+                          },
+                          "required_changed": {
+                            "removed": [
+                              "scope"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/repos/{owner}/{repo}/forks": {
         "post": {
           "request_body": {
@@ -18580,6 +22513,89 @@
                 "style": "form"
               }
             ]
+          },
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "removed": [
+                              "resolution_comment"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "removed": [
+                            "resolution_comment"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "removed": [
+                        "resolution_comment"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "removed": [
+                            "resolution_comment"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "removed": [
+              "400"
+            ]
           }
         }
       },
@@ -18678,25 +22694,7 @@
       "/enterprise-installation/{enterprise_or_org}/server-statistics": [
         "get"
       ],
-      "/enterprises/{enterprise}/actions/oidc/customization/issuer": [
-        "put"
-      ],
       "/enterprises/{enterprise}/code-scanning/alerts": [
-        "get"
-      ],
-      "/enterprises/{enterprise}/consumed-licenses": [
-        "get"
-      ],
-      "/enterprises/{enterprise}/license-sync-status": [
-        "get"
-      ],
-      "/enterprises/{enterprise}/settings/billing/actions": [
-        "get"
-      ],
-      "/enterprises/{enterprise}/settings/billing/packages": [
-        "get"
-      ],
-      "/enterprises/{enterprise}/settings/billing/shared-storage": [
         "get"
       ],
       "/marketplace_listing/accounts/{account_id}": [
@@ -18717,9 +22715,24 @@
       "/marketplace_listing/stubbed/plans/{plan_id}/accounts": [
         "get"
       ],
-      "/orgs/{org}/actions/oidc/customization/sub": [
+      "/organizations/{org}/codespaces/secrets": [
+        "get"
+      ],
+      "/organizations/{org}/codespaces/secrets/public-key": [
+        "get"
+      ],
+      "/organizations/{org}/codespaces/secrets/{secret_name}": [
+        "get",
+        "put",
+        "delete"
+      ],
+      "/organizations/{org}/codespaces/secrets/{secret_name}/repositories": [
         "get",
         "put"
+      ],
+      "/organizations/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}": [
+        "put",
+        "delete"
       ],
       "/orgs/{org}/blocks": [
         "get"
@@ -18731,12 +22744,6 @@
       ],
       "/orgs/{org}/codespaces": [
         "get"
-      ],
-      "/orgs/{org}/credential-authorizations": [
-        "get"
-      ],
-      "/orgs/{org}/credential-authorizations/{credential_id}": [
-        "delete"
       ],
       "/orgs/{org}/custom_roles": [
         "post"
@@ -18818,15 +22825,8 @@
       "/orgs/{org}/settings/billing/shared-storage": [
         "get"
       ],
-      "/orgs/{org}/team-sync/groups": [
-        "get"
-      ],
       "/orgs/{org}/teams/{team_slug}/invitations": [
         "get"
-      ],
-      "/orgs/{org}/teams/{team_slug}/team-sync/group-mappings": [
-        "get",
-        "patch"
       ],
       "/orgs/{org}/{security_product}/{enablement}": [
         "post"
@@ -18837,10 +22837,6 @@
       ],
       "/repos/{owner}/{repo}/actions/caches/{cache_id}": [
         "delete"
-      ],
-      "/repos/{owner}/{repo}/actions/oidc/customization/sub": [
-        "get",
-        "put"
       ],
       "/repos/{owner}/{repo}/actions/runs/{run_id}/approve": [
         "post"
@@ -18887,6 +22883,13 @@
       ],
       "/repos/{owner}/{repo}/community/profile": [
         "get"
+      ],
+      "/repos/{owner}/{repo}/dependabot/alerts": [
+        "get"
+      ],
+      "/repos/{owner}/{repo}/dependabot/alerts/{alert_number}": [
+        "get",
+        "patch"
       ],
       "/repos/{owner}/{repo}/dependency-graph/snapshots": [
         "post"
@@ -18940,42 +22943,8 @@
         "put",
         "delete"
       ],
-      "/scim/v2/enterprises/{enterprise}/Groups": [
-        "get",
-        "post"
-      ],
-      "/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}": [
-        "get",
-        "put",
-        "delete",
-        "patch"
-      ],
-      "/scim/v2/enterprises/{enterprise}/Users": [
-        "get",
-        "post"
-      ],
-      "/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}": [
-        "get",
-        "put",
-        "delete",
-        "patch"
-      ],
-      "/scim/v2/organizations/{org}/Users": [
-        "get",
-        "post"
-      ],
-      "/scim/v2/organizations/{org}/Users/{scim_user_id}": [
-        "get",
-        "put",
-        "delete",
-        "patch"
-      ],
       "/teams/{team_id}/invitations": [
         "get"
-      ],
-      "/teams/{team_id}/team-sync/group-mappings": [
-        "get",
-        "patch"
       ],
       "/user/blocks": [
         "get"
