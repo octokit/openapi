@@ -1,4 +1,4 @@
-on:
+"on":
   push:
     paths-ignore:
       - cache/**
@@ -7,21 +7,19 @@ name: Dry-run the update process
 jobs:
   update_dry_run:
     runs-on: ubuntu-latest
-    # These steps should be kept in sync with `update.yml` - minus the code that actually
-    # commits, pushes and creates a PR.
     steps:
-      - uses: actions/checkout@v3 # tag=v3
-      - uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           cache: npm
           node-version: 16
       - run: npm ci
       - run: npm run download
-      - uses: actions/checkout@v3 # tag=v3
+      - uses: actions/checkout@v3
         with:
           repository: xuorig/anicca
           path: anicca
-      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # tag=v1
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af
         with:
           toolchain: stable
       - run: cargo build
