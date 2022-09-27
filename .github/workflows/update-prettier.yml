@@ -1,18 +1,18 @@
 name: Update Prettier
-on:
+"on":
   push:
     branches:
-      - "dependabot/npm_and_yarn/prettier-*"
+      - dependabot/npm_and_yarn/prettier-*
   workflow_dispatch: {}
 jobs:
   update_prettier:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: "lts/*"
-      - uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # tag=v3
+          node-version: lts/*
+      - uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
         with:
           path: ~/.npm
           key: \${{ runner.os }}-node-\${{ hashFiles('**/package-lock.json') }}
@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: \${{ secrets.OCTOKITBOT_PAT }}
         with:
-          title: "Prettier updated"
-          body: "An update to prettier required updates to your code."
+          title: Prettier updated
+          body: An update to prettier required updates to your code.
           branch: \${{ github.ref }}
           commit-message: "style: prettier"
