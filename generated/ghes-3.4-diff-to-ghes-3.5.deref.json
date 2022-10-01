@@ -2653,7 +2653,7 @@
     "/notifications/threads/{thread_id}": {
       "get": {
         "summary": "Get a thread",
-        "description": "",
+        "description": "Gets information about a notification thread.",
         "tags": [
           "activity"
         ],
@@ -2665,7 +2665,7 @@
         "parameters": [
           {
             "name": "thread_id",
-            "description": "The unique identifier of the pull request thread.",
+            "description": "The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/enterprise-server@3.4/rest/reference/activity#list-notifications-for-the-authenticated-user)).",
             "in": "path",
             "required": true,
             "schema": {
@@ -6619,7 +6619,7 @@
                             "format": "uri",
                             "example": "https://api.github.com/users/octocat/repos"
                           },
-                          "events_url": {
+                          "gravatar_id": {
                             "type": "string",
                             "example": "https://api.github.com/users/octocat/events{/privacy}"
                           },
@@ -7400,6 +7400,20 @@
                             "type": "string",
                             "example": "41d064eb2195891e12d0413f63227ea7",
                             "nullable": true
+                          }
+                        },
+                        "required": [
+                          "url",
+                          "html_url",
+                          "key",
+                          "name"
+                        ]
+                      },
+                      "license": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "type": "string"
                           },
                           "url": {
                             "type": "string",
@@ -12961,10 +12975,11 @@
           "category": "actions",
           "subcategory": "workflow-runs"
         },
+        "deprecated": true,
         "x-octokit": {
           "diff": {
             "ghes-3.5": {
-              "type": "changed"
+              "type": "added"
             }
           }
         }
@@ -12997,6 +13012,33 @@
             "description": "The name of the repository. The name is not case sensitive.",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "actor",
+            "description": "Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branch",
+            "description": "Returns workflow runs associated with a branch. Use the name of the branch of the `push`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event",
+            "description": "Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see \"[Events that trigger workflows](https://docs.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows).\"",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -28707,7 +28749,7 @@
     "/repos/{owner}/{repo}/notifications": {
       "get": {
         "summary": "List repository notifications for the authenticated user",
-        "description": "List all notifications for the current user.",
+        "description": "Lists all notifications for the current user in the specified repository.",
         "tags": [
           "activity"
         ],
