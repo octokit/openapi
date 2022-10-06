@@ -3984,10 +3984,11 @@
             "$ref": "#/components/responses/not_modified"
           },
           "422": {
-            "$ref": "#/components/responses/validation_failed"
+            "description": "Unprocessable Entity if user is not a collaborator"
           }
         },
         "x-github": {
+          "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "category": "pulls",
@@ -4121,7 +4122,7 @@
         "summary": "Create a release",
         "description": "Users with push access to the repository can create a release.\n\nThis endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.2/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.2/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
         "tags": [
-          "repos"
+          "reactions"
         ],
         "operationId": "repos/create-release",
         "externalDocs": {
@@ -4187,8 +4188,14 @@
                 }
               }
             }
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
           }
-        },
+        ],
         "responses": {
           "201": {
             "description": "Response",
@@ -4274,9 +4281,6 @@
           },
           {
             "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
           }
         ],
         "responses": {
@@ -4295,11 +4299,6 @@
                     "$ref": "#/components/examples/reaction-items"
                   }
                 }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
               }
             }
           },
@@ -4454,7 +4453,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Response",
             "content": {
               "application/json": {
@@ -4528,6 +4527,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "$ref": "#/components/parameters/order"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
           }
         ],
         "requestBody": {
@@ -4772,7 +4780,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Response",
+            "description": "Alternative response with extra repository information",
             "content": {
               "application/json": {
                 "schema": {
@@ -4824,6 +4832,7 @@
             }
           ]
         },
+        "deprecated": true,
         "x-octokit": {
           "diff": {
             "ghes-3.3": {
