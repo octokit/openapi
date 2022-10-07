@@ -4021,6 +4021,59 @@
           },
           {
             "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tag_name": {
+                    "type": "string",
+                    "description": "The name of the tag."
+                  },
+                  "target_commitish": {
+                    "type": "string",
+                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the release."
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "Text describing the contents of the tag."
+                  },
+                  "draft": {
+                    "type": "boolean",
+                    "description": "`true` to create a draft (unpublished) release, `false` to create a published one.",
+                    "default": false
+                  },
+                  "prerelease": {
+                    "type": "boolean",
+                    "description": "`true` to identify the release as a prerelease. `false` to identify the release as a full release.",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "tag_name"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "tag_name": "v1.0.0",
+                    "target_commitish": "master",
+                    "name": "v1.0.0",
+                    "body": "Description of the release",
+                    "draft": false,
+                    "prerelease": false
+                  }
+                }
+              }
+            }
           },
           {
             "$ref": "#/components/parameters/pull-number"
@@ -4188,14 +4241,8 @@
                 }
               }
             }
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
           }
-        ],
+        },
         "responses": {
           "201": {
             "description": "Response",
@@ -4412,7 +4459,12 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/owner"
+            "name": "template_owner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "$ref": "#/components/parameters/repo"
@@ -4688,7 +4740,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Response",
+            "description": "Alternative response with extra repository information",
             "content": {
               "application/json": {
                 "schema": {
@@ -4740,6 +4792,7 @@
           "category": "search",
           "subcategory": null
         },
+        "deprecated": true,
         "x-octokit": {
           "diff": {
             "ghes-3.3": {
