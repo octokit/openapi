@@ -4021,6 +4021,59 @@
           },
           {
             "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tag_name": {
+                    "type": "string",
+                    "description": "The name of the tag."
+                  },
+                  "target_commitish": {
+                    "type": "string",
+                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the release."
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "Text describing the contents of the tag."
+                  },
+                  "draft": {
+                    "type": "boolean",
+                    "description": "`true` to create a draft (unpublished) release, `false` to create a published one.",
+                    "default": false
+                  },
+                  "prerelease": {
+                    "type": "boolean",
+                    "description": "`true` to identify the release as a prerelease. `false` to identify the release as a full release.",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "tag_name"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "tag_name": "v1.0.0",
+                    "target_commitish": "master",
+                    "name": "v1.0.0",
+                    "body": "Description of the release",
+                    "draft": false,
+                    "prerelease": false
+                  }
+                }
+              }
+            }
           },
           {
             "$ref": "#/components/parameters/pull-number"
@@ -4341,7 +4394,12 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/owner"
+            "name": "template_owner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "$ref": "#/components/parameters/repo"
@@ -4492,6 +4550,7 @@
             }
           ]
         },
+        "deprecated": true,
         "x-octokit": {
           "diff": {
             "ghes-3.3": {
@@ -4691,7 +4750,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Alternative response with extra repository information",
+            "description": "The access the user has to each repository is included in the hash under the `permissions` key.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4722,6 +4781,11 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
             }
           },
           "304": {
@@ -4743,7 +4807,6 @@
           "category": "search",
           "subcategory": null
         },
-        "deprecated": true,
         "x-octokit": {
           "diff": {
             "ghes-3.3": {
@@ -4784,7 +4847,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The access the user has to each repository is included in the hash under the `permissions` key.",
+            "description": "Alternative response with extra repository information",
             "content": {
               "application/json": {
                 "schema": {
@@ -4815,11 +4878,6 @@
                   }
                 }
               }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
             }
           },
           "304": {
@@ -4841,6 +4899,7 @@
             }
           ]
         },
+        "deprecated": true,
         "x-octokit": {
           "diff": {
             "ghes-3.3": {
@@ -5181,11 +5240,7 @@
                     "name": "My Projects",
                     "body": "A board to manage my personal projects."
                   }
-                },
-                "required": [
-                  "name"
-                ],
-                "type": "object"
+                }
               }
             }
           }
@@ -5202,14 +5257,6 @@
                   "default": {
                     "$ref": "#/components/examples/project"
                   }
-                }
-              }
-            },
-            "headers": {
-              "Location": {
-                "example": "https://api.github.com/repos/octocat/Hello-World",
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -5256,7 +5303,7 @@
         "summary": "List repositories for the authenticated user",
         "description": "Lists repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.\n\nThe authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.",
         "tags": [
-          "activity"
+          "repos"
         ],
         "operationId": "repos/list-for-authenticated-user",
         "externalDocs": {
@@ -5377,7 +5424,7 @@
             "$ref": "#/components/responses/forbidden"
           },
           "422": {
-            "$ref": "#/components/responses/validation_failed"
+            "$ref": "#/components/responses/validation_failed_simple"
           }
         },
         "x-github": {
@@ -5910,6 +5957,24 @@
                 }
               }
             }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
           }
         },
         "x-github": {
@@ -8130,7 +8195,7 @@
             "type": "integer",
             "example": 1296269
           },
-          "merge_method": {
+          "node_id": {
             "type": "string",
             "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
           },
