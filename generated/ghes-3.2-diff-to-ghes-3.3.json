@@ -2962,6 +2962,15 @@
                     "description": "Optional parameter to specify the organization name if forking into an organization."
                   }
                 }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "organization": "octocat",
+                    "name": "Hello-World",
+                    "default_branch_only": true
+                  }
+                }
               }
             }
           }
@@ -3950,6 +3959,53 @@
             }
           },
           {
+            "name": "head",
+            "description": "Filter pulls by head user or head organization and branch name in the format of `user:ref-name` or `organization:ref-name`. For example: `github:new-script-format` or `octocat:test-branch`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "base",
+            "description": "Filter pulls by base branch name. Example: `gh-pages`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "What to sort results by. `popularity` will sort by the number of comments. `long-running` will sort by date created and will limit the results to pull requests that have been open for more than a month and have had activity within the past month.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created",
+                "updated",
+                "popularity",
+                "long-running"
+              ],
+              "default": "created"
+            }
+          },
+          {
+            "name": "direction",
+            "description": "The direction of the sort. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
             "$ref": "#/components/parameters/per-page"
           },
           {
@@ -3984,7 +4040,7 @@
             "$ref": "#/components/responses/not_modified"
           },
           "422": {
-            "description": "Unprocessable Entity if user is not a collaborator"
+            "$ref": "#/components/responses/validation_failed"
           }
         },
         "x-github": {
@@ -4341,12 +4397,7 @@
         },
         "parameters": [
           {
-            "name": "template_owner",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/owner"
           },
           {
             "$ref": "#/components/parameters/repo"
@@ -4460,7 +4511,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Response",
             "content": {
               "application/json": {
@@ -4535,15 +4586,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "$ref": "#/components/parameters/order"
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
           }
         ],
         "requestBody": {
@@ -4748,7 +4790,6 @@
           "category": "search",
           "subcategory": null
         },
-        "deprecated": true,
         "x-octokit": {
           "diff": {
             "ghes-3.3": {
@@ -5190,11 +5231,7 @@
                     "name": "My Projects",
                     "body": "A board to manage my personal projects."
                   }
-                },
-                "required": [
-                  "name"
-                ],
-                "type": "object"
+                }
               }
             }
           }
@@ -5211,14 +5248,6 @@
                   "default": {
                     "$ref": "#/components/examples/project"
                   }
-                }
-              }
-            },
-            "headers": {
-              "Location": {
-                "example": "https://api.github.com/repos/octocat/Hello-World",
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -5265,7 +5294,7 @@
         "summary": "List repositories for the authenticated user",
         "description": "Lists repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.\n\nThe authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.",
         "tags": [
-          "activity"
+          "projects"
         ],
         "operationId": "repos/list-for-authenticated-user",
         "externalDocs": {
@@ -5551,6 +5580,17 @@
                   "name"
                 ],
                 "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "Hello-World",
+                    "description": "This is your first repo!",
+                    "homepage": "https://github.com",
+                    "private": false,
+                    "is_template": true
+                  }
+                }
               }
             }
           }
@@ -5803,6 +5843,24 @@
                 }
               }
             }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
+          "401": {
+            "$ref": "#/components/responses/requires_authentication"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
           }
         },
         "x-github": {
@@ -5919,24 +5977,6 @@
                 }
               }
             }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "400": {
-            "$ref": "#/components/responses/bad_request"
-          },
-          "401": {
-            "$ref": "#/components/responses/requires_authentication"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
           }
         },
         "x-github": {
@@ -8157,7 +8197,7 @@
             "type": "integer",
             "example": 1296269
           },
-          "merge_method": {
+          "node_id": {
             "type": "string",
             "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
           },
@@ -8175,7 +8215,7 @@
           "private": {
             "type": "boolean"
           },
-          "detail": {
+          "html_url": {
             "type": "string",
             "format": "uri",
             "example": "https://github.com/octocat/Hello-World"
@@ -9479,7 +9519,7 @@
           },
           "body": {
             "type": "string",
-            "nullable": true
+            "format": "uri"
           },
           "draft": {
             "description": "true to create a draft (unpublished) release, false to create a published one.",
@@ -11939,6 +11979,7 @@
         "title": "Team",
         "description": "Groups of organization members that gives permissions on specified repositories.",
         "type": "object",
+        "description": "Describe a region within a file for the alert.",
         "properties": {
           "id": {
             "type": "integer"
@@ -12553,7 +12594,7 @@
           "name": {
             "description": "The file name of the asset.",
             "type": "string",
-            "example": "Team Environment"
+            "format": "uri"
           },
           "label": {
             "type": "string",

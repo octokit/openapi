@@ -6959,6 +6959,15 @@
                     "description": "Optional parameter to specify the organization name if forking into an organization."
                   }
                 }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "organization": "octocat",
+                    "name": "Hello-World",
+                    "default_branch_only": true
+                  }
+                }
               }
             }
           }
@@ -10228,6 +10237,17 @@
                   "name"
                 ],
                 "type": "object"
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "Hello-World",
+                    "description": "This is your first repo!",
+                    "homepage": "https://github.com",
+                    "private": false,
+                    "is_template": true
+                  }
+                }
               }
             }
           }
@@ -11030,9 +11050,9 @@
           "format": "date-time"
         }
       },
-      "sort": {
-        "name": "sort",
-        "description": "The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to.",
+      "exclude-pull-requests": {
+        "name": "exclude_pull_requests",
+        "description": "If `true` pull requests are omitted from the response (empty array).",
         "in": "query",
         "required": false,
         "schema": {
@@ -13893,6 +13913,250 @@
             "description": "The display name for the group",
             "example": "group-azuread-test",
             "type": "string"
+          },
+          "updated_at": {
+            "description": "The date when the group was last updated_at",
+            "example": "2021-01-03 22:27:15:000 -700",
+            "type": "string"
+          },
+          "teams": {
+            "description": "An array of teams linked to this group",
+            "example": [
+              {
+                "team_id": 1,
+                "team_name": "team-test"
+              },
+              {
+                "team_id": 2,
+                "team_name": "team-test2"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "team_id",
+                "team_name"
+              ],
+              "properties": {
+                "team_id": {
+                  "description": "The id for a team",
+                  "example": 1,
+                  "type": "integer"
+                },
+                "team_name": {
+                  "description": "The name of the team",
+                  "example": "team-test",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "members": {
+            "description": "An array of external members linked to this group",
+            "example": [
+              {
+                "member_id": 1,
+                "member_login": "mona-lisa_eocsaxrs",
+                "member_name": "Mona Lisa",
+                "member_email": "mona_lisa@github.com"
+              },
+              {
+                "member_id": 2,
+                "member_login": "octo-lisa_eocsaxrs",
+                "member_name": "Octo Lisa",
+                "member_email": "octo_lisa@github.com"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "member_id",
+                "member_login",
+                "member_name",
+                "member_email"
+              ],
+              "properties": {
+                "member_id": {
+                  "description": "The internal user ID of the identity",
+                  "example": 1,
+                  "type": "integer"
+                },
+                "member_login": {
+                  "description": "The handle/login for the user",
+                  "example": "mona-lisa_eocsaxrs",
+                  "type": "string"
+                },
+                "member_name": {
+                  "description": "The user display name/profile name",
+                  "example": "Mona Lisa",
+                  "type": "string"
+                },
+                "member_email": {
+                  "description": "An email attached to a user",
+                  "example": "mona_lisa@github.com",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "external-groups": {
+        "title": "ExternalGroups",
+        "description": "A list of external groups available to be connected to a team",
+        "type": "object",
+        "properties": {
+          "groups": {
+            "description": "An array of external groups available to be mapped to a team",
+            "example": [
+              {
+                "group_id": 1,
+                "group_name": "group-azuread-test",
+                "updated_at": "2021-01-03 22:27:15:000 -700"
+              },
+              {
+                "group_id": 2,
+                "group_name": "group-azuread-test2",
+                "updated_at": "2021-06-03 22:27:15:000 -700"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "group_id",
+                "group_name",
+                "updated_at"
+              ],
+              "properties": {
+                "group_id": {
+                  "description": "The internal ID of the group",
+                  "example": 1,
+                  "type": "integer"
+                },
+                "group_name": {
+                  "description": "The display name of the group",
+                  "example": "group-azuread-test",
+                  "type": "string"
+                },
+                "updated_at": {
+                  "description": "The time of the last update for this group",
+                  "example": "2019-06-03 22:27:15:000 -700",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "migration": {
+        "title": "Migration",
+        "description": "A migration.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 79
+          },
+          "owner": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "guid": {
+            "type": "string",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516"
+          },
+          "state": {
+            "type": "string",
+            "example": "pending"
+          },
+          "lock_repositories": {
+            "type": "boolean",
+            "example": true
+          },
+          "exclude_metadata": {
+            "type": "boolean"
+          },
+          "exclude_git_data": {
+            "type": "boolean"
+          },
+          "exclude_attachments": {
+            "type": "boolean"
+          },
+          "exclude_releases": {
+            "type": "boolean"
+          },
+          "exclude_owner_projects": {
+            "type": "boolean"
+          },
+          "org_metadata_only": {
+            "type": "boolean"
+          },
+          "repositories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/repository"
+            }
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/orgs/octo-org/migrations/79"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2015-07-06T15:33:38-07:00"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2015-07-06T15:33:38-07:00"
+          },
+          "node_id": {
+            "type": "string"
+          },
+          "archive_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "exclude": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "owner",
+          "guid",
+          "state",
+          "lock_repositories",
+          "exclude_metadata",
+          "exclude_git_data",
+          "exclude_attachments",
+          "exclude_releases",
+          "exclude_owner_projects",
+          "org_metadata_only",
+          "repositories",
+          "url",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "minimal-repository": {
+        "title": "Minimal Repository",
+        "description": "Minimal Repository",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1296269
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
           },
           "updated_at": {
             "description": "The date when the group was last updated_at",
