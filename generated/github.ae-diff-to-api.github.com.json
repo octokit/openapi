@@ -3961,7 +3961,7 @@
     "/orgs/{org}/actions/secrets/{secret_name}": {
       "put": {
         "summary": "Create or update an organization secret",
-        "description": "Creates or updates an organization secret with an encrypted value. Encrypt your secret using\n[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access\ntoken with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to\nuse this endpoint.\n\n#### Example encrypting a secret using Node.js\n\nEncrypt your secret using the [tweetsodium](https://github.com/github/tweetsodium) library.\n\n```\nconst sodium = require('tweetsodium');\n\nconst key = \"base64-encoded-public-key\";\nconst value = \"plain-text-secret\";\n\n// Convert the message and key to Uint8Array's (Buffer implements that interface)\nconst messageBytes = Buffer.from(value);\nconst keyBytes = Buffer.from(key, 'base64');\n\n// Encrypt using LibSodium.\nconst encryptedBytes = sodium.seal(messageBytes, keyBytes);\n\n// Base64 the encrypted secret\nconst encrypted = Buffer.from(encryptedBytes).toString('base64');\n\nconsole.log(encrypted);\n```\n\n\n#### Example encrypting a secret using Python\n\nEncrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.\n\n```\nfrom base64 import b64encode\nfrom nacl import encoding, public\n\ndef encrypt(public_key: str, secret_value: str) -> str:\n  \"\"\"Encrypt a Unicode string using the public key.\"\"\"\n  public_key = public.PublicKey(public_key.encode(\"utf-8\"), encoding.Base64Encoder())\n  sealed_box = public.SealedBox(public_key)\n  encrypted = sealed_box.encrypt(secret_value.encode(\"utf-8\"))\n  return b64encode(encrypted).decode(\"utf-8\")\n```\n\n#### Example encrypting a secret using C#\n\nEncrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.\n\n```\nvar secretValue = System.Text.Encoding.UTF8.GetBytes(\"mySecret\");\nvar publicKey = Convert.FromBase64String(\"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=\");\n\nvar sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);\n\nConsole.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));\n```\n\n#### Example encrypting a secret using Ruby\n\nEncrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.\n\n```ruby\nrequire \"rbnacl\"\nrequire \"base64\"\n\nkey = Base64.decode64(\"+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=\")\npublic_key = RbNaCl::PublicKey.new(key)\n\nbox = RbNaCl::Boxes::Sealed.from_public_key(public_key)\nencrypted_secret = box.encrypt(\"my_secret\")\n\n# Print the base64 encoded secret\nputs Base64.strict_encode64(encrypted_secret)\n```",
+        "description": "Creates or updates an organization secret with an encrypted value. Encrypt your secret using\n[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access\ntoken with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to\nuse this endpoint.\n\n#### Example encrypting a secret using Node.js\n\nEncrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.\n\n```\nconst sodium = require('libsodium-wrappers')\nconst secret = 'plain-text-secret' // replace with the secret you want to encrypt\nconst key = 'base64-encoded-public-key' // replace with the Base64 encoded public key\n\n//Check if libsodium is ready and then proceed.\nsodium.ready.then(() => {\n  // Convert Secret & Base64 key to Uint8Array.\n  let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)\n  let binsec = sodium.from_string(secret)\n\n  //Encrypt the secret using LibSodium\n  let encBytes = sodium.crypto_box_seal(binsec, binkey)\n\n  // Convert encrypted Uint8Array to Base64\n  let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)\n\n  console.log(output)\n});\n```\n\n#### Example encrypting a secret using Python\n\nEncrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.\n\n```\nfrom base64 import b64encode\nfrom nacl import encoding, public\n\ndef encrypt(public_key: str, secret_value: str) -> str:\n  \"\"\"Encrypt a Unicode string using the public key.\"\"\"\n  public_key = public.PublicKey(public_key.encode(\"utf-8\"), encoding.Base64Encoder())\n  sealed_box = public.SealedBox(public_key)\n  encrypted = sealed_box.encrypt(secret_value.encode(\"utf-8\"))\n  return b64encode(encrypted).decode(\"utf-8\")\n```\n\n#### Example encrypting a secret using C#\n\nEncrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.\n\n```\nvar secretValue = System.Text.Encoding.UTF8.GetBytes(\"mySecret\");\nvar publicKey = Convert.FromBase64String(\"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=\");\n\nvar sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);\n\nConsole.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));\n```\n\n#### Example encrypting a secret using Ruby\n\nEncrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.\n\n```ruby\nrequire \"rbnacl\"\nrequire \"base64\"\n\nkey = Base64.decode64(\"+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=\")\npublic_key = RbNaCl::PublicKey.new(key)\n\nbox = RbNaCl::Boxes::Sealed.from_public_key(public_key)\nencrypted_secret = box.encrypt(\"my_secret\")\n\n# Print the base64 encoded secret\nputs Base64.strict_encode64(encrypted_secret)\n```",
         "tags": [
           "actions"
         ],
@@ -6523,6 +6523,122 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/code-scanning/sarifs": {
+      "post": {
+        "summary": "Upload an analysis as SARIF data",
+        "description": "Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.\n\nThere are two places where you can upload code scanning results.\n - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see \"[Triaging code scanning alerts in pull requests](/code-security/secure-coding/triaging-code-scanning-alerts-in-pull-requests).\"\n - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see \"[Managing code scanning alerts for your repository](/code-security/secure-coding/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository).\"\n\nYou must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:\n\n```\ngzip -c analysis-data.sarif | base64 -w0\n```\n\nSARIF upload supports a maximum of 5000 results per analysis run. Any results over this limit are ignored. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.\n\nThe `202 Accepted`, response includes an `id` value.\nYou can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.\nFor more information, see \"[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload).\"",
+        "operationId": "code-scanning/upload-sarif",
+        "tags": [
+          "code-scanning"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/github-ae@latest/rest/reference/code-scanning#upload-a-sarif-file"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commit_sha": {
+                    "$ref": "#/components/schemas/code-scanning-analysis-commit-sha"
+                  },
+                  "ref": {
+                    "$ref": "#/components/schemas/code-scanning-ref"
+                  },
+                  "sarif": {
+                    "$ref": "#/components/schemas/code-scanning-analysis-sarif-file"
+                  },
+                  "checkout_uri": {
+                    "description": "The base directory used in the analysis, as it appears in the SARIF file.\nThis property is used to convert file paths from absolute to relative, so that alerts can be mapped to their correct location in the repository.",
+                    "example": "file:///github/workspace/",
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "started_at": {
+                    "description": "The time that the analysis run began. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "tool_name": {
+                    "description": "The name of the tool used to generate the code scanning analysis. If this parameter is not used, the tool name defaults to \"API\". If the uploaded SARIF contains a tool GUID, this will be available for filtering using the `tool_guid` parameter of operations such as `GET /repos/{owner}/{repo}/code-scanning/alerts`.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "commit_sha",
+                  "ref",
+                  "sarif"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "commit_sha": "4b6472266afd7b471e86085a6659e8c7f2b119da",
+                    "ref": "refs/heads/master",
+                    "sarif": "H4sICMLGdF4AA2V4YW1wbGUuc2FyaWYAvVjdbts2FL7PUxDCijaA/CM7iRNfLkPXYgHSNstumlzQ0pHFVCI1korjFgH2ONtr7Ul2KFmy/mOn6QIkjsjDw0/nfN85NL8dEGL9pNwAImqRObECrWM1H40kXQ2XTAfJIlEgXcE1cD10RTQSVDE10K4aKSqZP1AxuKOIKg1ydJU60jSfSh8Hk6EzHA/vlOCWbfa7B6kYPpj90rlsWCZcmbHP5Bs+4oAWIjQD2SMOeJLh2vIQDnIaQerqXHjw8YIgxohybxAyDsS4cAPKsp03K4RcUs6+Up2D+JXpd8mibKIQN9fM/aMCdbyBujGSSQgVxJtx5qX2d2qUcIweQhEuDQf3GBO6CKHkogx/N3MVCKl/AeVKFuf4y5ubsMGDTj1ep+5I7sgmLIpxtU38hLtmMRGSuCFVyip5eKzs5ydh+LztVL6f2m6oih1BkYiuyQIIJWodxVpERPj4sEiWBNNH8EWT0DMG8EAjzKVHXCrB4FkPu/F64NMk1OeC+2yZSNoBOoR7CC0EzYWGbm+xFDFIzbI011+cLjfZtyJkmMZfumAh02uL3NpV2y+MZ6RAjxibyKrNxxJcVjANSb4eBGwZ1M0KsuyR2poLr5rMl8vaDSeVn6eTWEO2j2xIEcmhwlTKNOi4GMOI8gfuZYkvJ7b4v5Tiumyz7RnHeodFzpS8ASIZCH/AYdWi2z3sG8JtFxJ6fF9yR9CdifBr9Pd6d5V2+zbJKjjCFGGmsHuYFy2ytJq9tUxcLSRSQecppOGKrpUxYfxefMEFK+wOGa4hudQByBVT0L+EKtyACxnRsABhEx1QjVDs1KNI9MbpnhqfE45B6FJvu3hRu5VRU9MhZLmK7fqkKyQSTHNoyMqUFMqXCV3CwAeqEwmVokraK8IuBaGvHjQ0gMYrKjnjyw7uk9uD8tgmsBbFMPnU1bV2ZhkJNkuolUiWys3UPWzs5aaIUz9TBe8zMb+6+nT+6fLy91dlE3xzeDDT4zYszb0bW6NjJd0Rvn2EnLvWLFSdKPpBzInzfRgu8ETyMcH8nIfMnJCeC2PyfTA+UKngcnGH7Hw2hGkVQs5YlIRCtdWZYQ4/73es2JlxkfViOEIhoWJq5Oo6UBBfiKIqFBWhiE3jJGbFwVoxBHTRSuIS67sMeplei24X20shLjG+8gqbKC/bESiNMC+wd5q5id0yeS7CJEqXzmrTWNq3k05l84P6f4/bEmXFJjI0fIt1BGQssUnUDkBYeVhE5TqPnMH3jqogDcP0zKcTgLPTMSzOjhbjuVOmW23l1fYNStulfo6sXlFsGLhbDy5RECPRYGCTgOj2bd4nUQEivEd0H7KKYxqnEhFohuur3a3UPskbH/+Yg0+M5P2MHRJu3ziHh3Z2NCrWt3XF1rWTw8Ne/pfbWYXnDSE0SNZQQt1i18q7te2vOhu7ehWuvVyeu0wbLZi24mhoo6aOOTltzG/lgdVvVoXQq5V+pewkFIzL8fjEcadT55jOjpzFzHuOTtDNrMkJPMVQDd7F09RID72O/UPZ0tmctqZ7kWX6EmSZnDpP8GU67SXM8XE3YSrxbKsx6UReZ4y6n/FVZfJjs9Z7stma75W5yQtkzjk5eSJxk1lv4o7+j8TlhaJ2lsKWZO6lruDPBLib3x5ZN/KGWzZ+pn///evv7OOf4iIBv3oY9L/l1wiJ9p0Tc+F1zZnOE9NxXWEus6IQhr5pMfoqxi8WPsuu0azsns4UC6WzNzHIzbeEx4P/AJ3SefgcFAAA"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-sarifs-receipt"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-sarif-upload"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request if the sarif field is invalid"
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_write"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "413": {
+            "description": "Payload Too Large if the sarif field is too large"
+          },
+          "503": {
+            "$ref": "#/components/responses/service_unavailable"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "code-scanning"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
     "/repos/{owner}/{repo}/collaborators": {
       "get": {
         "summary": "List repository collaborators",
@@ -7482,8 +7598,8 @@
           {
             "$ref": "#/components/parameters/owner"
           },
-          {
-            "$ref": "#/components/parameters/repo"
+          "403": {
+            "$ref": "#/components/responses/forbidden"
           },
           {
             "name": "event_id",
@@ -7796,7 +7912,7 @@
         "summary": "Add assignees to an issue",
         "description": "Adds up to 10 assignees to an issue. Users already assigned to an issue are not replaced.",
         "tags": [
-          "issues"
+          "repos"
         ],
         "operationId": "issues/add-assignees",
         "externalDocs": {
@@ -7901,8 +8017,44 @@
             "$ref": "#/components/parameters/page"
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "A name for the key."
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The contents of the key."
+                  },
+                  "read_only": {
+                    "type": "boolean",
+                    "description": "If `true`, the key will only be able to read repository contents. Otherwise, the key will be able to read and write.  \n  \nDeploy keys with write access can perform the same actions as an organization member with admin access, or a collaborator on a personal repository. For more information, see \"[Repository permission levels for an organization](https://docs.github.com/articles/repository-permission-levels-for-an-organization/)\" and \"[Permission levels for a user account repository](https://docs.github.com/articles/permission-levels-for-a-user-account-repository/).\""
+                  }
+                },
+                "required": [
+                  "key"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "title": "octocat@octomac",
+                    "key": "ssh-rsa AAA...",
+                    "read_only": true
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
-          "200": {
+          "201": {
             "description": "Response",
             "content": {
               "application/json": {
@@ -8075,6 +8227,11 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
             }
           },
           "404": {
@@ -8177,8 +8334,8 @@
               ]
             }
           },
-          {
-            "$ref": "#/components/parameters/per-page"
+          "403": {
+            "$ref": "#/components/responses/forbidden"
           },
           {
             "$ref": "#/components/parameters/page"
@@ -8216,6 +8373,7 @@
           }
         },
         "x-github": {
+          "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "category": "pulls",
@@ -8547,6 +8705,12 @@
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "415": {
+            "$ref": "#/components/responses/preview_header_missing"
           }
         },
         "x-github": {
@@ -8605,9 +8769,6 @@
           },
           {
             "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
           }
         ],
         "responses": {
@@ -8626,11 +8787,6 @@
                     "$ref": "#/components/examples/reaction-items"
                   }
                 }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
               }
             }
           },
@@ -9744,9 +9900,9 @@
           {
             "$ref": "#/components/parameters/page"
           }
-        ],
+        },
         "responses": {
-          "200": {
+          "201": {
             "description": "Response",
             "content": {
               "application/json": {
@@ -9761,11 +9917,6 @@
                     "$ref": "#/components/examples/migration-items"
                   }
                 }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
               }
             }
           },
@@ -10376,6 +10527,9 @@
           "304": {
             "$ref": "#/components/responses/not_modified"
           },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
           "401": {
             "$ref": "#/components/responses/requires_authentication"
           },
@@ -10556,11 +10710,6 @@
                     "$ref": "#/components/examples/gpg-key-items"
                   }
                 }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
               }
             }
           }
@@ -11016,53 +11165,23 @@
           "type": "string"
         }
       },
-      "workflow-run-status": {
-        "name": "status",
-        "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`.",
+      "order": {
+        "name": "order",
+        "description": "Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`.",
         "in": "query",
         "required": false,
         "schema": {
           "type": "string",
           "enum": [
-            "completed",
-            "action_required",
-            "cancelled",
-            "failure",
-            "neutral",
-            "skipped",
-            "stale",
-            "success",
-            "timed_out",
-            "in_progress",
-            "queued",
-            "requested",
-            "waiting"
-          ]
+            "desc",
+            "asc"
+          ],
+          "default": "desc"
         }
       },
-      "created": {
-        "name": "created",
-        "description": "Returns workflow runs created within the given date-time range. For more information on the syntax, see \"[Understanding the search syntax](https://docs.github.com/github-ae@latest/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates).\"",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "exclude-pull-requests": {
-        "name": "exclude_pull_requests",
-        "description": "If `true` pull requests are omitted from the response (empty array).",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "boolean",
-          "default": false
-        }
-      },
-      "run-id": {
-        "name": "run_id",
-        "description": "The unique identifier of the workflow run.",
+      "team-id": {
+        "name": "team_id",
+        "description": "The unique identifier of the team.",
         "in": "path",
         "required": true,
         "schema": {
@@ -11223,29 +11342,7 @@
         "required": false,
         "schema": {
           "type": "string",
-          "enum": [
-            "desc",
-            "asc"
-          ],
-          "default": "desc"
-        }
-      },
-      "team-id": {
-        "name": "team_id",
-        "description": "The unique identifier of the team.",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      },
-      "gpg-key-id": {
-        "name": "gpg_key_id",
-        "description": "The unique identifier of the GPG key.",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
+          "format": "date-time"
         }
       },
       "before": {
@@ -14055,6 +14152,12 @@
         "title": "Migration",
         "description": "A migration.",
         "type": "object",
+        "required": [
+          "group_id",
+          "group_name",
+          "teams",
+          "members"
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -14068,6 +14171,133 @@
             "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516"
           },
           "state": {
+            "type": "string",
+            "example": "pending"
+          },
+          "lock_repositories": {
+            "type": "boolean",
+            "example": true
+          },
+          "exclude_metadata": {
+            "type": "boolean"
+          },
+          "exclude_git_data": {
+            "type": "boolean"
+          },
+          "exclude_attachments": {
+            "type": "boolean"
+          },
+          "exclude_releases": {
+            "type": "boolean"
+          },
+          "exclude_owner_projects": {
+            "type": "boolean"
+          },
+          "org_metadata_only": {
+            "type": "boolean"
+          },
+          "repositories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/repository"
+            }
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/orgs/octo-org/migrations/79"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2015-07-06T15:33:38-07:00"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2015-07-06T15:33:38-07:00"
+          },
+          "node_id": {
+            "type": "string"
+          },
+          "archive_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "exclude": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "owner",
+          "guid",
+          "state",
+          "lock_repositories",
+          "exclude_metadata",
+          "exclude_git_data",
+          "exclude_attachments",
+          "exclude_releases",
+          "exclude_owner_projects",
+          "org_metadata_only",
+          "repositories",
+          "url",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "minimal-repository": {
+        "title": "Minimal Repository",
+        "description": "Minimal Repository",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1296269
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+          },
+          "name": {
+            "type": "string",
+            "example": "Hello-World"
+          },
+          "full_name": {
+            "type": "string",
+            "example": "octocat/Hello-World"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "private": {
+            "type": "boolean"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World"
+          },
+          "description": {
+            "type": "string",
+            "example": "This your first repo!",
+            "nullable": true
+          },
+          "fork": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World"
+          },
+          "archive_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+          },
+          "assignees_url": {
             "type": "string",
             "example": "pending"
           },
@@ -16258,6 +16488,35 @@
           "won't fix",
           "used in tests"
         ]
+      },
+      "code-scanning-analysis-commit-sha": {
+        "description": "The SHA of the commit to which the analysis you are uploading relates.",
+        "type": "string",
+        "minLength": 40,
+        "maxLength": 40,
+        "pattern": "^[0-9a-fA-F]+$"
+      },
+      "code-scanning-ref": {
+        "type": "string",
+        "description": "The full Git reference, formatted as `refs/heads/<branch name>`,\n`refs/pull/<number>/merge`, or `refs/pull/<number>/head`."
+      },
+      "code-scanning-analysis-sarif-file": {
+        "description": "A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see \"[SARIF support for code scanning](https://docs.github.com/github-ae@latest/code-security/secure-coding/sarif-support-for-code-scanning).\"",
+        "type": "string"
+      },
+      "code-scanning-sarifs-receipt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+          },
+          "url": {
+            "type": "string",
+            "description": "The REST API URL for checking the status of the upload.",
+            "format": "uri",
+            "readOnly": true
+          }
+        }
       },
       "collaborator": {
         "title": "Collaborator",
@@ -19562,10 +19821,6 @@
         "type": "string",
         "description": "The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data."
       },
-      "code-scanning-ref": {
-        "type": "string",
-        "description": "The full Git reference, formatted as `refs/heads/<branch name>`,\n`refs/pull/<number>/merge`, or `refs/pull/<number>/head`."
-      },
       "alert-number": {
         "type": "integer",
         "description": "The security alert number.",
@@ -19799,6 +20054,11 @@
             "description": "A link to the documentation for the rule used to detect the alert."
           }
         }
+      },
+      "code-scanning-analysis-sarif-id": {
+        "type": "string",
+        "description": "An identifier for the upload.",
+        "example": "6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53"
       },
       "nullable-collaborator": {
         "title": "Collaborator",
@@ -24875,6 +25135,13 @@
             ]
           },
           "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/42/instances"
+        }
+      },
+      "code-scanning-sarif-upload": {
+        "summary": "Default response",
+        "value": {
+          "id": "47177e22-5596-11eb-80a1-c1e54ef945c6",
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/sarifs/47177e22-5596-11eb-80a1-c1e54ef945c6"
         }
       },
       "collaborator-items": {

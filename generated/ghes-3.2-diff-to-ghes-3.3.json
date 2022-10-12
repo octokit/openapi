@@ -4006,6 +4006,53 @@
             }
           },
           {
+            "name": "head",
+            "description": "Filter pulls by head user or head organization and branch name in the format of `user:ref-name` or `organization:ref-name`. For example: `github:new-script-format` or `octocat:test-branch`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "base",
+            "description": "Filter pulls by base branch name. Example: `gh-pages`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "What to sort results by. `popularity` will sort by the number of comments. `long-running` will sort by date created and will limit the results to pull requests that have been open for more than a month and have had activity within the past month.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created",
+                "updated",
+                "popularity",
+                "long-running"
+              ],
+              "default": "created"
+            }
+          },
+          {
+            "name": "direction",
+            "description": "The direction of the sort. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
             "$ref": "#/components/parameters/per-page"
           },
           {
@@ -4738,7 +4785,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Alternative response with extra repository information",
+            "description": "Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -4922,6 +4969,15 @@
           {
             "$ref": "#/components/parameters/repo"
           }
+        }
+      }
+    },
+    "/user/installations/{installation_id}/repositories": {
+      "get": {
+        "summary": "List repositories accessible to the user access token",
+        "description": "List repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access for an installation.\n\nThe authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.\n\nYou must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@3.2/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.\n\nThe access the user has to each repository is included in the hash under the `permissions` key.",
+        "tags": [
+          "apps"
         ],
         "responses": {
           "200": {
@@ -5250,6 +5306,14 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/repos/octocat/Hello-World",
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           },
           "304": {
@@ -5294,7 +5358,7 @@
         "summary": "List repositories for the authenticated user",
         "description": "Lists repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.\n\nThe authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.",
         "tags": [
-          "projects"
+          "activity"
         ],
         "operationId": "repos/list-for-authenticated-user",
         "externalDocs": {
@@ -5436,7 +5500,7 @@
         "summary": "Create a repository for the authenticated user",
         "description": "Creates a new repository for the authenticated user.\n\n**OAuth scope requirements**\n\nWhen using [OAuth](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:\n\n*   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.\n*   `repo` scope to create a private repository.",
         "tags": [
-          "repos"
+          "activity"
         ],
         "operationId": "repos/create-for-authenticated-user",
         "externalDocs": {
@@ -5843,24 +5907,6 @@
                 }
               }
             }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "400": {
-            "$ref": "#/components/responses/bad_request"
-          },
-          "401": {
-            "$ref": "#/components/responses/requires_authentication"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
           }
         },
         "x-github": {
@@ -5952,8 +5998,8 @@
           {
             "$ref": "#/components/parameters/username"
           },
-          {
-            "$ref": "#/components/parameters/per-page"
+          "active": {
+            "type": "boolean"
           },
           {
             "$ref": "#/components/parameters/page"
@@ -6010,8 +6056,8 @@
           {
             "$ref": "#/components/parameters/username"
           },
-          {
-            "$ref": "#/components/parameters/per-page"
+          "created_at": {
+            "type": "string"
           },
           {
             "$ref": "#/components/parameters/page"
@@ -8716,7 +8762,7 @@
             "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
             "type": "string"
           },
-          "created_at": {
+          "url": {
             "type": "string",
             "example": "https://api.github.com/repos/github/hello-world/actions/jobs/21"
           },
@@ -10203,12 +10249,12 @@
           "user": {
             "$ref": "#/components/schemas/nullable-simple-user"
           },
-          "created_at": {
+          "gravatar_id": {
             "type": "string",
             "format": "date-time",
             "example": "2011-04-14T16:00:49Z"
           },
-          "updated_at": {
+          "url": {
             "type": "string",
             "format": "date-time",
             "example": "2011-04-14T16:00:49Z"
@@ -10783,12 +10829,12 @@
             "format": "date-time",
             "example": "2011-04-10T20:09:31Z"
           },
-          "updated_at": {
+          "html_url": {
             "type": "string",
             "format": "date-time",
             "example": "2014-03-03T18:58:10Z"
           },
-          "closed_at": {
+          "created_at": {
             "type": "string",
             "format": "date-time",
             "example": "2013-02-12T13:22:01Z",
@@ -11979,7 +12025,6 @@
         "title": "Team",
         "description": "Groups of organization members that gives permissions on specified repositories.",
         "type": "object",
-        "description": "Describe a region within a file for the alert.",
         "properties": {
           "id": {
             "type": "integer"
@@ -12594,7 +12639,7 @@
           "name": {
             "description": "The file name of the asset.",
             "type": "string",
-            "format": "uri"
+            "example": "Team Environment"
           },
           "label": {
             "type": "string",

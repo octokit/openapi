@@ -7131,6 +7131,122 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/code-scanning/sarifs": {
+      "post": {
+        "summary": "Upload an analysis as SARIF data",
+        "description": "Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint for private repositories. You can also use tokens with the `public_repo` scope for public repositories only. GitHub Apps must have the `security_events` write permission to use this endpoint.\n\nThere are two places where you can upload code scanning results.\n - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see \"[Triaging code scanning alerts in pull requests](/code-security/secure-coding/triaging-code-scanning-alerts-in-pull-requests).\"\n - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see \"[Managing code scanning alerts for your repository](/code-security/secure-coding/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository).\"\n\nYou must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:\n\n```\ngzip -c analysis-data.sarif | base64 -w0\n```\n\nSARIF upload supports a maximum of 5000 results per analysis run. Any results over this limit are ignored and any SARIF uploads with more than 25,000 results are rejected. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.\n\nThe `202 Accepted`, response includes an `id` value.\nYou can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.\nFor more information, see \"[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload).\"",
+        "operationId": "code-scanning/upload-sarif",
+        "tags": [
+          "code-scanning"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/code-scanning#upload-a-sarif-file"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commit_sha": {
+                    "$ref": "#/components/schemas/code-scanning-analysis-commit-sha"
+                  },
+                  "ref": {
+                    "$ref": "#/components/schemas/code-scanning-ref"
+                  },
+                  "sarif": {
+                    "$ref": "#/components/schemas/code-scanning-analysis-sarif-file"
+                  },
+                  "checkout_uri": {
+                    "description": "The base directory used in the analysis, as it appears in the SARIF file.\nThis property is used to convert file paths from absolute to relative, so that alerts can be mapped to their correct location in the repository.",
+                    "example": "file:///github/workspace/",
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "started_at": {
+                    "description": "The time that the analysis run began. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "tool_name": {
+                    "description": "The name of the tool used to generate the code scanning analysis. If this parameter is not used, the tool name defaults to \"API\". If the uploaded SARIF contains a tool GUID, this will be available for filtering using the `tool_guid` parameter of operations such as `GET /repos/{owner}/{repo}/code-scanning/alerts`.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "commit_sha",
+                  "ref",
+                  "sarif"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "commit_sha": "4b6472266afd7b471e86085a6659e8c7f2b119da",
+                    "ref": "refs/heads/master",
+                    "sarif": "H4sICMLGdF4AA2V4YW1wbGUuc2FyaWYAvVjdbts2FL7PUxDCijaA/CM7iRNfLkPXYgHSNstumlzQ0pHFVCI1korjFgH2ONtr7Ul2KFmy/mOn6QIkjsjDw0/nfN85NL8dEGL9pNwAImqRObECrWM1H40kXQ2XTAfJIlEgXcE1cD10RTQSVDE10K4aKSqZP1AxuKOIKg1ydJU60jSfSh8Hk6EzHA/vlOCWbfa7B6kYPpj90rlsWCZcmbHP5Bs+4oAWIjQD2SMOeJLh2vIQDnIaQerqXHjw8YIgxohybxAyDsS4cAPKsp03K4RcUs6+Up2D+JXpd8mibKIQN9fM/aMCdbyBujGSSQgVxJtx5qX2d2qUcIweQhEuDQf3GBO6CKHkogx/N3MVCKl/AeVKFuf4y5ubsMGDTj1ep+5I7sgmLIpxtU38hLtmMRGSuCFVyip5eKzs5ydh+LztVL6f2m6oih1BkYiuyQIIJWodxVpERPj4sEiWBNNH8EWT0DMG8EAjzKVHXCrB4FkPu/F64NMk1OeC+2yZSNoBOoR7CC0EzYWGbm+xFDFIzbI011+cLjfZtyJkmMZfumAh02uL3NpV2y+MZ6RAjxibyKrNxxJcVjANSb4eBGwZ1M0KsuyR2poLr5rMl8vaDSeVn6eTWEO2j2xIEcmhwlTKNOi4GMOI8gfuZYkvJ7b4v5Tiumyz7RnHeodFzpS8ASIZCH/AYdWi2z3sG8JtFxJ6fF9yR9CdifBr9Pd6d5V2+zbJKjjCFGGmsHuYFy2ytJq9tUxcLSRSQecppOGKrpUxYfxefMEFK+wOGa4hudQByBVT0L+EKtyACxnRsABhEx1QjVDs1KNI9MbpnhqfE45B6FJvu3hRu5VRU9MhZLmK7fqkKyQSTHNoyMqUFMqXCV3CwAeqEwmVokraK8IuBaGvHjQ0gMYrKjnjyw7uk9uD8tgmsBbFMPnU1bV2ZhkJNkuolUiWys3UPWzs5aaIUz9TBe8zMb+6+nT+6fLy91dlE3xzeDDT4zYszb0bW6NjJd0Rvn2EnLvWLFSdKPpBzInzfRgu8ETyMcH8nIfMnJCeC2PyfTA+UKngcnGH7Hw2hGkVQs5YlIRCtdWZYQ4/73es2JlxkfViOEIhoWJq5Oo6UBBfiKIqFBWhiE3jJGbFwVoxBHTRSuIS67sMeplei24X20shLjG+8gqbKC/bESiNMC+wd5q5id0yeS7CJEqXzmrTWNq3k05l84P6f4/bEmXFJjI0fIt1BGQssUnUDkBYeVhE5TqPnMH3jqogDcP0zKcTgLPTMSzOjhbjuVOmW23l1fYNStulfo6sXlFsGLhbDy5RECPRYGCTgOj2bd4nUQEivEd0H7KKYxqnEhFohuur3a3UPskbH/+Yg0+M5P2MHRJu3ziHh3Z2NCrWt3XF1rWTw8Ne/pfbWYXnDSE0SNZQQt1i18q7te2vOhu7ehWuvVyeu0wbLZi24mhoo6aOOTltzG/lgdVvVoXQq5V+pewkFIzL8fjEcadT55jOjpzFzHuOTtDNrMkJPMVQDd7F09RID72O/UPZ0tmctqZ7kWX6EmSZnDpP8GU67SXM8XE3YSrxbKsx6UReZ4y6n/FVZfJjs9Z7stma75W5yQtkzjk5eSJxk1lv4o7+j8TlhaJ2lsKWZO6lruDPBLib3x5ZN/KGWzZ+pn///evv7OOf4iIBv3oY9L/l1wiJ9p0Tc+F1zZnOE9NxXWEus6IQhr5pMfoqxi8WPsuu0azsns4UC6WzNzHIzbeEx4P/AJ3SefgcFAAA"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-sarifs-receipt"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-sarif-upload"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request if the sarif field is invalid"
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_write"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "413": {
+            "description": "Payload Too Large if the sarif field is too large"
+          },
+          "503": {
+            "$ref": "#/components/responses/service_unavailable"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "code-scanning"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
     "/repos/{owner}/{repo}/collaborators": {
       "get": {
         "summary": "List repository collaborators",
@@ -14632,6 +14748,31 @@
           "warning"
         ]
       },
+      "code-scanning-analysis-commit-sha": {
+        "description": "The SHA of the commit to which the analysis you are uploading relates.",
+        "type": "string",
+        "minLength": 40,
+        "maxLength": 40,
+        "pattern": "^[0-9a-fA-F]+$"
+      },
+      "code-scanning-analysis-sarif-file": {
+        "description": "A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see \"[SARIF support for code scanning](https://docs.github.com/enterprise-server@3.6/code-security/secure-coding/sarif-support-for-code-scanning).\"",
+        "type": "string"
+      },
+      "code-scanning-sarifs-receipt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+          },
+          "url": {
+            "type": "string",
+            "description": "The REST API URL for checking the status of the upload.",
+            "format": "uri",
+            "readOnly": true
+          }
+        }
+      },
       "collaborator": {
         "title": "Collaborator",
         "description": "Collaborator",
@@ -19041,13 +19182,6 @@
         "type": "string",
         "description": "The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data."
       },
-      "code-scanning-analysis-commit-sha": {
-        "description": "The SHA of the commit to which the analysis you are uploading relates.",
-        "type": "string",
-        "minLength": 40,
-        "maxLength": 40,
-        "pattern": "^[0-9a-fA-F]+$"
-      },
       "code-scanning-analysis-analysis-key": {
         "type": "string",
         "description": "Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name."
@@ -22855,6 +22989,13 @@
           }
         ]
       },
+      "code-scanning-sarif-upload": {
+        "summary": "Default response",
+        "value": {
+          "id": "47177e22-5596-11eb-80a1-c1e54ef945c6",
+          "url": "https://api.github.com/repos/octocat/hello-world/code-scanning/sarifs/47177e22-5596-11eb-80a1-c1e54ef945c6"
+        }
+      },
       "collaborator-items": {
         "value": [
           {
@@ -24500,6 +24641,16 @@
       },
       "code_scanning_forbidden_read": {
         "description": "Response if GitHub Advanced Security is not enabled for this repository",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "code_scanning_forbidden_write": {
+        "description": "Response if the repository is archived or if GitHub Advanced Security is not enabled for this repository",
         "content": {
           "application/json": {
             "schema": {
