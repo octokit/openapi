@@ -1,4 +1,4 @@
-const { createWriteStream, readdirSync, writeFileSync } = require("fs");
+const { createWriteStream, readdirSync, writeFileSync, rmSync } = require("fs");
 const { basename, resolve } = require("path");
 
 const prettier = require("prettier");
@@ -30,6 +30,14 @@ async function run() {
     map[route].push(change);
     return map;
   }, {});
+
+  // empty generated/ folder
+  console.log("Emptying generated/ folder");
+  readdirSync("generated").forEach((filename) => {
+    if (filename === "README.md") return;
+
+    rmSync(`generated/${filename}`);
+  });
 
   for (const file of schemaFileNames) {
     const schema = require(`../cache/${file}`);
