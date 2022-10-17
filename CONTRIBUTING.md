@@ -47,24 +47,23 @@ It's written in Rust and there is no pre-compiled binary yet that could just run
 ANICCA_REPOSITORY_PATH='<path_to_my_local_anicca_repo>' npm run build
 ```
 
-## Submitting the Pull Request
+## Submitting a manual Pull Request
 
+- **Do not** submit a pull request that edits an OpenAPI operation. These changes need to be done in https://github.com/github/rest-api-description/.
 - Create a new branch locally.
 - Make your changes in that branch and push them to your fork
 - Submit a pull request from your topic branch to the main branch on the `octokit/openapi` repository.
 - Be sure to tag any issues your pull request is taking care of / contributing to. Adding "Closes #123" to a pull request description will automatically close the issue once the pull request is merged in.
 
-## Testing a pull request from github repo locally:
-
-You can install `@octokit/openapi` from each pull request. Replace `[PULL REQUEST NUMBER]`:
-
-```
-npm install https://github.pika.dev/octokit/openapi/pr/[PULL REQUEST NUMBER]
-```
-
-Once you are done testing, you can revert back to the default module `@octokit/openapi` from npm with `npm install @octokit/openapi`
-
 ## Maintainers only
+
+### Reviewing an automated OpenAPI update pull request
+
+1. Review the changes.
+   1. If there are only description updates, change the PR title to something like `fix: comment updates`. The `fix:` prefix in the squash & merge commit header is important to calculate the next version.
+   2. If there are any additions, use a `feat:` prefix.
+   3. If there are breaking changes, try to address them by adding an entry to [changes/](https://github.com/octokit/openapi/tree/main/changes). Avoid breaking changes if at all possible.
+   4. If endpoints have been removed which happens occasionally, release a breaking change of `octokit/openapi` and the `octokit/(openapi-)types.ts` repository, in order to prevent TypeScript build errors for users. The actual libraries and plugins can update to the new breaking versions as part of a fix release.
 
 ### Merging the Pull Request & releasing a new version
 
