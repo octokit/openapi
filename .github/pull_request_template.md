@@ -24,9 +24,7 @@ Resolves #ISSUE_NUMBER
 
 <!-- Any other information that is important to this PR  -->
 
--
-
----
+- ***
 
 ## Additional info
 
