@@ -1,4 +1,20 @@
 {
+  "info": {
+    "contact": null,
+    "description": null,
+    "extensions": {
+      "changed": {
+        "x-github-plan": {
+          "from": "api.github.com",
+          "to": "ghec"
+        }
+      }
+    },
+    "license": null,
+    "terms_of_service": null,
+    "title": null,
+    "version": null
+  },
   "paths": {
     "added": {
       "/enterprises/{enterprise}/actions/oidc/customization/issuer": {
@@ -66,7 +82,7 @@
       "/enterprises/{enterprise}/audit-log": {
         "get": {
           "deprecated": null,
-          "description": "Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.",
+          "description": "Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `read:audit_log` scope.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/enterprise-admin#get-the-audit-log-for-an-enterprise"
@@ -254,6 +270,9 @@
                         "business": {
                           "type": "string"
                         },
+                        "business_id": {
+                          "type": "integer"
+                        },
                         "config": {
                           "items": {
                             "type": "object"
@@ -319,6 +338,9 @@
                         "openssh_public_key": {
                           "type": "string"
                         },
+                        "operation_type": {
+                          "type": "string"
+                        },
                         "org": {
                           "type": "string"
                         },
@@ -360,6 +382,9 @@
                           "description": "The user that was affected by the action performed (if available).",
                           "type": "string"
                         },
+                        "user_id": {
+                          "type": "integer"
+                        },
                         "visibility": {
                           "description": "The repository visibility, for example `public` or `private`.",
                           "type": "string"
@@ -400,7 +425,7 @@
       "/enterprises/{enterprise}/consumed-licenses": {
         "get": {
           "deprecated": null,
-          "description": "Lists the license consumption information for all users, including those from connected servers, associated with an enterprise.\nTo use this endpoint, you must be an enterprise admin, and you must use an access\ntoken with the `read:enterprise` scope.\n\n**Note:** The license consumption API endpoints for enterprise accounts are currently\nin Beta and are subject to change.",
+          "description": "Lists the license consumption information for all users, including those from connected servers, associated with an enterprise.\nTo use this endpoint, you must be an enterprise admin, and you must use an access\ntoken with the `read:enterprise` scope.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/enterprise-admin#list-enterprise-consumed-licenses"
@@ -453,7 +478,7 @@
                         "total_seats_purchased": 4500,
                         "users": [
                           {
-                            "enterprise_server_emails": [
+                            "enterprise_server_primary_emails": [
                               "monalisa@github.com"
                             ],
                             "enterprise_server_user": true,
@@ -461,7 +486,6 @@
                               "example_host_name.com:123",
                               "example_host_name_2:222"
                             ],
-                            "github_com_enterprise_role": "owner",
                             "github_com_enterprise_roles": [
                               "owner"
                             ],
@@ -477,6 +501,7 @@
                             ],
                             "github_com_profile": "https://github.com/monalisa",
                             "github_com_saml_name_id": "monalisa",
+                            "github_com_two_factor_auth": true,
                             "github_com_user": true,
                             "github_com_verified_domain_emails": [
                               "monalisa@github.com"
@@ -487,7 +512,7 @@
                           },
                           {
                             "enterprise_server_emails": [
-                              "deleonjavier@example.com"
+                              "hubot@example.com"
                             ],
                             "enterprise_server_user": true,
                             "enterprise_server_user_ids": [
@@ -530,11 +555,6 @@
                               },
                               "type": "array"
                             },
-                            "github_com_enterprise_role": {
-                              "description": "Deprecated: The most permissive enterprise role for a user.",
-                              "nullable": true,
-                              "type": "string"
-                            },
                             "github_com_enterprise_roles": {
                               "description": "All enterprise roles for a user.",
                               "items": {
@@ -569,6 +589,10 @@
                               "nullable": true,
                               "type": "string"
                             },
+                            "github_com_two_factor_auth": {
+                              "nullable": true,
+                              "type": "boolean"
+                            },
                             "github_com_user": {
                               "type": "boolean"
                             },
@@ -583,6 +607,10 @@
                             },
                             "total_user_accounts": {
                               "type": "integer"
+                            },
+                            "visual_studio_license_status": {
+                              "nullable": true,
+                              "type": "string"
                             },
                             "visual_studio_subscription_email": {
                               "nullable": true,
@@ -729,7 +757,7 @@
       "/enterprises/{enterprise}/settings/billing/actions": {
         "get": {
           "deprecated": null,
-          "description": "Gets the summary of the free and paid GitHub Actions minutes used.\n\nPaid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see \"[Managing billing for GitHub Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)\".\n\nThe authenticated user must be an enterprise admin.",
+          "description": "Gets the summary of the free and paid GitHub Actions minutes used.\n\nPaid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see \"[Managing billing for GitHub Actions](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)\".\n\nThe authenticated user must be an enterprise admin.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/billing#get-github-actions-billing-for-an-enterprise"
@@ -783,6 +811,10 @@
                           },
                           "WINDOWS": {
                             "description": "Total minutes used on Windows runner machines.",
+                            "type": "integer"
+                          },
+                          "macos_12_core": {
+                            "description": "Total minutes used on macOS 12 core runner machines.",
                             "type": "integer"
                           },
                           "total": {
@@ -869,7 +901,7 @@
       "/enterprises/{enterprise}/settings/billing/packages": {
         "get": {
           "deprecated": null,
-          "description": "Gets the free and paid storage used for GitHub Packages in gigabytes.\n\nPaid minutes only apply to packages stored for private repositories. For more information, see \"[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages).\"\n\nThe authenticated user must be an enterprise admin.",
+          "description": "Gets the free and paid storage used for GitHub Packages in gigabytes.\n\nPaid minutes only apply to packages stored for private repositories. For more information, see \"[Managing billing for GitHub Packages](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages).\"\n\nThe authenticated user must be an enterprise admin.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/billing#get-github-packages-billing-for-an-enterprise"
@@ -942,7 +974,7 @@
       "/enterprises/{enterprise}/settings/billing/shared-storage": {
         "get": {
           "deprecated": null,
-          "description": "Gets the estimated paid and estimated total storage used for GitHub Actions and GitHub Packages.\n\nPaid minutes only apply to packages stored for private repositories. For more information, see \"[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages).\"\n\nThe authenticated user must be an enterprise admin.",
+          "description": "Gets the estimated paid and estimated total storage used for GitHub Actions and GitHub Packages.\n\nPaid minutes only apply to packages stored for private repositories. For more information, see \"[Managing billing for GitHub Packages](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages).\"\n\nThe authenticated user must be an enterprise admin.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/billing#get-shared-storage-billing-for-an-enterprise"
@@ -1012,209 +1044,10 @@
           }
         }
       },
-      "/orgs/{org}/actions/oidc/customization/sub": {
-        "get": {
-          "deprecated": null,
-          "description": "Gets the customization template for an OpenID Connect (OIDC) subject claim.\nYou must authenticate using an access token with the `read:org` scope to use this endpoint.\nGitHub Apps must have the `organization_administration:write` permission to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/actions/oidc#get-the-customization-template-for-an-oidc-subject-claim-for-an-organization"
-          },
-          "operationId": "oidc/get-oidc-custom-sub-template-for-org",
-          "parameters": [
-            {
-              "description": "The organization name. The name is not case sensitive.",
-              "in": "path",
-              "name": "org",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "include_claim_keys": [
-                          "repo",
-                          "context"
-                        ]
-                      }
-                    }
-                  },
-                  "schema": {
-                    "description": "Actions OIDC Subject customization",
-                    "properties": {
-                      "include_claim_keys": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      }
-                    },
-                    "required": [
-                      "include_claim_keys"
-                    ],
-                    "title": "Actions OIDC Subject customization",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "A JSON serialized template for OIDC subject claim customization"
-            }
-          },
-          "summary": "Get the customization template for an OIDC subject claim for an organization",
-          "tags": [
-            "oidc"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": true,
-            "subcategory": "oidc"
-          }
-        },
-        "put": {
-          "deprecated": null,
-          "description": "Creates or updates the customization template for an OpenID Connect (OIDC) subject claim.\nYou must authenticate using an access token with the `write:org` scope to use this endpoint.\nGitHub Apps must have the `admin:org` permission to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/actions/oidc#set-the-customization-template-for-an-oidc-subject-claim-for-an-organization"
-          },
-          "operationId": "oidc/update-oidc-custom-sub-template-for-org",
-          "parameters": [
-            {
-              "description": "The organization name. The name is not case sensitive.",
-              "in": "path",
-              "name": "org",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "include_claim_keys": [
-                        "repo",
-                        "context"
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "description": "Actions OIDC Subject customization",
-                  "properties": {
-                    "include_claim_keys": {
-                      "items": {
-                        "type": "string"
-                      },
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "include_claim_keys"
-                  ],
-                  "title": "Actions OIDC Subject customization",
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "201": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "additionalProperties": false,
-                    "description": "An object without any properties.",
-                    "title": "Empty Object",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Empty response"
-            },
-            "403": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Forbidden"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            }
-          },
-          "summary": "Set the customization template for an OIDC subject claim for an organization",
-          "tags": [
-            "oidc"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": true,
-            "subcategory": "oidc"
-          }
-        }
-      },
       "/orgs/{org}/audit-log": {
         "get": {
           "deprecated": null,
-          "description": "Gets the audit log for an organization. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization).\"\n\nThis endpoint is available for organizations on GitHub Enterprise Cloud. To use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.\n\nBy default, the response includes up to 30 events from the past three months. Use the `phrase` parameter to filter results and retrieve older events. For example, use the `phrase` parameter with the `created` qualifier to filter events based on when the events occurred. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/enterprise-cloud@latest//organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).\"\n\nUse pagination to retrieve fewer or more than 30 events. For more information, see \"[Resources in the REST API](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#pagination).\"",
+          "description": "Gets the audit log for an organization. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization).\"\n\nTo use this endpoint, you must be an organization owner, and you must use an access token with the `read:audit_log` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.\n\nBy default, the response includes up to 30 events from the past three months. Use the `phrase` parameter to filter results and retrieve older events. For example, use the `phrase` parameter with the `created` qualifier to filter events based on when the events occurred. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/enterprise-cloud@latest//organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).\"\n\nUse pagination to retrieve fewer or more than 30 events. For more information, see \"[Resources in the REST API](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#pagination).\"",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#get-audit-log"
@@ -1390,6 +1223,9 @@
                         "business": {
                           "type": "string"
                         },
+                        "business_id": {
+                          "type": "integer"
+                        },
                         "config": {
                           "items": {
                             "type": "object"
@@ -1455,6 +1291,9 @@
                         "openssh_public_key": {
                           "type": "string"
                         },
+                        "operation_type": {
+                          "type": "string"
+                        },
                         "org": {
                           "type": "string"
                         },
@@ -1496,6 +1335,9 @@
                           "description": "The user that was affected by the action performed (if available).",
                           "type": "string"
                         },
+                        "user_id": {
+                          "type": "integer"
+                        },
                         "visibility": {
                           "description": "The repository visibility, for example `public` or `private`.",
                           "type": "string"
@@ -1525,7 +1367,7 @@
       "/orgs/{org}/credential-authorizations": {
         "get": {
           "deprecated": null,
-          "description": "Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products).\n\nAn authenticated organization owner with the `read:org` scope can list all credential authorizations for an organization that uses SAML single sign-on (SSO). The credentials are either personal access tokens or SSH keys that organization members have authorized for the organization. For more information, see [About authentication with SAML single sign-on](https://docs.github.com/en/articles/about-authentication-with-saml-single-sign-on).",
+          "description": "Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products).\n\nAn authenticated organization owner with the `read:org` scope can list all credential authorizations for an organization that uses SAML single sign-on (SSO). The credentials are either personal access tokens or SSH keys that organization members have authorized for the organization. For more information, see [About authentication with SAML single sign-on](https://docs.github.com/enterprise-cloud@latest//articles/about-authentication-with-saml-single-sign-on).",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#list-saml-sso-authorizations-for-an-organization"
@@ -1586,6 +1428,7 @@
                       "value": [
                         {
                           "authorized_credential_expires_at": "2011-02-25T19:06:43Z",
+                          "credential_accessed_at": "2011-01-26T19:06:43Z",
                           "credential_authorized_at": "2011-01-26T19:06:43Z",
                           "credential_id": 161195,
                           "credential_type": "personal access token",
@@ -1598,6 +1441,7 @@
                         },
                         {
                           "authorized_credential_expires_at": "2019-04-28T19:06:43Z",
+                          "credential_accessed_at": "2011-01-26T19:06:43Z",
                           "credential_authorized_at": "2019-03-29T19:06:43Z",
                           "credential_id": 161196,
                           "credential_type": "personal access token",
@@ -1720,7 +1564,7 @@
       "/orgs/{org}/credential-authorizations/{credential_id}": {
         "delete": {
           "deprecated": null,
-          "description": "Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products).\n\nAn authenticated organization owner with the `admin:org` scope can remove a credential authorization for an organization that uses SAML SSO. Once you remove someone's credential authorization, they will need to create a new personal access token or SSH key and authorize it for the organization they want to access.",
+          "description": "Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products).\n\nAn authenticated organization owner with the `admin:org` scope can remove a credential authorization for an organization that uses SAML SSO. Once you remove someone's credential authorization, they will need to create a new personal access token or SSH key and authorize it for the organization they want to access.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#remove-a-saml-sso-authorization-for-an-organization"
@@ -2140,7 +1984,7 @@
       "/orgs/{org}/team-sync/groups": {
         "get": {
           "deprecated": null,
-          "description": "Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nList IdP groups available in an organization. You can limit your page results using the `per_page` parameter. GitHub Enterprise Cloud generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see \"[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89).\"",
+          "description": "Lists IdP groups available in an organization.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#list-idp-groups-for-an-organization"
@@ -2174,6 +2018,17 @@
               "description": "Page token",
               "in": "query",
               "name": "page",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Filters the results to return only those that begin with the value specified by this parameter. For example, a value of `ab` will return results that begin with \"ab\".",
+              "in": "query",
+              "name": "q",
               "required": false,
               "schema": {
                 "type": "string"
@@ -2676,7 +2531,7 @@
       "/orgs/{org}/teams/{team_slug}/team-sync/group-mappings": {
         "get": {
           "deprecated": null,
-          "description": "Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nList IdP groups connected to a team on GitHub Enterprise Cloud.\n\n**Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.",
+          "description": "Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nList IdP groups connected to a team on GitHub Enterprise Cloud.\n\n**Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#list-idp-groups-for-a-team"
@@ -2803,7 +2658,7 @@
         },
         "patch": {
           "deprecated": null,
-          "description": "Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nCreates, updates, or removes a connection between a team and an IdP group. When adding groups to a team, you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty `groups` array will remove all connections for a team.\n\n**Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.",
+          "description": "Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nCreates, updates, or removes a connection between a team and an IdP group. When adding groups to a team, you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty `groups` array will remove all connections for a team.\n\n**Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/team-sync/group-mappings`.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#create-or-update-idp-group-connections"
@@ -2978,363 +2833,6 @@
             "enabledForGitHubApps": false,
             "githubCloudOnly": true,
             "subcategory": "team-sync"
-          }
-        }
-      },
-      "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
-        "get": {
-          "deprecated": null,
-          "description": "Gets the `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.\nYou must authenticate using an access token with the `repo` scope to use this\nendpoint. GitHub Apps must have the `organization_administration:read` permission to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/actions/oidc#get-the-opt-out-flag-of-an-oidc-subject-claim-customization-for-a-repository"
-          },
-          "operationId": "actions/get-custom-oidc-sub-claim-for-repo",
-          "parameters": [
-            {
-              "description": "The account owner of the repository. The name is not case sensitive.",
-              "in": "path",
-              "name": "owner",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "The name of the repository. The name is not case sensitive.",
-              "in": "path",
-              "name": "repo",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "use_default": false
-                      }
-                    }
-                  },
-                  "schema": {
-                    "description": "OIDC Customer Subject",
-                    "properties": {
-                      "use_default": {
-                        "type": "boolean"
-                      }
-                    },
-                    "required": [
-                      "use_default"
-                    ],
-                    "title": "The json payload enables/disables the use of sub claim customization",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Status response"
-            },
-            "400": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Bad Request"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            }
-          },
-          "summary": "Get the opt-out flag of an OIDC subject claim customization for a repository",
-          "tags": [
-            "actions"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": true,
-            "subcategory": "oidc"
-          }
-        },
-        "put": {
-          "deprecated": null,
-          "description": "Sets the `opt-in` or `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.\nYou must authenticate using an access token with the `repo` scope to use this\nendpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/actions/oidc#set-the-opt-out-flag-of-an-oidc-subject-claim-customization-for-a-repository"
-          },
-          "operationId": "actions/set-custom-oidc-sub-claim-for-repo",
-          "parameters": [
-            {
-              "description": "The account owner of the repository. The name is not case sensitive.",
-              "in": "path",
-              "name": "owner",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "The name of the repository. The name is not case sensitive.",
-              "in": "path",
-              "name": "repo",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "use_default": false
-                    }
-                  }
-                },
-                "schema": {
-                  "description": "OIDC Customer Subject",
-                  "properties": {
-                    "use_default": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "use_default"
-                  ],
-                  "title": "The json payload enables/disables the use of sub claim customization",
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "201": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "additionalProperties": false,
-                    "description": "An object without any properties.",
-                    "title": "Empty Object",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Empty response"
-            },
-            "400": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Bad Request"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            },
-            "422": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Validation Error Simple",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "errors": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "message": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "message",
-                      "documentation_url"
-                    ],
-                    "title": "Validation Error Simple",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Validation failed, or the endpoint has been spammed."
-            }
-          },
-          "summary": "Set the opt-in flag of an OIDC subject claim customization for a repository",
-          "tags": [
-            "actions"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": true,
-            "subcategory": "oidc"
           }
         }
       },
@@ -3540,6 +3038,9 @@
                                   "primary": {
                                     "type": "boolean"
                                   },
+                                  "type": {
+                                    "type": "string"
+                                  },
                                   "value": {
                                     "type": "string"
                                   }
@@ -3549,7 +3050,6 @@
                                 ],
                                 "type": "object"
                               },
-                              "minItems": 1,
                               "type": "array"
                             },
                             "externalId": {
@@ -3568,7 +3068,8 @@
                                   "value": {
                                     "type": "string"
                                   }
-                                }
+                                },
+                                "type": "object"
                               },
                               "type": "array"
                             },
@@ -3620,10 +3121,6 @@
                                   "type": "string"
                                 }
                               },
-                              "required": [
-                                "givenName",
-                                "familyName"
-                              ],
                               "type": "object"
                             },
                             "operations": {
@@ -3675,6 +3172,26 @@
                               "description": "The ID of the organization.",
                               "type": "integer"
                             },
+                            "roles": {
+                              "items": {
+                                "properties": {
+                                  "display": {
+                                    "type": "string"
+                                  },
+                                  "primary": {
+                                    "type": "boolean"
+                                  },
+                                  "type": {
+                                    "type": "string"
+                                  },
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
                             "schemas": {
                               "description": "SCIM schema used.",
                               "items": {
@@ -3694,9 +3211,6 @@
                           "required": [
                             "id",
                             "schemas",
-                            "externalId",
-                            "userName",
-                            "name",
                             "emails",
                             "active",
                             "meta"
@@ -3816,7 +3330,7 @@
                   }
                 }
               },
-              "description": "Bad Request"
+              "description": "Bad request"
             },
             "403": {
               "content": {
@@ -4035,7 +3549,7 @@
                   }
                 }
               },
-              "description": "Too Many Requests"
+              "description": "Too many requests"
             }
           },
           "summary": "List SCIM provisioned identities",
@@ -4051,7 +3565,7 @@
         },
         "post": {
           "deprecated": null,
-          "description": "Provision organization membership for a user, and send an activation email to the email address.",
+          "description": "Provisions organization membership for a user, and sends an activation email to the email address. If the user was previously a member of the organization, the invitation will reinstate any former privileges that the user had. For more information about reinstating former members, see \"[Reinstating a former member of your organization](https://docs.github.com/enterprise-cloud@latest//organizations/managing-membership-in-your-organization/reinstating-a-former-member-of-your-organization).\"",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/scim#provision-and-invite-a-scim-user"
@@ -4072,6 +3586,20 @@
           "requestBody": {
             "content": {
               "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "emails": [
+                        {
+                          "primary": true,
+                          "value": "mona.octocat@github.com"
+                        }
+                      ],
+                      "name": "Monalisa Octocat",
+                      "userName": "octocat"
+                    }
+                  }
+                },
                 "schema": {
                   "properties": {
                     "active": {
@@ -4237,6 +3765,9 @@
                             "primary": {
                               "type": "boolean"
                             },
+                            "type": {
+                              "type": "string"
+                            },
                             "value": {
                               "type": "string"
                             }
@@ -4246,7 +3777,6 @@
                           ],
                           "type": "object"
                         },
-                        "minItems": 1,
                         "type": "array"
                       },
                       "externalId": {
@@ -4265,7 +3795,8 @@
                             "value": {
                               "type": "string"
                             }
-                          }
+                          },
+                          "type": "object"
                         },
                         "type": "array"
                       },
@@ -4317,10 +3848,6 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "givenName",
-                          "familyName"
-                        ],
                         "type": "object"
                       },
                       "operations": {
@@ -4372,6 +3899,26 @@
                         "description": "The ID of the organization.",
                         "type": "integer"
                       },
+                      "roles": {
+                        "items": {
+                          "properties": {
+                            "display": {
+                              "type": "string"
+                            },
+                            "primary": {
+                              "type": "boolean"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
                       "schemas": {
                         "description": "SCIM schema used.",
                         "items": {
@@ -4391,9 +3938,6 @@
                     "required": [
                       "id",
                       "schemas",
-                      "externalId",
-                      "userName",
-                      "name",
                       "emails",
                       "active",
                       "meta"
@@ -4479,7 +4023,7 @@
                   }
                 }
               },
-              "description": "Bad Request"
+              "description": "Bad request"
             },
             "403": {
               "content": {
@@ -4771,7 +4315,7 @@
                   }
                 }
               },
-              "description": "Internal Error"
+              "description": "Internal server error"
             }
           },
           "summary": "Provision and invite a SCIM user",
@@ -5079,6 +4623,9 @@
                             "primary": {
                               "type": "boolean"
                             },
+                            "type": {
+                              "type": "string"
+                            },
                             "value": {
                               "type": "string"
                             }
@@ -5088,7 +4635,6 @@
                           ],
                           "type": "object"
                         },
-                        "minItems": 1,
                         "type": "array"
                       },
                       "externalId": {
@@ -5107,7 +4653,8 @@
                             "value": {
                               "type": "string"
                             }
-                          }
+                          },
+                          "type": "object"
                         },
                         "type": "array"
                       },
@@ -5159,10 +4706,6 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "givenName",
-                          "familyName"
-                        ],
                         "type": "object"
                       },
                       "operations": {
@@ -5214,6 +4757,26 @@
                         "description": "The ID of the organization.",
                         "type": "integer"
                       },
+                      "roles": {
+                        "items": {
+                          "properties": {
+                            "display": {
+                              "type": "string"
+                            },
+                            "primary": {
+                              "type": "boolean"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
                       "schemas": {
                         "description": "SCIM schema used.",
                         "items": {
@@ -5233,9 +4796,6 @@
                     "required": [
                       "id",
                       "schemas",
-                      "externalId",
-                      "userName",
-                      "name",
                       "emails",
                       "active",
                       "meta"
@@ -5441,6 +5001,20 @@
           "requestBody": {
             "content": {
               "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "Operations": [
+                        {
+                          "op": "replace",
+                          "value": {
+                            "displayName": "Octocat"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
                 "schema": {
                   "properties": {
                     "Operations": {
@@ -5606,6 +5180,9 @@
                             "primary": {
                               "type": "boolean"
                             },
+                            "type": {
+                              "type": "string"
+                            },
                             "value": {
                               "type": "string"
                             }
@@ -5615,7 +5192,6 @@
                           ],
                           "type": "object"
                         },
-                        "minItems": 1,
                         "type": "array"
                       },
                       "externalId": {
@@ -5634,7 +5210,8 @@
                             "value": {
                               "type": "string"
                             }
-                          }
+                          },
+                          "type": "object"
                         },
                         "type": "array"
                       },
@@ -5686,10 +5263,6 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "givenName",
-                          "familyName"
-                        ],
                         "type": "object"
                       },
                       "operations": {
@@ -5741,6 +5314,26 @@
                         "description": "The ID of the organization.",
                         "type": "integer"
                       },
+                      "roles": {
+                        "items": {
+                          "properties": {
+                            "display": {
+                              "type": "string"
+                            },
+                            "primary": {
+                              "type": "boolean"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
                       "schemas": {
                         "description": "SCIM schema used.",
                         "items": {
@@ -5760,9 +5353,6 @@
                     "required": [
                       "id",
                       "schemas",
-                      "externalId",
-                      "userName",
-                      "name",
                       "emails",
                       "active",
                       "meta"
@@ -5848,7 +5438,7 @@
                   }
                 }
               },
-              "description": "Bad Request"
+              "description": "Bad request"
             },
             "403": {
               "content": {
@@ -6067,6 +5657,20 @@
           "requestBody": {
             "content": {
               "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "emails": [
+                        {
+                          "primary": true,
+                          "value": "mona.octocat@github.com"
+                        }
+                      ],
+                      "name": "Monalisa Octocat",
+                      "userName": "octocat"
+                    }
+                  }
+                },
                 "schema": {
                   "properties": {
                     "active": {
@@ -6232,6 +5836,9 @@
                             "primary": {
                               "type": "boolean"
                             },
+                            "type": {
+                              "type": "string"
+                            },
                             "value": {
                               "type": "string"
                             }
@@ -6241,7 +5848,6 @@
                           ],
                           "type": "object"
                         },
-                        "minItems": 1,
                         "type": "array"
                       },
                       "externalId": {
@@ -6260,7 +5866,8 @@
                             "value": {
                               "type": "string"
                             }
-                          }
+                          },
+                          "type": "object"
                         },
                         "type": "array"
                       },
@@ -6312,10 +5919,6 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "givenName",
-                          "familyName"
-                        ],
                         "type": "object"
                       },
                       "operations": {
@@ -6367,6 +5970,26 @@
                         "description": "The ID of the organization.",
                         "type": "integer"
                       },
+                      "roles": {
+                        "items": {
+                          "properties": {
+                            "display": {
+                              "type": "string"
+                            },
+                            "primary": {
+                              "type": "boolean"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
                       "schemas": {
                         "description": "SCIM schema used.",
                         "items": {
@@ -6386,9 +6009,6 @@
                     "required": [
                       "id",
                       "schemas",
-                      "externalId",
-                      "userName",
-                      "name",
                       "emails",
                       "active",
                       "meta"
@@ -6565,7 +6185,7 @@
       "/teams/{team_id}/team-sync/group-mappings": {
         "get": {
           "deprecated": true,
-          "description": "**Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List IdP groups for a team`](https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#list-idp-groups-for-a-team) endpoint.\n\nTeam synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nList IdP groups connected to a team on GitHub Enterprise Cloud.",
+          "description": "**Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List IdP groups for a team`](https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#list-idp-groups-for-a-team) endpoint.\n\nTeam synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nList IdP groups connected to a team on GitHub Enterprise Cloud.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#list-idp-groups-for-a-team-legacy"
@@ -6736,7 +6356,7 @@
         },
         "patch": {
           "deprecated": true,
-          "description": "**Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create or update IdP group connections`](https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#create-or-update-idp-group-connections) endpoint.\n\nTeam synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nCreates, updates, or removes a connection between a team and an IdP group. When adding groups to a team, you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty `groups` array will remove all connections for a team.",
+          "description": "**Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create or update IdP group connections`](https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#create-or-update-idp-group-connections) endpoint.\n\nTeam synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nCreates, updates, or removes a connection between a team and an IdP group. When adding groups to a team, you must include all new and existing groups to avoid replacing existing groups with the new ones. Specifying an empty `groups` array will remove all connections for a team.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#create-or-update-idp-group-connections-legacy"
@@ -7020,6 +6640,28 @@
       "/repos/{owner}/{repo}/code-scanning/alerts": {
         "get": {
           "parameters": {
+            "added": [
+              {
+                "description": "If specified, only code scanning alerts with this severity will be returned.",
+                "in": "query",
+                "name": "severity",
+                "required": false,
+                "schema": {
+                  "description": "Severity of a code scanning alert.",
+                  "enum": [
+                    "critical",
+                    "high",
+                    "medium",
+                    "low",
+                    "warning",
+                    "note",
+                    "error"
+                  ],
+                  "type": "string"
+                },
+                "style": "form"
+              }
+            ],
             "changed": {
               "sort": {
                 "schema": {
