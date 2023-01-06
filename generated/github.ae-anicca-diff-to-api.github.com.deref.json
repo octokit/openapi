@@ -1,4 +1,20 @@
 {
+  "info": {
+    "contact": null,
+    "description": null,
+    "extensions": {
+      "changed": {
+        "x-github-plan": {
+          "from": "api.github.com",
+          "to": "github.ae"
+        }
+      }
+    },
+    "license": null,
+    "terms_of_service": null,
+    "title": null,
+    "version": null
+  },
   "paths": {
     "added": {
       "/admin/hooks": {
@@ -978,7 +994,7 @@
                     }
                   },
                   "schema": {
-                    "description": "Organization Simple",
+                    "description": "A GitHub organization.",
                     "properties": {
                       "avatar_url": {
                         "example": "https://github.com/images/error/octocat_happy.gif",
@@ -1669,6 +1685,14 @@
           "requestBody": {
             "content": {
               "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "image_url": "https://my_file_server/path/to/devtools_env.tar.gz",
+                      "name": "DevTools Hook Env"
+                    }
+                  }
+                },
                 "schema": {
                   "properties": {
                     "image_url": {
@@ -2123,7 +2147,7 @@
                           "nullable": true,
                           "properties": {
                             "account": {
-                              "description": "Simple User",
+                              "description": "A GitHub user.",
                               "properties": {
                                 "avatar_url": {
                                   "example": "https://github.com/images/error/octocat_happy.gif",
@@ -2570,7 +2594,7 @@
                           "type": "string"
                         },
                         "user": {
-                          "description": "Simple User",
+                          "description": "A GitHub user.",
                           "nullable": true,
                           "properties": {
                             "avatar_url": {
@@ -2871,6 +2895,15 @@
           "requestBody": {
             "content": {
               "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "scopes": [
+                        "public_repo"
+                      ]
+                    }
+                  }
+                },
                 "schema": {
                   "properties": {
                     "scopes": {
@@ -2962,7 +2995,7 @@
                         "nullable": true,
                         "properties": {
                           "account": {
-                            "description": "Simple User",
+                            "description": "A GitHub user.",
                             "properties": {
                               "avatar_url": {
                                 "example": "https://github.com/images/error/octocat_happy.gif",
@@ -3409,7 +3442,7 @@
                         "type": "string"
                       },
                       "user": {
-                        "description": "Simple User",
+                        "description": "A GitHub user.",
                         "nullable": true,
                         "properties": {
                           "avatar_url": {
@@ -3625,7 +3658,7 @@
                         "nullable": true,
                         "properties": {
                           "account": {
-                            "description": "Simple User",
+                            "description": "A GitHub user.",
                             "properties": {
                               "avatar_url": {
                                 "example": "https://github.com/images/error/octocat_happy.gif",
@@ -4072,7 +4105,7 @@
                         "type": "string"
                       },
                       "user": {
-                        "description": "Simple User",
+                        "description": "A GitHub user.",
                         "nullable": true,
                         "properties": {
                           "avatar_url": {
@@ -4358,7 +4391,7 @@
                         "nullable": true,
                         "properties": {
                           "account": {
-                            "description": "Simple User",
+                            "description": "A GitHub user.",
                             "properties": {
                               "avatar_url": {
                                 "example": "https://github.com/images/error/octocat_happy.gif",
@@ -4805,7 +4838,7 @@
                         "type": "string"
                       },
                       "user": {
-                        "description": "Simple User",
+                        "description": "A GitHub user.",
                         "nullable": true,
                         "properties": {
                           "avatar_url": {
@@ -4966,6 +4999,10 @@
         "delete": {
           "deprecated": null,
           "description": "Removes the global announcement banner in your enterprise.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/enterprise-admin/announcement#remove-the-global-announcement-banner"
+          },
           "operationId": "enterprise-admin/remove-announcement",
           "responses": {
             "204": {
@@ -4986,6 +5023,10 @@
         "get": {
           "deprecated": null,
           "description": "Gets the current message and expiration date of the global announcement banner in your enterprise.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/enterprise-admin/announcement#get-the-global-announcement-banner"
+          },
           "operationId": "enterprise-admin/get-announcement",
           "responses": {
             "200": {
@@ -4993,10 +5034,11 @@
                 "application/json": {
                   "examples": {
                     "default": {
-                      "summary": "Default response",
+                      "summary": "Announcement banner",
                       "value": {
-                        "announcement": "Very **important** announcement about _nothing_.",
-                        "expires_at": "2021-01-01T00:00:00.000+00:00"
+                        "announcement": "Very **important** announcement about _something_.",
+                        "expires_at": "2021-01-01T00:00:00.000+00:00",
+                        "user_dismissible": false
                       }
                     }
                   },
@@ -5005,7 +5047,8 @@
                     "properties": {
                       "announcement": {
                         "description": "The announcement text in GitHub Flavored Markdown. For more information about GitHub Flavored Markdown, see \"[Basic writing and formatting syntax](https://docs.github.com/github-ae@latest/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).\"",
-                        "example": "Very **important** announcement about _nothing_.",
+                        "example": "Very **important** announcement about _something_.",
+                        "nullable": true,
                         "type": "string"
                       },
                       "expires_at": {
@@ -5041,16 +5084,29 @@
         "patch": {
           "deprecated": null,
           "description": "Sets the message and expiration time for the global announcement banner in your enterprise.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/enterprise-admin/announcement#set-the-global-announcement-banner"
+          },
           "operationId": "enterprise-admin/set-announcement",
           "requestBody": {
             "content": {
               "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "announcement": "Very **important** announcement about _something_.",
+                      "expires_at": "2021-01-01T00:00:00.000+00:00"
+                    }
+                  }
+                },
                 "schema": {
                   "description": "Enterprise global announcement",
                   "properties": {
                     "announcement": {
                       "description": "The announcement text in GitHub Flavored Markdown. For more information about GitHub Flavored Markdown, see \"[Basic writing and formatting syntax](https://docs.github.com/github-ae@latest/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).\"",
-                      "example": "Very **important** announcement about _nothing_.",
+                      "example": "Very **important** announcement about _something_.",
+                      "nullable": true,
                       "type": "string"
                     },
                     "expires_at": {
@@ -5077,10 +5133,11 @@
                 "application/json": {
                   "examples": {
                     "default": {
-                      "summary": "Default response",
+                      "summary": "Announcement banner",
                       "value": {
-                        "announcement": "Very **important** announcement about _nothing_.",
-                        "expires_at": "2021-01-01T00:00:00.000+00:00"
+                        "announcement": "Very **important** announcement about _something_.",
+                        "expires_at": "2021-01-01T00:00:00.000+00:00",
+                        "user_dismissible": false
                       }
                     }
                   },
@@ -5089,7 +5146,8 @@
                     "properties": {
                       "announcement": {
                         "description": "The announcement text in GitHub Flavored Markdown. For more information about GitHub Flavored Markdown, see \"[Basic writing and formatting syntax](https://docs.github.com/github-ae@latest/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).\"",
-                        "example": "Very **important** announcement about _nothing_.",
+                        "example": "Very **important** announcement about _something_.",
+                        "nullable": true,
                         "type": "string"
                       },
                       "expires_at": {
@@ -5523,6 +5581,16 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "total_commit_comments": 5000,
+                        "total_gist_comments": 400,
+                        "total_issue_comments": 10900,
+                        "total_pull_request_comments": 9900
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "total_commit_comments": {
@@ -5576,6 +5644,15 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "private_gists": 30,
+                        "public_gists": 470,
+                        "total_gists": 500
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "private_gists": {
@@ -5625,6 +5702,15 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "active_hooks": 47,
+                        "inactive_hooks": 3,
+                        "total_hooks": 50
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "active_hooks": {
@@ -5674,6 +5760,15 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "closed_issues": 4700,
+                        "open_issues": 300,
+                        "total_issues": 5000
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "closed_issues": {
@@ -5723,6 +5818,15 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "closed_milestones": 80,
+                        "open_milestones": 10,
+                        "total_milestones": 90
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "closed_milestones": {
@@ -5772,6 +5876,16 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "disabled_orgs": 1,
+                        "total_orgs": 50,
+                        "total_team_members": 700,
+                        "total_teams": 70
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "disabled_orgs": {
@@ -5825,6 +5939,13 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "total_pages": 20
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "total_pages": {
@@ -5866,6 +5987,16 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "mergeable_pulls": 90,
+                        "merged_pulls": 1100,
+                        "total_pulls": 1200,
+                        "unmergeable_pulls": 10
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "mergeable_pulls": {
@@ -5919,6 +6050,18 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "fork_repos": 10,
+                        "org_repos": 150,
+                        "root_repos": 1,
+                        "total_pushes": 39000,
+                        "total_repos": 200,
+                        "total_wikis": 5
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "fork_repos": {
@@ -5980,6 +6123,15 @@
             "200": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "example": {
+                      "value": {
+                        "admin_users": 3,
+                        "suspended_users": 1,
+                        "total_users": 100
+                      }
+                    }
+                  },
                   "schema": {
                     "properties": {
                       "admin_users": {
@@ -6297,6 +6449,9 @@
                         "business": {
                           "type": "string"
                         },
+                        "business_id": {
+                          "type": "integer"
+                        },
                         "config": {
                           "items": {
                             "type": "object"
@@ -6362,6 +6517,9 @@
                         "openssh_public_key": {
                           "type": "string"
                         },
+                        "operation_type": {
+                          "type": "string"
+                        },
                         "org": {
                           "type": "string"
                         },
@@ -6402,6 +6560,9 @@
                         "user": {
                           "description": "The user that was affected by the action performed (if available).",
                           "type": "string"
+                        },
+                        "user_id": {
+                          "type": "integer"
                         },
                         "visibility": {
                           "description": "The repository visibility, for example `public` or `private`.",
@@ -6720,6 +6881,9 @@
                         "business": {
                           "type": "string"
                         },
+                        "business_id": {
+                          "type": "integer"
+                        },
                         "config": {
                           "items": {
                             "type": "object"
@@ -6785,6 +6949,9 @@
                         "openssh_public_key": {
                           "type": "string"
                         },
+                        "operation_type": {
+                          "type": "string"
+                        },
                         "org": {
                           "type": "string"
                         },
@@ -6825,6 +6992,9 @@
                         "user": {
                           "description": "The user that was affected by the action performed (if available).",
                           "type": "string"
+                        },
+                        "user_id": {
+                          "type": "integer"
                         },
                         "visibility": {
                           "description": "The repository visibility, for example `public` or `private`.",
@@ -7491,6 +7661,13 @@
           "requestBody": {
             "content": {
               "application/json": {
+                "examples": {
+                  "reason": {
+                    "value": {
+                      "reason": "Unsuspended after leave of absence."
+                    }
+                  }
+                },
                 "schema": {
                   "nullable": true,
                   "properties": {
@@ -7544,6 +7721,13 @@
           "requestBody": {
             "content": {
               "application/json": {
+                "examples": {
+                  "reason": {
+                    "value": {
+                      "reason": "Suspended during leave of absence."
+                    }
+                  }
+                },
                 "schema": {
                   "nullable": true,
                   "properties": {
@@ -7592,7 +7776,9 @@
                               "permissions": {
                                 "properties_changed": {
                                   "removed": [
-                                    "organization_custom_roles"
+                                    "organization_announcement_banners",
+                                    "organization_custom_roles",
+                                    "repository_announcement_banners"
                                   ]
                                 }
                               }
@@ -7622,7 +7808,9 @@
                             "permissions": {
                               "properties_changed": {
                                 "removed": [
-                                  "organization_custom_roles"
+                                  "organization_announcement_banners",
+                                  "organization_custom_roles",
+                                  "repository_announcement_banners"
                                 ]
                               }
                             }
@@ -7649,7 +7837,9 @@
                         "permissions": {
                           "properties_changed": {
                             "removed": [
-                              "organization_custom_roles"
+                              "organization_announcement_banners",
+                              "organization_custom_roles",
+                              "repository_announcement_banners"
                             ]
                           }
                         }
@@ -7672,7 +7862,9 @@
                             "permissions": {
                               "properties_changed": {
                                 "removed": [
-                                  "organization_custom_roles"
+                                  "organization_announcement_banners",
+                                  "organization_custom_roles",
+                                  "repository_announcement_banners"
                                 ]
                               }
                             },
@@ -7693,6 +7885,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -7730,7 +7923,9 @@
                                   "permissions": {
                                     "properties_changed": {
                                       "removed": [
-                                        "organization_custom_roles"
+                                        "organization_announcement_banners",
+                                        "organization_custom_roles",
+                                        "repository_announcement_banners"
                                       ]
                                     }
                                   }
@@ -7763,7 +7958,9 @@
                                   "permissions": {
                                     "properties_changed": {
                                       "removed": [
-                                        "organization_custom_roles"
+                                        "organization_announcement_banners",
+                                        "organization_custom_roles",
+                                        "repository_announcement_banners"
                                       ]
                                     }
                                   }
@@ -7959,6 +8156,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8007,6 +8205,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8055,6 +8254,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8103,6 +8303,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8160,32 +8361,9 @@
                             "changed": {
                               "repository": {
                                 "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        },
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  }
+                                  "removed": [
+                                    "security_and_analysis"
+                                  ]
                                 }
                               }
                             }
@@ -8213,37 +8391,34 @@
                           "changed": {
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orgs/{org}": {
+        "patch": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "removed": [
+                        "secret_scanning_push_protection_custom_link",
+                        "secret_scanning_push_protection_custom_link_enabled"
+                      ]
                     }
                   }
                 }
@@ -8280,6 +8455,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8478,6 +8654,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8526,6 +8703,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8585,35 +8763,61 @@
                             "repositories": {
                               "items_changed": {
                                 "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        },
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  }
+                                  "removed": [
+                                    "security_and_analysis"
+                                  ]
                                 }
                               }
                             }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orgs/{org}/code-scanning/alerts": {
+        "get": {
+          "parameters": {
+            "removed": [
+              {
+                "description": "If specified, only code scanning alerts with this severity will be returned.",
+                "in": "query",
+                "name": "severity",
+                "required": false,
+                "schema": {
+                  "description": "Severity of a code scanning alert.",
+                  "enum": [
+                    "critical",
+                    "high",
+                    "medium",
+                    "low",
+                    "warning",
+                    "note",
+                    "error"
+                  ],
+                  "type": "string"
+                },
+                "style": "form"
+              }
+            ]
+          },
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "removed": [
+                              "dismissed_comment"
+                            ]
                           }
                         }
                       }
@@ -8639,7 +8843,9 @@
                             "permissions": {
                               "properties_changed": {
                                 "removed": [
-                                  "organization_custom_roles"
+                                  "organization_announcement_banners",
+                                  "organization_custom_roles",
+                                  "repository_announcement_banners"
                                 ]
                               }
                             }
@@ -8672,7 +8878,9 @@
                                     "permissions": {
                                       "properties_changed": {
                                         "removed": [
-                                          "organization_custom_roles"
+                                          "organization_announcement_banners",
+                                          "organization_custom_roles",
+                                          "repository_announcement_banners"
                                         ]
                                       }
                                     }
@@ -8719,6 +8927,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8768,6 +8977,7 @@
                                       }
                                     },
                                     "removed": [
+                                      "has_discussions",
                                       "merge_commit_message",
                                       "merge_commit_title",
                                       "squash_merge_commit_message",
@@ -8815,6 +9025,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8863,6 +9074,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -8909,32 +9121,9 @@
                       "schema_changed": {
                         "items_changed": {
                           "properties_changed": {
-                            "changed": {
-                              "template_repository": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  },
-                                  "removed": [
-                                    "merge_commit_message",
-                                    "merge_commit_title",
-                                    "squash_merge_commit_message",
-                                    "squash_merge_commit_title",
-                                    "use_squash_pr_title_as_default"
-                                  ]
-                                }
-                              }
-                            }
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -8968,6 +9157,7 @@
                             }
                           },
                           "removed": [
+                            "has_discussions",
                             "merge_commit_message",
                             "merge_commit_title",
                             "squash_merge_commit_message",
@@ -8995,32 +9185,9 @@
                       "schema_changed": {
                         "items_changed": {
                           "properties_changed": {
-                            "changed": {
-                              "template_repository": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  },
-                                  "removed": [
-                                    "merge_commit_message",
-                                    "merge_commit_title",
-                                    "squash_merge_commit_message",
-                                    "squash_merge_commit_title",
-                                    "use_squash_pr_title_as_default"
-                                  ]
-                                }
-                              }
-                            }
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -9059,6 +9226,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -9134,6 +9302,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -9158,6 +9327,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -9182,6 +9352,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -9232,6 +9403,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -9256,6 +9428,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -9280,6 +9453,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -9333,6 +9507,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -9381,6 +9556,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -9442,62 +9618,16 @@
                                   "changed": {
                                     "head_repository": {
                                       "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "changed": {
-                                                "template_repository": {
-                                                  "properties_changed": {
-                                                    "removed": [
-                                                      "merge_commit_message",
-                                                      "merge_commit_title",
-                                                      "squash_merge_commit_message",
-                                                      "squash_merge_commit_title",
-                                                      "use_squash_pr_title_as_default"
-                                                    ]
-                                                  }
-                                                }
-                                              },
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        }
+                                        "removed": [
+                                          "security_and_analysis"
+                                        ]
                                       }
                                     },
                                     "repository": {
                                       "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "changed": {
-                                                "template_repository": {
-                                                  "properties_changed": {
-                                                    "removed": [
-                                                      "merge_commit_message",
-                                                      "merge_commit_title",
-                                                      "squash_merge_commit_message",
-                                                      "squash_merge_commit_title",
-                                                      "use_squash_pr_title_as_default"
-                                                    ]
-                                                  }
-                                                }
-                                              },
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        }
+                                        "removed": [
+                                          "security_and_analysis"
+                                        ]
                                       }
                                     }
                                   }
@@ -9528,62 +9658,16 @@
                           "changed": {
                             "head_repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             },
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -9610,62 +9694,16 @@
                           "changed": {
                             "head_repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             },
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -9739,62 +9777,16 @@
                                   "changed": {
                                     "head_repository": {
                                       "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "changed": {
-                                                "template_repository": {
-                                                  "properties_changed": {
-                                                    "removed": [
-                                                      "merge_commit_message",
-                                                      "merge_commit_title",
-                                                      "squash_merge_commit_message",
-                                                      "squash_merge_commit_title",
-                                                      "use_squash_pr_title_as_default"
-                                                    ]
-                                                  }
-                                                }
-                                              },
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        }
+                                        "removed": [
+                                          "security_and_analysis"
+                                        ]
                                       }
                                     },
                                     "repository": {
                                       "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "changed": {
-                                                "template_repository": {
-                                                  "properties_changed": {
-                                                    "removed": [
-                                                      "merge_commit_message",
-                                                      "merge_commit_title",
-                                                      "squash_merge_commit_message",
-                                                      "squash_merge_commit_title",
-                                                      "use_squash_pr_title_as_default"
-                                                    ]
-                                                  }
-                                                }
-                                              },
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        }
+                                        "removed": [
+                                          "security_and_analysis"
+                                        ]
                                       }
                                     }
                                   }
@@ -9896,6 +9888,234 @@
           }
         }
       },
+      "/repos/{owner}/{repo}/branches": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "changed": {
+                              "protection": {
+                                "properties_changed": {
+                                  "changed": {
+                                    "required_pull_request_reviews": {
+                                      "properties_changed": {
+                                        "removed": [
+                                          "require_last_push_approval"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "removed": [
+                                    "allow_fork_syncing",
+                                    "lock_branch"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/branches/{branch}": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "protection": {
+                              "properties_changed": {
+                                "changed": {
+                                  "required_pull_request_reviews": {
+                                    "properties_changed": {
+                                      "removed": [
+                                        "require_last_push_approval"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "removed": [
+                                  "allow_fork_syncing",
+                                  "lock_branch"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/branches/{branch}/protection": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "required_pull_request_reviews": {
+                              "properties_changed": {
+                                "removed": [
+                                  "require_last_push_approval"
+                                ]
+                              }
+                            }
+                          },
+                          "removed": [
+                            "allow_fork_syncing",
+                            "lock_branch"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "changed": {
+                        "required_pull_request_reviews": {
+                          "properties_changed": {
+                            "removed": [
+                              "require_last_push_approval"
+                            ]
+                          }
+                        }
+                      },
+                      "removed": [
+                        "allow_fork_syncing",
+                        "lock_branch"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "required_pull_request_reviews": {
+                              "properties_changed": {
+                                "removed": [
+                                  "require_last_push_approval"
+                                ]
+                              }
+                            }
+                          },
+                          "removed": [
+                            "allow_fork_syncing",
+                            "lock_branch"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "removed": [
+                            "require_last_push_approval"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "removed": [
+                        "require_last_push_approval"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "removed": [
+                            "require_last_push_approval"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/repos/{owner}/{repo}/check-suites": {
         "post": {
           "responses": {
@@ -9909,32 +10129,9 @@
                           "changed": {
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -9953,32 +10150,9 @@
                           "changed": {
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -10005,32 +10179,9 @@
                           "changed": {
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -10057,32 +10208,9 @@
                           "changed": {
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -10099,39 +10227,19 @@
       "/repos/{owner}/{repo}/code-scanning/alerts": {
         "get": {
           "parameters": {
-            "removed": [
-              {
-                "description": "The direction to sort the results by.",
-                "in": "query",
-                "name": "direction",
-                "required": false,
+            "changed": {
+              "sort": {
                 "schema": {
-                  "default": "desc",
-                  "enum": [
-                    "asc",
-                    "desc"
-                  ],
-                  "type": "string"
-                },
-                "style": "form"
-              },
-              {
-                "description": "The property by which to sort the results. `number` is deprecated - we recommend that you use `created` instead.",
-                "in": "query",
-                "name": "sort",
-                "required": false,
-                "schema": {
-                  "default": "created",
-                  "enum": [
-                    "created",
-                    "number",
-                    "updated"
-                  ],
-                  "type": "string"
-                },
-                "style": "form"
+                  "enum_changed": {
+                    "added": false,
+                    "removed": false,
+                    "values_removed": [
+                      "number"
+                    ]
+                  }
+                }
               }
-            ]
+            }
           },
           "responses": {
             "changed": {
@@ -10163,10 +10271,7 @@
                   }
                 }
               }
-            },
-            "removed": [
-              "304"
-            ]
+            }
           }
         }
       },
@@ -10191,10 +10296,7 @@
                   }
                 }
               }
-            },
-            "removed": [
-              "304"
-            ]
+            }
           }
         },
         "patch": {
@@ -10228,6 +10330,25 @@
                           ]
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/code-scanning/sarifs": {
+        "post": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "removed": [
+                        "validate"
+                      ]
                     }
                   }
                 }
@@ -10274,32 +10395,9 @@
                           "changed": {
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -10406,6 +10504,7 @@
                                           }
                                         },
                                         "removed": [
+                                          "has_discussions",
                                           "merge_commit_message",
                                           "merge_commit_title",
                                           "squash_merge_commit_message",
@@ -10436,6 +10535,7 @@
                                           }
                                         },
                                         "removed": [
+                                          "has_discussions",
                                           "merge_commit_message",
                                           "merge_commit_title",
                                           "squash_merge_commit_message",
@@ -10476,32 +10576,9 @@
                                   "changed": {
                                     "repository": {
                                       "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "changed": {
-                                                "template_repository": {
-                                                  "properties_changed": {
-                                                    "removed": [
-                                                      "merge_commit_message",
-                                                      "merge_commit_title",
-                                                      "squash_merge_commit_message",
-                                                      "squash_merge_commit_title",
-                                                      "use_squash_pr_title_as_default"
-                                                    ]
-                                                  }
-                                                }
-                                              },
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        }
+                                        "removed": [
+                                          "security_and_analysis"
+                                        ]
                                       }
                                     }
                                   }
@@ -10532,32 +10609,9 @@
                           "changed": {
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -10605,6 +10659,7 @@
                                                 }
                                               },
                                               "removed": [
+                                                "has_discussions",
                                                 "merge_commit_message",
                                                 "merge_commit_title",
                                                 "squash_merge_commit_message",
@@ -10642,32 +10697,9 @@
                       "schema_changed": {
                         "items_changed": {
                           "properties_changed": {
-                            "changed": {
-                              "template_repository": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  },
-                                  "removed": [
-                                    "merge_commit_message",
-                                    "merge_commit_title",
-                                    "squash_merge_commit_message",
-                                    "squash_merge_commit_title",
-                                    "use_squash_pr_title_as_default"
-                                  ]
-                                }
-                              }
-                            }
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -10720,6 +10752,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -10744,6 +10777,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -10768,6 +10802,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -10807,7 +10842,9 @@
                             "permissions": {
                               "properties_changed": {
                                 "removed": [
-                                  "organization_custom_roles"
+                                  "organization_announcement_banners",
+                                  "organization_custom_roles",
+                                  "repository_announcement_banners"
                                 ]
                               }
                             }
@@ -10836,32 +10873,9 @@
                             "changed": {
                               "repository": {
                                 "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        },
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  }
+                                  "removed": [
+                                    "security_and_analysis"
+                                  ]
                                 }
                               }
                             }
@@ -10889,32 +10903,9 @@
                           "changed": {
                             "repository": {
                               "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "changed": {
-                                        "template_repository": {
-                                          "properties_changed": {
-                                            "removed": [
-                                              "merge_commit_message",
-                                              "merge_commit_title",
-                                              "squash_merge_commit_message",
-                                              "squash_merge_commit_title",
-                                              "use_squash_pr_title_as_default"
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                }
+                                "removed": [
+                                  "security_and_analysis"
+                                ]
                               }
                             }
                           }
@@ -10956,6 +10947,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -11001,6 +10993,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -11051,6 +11044,7 @@
                                           }
                                         },
                                         "removed": [
+                                          "has_discussions",
                                           "merge_commit_message",
                                           "merge_commit_title",
                                           "squash_merge_commit_message",
@@ -11104,6 +11098,7 @@
                                         }
                                       },
                                       "removed": [
+                                        "has_discussions",
                                         "merge_commit_message",
                                         "merge_commit_title",
                                         "squash_merge_commit_message",
@@ -11153,6 +11148,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -11197,6 +11193,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -11243,6 +11240,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -11348,32 +11346,9 @@
                             "changed": {
                               "repository": {
                                 "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        },
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  }
+                                  "removed": [
+                                    "security_and_analysis"
+                                  ]
                                 }
                               }
                             }
@@ -11419,6 +11394,7 @@
                                           }
                                         },
                                         "removed": [
+                                          "has_discussions",
                                           "merge_commit_message",
                                           "merge_commit_title",
                                           "squash_merge_commit_message",
@@ -11449,6 +11425,7 @@
                                           }
                                         },
                                         "removed": [
+                                          "has_discussions",
                                           "merge_commit_message",
                                           "merge_commit_title",
                                           "squash_merge_commit_message",
@@ -11502,6 +11479,7 @@
                                         }
                                       },
                                       "removed": [
+                                        "has_discussions",
                                         "merge_commit_message",
                                         "merge_commit_title",
                                         "squash_merge_commit_message",
@@ -11532,6 +11510,7 @@
                                         }
                                       },
                                       "removed": [
+                                        "has_discussions",
                                         "merge_commit_message",
                                         "merge_commit_title",
                                         "squash_merge_commit_message",
@@ -11564,7 +11543,8 @@
                     "properties_changed": {
                       "removed": [
                         "discussion_category_name",
-                        "generate_release_notes"
+                        "generate_release_notes",
+                        "make_latest"
                       ]
                     }
                   }
@@ -11588,7 +11568,8 @@
                   "schema_changed": {
                     "properties_changed": {
                       "removed": [
-                        "discussion_category_name"
+                        "discussion_category_name",
+                        "make_latest"
                       ]
                     }
                   }
@@ -11770,6 +11751,21 @@
       },
       "/repos/{owner}/{repo}/transfer": {
         "post": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "removed": [
+                        "new_name"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "responses": {
             "changed": {
               "202": {
@@ -11778,32 +11774,9 @@
                     "application/json": {
                       "schema_changed": {
                         "properties_changed": {
-                          "changed": {
-                            "template_repository": {
-                              "properties_changed": {
-                                "changed": {
-                                  "template_repository": {
-                                    "properties_changed": {
-                                      "removed": [
-                                        "merge_commit_message",
-                                        "merge_commit_title",
-                                        "squash_merge_commit_message",
-                                        "squash_merge_commit_title",
-                                        "use_squash_pr_title_as_default"
-                                      ]
-                                    }
-                                  }
-                                },
-                                "removed": [
-                                  "merge_commit_message",
-                                  "merge_commit_title",
-                                  "squash_merge_commit_message",
-                                  "squash_merge_commit_title",
-                                  "use_squash_pr_title_as_default"
-                                ]
-                              }
-                            }
-                          }
+                          "removed": [
+                            "security_and_analysis"
+                          ]
                         }
                       }
                     }
@@ -11838,6 +11811,7 @@
                             }
                           },
                           "removed": [
+                            "has_discussions",
                             "merge_commit_message",
                             "merge_commit_title",
                             "squash_merge_commit_message",
@@ -11871,32 +11845,9 @@
                                   "changed": {
                                     "repository": {
                                       "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "changed": {
-                                                "template_repository": {
-                                                  "properties_changed": {
-                                                    "removed": [
-                                                      "merge_commit_message",
-                                                      "merge_commit_title",
-                                                      "squash_merge_commit_message",
-                                                      "squash_merge_commit_title",
-                                                      "use_squash_pr_title_as_default"
-                                                    ]
-                                                  }
-                                                }
-                                              },
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        }
+                                        "removed": [
+                                          "security_and_analysis"
+                                        ]
                                       }
                                     }
                                   }
@@ -11931,32 +11882,9 @@
                                   "changed": {
                                     "repository": {
                                       "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "changed": {
-                                                "template_repository": {
-                                                  "properties_changed": {
-                                                    "removed": [
-                                                      "merge_commit_message",
-                                                      "merge_commit_title",
-                                                      "squash_merge_commit_message",
-                                                      "squash_merge_commit_title",
-                                                      "use_squash_pr_title_as_default"
-                                                    ]
-                                                  }
-                                                }
-                                              },
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        }
+                                        "removed": [
+                                          "security_and_analysis"
+                                        ]
                                       }
                                     }
                                   }
@@ -12005,6 +11933,7 @@
                                           }
                                         },
                                         "removed": [
+                                          "has_discussions",
                                           "merge_commit_message",
                                           "merge_commit_title",
                                           "squash_merge_commit_message",
@@ -12039,32 +11968,9 @@
                       "schema_changed": {
                         "items_changed": {
                           "properties_changed": {
-                            "changed": {
-                              "template_repository": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  },
-                                  "removed": [
-                                    "merge_commit_message",
-                                    "merge_commit_title",
-                                    "squash_merge_commit_message",
-                                    "squash_merge_commit_title",
-                                    "use_squash_pr_title_as_default"
-                                  ]
-                                }
-                              }
-                            }
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -12103,6 +12009,7 @@
                                   }
                                 },
                                 "removed": [
+                                  "has_discussions",
                                   "merge_commit_message",
                                   "merge_commit_title",
                                   "squash_merge_commit_message",
@@ -12275,7 +12182,9 @@
                                     "permissions": {
                                       "properties_changed": {
                                         "removed": [
-                                          "organization_custom_roles"
+                                          "organization_announcement_banners",
+                                          "organization_custom_roles",
+                                          "repository_announcement_banners"
                                         ]
                                       }
                                     }
@@ -12322,6 +12231,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -12370,6 +12280,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -12419,6 +12330,7 @@
                                       }
                                     },
                                     "removed": [
+                                      "has_discussions",
                                       "merge_commit_message",
                                       "merge_commit_title",
                                       "squash_merge_commit_message",
@@ -12466,6 +12378,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -12497,32 +12410,9 @@
                       "schema_changed": {
                         "items_changed": {
                           "properties_changed": {
-                            "changed": {
-                              "template_repository": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  },
-                                  "removed": [
-                                    "merge_commit_message",
-                                    "merge_commit_title",
-                                    "squash_merge_commit_message",
-                                    "squash_merge_commit_title",
-                                    "use_squash_pr_title_as_default"
-                                  ]
-                                }
-                              }
-                            }
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -12591,6 +12481,7 @@
                               }
                             },
                             "removed": [
+                              "has_discussions",
                               "merge_commit_message",
                               "merge_commit_title",
                               "squash_merge_commit_message",
@@ -12630,6 +12521,7 @@
                             }
                           },
                           "removed": [
+                            "has_discussions",
                             "merge_commit_message",
                             "merge_commit_title",
                             "squash_merge_commit_message",
@@ -12660,32 +12552,9 @@
                             "changed": {
                               "repository": {
                                 "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "changed": {
-                                          "template_repository": {
-                                            "properties_changed": {
-                                              "removed": [
-                                                "merge_commit_message",
-                                                "merge_commit_title",
-                                                "squash_merge_commit_message",
-                                                "squash_merge_commit_title",
-                                                "use_squash_pr_title_as_default"
-                                              ]
-                                            }
-                                          }
-                                        },
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  }
+                                  "removed": [
+                                    "security_and_analysis"
+                                  ]
                                 }
                               }
                             }
@@ -12725,6 +12594,7 @@
                               }
                             },
                             "removed": [
+                              "has_discussions",
                               "merge_commit_message",
                               "merge_commit_title",
                               "squash_merge_commit_message",
@@ -12756,6 +12626,7 @@
                                     }
                                   },
                                   "removed": [
+                                    "has_discussions",
                                     "merge_commit_message",
                                     "merge_commit_title",
                                     "squash_merge_commit_message",
@@ -12787,32 +12658,9 @@
                       "schema_changed": {
                         "items_changed": {
                           "properties_changed": {
-                            "changed": {
-                              "template_repository": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  },
-                                  "removed": [
-                                    "merge_commit_message",
-                                    "merge_commit_title",
-                                    "squash_merge_commit_message",
-                                    "squash_merge_commit_title",
-                                    "use_squash_pr_title_as_default"
-                                  ]
-                                }
-                              }
-                            }
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -12858,6 +12706,7 @@
                                                 }
                                               },
                                               "removed": [
+                                                "has_discussions",
                                                 "merge_commit_message",
                                                 "merge_commit_title",
                                                 "squash_merge_commit_message",
@@ -12918,6 +12767,7 @@
                                                 }
                                               },
                                               "removed": [
+                                                "has_discussions",
                                                 "merge_commit_message",
                                                 "merge_commit_title",
                                                 "squash_merge_commit_message",
@@ -13000,7 +12850,9 @@
                             "permissions": {
                               "properties_changed": {
                                 "removed": [
-                                  "organization_custom_roles"
+                                  "organization_announcement_banners",
+                                  "organization_custom_roles",
+                                  "repository_announcement_banners"
                                 ]
                               }
                             }
@@ -13026,32 +12878,9 @@
                       "schema_changed": {
                         "items_changed": {
                           "properties_changed": {
-                            "changed": {
-                              "template_repository": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  },
-                                  "removed": [
-                                    "merge_commit_message",
-                                    "merge_commit_title",
-                                    "squash_merge_commit_message",
-                                    "squash_merge_commit_title",
-                                    "use_squash_pr_title_as_default"
-                                  ]
-                                }
-                              }
-                            }
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -13074,32 +12903,9 @@
                       "schema_changed": {
                         "items_changed": {
                           "properties_changed": {
-                            "changed": {
-                              "template_repository": {
-                                "properties_changed": {
-                                  "changed": {
-                                    "template_repository": {
-                                      "properties_changed": {
-                                        "removed": [
-                                          "merge_commit_message",
-                                          "merge_commit_title",
-                                          "squash_merge_commit_message",
-                                          "squash_merge_commit_title",
-                                          "use_squash_pr_title_as_default"
-                                        ]
-                                      }
-                                    }
-                                  },
-                                  "removed": [
-                                    "merge_commit_message",
-                                    "merge_commit_title",
-                                    "squash_merge_commit_message",
-                                    "squash_merge_commit_title",
-                                    "use_squash_pr_title_as_default"
-                                  ]
-                                }
-                              }
-                            }
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -13146,11 +12952,18 @@
       "/enterprises/{enterprise}/code-scanning/alerts": [
         "get"
       ],
-      "/enterprises/{enterprise}/secret-scanning/alerts": [
+      "/enterprises/{enterprise}/code_security_and_analysis": [
+        "get",
+        "patch"
+      ],
+      "/enterprises/{enterprise}/dependabot/alerts": [
         "get"
       ],
       "/enterprises/{enterprise}/settings/billing/advanced-security": [
         "get"
+      ],
+      "/enterprises/{enterprise}/{security_product}/{enablement}": [
+        "post"
       ],
       "/events": [
         "get"
@@ -13179,30 +12992,15 @@
       "/organizations/{organization_id}/custom_roles": [
         "get"
       ],
-      "/organizations/{org}/codespaces/secrets": [
-        "get"
-      ],
-      "/organizations/{org}/codespaces/secrets/public-key": [
-        "get"
-      ],
-      "/organizations/{org}/codespaces/secrets/{secret_name}": [
-        "get",
-        "put",
-        "delete"
-      ],
-      "/organizations/{org}/codespaces/secrets/{secret_name}/repositories": [
-        "get",
-        "put"
-      ],
-      "/organizations/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}": [
-        "put",
-        "delete"
-      ],
       "/orgs/{org}/actions/cache/usage": [
         "get"
       ],
       "/orgs/{org}/actions/cache/usage-by-repository": [
         "get"
+      ],
+      "/orgs/{org}/actions/oidc/customization/sub": [
+        "get",
+        "put"
       ],
       "/orgs/{org}/actions/permissions/workflow": [
         "get",
@@ -13236,18 +13034,41 @@
         "put",
         "delete"
       ],
-      "/orgs/{org}/code-scanning/alerts": [
-        "get"
-      ],
       "/orgs/{org}/codespaces": [
         "get"
+      ],
+      "/orgs/{org}/codespaces/billing": [
+        "put"
+      ],
+      "/orgs/{org}/codespaces/secrets": [
+        "get"
+      ],
+      "/orgs/{org}/codespaces/secrets/public-key": [
+        "get"
+      ],
+      "/orgs/{org}/codespaces/secrets/{secret_name}": [
+        "get",
+        "put",
+        "delete"
+      ],
+      "/orgs/{org}/codespaces/secrets/{secret_name}/repositories": [
+        "get",
+        "put"
+      ],
+      "/orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}": [
+        "put",
+        "delete"
       ],
       "/orgs/{org}/custom_roles": [
         "post"
       ],
       "/orgs/{org}/custom_roles/{role_id}": [
+        "get",
         "delete",
         "patch"
+      ],
+      "/orgs/{org}/dependabot/alerts": [
+        "get"
       ],
       "/orgs/{org}/dependabot/secrets": [
         "get"
@@ -13290,6 +13111,9 @@
         "delete"
       ],
       "/orgs/{org}/invitations/{invitation_id}/teams": [
+        "get"
+      ],
+      "/orgs/{org}/members/{username}/codespaces": [
         "get"
       ],
       "/orgs/{org}/members/{username}/codespaces/{codespace_name}": [
@@ -13376,6 +13200,10 @@
       ],
       "/repos/{owner}/{repo}/actions/jobs/{job_id}/rerun": [
         "post"
+      ],
+      "/repos/{owner}/{repo}/actions/oidc/customization/sub": [
+        "get",
+        "put"
       ],
       "/repos/{owner}/{repo}/actions/permissions/access": [
         "get",
@@ -13505,9 +13333,6 @@
       ],
       "/repos/{owner}/{repo}/releases/generate-notes": [
         "post"
-      ],
-      "/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations": [
-        "get"
       ],
       "/repos/{owner}/{repo}/tags/protection": [
         "get",
@@ -13704,6 +13529,9 @@
         "get"
       ],
       "/users/{username}/ssh_signing_keys": [
+        "get"
+      ],
+      "/versions": [
         "get"
       ]
     }
