@@ -152,6 +152,14 @@
     {
       "name": "users",
       "description": "Interact with and view information about users and also current user."
+    },
+    {
+      "name": "enterprise-admin",
+      "description": "Enterprise Administration"
+    },
+    {
+      "name": "server-statistics",
+      "description": "Server statistics"
     }
   ],
   "servers": [
@@ -1363,7 +1371,7 @@
     "/orgs/{org}/actions/runner-groups": {
       "get": {
         "summary": "List self-hosted runner groups for an organization",
-        "description": "Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "description": "Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
         "operationId": "actions/list-self-hosted-runner-groups-for-org",
         "tags": [
           "actions"
@@ -1433,7 +1441,7 @@
     "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories": {
       "get": {
         "summary": "List repository access to a self-hosted runner group in an organization",
-        "description": "The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-server@3.5/github/getting-started-with-github/githubs-products).\"\n\nLists the repositories with access to a self-hosted runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "description": "Lists the repositories with access to a self-hosted runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
         "operationId": "actions/list-repo-access-to-self-hosted-runner-group-in-org",
         "tags": [
           "actions"
@@ -2338,7 +2346,7 @@
           },
           {
             "name": "type",
-            "description": "Specifies the types of repositories you want returned. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `type` can also be `internal`. However, the `internal` value is not yet supported when a GitHub App calls this API with an installation access token.",
+            "description": "Specifies the types of repositories you want returned. `internal` is not yet supported when a GitHub App calls this endpoint with an installation access token.",
             "in": "query",
             "required": false,
             "schema": {
@@ -2471,7 +2479,7 @@
                   },
                   "visibility": {
                     "type": "string",
-                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see \"[Creating an internal repository](https://docs.github.com/enterprise-server@3.5/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)\" in the GitHub Help documentation.",
+                    "description": "The visibility of the repository. **Note**: For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise. For more information, see \"[Creating an internal repository](https://docs.github.com/enterprise-server@3.5/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)\" in the GitHub Help documentation.  \nThe `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.",
                     "enum": [
                       "public",
                       "private",
@@ -3274,49 +3282,12 @@
                   },
                   "visibility": {
                     "type": "string",
-                    "description": "Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`.\"",
+                    "description": "The visibility of the repository.",
                     "enum": [
                       "public",
                       "private",
                       "internal"
                     ]
-                  },
-                  "security_and_analysis": {
-                    "type": "object",
-                    "description": "Specify which security and analysis features to enable or disable for the repository.\n\nTo use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.5/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n\nFor example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:\n`{ \"security_and_analysis\": {\"advanced_security\": { \"status\": \"enabled\" } } }`.\n\nYou can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
-                    "nullable": true,
-                    "properties": {
-                      "advanced_security": {
-                        "type": "object",
-                        "description": "Use the `status` property to enable or disable GitHub Advanced Security for this repository. For more information, see \"[About GitHub Advanced Security](/github/getting-started-with-github/learning-about-github/about-github-advanced-security).\"",
-                        "properties": {
-                          "status": {
-                            "type": "string",
-                            "description": "Can be `enabled` or `disabled`."
-                          }
-                        }
-                      },
-                      "secret_scanning": {
-                        "type": "object",
-                        "description": "Use the `status` property to enable or disable secret scanning for this repository. For more information, see \"[About secret scanning](/code-security/secret-security/about-secret-scanning).\"",
-                        "properties": {
-                          "status": {
-                            "type": "string",
-                            "description": "Can be `enabled` or `disabled`."
-                          }
-                        }
-                      },
-                      "secret_scanning_push_protection": {
-                        "type": "object",
-                        "description": "Use the `status` property to enable or disable secret scanning push protection for this repository. For more information, see \"[Protecting pushes with secret scanning](/code-security/secret-scanning/protecting-pushes-with-secret-scanning).\"",
-                        "properties": {
-                          "status": {
-                            "type": "string",
-                            "description": "Can be `enabled` or `disabled`."
-                          }
-                        }
-                      }
-                    }
                   },
                   "has_issues": {
                     "type": "boolean",
@@ -3356,11 +3327,6 @@
                     "type": "boolean",
                     "description": "Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.",
                     "default": true
-                  },
-                  "allow_auto_merge": {
-                    "type": "boolean",
-                    "description": "Either `true` to allow auto-merge on pull requests, or `false` to disallow auto-merge.",
-                    "default": false
                   },
                   "delete_branch_on_merge": {
                     "type": "boolean",
@@ -3473,7 +3439,18 @@
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "category": "repos",
-          "subcategory": null
+          "previews": [
+            {
+              "required": false,
+              "name": "nebula",
+              "note": "You can set the visibility of a repository using the new `visibility` parameter in the [Repositories API](https://docs.github.com/enterprise-server@3.5/rest/reference/repos/), and get a repository's visibility with a new response key. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes/).\n\nTo access repository visibility during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types) in the `Accept` header:\n```shell\napplication/vnd.github.nebula-preview+json\n```"
+            },
+            {
+              "required": false,
+              "name": "baptiste",
+              "note": "The `is_template` and `template_repository` keys are currently available for developer to preview. See [Create a repository using a template](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#create-a-repository-using-a-template) to learn how to create template repositories. To access these new response keys during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
+            }
+          ]
         },
         "x-octokit": {
           "diff": {
@@ -7306,7 +7283,7 @@
     "/search/commits": {
       "get": {
         "summary": "Search commits",
-        "description": "Find commits via various criteria on the default branch (usually `master`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match\nmetadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:\n\n`q=repo:octocat/Spoon-Knife+css`",
+        "description": "Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match\nmetadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:\n\n`q=repo:octocat/Spoon-Knife+css`",
         "tags": [
           "search"
         ],
