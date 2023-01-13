@@ -4129,6 +4129,160 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/pages": {
+      "put": {
+        "summary": "Update information about a GitHub Enterprise Cloud Pages site",
+        "description": "Updates information for a GitHub Enterprise Cloud Pages site. For more information, see \"[About GitHub Pages](/github/working-with-github-pages/about-github-pages).",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/update-information-about-pages-site",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/pages#update-information-about-a-github-pages-site"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cname": {
+                    "type": "string",
+                    "description": "Specify a custom domain for the repository. Sending a `null` value will remove the custom domain. For more about custom domains, see \"[Using a custom domain with GitHub Pages](https://docs.github.com/enterprise-cloud@latest//articles/using-a-custom-domain-with-github-pages/).\"",
+                    "nullable": true
+                  },
+                  "https_enforced": {
+                    "type": "boolean",
+                    "description": "Specify whether HTTPS should be enforced for the repository."
+                  },
+                  "build_type": {
+                    "type": "string",
+                    "description": "The process by which the GitHub Pages site will be built. `workflow` means that the site is built by a custom GitHub Actions workflow. `legacy` means that the site is built by GitHub when changes are pushed to a specific branch.",
+                    "enum": [
+                      "legacy",
+                      "workflow"
+                    ]
+                  },
+                  "source": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "description": "Update the source for the repository. Must include the branch name, and may optionally specify the subdirectory `/docs`. Possible values are `\"gh-pages\"`, `\"master\"`, and `\"master /docs\"`.",
+                        "enum": [
+                          "gh-pages",
+                          "master",
+                          "master /docs"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "description": "Update the source for the repository. Must include the branch name and path.",
+                        "properties": {
+                          "branch": {
+                            "type": "string",
+                            "description": "The repository branch used to publish your site's source files."
+                          },
+                          "path": {
+                            "type": "string",
+                            "description": "The repository directory that includes the source files for the Pages site. Allowed paths are `/` or `/docs`.",
+                            "enum": [
+                              "/",
+                              "/docs"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "branch",
+                          "path"
+                        ]
+                      }
+                    ]
+                  },
+                  "public": {
+                    "type": "boolean",
+                    "description": "Configures access controls for the GitHub Pages site. If public is set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site. This includes anyone in your Enterprise if the repository is set to `internal` visibility."
+                  }
+                },
+                "anyOf": [
+                  {
+                    "required": [
+                      "build_type"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "source"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "cname"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "public"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "https_enforced"
+                    ]
+                  }
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "cname": "octocatblog.com",
+                    "source": {
+                      "branch": "main",
+                      "path": "/"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Response"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
+          "409": {
+            "$ref": "#/components/responses/conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "pages"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
     "/scim/v2/organizations/{org}/Users": {
       "get": {
         "summary": "List SCIM provisioned identities",
@@ -33135,6 +33289,41 @@
       },
       "temporary_redirect": {
         "description": "Temporary Redirect",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "validation_failed": {
+        "description": "Validation failed, or the endpoint has been spammed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/validation-error"
+            }
+          }
+        }
+      },
+      "bad_request": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          },
+          "application/scim+json": {
+            "schema": {
+              "$ref": "#/components/schemas/scim-error"
+            }
+          }
+        }
+      },
+      "conflict": {
+        "description": "Conflict",
         "content": {
           "application/json": {
             "schema": {

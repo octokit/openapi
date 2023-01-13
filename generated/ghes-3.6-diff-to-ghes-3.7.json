@@ -2555,90 +2555,6 @@
     },
     "/orgs/{org}/teams/{team_slug}/repos": {
       "get": {
-        "summary": "List secret scanning alerts for an organization",
-        "description": "Lists secret scanning alerts for eligible repositories in an organization, from newest to oldest.\nTo use this endpoint, you must be an administrator or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.\nFor public repositories, you may instead use the `public_repo` scope.\n\nGitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.",
-        "tags": [
-          "secret-scanning"
-        ],
-        "operationId": "secret-scanning/list-alerts-for-org",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams#list-team-repositories"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/org"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-state"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-secret-type"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-resolution"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-sort"
-          },
-          {
-            "$ref": "#/components/parameters/direction"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/organization-secret-scanning-alert"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/organization-secret-scanning-alert-list"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
-            }
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          },
-          "503": {
-            "$ref": "#/components/responses/service_unavailable"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "secret-scanning",
-          "subcategory": null
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/orgs/{org}/teams/{team_slug}/repos": {
-      "get": {
         "summary": "List team repositories",
         "description": "Lists a team's repositories visible to the authenticated user.\n\n**Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos`.",
         "tags": [
@@ -3529,7 +3445,6 @@
           }
         },
         "x-github": {
-          "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "category": "repos",
           "subcategory": "autolinks"
@@ -3562,7 +3477,7 @@
           }
         ],
         "requestBody": {
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -3588,7 +3503,8 @@
                 ]
               },
               "examples": {
-                "default": {
+                "new-invitation-is-created": {
+                  "summary": "Add a collaborator with triage permissions",
                   "value": {
                     "key_prefix": "TICKET-",
                     "url_template": "https://example.com/TICKET?query=<num>",
@@ -3760,6 +3676,11 @@
                   }
                 }
               }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
             }
           },
           "201": {
@@ -3779,6 +3700,7 @@
           }
         },
         "x-github": {
+          "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "category": "checks",
           "subcategory": "suites"
@@ -3813,7 +3735,7 @@
           }
         ],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -3844,8 +3766,7 @@
                 }
               },
               "examples": {
-                "new-invitation-is-created": {
-                  "summary": "Add a collaborator with triage permissions",
+                "default": {
                   "value": {
                     "auto_trigger_checks": [
                       {
@@ -3860,8 +3781,8 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Response when a new invitation is created",
+          "200": {
+            "description": "Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -3946,7 +3867,7 @@
         }
       }
     },
-    "/repos/{owner}/{repo}/commits/{commit_sha}/pulls": {
+    "/repos/{owner}/{repo}/forks": {
       "get": {
         "summary": "List code scanning analyses for a repository",
         "description": "Lists the details of all code scanning analyses for a repository,\nstarting with the most recent.\nThe response is paginated and you can use the `page` and `per_page` parameters\nto list the analyses you're interested in.\nBy default 30 analyses are listed per page.\n\nThe `rules_count` field in the response give the number of rules\nthat were run in the analysis.\nFor very old analyses this data is not available,\nand `0` is returned in this field.\n\nYou must use an access token with the `security_events` scope to use this endpoint with private repos,\nthe `public_repo` scope also grants permission to read security events on public repos only.\nGitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.",
@@ -3954,136 +3875,10 @@
         "tags": [
           "repos"
         ],
-        "operationId": "repos/list-pull-requests-associated-with-commit",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/commit-sha"
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/pull-request-simple"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/pull-request-simple-items"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "commits"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/collaborators/{username}": {
-      "put": {
-        "summary": "Add a repository collaborator",
-        "description": "This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.6/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.\n\nAdding an outside collaborator may be restricted by enterprise administrators. For more information, see \"[Enforcing repository management policies in your enterprise](https://docs.github.com/enterprise-server@3.6/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories).\"\n\nFor more information on permission levels, see \"[Repository permission levels for an organization](https://docs.github.com/enterprise-server@3.6/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)\". There are restrictions on which permissions can be granted to organization members when an organization base role is in place. In this case, the permission being given must be equal to or higher than the org base permission. Otherwise, the request will fail with:\n\n```\nCannot assign {member} permission of {role name}\n```\n\nNote that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#http-verbs).\"\n\nThe invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/enterprise-server@3.6/rest/reference/repos#invitations).\n\n**Updating an existing collaborator's permission level**\n\nThe endpoint can also be used to change the permissions of an existing collaborator without first removing and re-adding the collaborator. To change the permissions, use the same endpoint and pass a different `permission` parameter. The response will be a `204`, with no other indication that the permission level changed.\n\n**Rate limits**\n\nYou are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.",
-        "tags": [
-          "repos"
-        ],
-        "operationId": "repos/add-collaborator",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/collaborators/collaborators#add-a-repository-collaborator"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/username"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/combined-commit-status"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/combined-commit-status"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "commits",
-          "subcategory": "statuses"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/forks": {
-      "get": {
-        "summary": "List pull requests associated with a commit",
-        "description": "Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, will only return open pull requests associated with the commit.",
-        "tags": [
-          "repos"
-        ],
         "operationId": "repos/list-forks",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/commits/commits#list-pull-requests-associated-with-a-commit"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository"
         },
         "parameters": [
           {
@@ -4155,107 +3950,19 @@
             }
           }
         }
-      },
-      "post": {
-        "summary": "Create a fork",
-        "description": "Create a fork for the authenticated user.\n\n**Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).",
-        "tags": [
-          "repos"
-        ],
-        "operationId": "repos/create-fork",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/checks#list-check-suites-for-a-git-reference"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          }
-        ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "nullable": true,
-                "properties": {
-                  "organization": {
-                    "type": "string",
-                    "description": "Optional parameter to specify the organization name if forking into an organization."
-                  }
-                }
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "organization": "octocat",
-                    "name": "Hello-World",
-                    "default_branch_only": true
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "202": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/full-repository"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/full-repository"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/bad_request"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "forks"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
       }
     },
-    "/repos/{owner}/{repo}/invitations": {
-      "get": {
-        "summary": "List repository invitations",
-        "description": "When authenticating as a user with admin rights to a repository, this endpoint will list all currently open repository invitations.",
+    "/repos/{owner}/{repo}/collaborators/{username}": {
+      "put": {
+        "summary": "Add a repository collaborator",
+        "description": "This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.6/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.\n\nAdding an outside collaborator may be restricted by enterprise administrators. For more information, see \"[Enforcing repository management policies in your enterprise](https://docs.github.com/enterprise-server@3.6/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories).\"\n\nFor more information on permission levels, see \"[Repository permission levels for an organization](https://docs.github.com/enterprise-server@3.6/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)\". There are restrictions on which permissions can be granted to organization members when an organization base role is in place. In this case, the permission being given must be equal to or higher than the org base permission. Otherwise, the request will fail with:\n\n```\nCannot assign {member} permission of {role name}\n```\n\nNote that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#http-verbs).\"\n\nThe invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/enterprise-server@3.6/rest/reference/repos#invitations).\n\n**Updating an existing collaborator's permission level**\n\nThe endpoint can also be used to change the permissions of an existing collaborator without first removing and re-adding the collaborator. To change the permissions, use the same endpoint and pass a different `permission` parameter. The response will be a `204`, with no other indication that the permission level changed.\n\n**Rate limits**\n\nYou are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.",
         "tags": [
           "repos"
         ],
-        "operationId": "repos/list-invitations",
+        "operationId": "repos/add-collaborator",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/commits/statuses#get-the-combined-status-for-a-specific-reference"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/collaborators/collaborators#add-a-repository-collaborator"
         },
         "parameters": [
           {
@@ -4265,10 +3972,7 @@
             "$ref": "#/components/parameters/repo"
           },
           {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
+            "$ref": "#/components/parameters/username"
           }
         ],
         "responses": {
@@ -4311,103 +4015,17 @@
         }
       }
     },
-    "/repos/{owner}/{repo}/invitations/{invitation_id}": {
-      "patch": {
-        "summary": "Update a repository invitation",
-        "description": "",
-        "tags": [
-          "repos"
-        ],
-        "operationId": "repos/update-invitation",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/activity#list-repository-events"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/invitation-id"
-          }
-        ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "permissions": {
-                    "type": "string",
-                    "description": "The permissions that the associated user will have on the repository. Valid values are `read`, `write`, `maintain`, `triage`, and `admin`.",
-                    "enum": [
-                      "read",
-                      "write",
-                      "maintain",
-                      "triage",
-                      "admin"
-                    ]
-                  }
-                }
-              },
-              "examples": {
-                "default": {
-                  "summary": "Example request body",
-                  "value": {
-                    "permissions": "write"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/repository-invitation"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/repository-invitation"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "collaborators",
-          "subcategory": "invitations"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
     "/repos/{owner}/{repo}/issues": {
       "get": {
-        "summary": "List repository issues",
-        "description": "List issues in a repository. Only open issues will be listed.\n\n**Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#list-pull-requests)\" endpoint.",
+        "summary": "List pull requests associated with a commit",
+        "description": "Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, will only return open pull requests associated with the commit.",
         "tags": [
           "issues"
         ],
         "operationId": "issues/list-for-repo",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#list-forks"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/commits/commits#list-pull-requests-associated-with-a-commit"
         },
         "parameters": [
           {
@@ -4426,20 +4044,61 @@
             }
           },
           {
-            "name": "state",
-            "description": "Indicates the state of the issues to return.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "open",
-                "closed",
-                "all"
-              ],
-              "default": "open"
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/pull-request-simple"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/pull-request-simple-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
             }
-          },
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "commits"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/commits/{ref}/check-suites": {
+      "get": {
+        "summary": "List check suites for a Git reference",
+        "description": "**Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.\n\nLists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.",
+        "tags": [
+          "checks"
+        ],
+        "operationId": "checks/list-suites-for-ref",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/checks#list-check-suites-for-a-git-reference"
+        },
+        "parameters": [
           {
             "name": "assignee",
             "description": "Can be the name of a user. Pass in `none` for issues with no assigned user, and `*` for issues assigned to any user.",
@@ -4521,6 +4180,54 @@
                 "$ref": "#/components/headers/link"
               }
             }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "checks",
+          "subcategory": "suites"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/commits/{ref}/status": {
+      "get": {
+        "summary": "Get the combined status for a specific reference",
+        "description": "Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name.\n\n\nAdditionally, a combined `state` is returned. The `state` is one of:\n\n*   **failure** if any of the contexts report as `error` or `failure`\n*   **pending** if there are no statuses or a context is `pending`\n*   **success** if the latest status for all contexts is `success`",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/get-combined-status-for-ref",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/commits/statuses#get-the-combined-status-for-a-specific-reference"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "name": "ref",
+            "description": "ref parameter",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-multi-segment": true
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
           },
           "301": {
             "$ref": "#/components/responses/moved_permanently"
@@ -4553,6 +4260,150 @@
           "issues"
         ],
         "operationId": "issues/create",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/activity#list-repository-events"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/event"
+                  }
+                },
+                "examples": {
+                  "200-response": {
+                    "$ref": "#/components/examples/repo-events-items"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "activity",
+          "subcategory": "events"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/forks": {
+      "get": {
+        "summary": "List forks",
+        "description": "",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/list-forks",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#list-forks"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "name": "sort",
+            "description": "The sort order. `stargazers` will sort by star count.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "oldest",
+                "stargazers",
+                "watchers"
+              ],
+              "default": "newest"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/minimal-repository"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository-items-2"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "forks"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a fork",
+        "description": "Create a fork for the authenticated user.\n\n**Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/create-fork",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#create-a-fork"
@@ -4658,6 +4509,15 @@
                     "labels": [
                       "bug"
                     ]
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "organization": "octocat",
+                    "name": "Hello-World",
+                    "default_branch_only": true
                   }
                 }
               },

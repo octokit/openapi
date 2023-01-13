@@ -27644,14 +27644,7 @@
                         "type": "string"
                       },
                       "schemas": {
-                        "description": "The URIs that are used to indicate the namespaces of the list SCIM schemas.",
-                        "example": [
-                          "urn:ietf:params:scim:api:messages:2.0:ListResponse"
-                        ],
                         "items": {
-                          "enum": [
-                            "urn:ietf:params:scim:api:messages:2.0:ListResponse"
-                          ],
                           "type": "string"
                         },
                         "type": "array"
@@ -28064,7 +28057,12 @@
                         "items": {
                           "type": "string"
                         },
-                        "type": "array"
+                        "required": [
+                          "schemas",
+                          "active",
+                          "emails"
+                        ],
+                        "type": "object"
                       },
                       "scimType": {
                         "nullable": true,
@@ -28647,9 +28645,9 @@
           ],
           "x-github": {
             "category": "enterprise-admin",
-            "enabledForGitHubApps": true,
+            "enabledForGitHubApps": false,
             "githubCloudOnly": false,
-            "subcategory": "scim"
+            "subcategory": "management-console"
           }
         },
         "patch": {
@@ -28667,2608 +28665,15 @@
               "name": "scim_user_id",
               "required": true,
               "schema": {
-                "example": "7fce0092-d52e-4f76-b727-3955bd72c939",
                 "type": "string"
               },
               "style": "simple"
             }
           ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "disableUser": {
-                    "summary": "Disable User",
-                    "value": {
-                      "Operations": [
-                        {
-                          "op": "replace",
-                          "path": "active",
-                          "value": false
-                        }
-                      ],
-                      "schemas": [
-                        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-                      ]
-                    }
-                  },
-                  "userMultiValuedProperties": {
-                    "summary": "Multi Valued Property",
-                    "value": {
-                      "Operations": [
-                        {
-                          "op": "replace",
-                          "path": "emails[type eq 'work'].value",
-                          "value": "updatedEmail@microsoft.com"
-                        },
-                        {
-                          "op": "replace",
-                          "path": "name.familyName",
-                          "value": "updatedFamilyName"
-                        }
-                      ],
-                      "schemas": [
-                        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-                      ]
-                    }
-                  },
-                  "userSingleValuedProperties": {
-                    "summary": "Single Valued Property",
-                    "value": {
-                      "Operations": [
-                        {
-                          "op": "replace",
-                          "path": "userName",
-                          "value": "5b50642d-79fc-4410-9e90-4c077cdd1a59@testuser.com"
-                        },
-                        {
-                          "op": "replace",
-                          "path": "displayName",
-                          "value": "Monalisa Octocat"
-                        }
-                      ],
-                      "schemas": [
-                        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "Operations": {
-                      "description": "patch operations list",
-                      "items": {
-                        "properties": {
-                          "op": {
-                            "enum": [
-                              "add",
-                              "replace",
-                              "remove"
-                            ],
-                            "type": "string"
-                          },
-                          "path": {
-                            "type": "string"
-                          },
-                          "value": {
-                            "description": "Corresponding 'value' of that field specified by 'path'",
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "op"
-                        ],
-                        "type": "object"
-                      },
-                      "type": "array"
-                    },
-                    "schemas": {
-                      "items": {
-                        "enum": [
-                          "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-                        ],
-                        "type": "string"
-                      },
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "Operations",
-                    "schemas"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "content": {
-                "application/scim+json": {
-                  "examples": {
-                    "disableUser": {
-                      "value": {
-                        "active": true,
-                        "displayName": "Mona Lisa",
-                        "emails": [
-                          {
-                            "primary": true,
-                            "type": "work",
-                            "value": "mlisa@example.com"
-                          }
-                        ],
-                        "externalId": "E012345",
-                        "id": "7fce0092-d52e-4f76-b727-3955bd72c939",
-                        "meta": {
-                          "created": "2012-03-27T19:59:26.000Z",
-                          "lastModified": "2018-03-27T19:59:26.000Z",
-                          "location": "https://api.github.localhost/scim/v2/Users/7fce0092-d52e-4f76-b727-3955bd72c939",
-                          "resourceType": "User"
-                        },
-                        "name": {
-                          "familyName": "Octocat",
-                          "formatted": "Ms. Mona Lisa Octocat",
-                          "givenName": "Mona",
-                          "middleName": "Lisa"
-                        },
-                        "roles": [
-                          {
-                            "primary": false,
-                            "value": "User"
-                          }
-                        ],
-                        "schemas": [
-                          "urn:ietf:params:scim:schemas:core:2.0:User"
-                        ],
-                        "userName": "E012345"
-                      }
-                    },
-                    "userMultiValuedProperties": {
-                      "value": {
-                        "active": true,
-                        "displayName": "Mona Lisa",
-                        "emails": [
-                          {
-                            "primary": true,
-                            "type": "work",
-                            "value": "mlisa@example.com"
-                          }
-                        ],
-                        "externalId": "E012345",
-                        "id": "7fce0092-d52e-4f76-b727-3955bd72c939",
-                        "meta": {
-                          "created": "2012-03-27T19:59:26.000Z",
-                          "lastModified": "2018-03-27T19:59:26.000Z",
-                          "location": "https://api.github.localhost/scim/v2/Users/7fce0092-d52e-4f76-b727-3955bd72c939",
-                          "resourceType": "User"
-                        },
-                        "name": {
-                          "familyName": "Octocat",
-                          "formatted": "Ms. Mona Lisa Octocat",
-                          "givenName": "Mona",
-                          "middleName": "Lisa"
-                        },
-                        "roles": [
-                          {
-                            "primary": false,
-                            "value": "User"
-                          }
-                        ],
-                        "schemas": [
-                          "urn:ietf:params:scim:schemas:core:2.0:User"
-                        ],
-                        "userName": "E012345"
-                      }
-                    },
-                    "userSingleValuedProperties": {
-                      "value": {
-                        "active": true,
-                        "displayName": "Mona Lisa",
-                        "emails": [
-                          {
-                            "primary": true,
-                            "type": "work",
-                            "value": "mlisa@example.com"
-                          }
-                        ],
-                        "externalId": "E012345",
-                        "id": "7fce0092-d52e-4f76-b727-3955bd72c939",
-                        "meta": {
-                          "created": "2012-03-27T19:59:26.000Z",
-                          "lastModified": "2018-03-27T19:59:26.000Z",
-                          "location": "https://api.github.localhost/scim/v2/Users/7fce0092-d52e-4f76-b727-3955bd72c939",
-                          "resourceType": "User"
-                        },
-                        "name": {
-                          "familyName": "Octocat",
-                          "formatted": "Ms. Mona Lisa Octocat",
-                          "givenName": "Mona",
-                          "middleName": "Lisa"
-                        },
-                        "roles": [
-                          {
-                            "primary": false,
-                            "value": "User"
-                          }
-                        ],
-                        "schemas": [
-                          "urn:ietf:params:scim:schemas:core:2.0:User"
-                        ],
-                        "userName": "E012345"
-                      }
-                    }
-                  },
-                  "schema": {
-                    "allOf": [
-                      {
-                        "properties": {
-                          "active": {
-                            "description": "Whether the user active in the IdP.",
-                            "example": true,
-                            "type": "boolean"
-                          },
-                          "displayName": {
-                            "description": "A human-readable name for the user.",
-                            "example": "Mona Lisa",
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "emails": {
-                            "description": "The emails for the user.",
-                            "items": {
-                              "properties": {
-                                "primary": {
-                                  "description": "Whether this email address is the primary address.",
-                                  "example": true,
-                                  "type": "boolean"
-                                },
-                                "type": {
-                                  "description": "The type of email address.",
-                                  "example": "work",
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "description": "The email address.",
-                                  "example": "mlisa@example.com",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "value"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "externalId": {
-                            "description": "A unique identifier for the resource as defined by the provisioning client.",
-                            "example": "E012345",
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "name": {
-                            "properties": {
-                              "familyName": {
-                                "description": "The family name of the user.",
-                                "example": "Octocat",
-                                "type": "string"
-                              },
-                              "formatted": {
-                                "description": "The full name, including all middle names, titles, and suffixes as appropriate, formatted for display.",
-                                "example": "Ms. Mona Lisa Octocat",
-                                "type": "string"
-                              },
-                              "givenName": {
-                                "description": "The given name of the user.",
-                                "example": "Mona",
-                                "type": "string"
-                              },
-                              "middleName": {
-                                "description": "The middle name(s) of the user.",
-                                "example": "Lisa",
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "roles": {
-                            "description": "The roles assigned to the user.",
-                            "items": {
-                              "properties": {
-                                "display": {
-                                  "type": "string"
-                                },
-                                "primary": {
-                                  "description": "Is the role a primary role for the user.",
-                                  "example": false,
-                                  "type": "boolean"
-                                },
-                                "type": {
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "description": "The role value representing a user role in GitHub.",
-                                  "enum": [
-                                    "User",
-                                    "user",
-                                    "27d9891d-2c17-4f45-a262-781a0e55c80a",
-                                    "Restricted User",
-                                    "restricted_user",
-                                    "1ebc4a02-e56c-43a6-92a5-02ee09b90824",
-                                    "Enterprise Owner",
-                                    "enterprise_owner",
-                                    "981df190-8801-4618-a08a-d91f6206c954",
-                                    "ba4987ab-a1c3-412a-b58c-360fc407cb10",
-                                    "Billing Manager",
-                                    "billing_manager",
-                                    "0e338b8c-cc7f-498a-928d-ea3470d7e7e3",
-                                    "e6be2762-e4ad-4108-b72d-1bbe884a0f91"
-                                  ],
-                                  "example": "user",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "value"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "schemas": {
-                            "description": "The URIs that are used to indicate the namespaces of the SCIM schemas.",
-                            "example": [
-                              "urn:ietf:params:scim:schemas:core:2.0:User"
-                            ],
-                            "items": {
-                              "enum": [
-                                "urn:ietf:params:scim:schemas:core:2.0:User"
-                              ],
-                              "type": "string"
-                            },
-                            "type": "array"
-                          },
-                          "userName": {
-                            "description": "The username for the user.",
-                            "example": "E012345",
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "schemas",
-                          "active",
-                          "emails"
-                        ],
-                        "type": "object"
-                      },
-                      {
-                        "properties": {
-                          "groups": {
-                            "description": "Provisioned SCIM groups that the user is a member of.",
-                            "type": "array"
-                          },
-                          "id": {
-                            "description": "The internally generated id for the user object.",
-                            "example": "7fce0092-d52e-4f76-b727-3955bd72c939",
-                            "type": "string"
-                          },
-                          "meta": {
-                            "description": "The metadata associated with the creation/updates to the user.",
-                            "properties": {
-                              "created": {
-                                "description": "A date and time when the user was created.",
-                                "example": "2022-03-27T19:59:26.000Z",
-                                "type": "string"
-                              },
-                              "lastModified": {
-                                "description": "A data and time when the user was last modified.",
-                                "example": "2022-03-27T19:59:26.000Z",
-                                "type": "string"
-                              },
-                              "location": {
-                                "description": "A URL location of an object",
-                                "type": "string"
-                              },
-                              "resourceType": {
-                                "description": "A type of a resource",
-                                "enum": [
-                                  "User",
-                                  "Group"
-                                ],
-                                "example": "User",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "resourceType"
-                            ],
-                            "type": "object"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "meta"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  }
-                }
-              },
-              "description": "Success, user was updated"
-            },
-            "400": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Bad request"
-            },
-            "401": {
-              "description": "Authorization failure"
-            },
-            "403": {
-              "description": "Permission denied"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            },
-            "409": {
-              "description": "Duplicate record detected"
-            },
-            "429": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Too many requests"
-            },
-            "500": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Internal server error"
-            }
-          },
-          "summary": "Update an attribute for a SCIM enterprise user",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": false,
-            "subcategory": "scim"
-          }
-        },
-        "put": {
-          "deprecated": null,
-          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.\n\nReplaces an existing provisioned user's information.\n\nYou must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](#update-an-attribute-for-a-scim-enterprise-user) endpoint instead.\n\n**Warning:** Setting `active: false` will suspend a user and obfuscate the user handle and user email. Since the implementation is a generic SCIM implementation and does not differentiate yet between different IdP providers, for Okta, the user GDPR data will not be purged and the credentials will not be removed.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#set-scim-information-for-a-provisioned-enterprise-user"
-          },
-          "operationId": "enterprise-admin/set-information-for-provisioned-enterprise-user",
-          "parameters": [
-            {
-              "description": "The unique identifier of the SCIM user.",
-              "in": "path",
-              "name": "scim_user_id",
-              "required": true,
-              "schema": {
-                "example": "members",
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "Used for pagination: the starting index of the first result to return when paginating through values.",
-              "in": "query",
-              "name": "startIndex",
-              "required": false,
-              "schema": {
-                "default": 1,
-                "example": 1,
-                "format": "int32",
-                "type": "integer"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "Used for pagination: the number of results to return per page.",
-              "in": "query",
-              "name": "count",
-              "required": false,
-              "schema": {
-                "default": 30,
-                "example": 1,
-                "format": "int32",
-                "type": "integer"
-              },
-              "style": "form"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "user": {
-                    "summary": "User",
-                    "value": {
-                      "active": true,
-                      "displayName": "Mona Lisa",
-                      "emails": [
-                        {
-                          "primary": true,
-                          "type": "work",
-                          "value": "mlisa@example.com"
-                        }
-                      ],
-                      "externalId": "E012345",
-                      "name": {
-                        "familyName": "Octocat",
-                        "formatted": "Ms. Mona Lisa Octocat",
-                        "givenName": "Mona",
-                        "middleName": "Lisa"
-                      },
-                      "roles": [
-                        {
-                          "primary": false,
-                          "value": "User"
-                        }
-                      ],
-                      "schemas": [
-                        "urn:ietf:params:scim:schemas:core:2.0:User"
-                      ],
-                      "userName": "E012345"
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "active": {
-                      "description": "Whether the user active in the IdP.",
-                      "example": true,
-                      "type": "boolean"
-                    },
-                    "displayName": {
-                      "description": "A human-readable name for the user.",
-                      "example": "Mona Lisa",
-                      "type": "string"
-                    },
-                    "emails": {
-                      "description": "The emails for the user.",
-                      "items": {
-                        "properties": {
-                          "primary": {
-                            "description": "Whether this email address is the primary address.",
-                            "example": true,
-                            "type": "boolean"
-                          },
-                          "type": {
-                            "description": "The type of email address.",
-                            "example": "work",
-                            "type": "string"
-                          },
-                          "value": {
-                            "description": "The email address.",
-                            "example": "mlisa@example.com",
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "value",
-                          "type",
-                          "primary"
-                        ],
-                        "type": "object"
-                      },
-                      "type": "array"
-                    },
-                    "externalId": {
-                      "description": "A unique identifier for the resource as defined by the provisioning client.",
-                      "example": "E012345",
-                      "type": "string"
-                    },
-                    "name": {
-                      "properties": {
-                        "familyName": {
-                          "description": "The family name of the user.",
-                          "example": "Octocat",
-                          "type": "string"
-                        },
-                        "formatted": {
-                          "description": "The full name, including all middle names, titles, and suffixes as appropriate, formatted for display.",
-                          "example": "Ms. Mona Lisa Octocat",
-                          "type": "string"
-                        },
-                        "givenName": {
-                          "description": "The given name of the user.",
-                          "example": "Mona",
-                          "type": "string"
-                        },
-                        "middleName": {
-                          "description": "The middle name(s) of the user.",
-                          "example": "Lisa",
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "familyName",
-                        "givenName"
-                      ],
-                      "type": "object"
-                    },
-                    "roles": {
-                      "description": "The roles assigned to the user.",
-                      "items": {
-                        "properties": {
-                          "display": {
-                            "type": "string"
-                          },
-                          "primary": {
-                            "description": "Is the role a primary role for the user.",
-                            "example": false,
-                            "type": "boolean"
-                          },
-                          "type": {
-                            "type": "string"
-                          },
-                          "value": {
-                            "description": "The role value representing a user role in GitHub.",
-                            "enum": [
-                              "User",
-                              "user",
-                              "27d9891d-2c17-4f45-a262-781a0e55c80a",
-                              "Restricted User",
-                              "restricted_user",
-                              "1ebc4a02-e56c-43a6-92a5-02ee09b90824",
-                              "Enterprise Owner",
-                              "enterprise_owner",
-                              "981df190-8801-4618-a08a-d91f6206c954",
-                              "ba4987ab-a1c3-412a-b58c-360fc407cb10",
-                              "Billing Manager",
-                              "billing_manager",
-                              "0e338b8c-cc7f-498a-928d-ea3470d7e7e3",
-                              "e6be2762-e4ad-4108-b72d-1bbe884a0f91"
-                            ],
-                            "example": "user",
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "value"
-                        ],
-                        "type": "object"
-                      },
-                      "type": "array"
-                    },
-                    "schemas": {
-                      "description": "The URIs that are used to indicate the namespaces of the SCIM schemas.",
-                      "example": [
-                        "urn:ietf:params:scim:schemas:core:2.0:User"
-                      ],
-                      "items": {
-                        "enum": [
-                          "urn:ietf:params:scim:schemas:core:2.0:User"
-                        ],
-                        "type": "string"
-                      },
-                      "type": "array"
-                    },
-                    "userName": {
-                      "description": "The username for the user.",
-                      "example": "E012345",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "schemas",
-                    "externalId",
-                    "userName",
-                    "active",
-                    "displayName",
-                    "emails"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "content": {
-                "application/scim+json": {
-                  "examples": {
-                    "user": {
-                      "value": {
-                        "active": true,
-                        "displayName": "Mona Lisa",
-                        "emails": [
-                          {
-                            "primary": true,
-                            "type": "work",
-                            "value": "mlisa@example.com"
-                          }
-                        ],
-                        "externalId": "E012345",
-                        "id": "7fce0092-d52e-4f76-b727-3955bd72c939",
-                        "meta": {
-                          "created": "2012-03-27T19:59:26.000Z",
-                          "lastModified": "2018-03-27T19:59:26.000Z",
-                          "location": "https://api.github.localhost/scim/v2/Users/7fce0092-d52e-4f76-b727-3955bd72c939",
-                          "resourceType": "User"
-                        },
-                        "name": {
-                          "familyName": "Octocat",
-                          "formatted": "Ms. Mona Lisa Octocat",
-                          "givenName": "Mona",
-                          "middleName": "Lisa"
-                        },
-                        "roles": [
-                          {
-                            "primary": false,
-                            "value": "User"
-                          }
-                        ],
-                        "schemas": [
-                          "urn:ietf:params:scim:api:messages:2.0:ListResponse"
-                        ],
-                        "userName": "E012345"
-                      }
-                    }
-                  },
-                  "schema": {
-                    "allOf": [
-                      {
-                        "properties": {
-                          "active": {
-                            "description": "Whether the user active in the IdP.",
-                            "example": true,
-                            "type": "boolean"
-                          },
-                          "displayName": {
-                            "description": "A human-readable name for the user.",
-                            "example": "Mona Lisa",
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "emails": {
-                            "description": "The emails for the user.",
-                            "items": {
-                              "properties": {
-                                "primary": {
-                                  "description": "Whether this email address is the primary address.",
-                                  "example": true,
-                                  "type": "boolean"
-                                },
-                                "type": {
-                                  "description": "The type of email address.",
-                                  "example": "work",
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "description": "The email address.",
-                                  "example": "mlisa@example.com",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "value"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "externalId": {
-                            "description": "A unique identifier for the resource as defined by the provisioning client.",
-                            "example": "E012345",
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "name": {
-                            "properties": {
-                              "familyName": {
-                                "description": "The family name of the user.",
-                                "example": "Octocat",
-                                "type": "string"
-                              },
-                              "formatted": {
-                                "description": "The full name, including all middle names, titles, and suffixes as appropriate, formatted for display.",
-                                "example": "Ms. Mona Lisa Octocat",
-                                "type": "string"
-                              },
-                              "givenName": {
-                                "description": "The given name of the user.",
-                                "example": "Mona",
-                                "type": "string"
-                              },
-                              "middleName": {
-                                "description": "The middle name(s) of the user.",
-                                "example": "Lisa",
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "roles": {
-                            "description": "The roles assigned to the user.",
-                            "items": {
-                              "properties": {
-                                "display": {
-                                  "type": "string"
-                                },
-                                "primary": {
-                                  "description": "Is the role a primary role for the user.",
-                                  "example": false,
-                                  "type": "boolean"
-                                },
-                                "type": {
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "description": "The role value representing a user role in GitHub.",
-                                  "enum": [
-                                    "User",
-                                    "user",
-                                    "27d9891d-2c17-4f45-a262-781a0e55c80a",
-                                    "Restricted User",
-                                    "restricted_user",
-                                    "1ebc4a02-e56c-43a6-92a5-02ee09b90824",
-                                    "Enterprise Owner",
-                                    "enterprise_owner",
-                                    "981df190-8801-4618-a08a-d91f6206c954",
-                                    "ba4987ab-a1c3-412a-b58c-360fc407cb10",
-                                    "Billing Manager",
-                                    "billing_manager",
-                                    "0e338b8c-cc7f-498a-928d-ea3470d7e7e3",
-                                    "e6be2762-e4ad-4108-b72d-1bbe884a0f91"
-                                  ],
-                                  "example": "user",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "value"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "schemas": {
-                            "description": "The URIs that are used to indicate the namespaces of the SCIM schemas.",
-                            "example": [
-                              "urn:ietf:params:scim:schemas:core:2.0:User"
-                            ],
-                            "items": {
-                              "enum": [
-                                "urn:ietf:params:scim:schemas:core:2.0:User"
-                              ],
-                              "type": "string"
-                            },
-                            "type": "array"
-                          },
-                          "userName": {
-                            "description": "The username for the user.",
-                            "example": "E012345",
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "schemas",
-                          "active",
-                          "emails"
-                        ],
-                        "type": "object"
-                      },
-                      {
-                        "properties": {
-                          "groups": {
-                            "description": "Provisioned SCIM groups that the user is a member of.",
-                            "type": "array"
-                          },
-                          "id": {
-                            "description": "The internally generated id for the user object.",
-                            "example": "7fce0092-d52e-4f76-b727-3955bd72c939",
-                            "type": "string"
-                          },
-                          "meta": {
-                            "description": "The metadata associated with the creation/updates to the user.",
-                            "properties": {
-                              "created": {
-                                "description": "A date and time when the user was created.",
-                                "example": "2022-03-27T19:59:26.000Z",
-                                "type": "string"
-                              },
-                              "lastModified": {
-                                "description": "A data and time when the user was last modified.",
-                                "example": "2022-03-27T19:59:26.000Z",
-                                "type": "string"
-                              },
-                              "location": {
-                                "description": "A URL location of an object",
-                                "type": "string"
-                              },
-                              "resourceType": {
-                                "description": "A type of a resource",
-                                "enum": [
-                                  "User",
-                                  "Group"
-                                ],
-                                "example": "User",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "resourceType"
-                            ],
-                            "type": "object"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "meta"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  }
-                }
-              },
-              "description": "User was updated"
-            },
-            "400": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Bad request"
-            },
-            "401": {
-              "description": "Authorization failure"
-            },
-            "403": {
-              "description": "Permission denied"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            },
-            "409": {
-              "description": "Duplicate record detected"
-            },
-            "429": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Too many requests"
-            },
-            "500": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Internal server error"
-            }
-          },
-          "summary": "Set SCIM information for a provisioned enterprise user",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": false,
-            "subcategory": "scim"
-          }
-        }
-      },
-      "/setup/api/configcheck": {
-        "get": {
-          "deprecated": null,
-          "description": "This endpoint allows you to check the status of the most recent configuration process:\n\nNote that you may need to wait several seconds after you start a process before you can check its status.\n\nThe different statuses are:\n\n| Status        | Description                       |\n| ------------- | --------------------------------- |\n| `PENDING`     | The job has not started yet       |\n| `CONFIGURING` | The job is running                |\n| `DONE`        | The job has finished correctly    |\n| `FAILED`      | The job has finished unexpectedly |",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-configuration-status"
-          },
-          "operationId": "enterprise-admin/get-configuration-status",
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "progress": [
-                          {
-                            "key": "Appliance core components",
-                            "status": "DONE"
-                          },
-                          {
-                            "key": "GitHub utilities",
-                            "status": "DONE"
-                          },
-                          {
-                            "key": "GitHub applications",
-                            "status": "DONE"
-                          },
-                          {
-                            "key": "GitHub services",
-                            "status": "CONFIGURING"
-                          },
-                          {
-                            "key": "Reloading appliance services",
-                            "status": "PENDING"
-                          }
-                        ],
-                        "status": "running"
-                      }
-                    }
-                  },
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response"
-            }
-          },
-          "servers": [
-            {
-              "url": "{protocol}://{hostname}",
-              "variables": {
-                "hostname": {
-                  "default": "HOSTNAME",
-                  "description": "Self-hosted Enterprise Server hostname"
-                },
-                "protocol": {
-                  "default": "http",
-                  "description": "Self-hosted Enterprise Server protocol"
-                }
-              }
-            }
-          ],
-          "summary": "Get the configuration status",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": false,
-            "subcategory": "management-console"
-          }
-        }
-      },
-      "/setup/api/configure": {
-        "post": {
-          "deprecated": null,
-          "description": "This endpoint allows you to start a configuration process at any time for your updated settings to take effect:",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process"
-          },
-          "operationId": "enterprise-admin/start-configuration-process",
-          "responses": {
-            "202": {
-              "description": "Response"
-            }
-          },
-          "servers": [
-            {
-              "url": "{protocol}://{hostname}",
-              "variables": {
-                "hostname": {
-                  "default": "HOSTNAME",
-                  "description": "Self-hosted Enterprise Server hostname"
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          ],
-          "summary": "Start a configuration process",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": false,
-            "subcategory": "management-console"
-          }
-        }
-      },
-      "/setup/api/maintenance": {
-        "get": {
-          "deprecated": null,
-          "description": "Check your installation's maintenance status:",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-maintenance-status"
-          },
-          "operationId": "enterprise-admin/get-maintenance-status",
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Internal server error"
-            }
-          },
-          "summary": "Provision a SCIM enterprise user",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": false,
-            "subcategory": "scim"
-          }
-        }
-      },
-      "/scim/v2/Users/{scim_user_id}": {
-        "delete": {
-          "deprecated": null,
-          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.\n\nPermanently suspends a SCIM user from an enterprise, removes all data for the user, obfuscates the login, email, and display name of the user, removes all external-identity SCIM attributes, and deletes the emails, avatar, PATs, SSH keys, OAuth authorizations credentials, GPG keys, and SAML mappings for the user. You will not be able to undo this action.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#enable-or-disable-maintenance-mode"
-          },
-          "operationId": "enterprise-admin/enable-or-disable-maintenance-mode",
           "requestBody": {
             "content": {
               "application/x-www-form-urlencoded": {
                 "examples": {
-                  "default": {
-                    "value": {
-                      "maintenance": "{\"enabled\":true, \"when\":\"now\"}"
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "maintenance": {
-                      "description": "A JSON string with the attributes `enabled` and `when`.\n\nThe possible values for `enabled` are `true` and `false`. When it's `false`, the attribute `when` is ignored and the maintenance mode is turned off. `when` defines the time period when the maintenance was enabled.\n\nThe possible values for `when` are `now` or any date parseable by [mojombo/chronic](https://github.com/mojombo/chronic).",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "maintenance"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "operationId": "enterprise-admin/delete-user-from-enterprise",
-          "parameters": [
-            {
-              "description": "The unique identifier of the SCIM user.",
-              "in": "path",
-              "name": "scim_user_id",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "User was deleted, no content"
-            },
-            "400": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Bad request"
-            },
-            "401": {
-              "description": "Authorization failure"
-            },
-            "403": {
-              "description": "Permission denied"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            },
-            "429": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          ],
-          "summary": "Enable or disable maintenance mode",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": false,
-            "subcategory": "management-console"
-          }
-        }
-      },
-      "/setup/api/settings": {
-        "get": {
-          "deprecated": null,
-          "description": "Gets the settings for your instance. To change settings, see the [Set settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#set-settings).\n\n**Note:** You cannot retrieve the management console password with the Enterprise administration API.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings"
-          },
-          "operationId": "enterprise-admin/get-settings",
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Internal server error"
-            }
-          },
-          "summary": "Delete a SCIM user from an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": false,
-            "subcategory": "scim"
-          }
-        },
-        "get": {
-          "deprecated": null,
-          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.\n\nGets information about a SCIM user.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-scim-provisioning-information-for-an-enterprise-user"
-          },
-          "operationId": "enterprise-admin/get-provisioning-information-for-enterprise-user",
-          "parameters": [
-            {
-              "description": "The unique identifier of the SCIM user.",
-              "in": "path",
-              "name": "scim_user_id",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/scim+json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "active": true,
-                        "displayName": "Mona Lisa",
-                        "emails": [
-                          {
-                            "primary": true,
-                            "type": "work",
-                            "value": "mlisa@example.com"
-                          }
-                        ],
-                        "externalId": "E012345",
-                        "id": "7fce0092-d52e-4f76-b727-3955bd72c939",
-                        "meta": {
-                          "created": "2012-03-27T19:59:26.000Z",
-                          "lastModified": "2018-03-27T19:59:26.000Z",
-                          "location": "https://api.github.localhost/scim/v2/Users/7fce0092-d52e-4f76-b727-3955bd72c939",
-                          "resourceType": "User"
-                        },
-                        "name": {
-                          "familyName": "Octocat",
-                          "formatted": "Ms. Mona Lisa Octocat",
-                          "givenName": "Mona",
-                          "middleName": "Lisa"
-                        },
-                        "roles": [
-                          {
-                            "primary": false,
-                            "value": "User"
-                          }
-                        ],
-                        "schemas": [
-                          "urn:ietf:params:scim:schemas:core:2.0:User"
-                        ],
-                        "userName": "E012345"
-                      }
-                    }
-                  },
-                  "schema": {
-                    "allOf": [
-                      {
-                        "properties": {
-                          "active": {
-                            "description": "Whether the user active in the IdP.",
-                            "example": true,
-                            "type": "boolean"
-                          },
-                          "displayName": {
-                            "description": "A human-readable name for the user.",
-                            "example": "Mona Lisa",
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "emails": {
-                            "description": "The emails for the user.",
-                            "items": {
-                              "properties": {
-                                "primary": {
-                                  "description": "Whether this email address is the primary address.",
-                                  "example": true,
-                                  "type": "boolean"
-                                },
-                                "type": {
-                                  "description": "The type of email address.",
-                                  "example": "work",
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "description": "The email address.",
-                                  "example": "mlisa@example.com",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "value"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "externalId": {
-                            "description": "A unique identifier for the resource as defined by the provisioning client.",
-                            "example": "E012345",
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "name": {
-                            "properties": {
-                              "familyName": {
-                                "description": "The family name of the user.",
-                                "example": "Octocat",
-                                "type": "string"
-                              },
-                              "formatted": {
-                                "description": "The full name, including all middle names, titles, and suffixes as appropriate, formatted for display.",
-                                "example": "Ms. Mona Lisa Octocat",
-                                "type": "string"
-                              },
-                              "givenName": {
-                                "description": "The given name of the user.",
-                                "example": "Mona",
-                                "type": "string"
-                              },
-                              "middleName": {
-                                "description": "The middle name(s) of the user.",
-                                "example": "Lisa",
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "roles": {
-                            "description": "The roles assigned to the user.",
-                            "items": {
-                              "properties": {
-                                "display": {
-                                  "type": "string"
-                                },
-                                "primary": {
-                                  "description": "Is the role a primary role for the user.",
-                                  "example": false,
-                                  "type": "boolean"
-                                },
-                                "type": {
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "description": "The role value representing a user role in GitHub.",
-                                  "enum": [
-                                    "User",
-                                    "user",
-                                    "27d9891d-2c17-4f45-a262-781a0e55c80a",
-                                    "Restricted User",
-                                    "restricted_user",
-                                    "1ebc4a02-e56c-43a6-92a5-02ee09b90824",
-                                    "Enterprise Owner",
-                                    "enterprise_owner",
-                                    "981df190-8801-4618-a08a-d91f6206c954",
-                                    "ba4987ab-a1c3-412a-b58c-360fc407cb10",
-                                    "Billing Manager",
-                                    "billing_manager",
-                                    "0e338b8c-cc7f-498a-928d-ea3470d7e7e3",
-                                    "e6be2762-e4ad-4108-b72d-1bbe884a0f91"
-                                  ],
-                                  "example": "user",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "value"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "schemas": {
-                            "description": "The URIs that are used to indicate the namespaces of the SCIM schemas.",
-                            "example": [
-                              "urn:ietf:params:scim:schemas:core:2.0:User"
-                            ],
-                            "items": {
-                              "enum": [
-                                "urn:ietf:params:scim:schemas:core:2.0:User"
-                              ],
-                              "type": "string"
-                            },
-                            "type": "array"
-                          },
-                          "userName": {
-                            "description": "The username for the user.",
-                            "example": "E012345",
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "schemas",
-                          "active",
-                          "emails"
-                        ],
-                        "type": "object"
-                      },
-                      {
-                        "properties": {
-                          "groups": {
-                            "description": "Provisioned SCIM groups that the user is a member of.",
-                            "type": "array"
-                          },
-                          "id": {
-                            "description": "The internally generated id for the user object.",
-                            "example": "7fce0092-d52e-4f76-b727-3955bd72c939",
-                            "type": "string"
-                          },
-                          "meta": {
-                            "description": "The metadata associated with the creation/updates to the user.",
-                            "properties": {
-                              "created": {
-                                "description": "A date and time when the user was created.",
-                                "example": "2022-03-27T19:59:26.000Z",
-                                "type": "string"
-                              },
-                              "lastModified": {
-                                "description": "A data and time when the user was last modified.",
-                                "example": "2022-03-27T19:59:26.000Z",
-                                "type": "string"
-                              },
-                              "location": {
-                                "description": "A URL location of an object",
-                                "type": "string"
-                              },
-                              "resourceType": {
-                                "description": "A type of a resource",
-                                "enum": [
-                                  "User",
-                                  "Group"
-                                ],
-                                "example": "User",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "resourceType"
-                            ],
-                            "type": "object"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "meta"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  }
-                }
-              },
-              "description": "Success, a user was found"
-            },
-            "400": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Bad request"
-            },
-            "401": {
-              "description": "Authorization failure"
-            },
-            "403": {
-              "description": "Permission denied"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            },
-            "429": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Too many requests"
-            },
-            "500": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                },
-                "application/scim+json": {
-                  "schema": {
-                    "description": "Scim Error",
-                    "properties": {
-                      "detail": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "documentation_url": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "message": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "schemas": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "scimType": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "integer"
-                      }
-                    },
-                    "title": "Scim Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Internal server error"
-            }
-          },
-          "summary": "Get SCIM provisioning information for an enterprise user",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": false,
-            "subcategory": "scim"
-          }
-        },
-        "patch": {
-          "deprecated": null,
-          "description": "**Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.\n\nUpdate a provisioned user's individual attributes.\n\nTo change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).\n\n**Note:** Complicated SCIM `path` selectors that include filters are not supported. For example, a `path` selector defined as `\"path\": \"emails[type eq \\\"work\\\"]\"` will not work.\n\n**Warning:** Setting `active: false` will suspend a user and obfuscate the user handle and user email. Since the implementation is a generic SCIM implementation and does not differentiate yet between different IdP providers, for Okta, the user GDPR data will not be purged and the credentials will not be removed.\n```\n{\n  \"Operations\":[{\n    \"op\":\"replace\",\n    \"value\":{\n      \"active\":false\n    }\n  }]\n}\n```",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#update-an-attribute-for-a-scim-enterprise-user"
-          },
-          "operationId": "enterprise-admin/update-attribute-for-enterprise-user",
-          "parameters": [
-            {
-              "description": "The unique identifier of the SCIM user.",
-              "in": "path",
-              "name": "scim_user_id",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
                   "disableUser": {
                     "summary": "Disable User",
                     "value": {
@@ -32532,7 +29937,7 @@
                         "nullable": true,
                         "type": "string"
                       },
-                      "schemas": {
+                      "run_list": {
                         "items": {
                           "type": "string"
                         },
@@ -32661,85 +30066,76 @@
               "description": "Internal server error"
             }
           },
-          "summary": "Set SCIM information for a provisioned enterprise user",
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Set settings",
           "tags": [
             "enterprise-admin"
           ],
           "x-github": {
             "category": "enterprise-admin",
-            "enabledForGitHubApps": true,
+            "enabledForGitHubApps": false,
             "githubCloudOnly": false,
-            "subcategory": "scim"
+            "subcategory": "management-console"
           }
         }
       },
-      "/setup/api/configcheck": {
-        "get": {
+      "/setup/api/settings/authorized-keys": {
+        "delete": {
           "deprecated": null,
-          "description": "This endpoint allows you to check the status of the most recent configuration process:\n\nNote that you may need to wait several seconds after you start a process before you can check its status.\n\nThe different statuses are:\n\n| Status        | Description                       |\n| ------------- | --------------------------------- |\n| `PENDING`     | The job has not started yet       |\n| `CONFIGURING` | The job is running                |\n| `DONE`        | The job has finished correctly    |\n| `FAILED`      | The job has finished unexpectedly |",
+          "description": "**Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-configuration-status"
           },
-          "operationId": "enterprise-admin/get-configuration-status",
           "responses": {
             "200": {
               "content": {
                 "application/json": {
                   "examples": {
                     "default": {
-                      "value": {
-                        "progress": [
-                          {
-                            "key": "Appliance core components",
-                            "status": "DONE"
-                          },
-                          {
-                            "key": "GitHub utilities",
-                            "status": "DONE"
-                          },
-                          {
-                            "key": "GitHub applications",
-                            "status": "DONE"
-                          },
-                          {
-                            "key": "GitHub services",
-                            "status": "CONFIGURING"
-                          },
-                          {
-                            "key": "Reloading appliance services",
-                            "status": "PENDING"
-                          }
-                        ],
-                        "status": "running"
-                      }
+                      "value": [
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        }
+                      ]
                     }
                   },
                   "schema": {
-                    "properties": {
-                      "progress": {
-                        "items": {
-                          "properties": {
-                            "key": {
-                              "type": "string"
-                            },
-                            "status": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "status",
-                            "key"
-                          ],
-                          "type": "object"
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
                         },
-                        "type": "array"
+                        "pretty-print": {
+                          "type": "string"
+                        }
                       },
-                      "status": {
-                        "type": "string"
-                      }
+                      "type": "object"
                     },
-                    "type": "object"
+                    "type": "array"
                   }
                 }
               },
@@ -32761,7 +30157,7 @@
               }
             }
           ],
-          "summary": "Get the configuration status",
+          "summary": "Remove an authorized SSH key",
           "tags": [
             "enterprise-admin"
           ],
@@ -32771,116 +30167,49 @@
             "githubCloudOnly": false,
             "subcategory": "management-console"
           }
-        }
-      },
-      "/setup/api/configure": {
-        "post": {
+        },
+        "get": {
           "deprecated": null,
-          "description": "This endpoint allows you to start a configuration process at any time for your updated settings to take effect:",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process"
           },
-          "operationId": "enterprise-admin/start-configuration-process",
-          "responses": {
-            "202": {
-              "description": "Response"
-            }
-          },
-          "servers": [
-            {
-              "url": "{protocol}://{hostname}",
-              "variables": {
-                "hostname": {
-                  "default": "HOSTNAME",
-                  "description": "Self-hosted Enterprise Server hostname"
-                },
-                "protocol": {
-                  "default": "http",
-                  "description": "Self-hosted Enterprise Server protocol"
-                }
-              }
-            }
-          ],
-          "summary": "Start a configuration process",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": false,
-            "subcategory": "management-console"
-          }
-        }
-      },
-      "/setup/api/maintenance": {
-        "get": {
-          "deprecated": null,
-          "description": "Check your installation's maintenance status:",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-maintenance-status"
-          },
-          "operationId": "enterprise-admin/get-maintenance-status",
+          "operationId": "enterprise-admin/get-all-authorized-ssh-keys",
           "responses": {
             "200": {
               "content": {
                 "application/json": {
                   "examples": {
                     "default": {
-                      "value": {
-                        "connection_services": [
-                          {
-                            "name": "git operations",
-                            "number": 0
-                          },
-                          {
-                            "name": "mysql queries",
-                            "number": 233
-                          },
-                          {
-                            "name": "aqueduct jobs",
-                            "number": 34
-                          },
-                          {
-                            "name": "resque jobs",
-                            "number": 54
-                          }
-                        ],
-                        "scheduled_time": "Tuesday, January 22 at 15:34 -0800",
-                        "status": "scheduled"
-                      }
+                      "value": [
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        }
+                      ]
                     }
                   },
                   "schema": {
-                    "properties": {
-                      "connection_services": {
-                        "items": {
-                          "properties": {
-                            "name": {
-                              "type": "string"
-                            },
-                            "number": {
-                              "type": "integer"
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "number"
-                          ],
-                          "type": "object"
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
                         },
-                        "type": "array"
+                        "pretty-print": {
+                          "type": "string"
+                        }
                       },
-                      "scheduled_time": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      }
+                      "type": "object"
                     },
-                    "type": "object"
+                    "type": "array"
                   }
                 }
               },
@@ -32902,7 +30231,7 @@
               }
             }
           ],
-          "summary": "Get the maintenance status",
+          "summary": "Get all authorized SSH keys",
           "tags": [
             "enterprise-admin"
           ],
@@ -32918,93 +30247,43 @@
           "description": "**Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#enable-or-disable-maintenance-mode"
-          },
-          "operationId": "enterprise-admin/enable-or-disable-maintenance-mode",
-          "requestBody": {
-            "content": {
-              "application/x-www-form-urlencoded": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "maintenance": "{\"enabled\":true, \"when\":\"now\"}"
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "maintenance": {
-                      "description": "A JSON string with the attributes `enabled` and `when`.\n\nThe possible values for `enabled` are `true` and `false`. When it's `false`, the attribute `when` is ignored and the maintenance mode is turned off. `when` defines the time period when the maintenance was enabled.\n\nThe possible values for `when` are `now` or any date parseable by [mojombo/chronic](https://github.com/mojombo/chronic).",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "maintenance"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-maintenance-status"
           },
           "responses": {
-            "200": {
+            "201": {
               "content": {
                 "application/json": {
                   "examples": {
                     "default": {
-                      "value": {
-                        "connection_services": [
-                          {
-                            "name": "git operations",
-                            "number": 0
-                          },
-                          {
-                            "name": "mysql queries",
-                            "number": 233
-                          },
-                          {
-                            "name": "aqueduct jobs",
-                            "number": 34
-                          },
-                          {
-                            "name": "resque jobs",
-                            "number": 54
-                          }
-                        ],
-                        "scheduled_time": "Tuesday, January 22 at 15:34 -0800",
-                        "status": "scheduled"
-                      }
+                      "value": [
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        }
+                      ]
                     }
                   },
                   "schema": {
-                    "properties": {
-                      "connection_services": {
-                        "items": {
-                          "properties": {
-                            "name": {
-                              "type": "string"
-                            },
-                            "number": {
-                              "type": "integer"
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "number"
-                          ],
-                          "type": "object"
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
                         },
-                        "type": "array"
+                        "pretty-print": {
+                          "type": "string"
+                        }
                       },
-                      "scheduled_time": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      }
+                      "type": "object"
                     },
-                    "type": "object"
+                    "type": "array"
                   }
                 }
               },
@@ -33026,7 +30305,7 @@
               }
             }
           ],
-          "summary": "Enable or disable maintenance mode",
+          "summary": "Add an authorized SSH key",
           "tags": [
             "enterprise-admin"
           ],
@@ -33038,566 +30317,449 @@
           }
         }
       },
-      "/setup/api/settings": {
-        "get": {
+      "/setup/api/start": {
+        "post": {
+          "deprecated": null,
+          "description": "When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.\n\nNote that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.\n\nWhen using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:\n\n1.  If you're working directly with the API before accessing the web interface, you must pass in the password parameter to set your password.\n2.  If you set up your instance via the web interface before accessing the API, your calls to this endpoint do not need the password parameter.\n\n**Note:** The request body for this operation must be submitted as `multipart/form-data` data. You can can reference the license file by prefixing the filename with the `@` symbol using `curl`. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#-F).",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#enable-or-disable-maintenance-mode"
+          },
+          "operationId": "enterprise-admin/create-enterprise-server-license",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "license": "@enterprise.ghl",
+                      "password": "secret"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "license": {
+                      "description": "The content of your _.ghl_ license file.",
+                      "type": "string"
+                    },
+                    "password": {
+                      "description": "You **must** provide a password _only if_ you are uploading your license for the first time. If you previously set a password through the web interface, you don't need this parameter.",
+                      "type": "string"
+                    },
+                    "settings": {
+                      "description": "An optional JSON string containing the installation settings. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "license"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "202": {
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Create a GitHub license",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        }
+      },
+      "/setup/api/upgrade": {
+        "post": {
           "deprecated": null,
           "description": "Gets the settings for your instance. To change settings, see the [Set settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#set-settings).\n\n**Note:** You cannot retrieve the management console password with the Enterprise administration API.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings"
           },
-          "operationId": "enterprise-admin/get-settings",
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "enterprise": {
-                          "admin_password": null,
-                          "assets": null,
-                          "auth_mode": "default",
-                          "avatar": {
-                            "enabled": false
-                          },
-                          "cas": {
-                            "url": null
-                          },
-                          "collectd": {
-                            "enabled": false,
-                            "encryption": null,
-                            "password": null,
-                            "port": 0,
-                            "server": null,
-                            "username": null
-                          },
-                          "configuration_id": 1401777404,
-                          "configuration_run_count": 4,
-                          "customer": {
-                            "email": "stannis@themannis.biz",
-                            "name": "GitHub",
-                            "public_key_data": "-----BEGIN PGP PUBLIC KEY BLOCK-----\nVersion: GnuPG v1.4.10 (GNU/Linux)\n\nmI0ETqzZYgEEALSe6snowdenXyqvLfSQ34HWD6C7....\n-----END PGP PUBLIC KEY BLOCK-----\n",
-                            "secret_key_data": "-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: GnuPG v1.4.10 (GNU/Linux)\n\nlQcYBE5TCgsBEACk4yHpUcapplebaumBMXYMiLF+nCQ0lxpx...\n-----END PGP PRIVATE KEY BLOCK-----\n",
-                            "uuid": "af6cac80-e4e1-012e-d822-1231380e52e9"
-                          },
-                          "expire_sessions": false,
-                          "github_hostname": "ghe.local",
-                          "github_oauth": {
-                            "client_id": "12313412",
-                            "client_secret": "kj123131132",
-                            "organization_name": "Homestar Runners",
-                            "organization_team": "homestarrunners/characters"
-                          },
-                          "github_ssl": {
-                            "cert": null,
-                            "enabled": false,
-                            "key": null
-                          },
-                          "http_proxy": null,
-                          "identicons_host": "dotcom",
-                          "ldap": {
-                            "admin_group": null,
-                            "bind_dn": null,
-                            "host": null,
-                            "method": "Plain",
-                            "password": null,
-                            "port": 0,
-                            "posix_support": true,
-                            "profile": {
-                              "key": null,
-                              "mail": null,
-                              "name": null,
-                              "uid": "uid"
-                            },
-                            "reconciliation": {
-                              "org": null,
-                              "user": null
-                            },
-                            "recursive_group_search": false,
-                            "search_strategy": "detect",
-                            "sync_enabled": false,
-                            "team_sync_interval": 4,
-                            "uid": null,
-                            "user_sync_emails": false,
-                            "user_sync_interval": 4,
-                            "user_sync_keys": false,
-                            "virtual_attribute_enabled": false
-                          },
-                          "license": {
-                            "cluster_support": false,
-                            "evaluation": false,
-                            "expire_at": "2016-04-27T00:00:00-07:00",
-                            "perpetual": false,
-                            "seats": 0,
-                            "ssh_allowed": true,
-                            "support_key": "ssh-rsa AAAAB3N....",
-                            "unlimited_seating": true
-                          },
-                          "load_balancer": null,
-                          "mapping": {
-                            "basemap": "company.map-qsz2zrvs",
-                            "enabled": true,
-                            "tileserver": null,
-                            "token": null
-                          },
-                          "ntp": {
-                            "primary_server": "0.pool.ntp.org",
-                            "secondary_server": "1.pool.ntp.org"
-                          },
-                          "pages": {
-                            "enabled": true
-                          },
-                          "private_mode": false,
-                          "public_pages": false,
-                          "saml": {
-                            "certificate": null,
-                            "certificate_path": null,
-                            "disable_admin_demote": false,
-                            "idp_initiated_sso": false,
-                            "issuer": null,
-                            "sso_url": null
-                          },
-                          "signup_enabled": false,
-                          "smtp": {
-                            "address": "smtp.example.com",
-                            "authentication": "plain",
-                            "discard-to-noreply-address": true,
-                            "domain": "blah",
-                            "enable_starttls_auto": true,
-                            "enabled": true,
-                            "noreply_address": "noreply@github.com",
-                            "password": "bar",
-                            "port": "1234",
-                            "support_address": "enterprise@github.com",
-                            "support_address_type": "email",
-                            "user_name": "mr_foo",
-                            "username": "foo"
-                          },
-                          "snmp": {
-                            "enabled": false
-                          },
-                          "subdomain_isolation": true,
-                          "syslog": {
-                            "enabled": false,
-                            "protocol_name": "udp",
-                            "server": null
-                          },
-                          "timezone": null
-                        },
-                        "run_list": [
-                          "recipe[enterprise-configure]"
-                        ]
-                      }
+          "operationId": "enterprise-admin/upgrade-license",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "license": "@enterprise.ghl"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "license": {
+                      "description": "The content of your new _.ghl_ license file.",
+                      "type": "string"
                     }
                   },
-                  "schema": {
-                    "properties": {
-                      "enterprise": {
-                        "properties": {
-                          "admin_password": {
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "assets": {
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "auth_mode": {
-                            "type": "string"
-                          },
-                          "avatar": {
-                            "properties": {
-                              "enabled": {
-                                "type": "boolean"
-                              },
-                              "uri": {
-                                "type": "string"
+                  "type": "object"
+                }
+              }
+            },
+            "required": null
+          },
+          "responses": {
+            "202": {
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Upgrade a license",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        }
+      },
+      "/users/{username}/site_admin": {
+        "delete": {
+          "deprecated": null,
+          "description": "You can demote any user account except your own.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#demote-a-site-administrator"
+          },
+          "operationId": "enterprise-admin/demote-site-administrator",
+          "parameters": [
+            {
+              "description": "The handle for the GitHub user account.",
+              "in": "path",
+              "name": "username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Demote a site administrator",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "users"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#promote-a-user-to-be-a-site-administrator"
+          },
+          "operationId": "enterprise-admin/promote-user-to-be-site-administrator",
+          "parameters": [
+            {
+              "description": "The handle for the GitHub user account.",
+              "in": "path",
+              "name": "username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Promote a user to be a site administrator",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "users"
+          }
+        }
+      },
+      "/users/{username}/suspended": {
+        "delete": {
+          "deprecated": null,
+          "description": "If your GitHub instance uses [LDAP Sync with Active Directory LDAP servers](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap), this API is disabled and will return a `403` response. Active Directory LDAP-authenticated users cannot be unsuspended using the API.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#unsuspend-a-user"
+          },
+          "operationId": "enterprise-admin/unsuspend-user",
+          "parameters": [
+            {
+              "description": "The handle for the GitHub user account.",
+              "in": "path",
+              "name": "username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "reason": {
+                    "value": {
+                      "reason": "Unsuspended after leave of absence."
+                    }
+                  }
+                },
+                "schema": {
+                  "nullable": true,
+                  "properties": {
+                    "reason": {
+                      "description": "The reason the user is being unsuspended. This message will be logged in the [audit log](https://docs.github.com/enterprise-server@3.7/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/about-the-audit-log-for-your-enterprise). If you don't provide a `reason`, it will default to \"Unsuspended via API by _SITE\\_ADMINISTRATOR_\", where _SITE\\_ADMINISTRATOR_ is the person who performed the action.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": null
+          },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Unsuspend a user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "users"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "If your GitHub instance uses [LDAP Sync with Active Directory LDAP servers](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap), Active Directory LDAP-authenticated users cannot be suspended through this API. If you attempt to suspend an Active Directory LDAP-authenticated user through this API, it will return a `403` response.\n\nYou can suspend any user account except your own.\n\nNote that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#suspend-a-user"
+          },
+          "operationId": "enterprise-admin/suspend-user",
+          "parameters": [
+            {
+              "description": "The handle for the GitHub user account.",
+              "in": "path",
+              "name": "username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "reason": {
+                    "value": {
+                      "reason": "Suspended during leave of absence."
+                    }
+                  }
+                },
+                "schema": {
+                  "nullable": true,
+                  "properties": {
+                    "reason": {
+                      "description": "The reason the user is being suspended. This message will be logged in the [audit log](https://docs.github.com/enterprise-server@3.7/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/about-the-audit-log-for-your-enterprise). If you don't provide a `reason`, it will default to \"Suspended via API by _SITE\\_ADMINISTRATOR_\", where _SITE\\_ADMINISTRATOR_ is the person who performed the action.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": null
+          },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Suspend a user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "users"
+          }
+        }
+      }
+    },
+    "changed": {
+      "/app/installations": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "changed": {
+                              "permissions": {
+                                "properties_changed": {
+                                  "removed": [
+                                    "organization_announcement_banners",
+                                    "organization_custom_roles",
+                                    "repository_announcement_banners"
+                                  ]
+                                }
                               }
-                            },
-                            "type": "object"
-                          },
-                          "cas": {
-                            "properties": {
-                              "url": {
-                                "nullable": true,
-                                "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/app/installations/{installation_id}": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "permissions": {
+                              "properties_changed": {
+                                "removed": [
+                                  "organization_announcement_banners",
+                                  "organization_custom_roles",
+                                  "repository_announcement_banners"
+                                ]
                               }
-                            },
-                            "type": "object"
-                          },
-                          "collectd": {
-                            "properties": {
-                              "enabled": {
-                                "type": "boolean"
-                              },
-                              "encryption": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "password": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "port": {
-                                "type": "integer"
-                              },
-                              "server": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "username": {
-                                "nullable": true,
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "configuration_id": {
-                            "type": "integer"
-                          },
-                          "configuration_run_count": {
-                            "type": "integer"
-                          },
-                          "customer": {
-                            "properties": {
-                              "email": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              },
-                              "public_key_data": {
-                                "type": "string"
-                              },
-                              "secret_key_data": {
-                                "type": "string"
-                              },
-                              "uuid": {
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "expire_sessions": {
-                            "type": "boolean"
-                          },
-                          "github_hostname": {
-                            "type": "string"
-                          },
-                          "github_oauth": {
-                            "properties": {
-                              "client_id": {
-                                "type": "string"
-                              },
-                              "client_secret": {
-                                "type": "string"
-                              },
-                              "organization_name": {
-                                "type": "string"
-                              },
-                              "organization_team": {
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "github_ssl": {
-                            "properties": {
-                              "cert": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "enabled": {
-                                "type": "boolean"
-                              },
-                              "key": {
-                                "nullable": true,
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "http_proxy": {
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "identicons_host": {
-                            "type": "string"
-                          },
-                          "ldap": {
-                            "properties": {
-                              "admin_group": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "base": {
-                                "type": "array"
-                              },
-                              "bind_dn": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "host": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "method": {
-                                "type": "string"
-                              },
-                              "password": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "port": {
-                                "type": "integer"
-                              },
-                              "posix_support": {
-                                "type": "boolean"
-                              },
-                              "profile": {
-                                "properties": {
-                                  "key": {
-                                    "nullable": true,
-                                    "type": "string"
-                                  },
-                                  "mail": {
-                                    "nullable": true,
-                                    "type": "string"
-                                  },
-                                  "name": {
-                                    "nullable": true,
-                                    "type": "string"
-                                  },
-                                  "uid": {
-                                    "type": "string"
-                                  }
-                                },
-                                "type": "object"
-                              },
-                              "reconciliation": {
-                                "properties": {
-                                  "org": {
-                                    "nullable": true,
-                                    "type": "string"
-                                  },
-                                  "user": {
-                                    "nullable": true,
-                                    "type": "string"
-                                  }
-                                },
-                                "type": "object"
-                              },
-                              "recursive_group_search": {
-                                "type": "boolean"
-                              },
-                              "search_strategy": {
-                                "type": "string"
-                              },
-                              "sync_enabled": {
-                                "type": "boolean"
-                              },
-                              "team_sync_interval": {
-                                "type": "integer"
-                              },
-                              "uid": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "user_groups": {
-                                "type": "array"
-                              },
-                              "user_sync_emails": {
-                                "type": "boolean"
-                              },
-                              "user_sync_interval": {
-                                "type": "integer"
-                              },
-                              "user_sync_keys": {
-                                "type": "boolean"
-                              },
-                              "virtual_attribute_enabled": {
-                                "type": "boolean"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "license": {
-                            "properties": {
-                              "cluster_support": {
-                                "type": "boolean"
-                              },
-                              "evaluation": {
-                                "type": "boolean"
-                              },
-                              "expire_at": {
-                                "type": "string"
-                              },
-                              "perpetual": {
-                                "type": "boolean"
-                              },
-                              "seats": {
-                                "type": "integer"
-                              },
-                              "ssh_allowed": {
-                                "type": "boolean"
-                              },
-                              "support_key": {
-                                "type": "string"
-                              },
-                              "unlimited_seating": {
-                                "type": "boolean"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "load_balancer": {
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "mapping": {
-                            "properties": {
-                              "basemap": {
-                                "type": "string"
-                              },
-                              "enabled": {
-                                "type": "boolean"
-                              },
-                              "tileserver": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "token": {
-                                "nullable": true,
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "ntp": {
-                            "properties": {
-                              "primary_server": {
-                                "type": "string"
-                              },
-                              "secondary_server": {
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "pages": {
-                            "properties": {
-                              "enabled": {
-                                "type": "boolean"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "private_mode": {
-                            "type": "boolean"
-                          },
-                          "public_pages": {
-                            "type": "boolean"
-                          },
-                          "saml": {
-                            "properties": {
-                              "certificate": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "certificate_path": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "disable_admin_demote": {
-                                "type": "boolean"
-                              },
-                              "idp_initiated_sso": {
-                                "type": "boolean"
-                              },
-                              "issuer": {
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "sso_url": {
-                                "nullable": true,
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "signup_enabled": {
-                            "type": "boolean"
-                          },
-                          "smtp": {
-                            "properties": {
-                              "address": {
-                                "type": "string"
-                              },
-                              "authentication": {
-                                "type": "string"
-                              },
-                              "discard-to-noreply-address": {
-                                "type": "boolean"
-                              },
-                              "domain": {
-                                "type": "string"
-                              },
-                              "enable_starttls_auto": {
-                                "type": "boolean"
-                              },
-                              "enabled": {
-                                "type": "boolean"
-                              },
-                              "noreply_address": {
-                                "type": "string"
-                              },
-                              "password": {
-                                "type": "string"
-                              },
-                              "port": {
-                                "type": "string"
-                              },
-                              "support_address": {
-                                "type": "string"
-                              },
-                              "support_address_type": {
-                                "type": "string"
-                              },
-                              "user_name": {
-                                "type": "string"
-                              },
-                              "username": {
-                                "type": "string"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "snmp": {
-                            "properties": {
-                              "community": {
-                                "type": "string"
-                              },
-                              "enabled": {
-                                "type": "boolean"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "subdomain_isolation": {
-                            "type": "boolean"
-                          },
-                          "syslog": {
-                            "properties": {
-                              "enabled": {
-                                "type": "boolean"
-                              },
-                              "protocol_name": {
-                                "type": "string"
-                              },
-                              "server": {
-                                "nullable": true,
-                                "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/app/installations/{installation_id}/access_tokens": {
+        "post": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "changed": {
+                        "permissions": {
+                          "properties_changed": {
+                            "removed": [
+                              "organization_announcement_banners",
+                              "organization_custom_roles",
+                              "repository_announcement_banners"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "changed": {
+              "201": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "permissions": {
+                              "properties_changed": {
+                                "removed": [
+                                  "organization_announcement_banners",
+                                  "organization_custom_roles",
+                                  "repository_announcement_banners"
+                                ]
                               }
                             },
                             "type": "object"
@@ -35509,7 +32671,11 @@
                                 }
                               }
                             }
-                          }
+                          },
+                          "removed": [
+                            "allow_fork_syncing",
+                            "lock_branch"
+                          ]
                         }
                       }
                     }
@@ -35602,7 +32768,7 @@
         "get": {
           "responses": {
             "changed": {
-              "200": {
+              "201": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -35755,33 +32921,35 @@
                 }
               }
             }
-          },
-          "responses": {
-            "changed": {
-              "200": {
-                "content": {
-                  "changed": {
-                    "application/json": {
-                      "schema_changed": {
-                        "properties_changed": {
-                          "removed": [
-                            "require_last_push_approval"
-                          ]
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       },
       "/repos/{owner}/{repo}/branches/{branch}": {
         "get": {
+          "parameters": {
+            "removed": [
+              {
+                "description": "Filter collaborators by the permissions they have on the repository. If not specified, all collaborators will be returned.",
+                "in": "query",
+                "name": "permission",
+                "required": false,
+                "schema": {
+                  "enum": [
+                    "pull",
+                    "triage",
+                    "push",
+                    "maintain",
+                    "admin"
+                  ],
+                  "type": "string"
+                },
+                "style": "form"
+              }
+            ]
+          },
           "responses": {
             "changed": {
-              "201": {
+              "200": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -35820,7 +32988,7 @@
         "get": {
           "responses": {
             "changed": {
-              "200": {
+              "201": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -35928,8 +33096,8 @@
           }
         }
       },
-      "/repos/{owner}/{repo}/code-scanning/sarifs": {
-        "post": {
+      "/repos/{owner}/{repo}/check-suites/preferences": {
+        "patch": {
           "request_body": {
             "content_changed": {
               "changed": {
@@ -35944,31 +33112,6 @@
                 }
               }
             }
-          }
-        }
-      },
-      "/repos/{owner}/{repo}/collaborators": {
-        "get": {
-          "parameters": {
-            "removed": [
-              {
-                "description": "Filter collaborators by the permissions they have on the repository. If not specified, all collaborators will be returned.",
-                "in": "query",
-                "name": "permission",
-                "required": false,
-                "schema": {
-                  "enum": [
-                    "pull",
-                    "triage",
-                    "push",
-                    "maintain",
-                    "admin"
-                  ],
-                  "type": "string"
-                },
-                "style": "form"
-              }
-            ]
           },
           "responses": {
             "changed": {
@@ -36089,6 +33232,31 @@
                   "changed": {
                     "application/json": {
                       "schema_changed": {
+                        "items_changed": {
+                          "required_changed": {
+                            "removed": [
+                              "role_name"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/collaborators/{username}": {
+        "put": {
+          "responses": {
+            "changed": {
+              "201": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
                         "properties_changed": {
                           "changed": {
                             "repository": {
@@ -36178,12 +33346,8 @@
                 },
                 "style": "form"
               }
-            }
-          }
-        }
-      },
-      "/repos/{owner}/{repo}/dependency-graph/compare/{basehead}": {
-        "get": {
+            ]
+          },
           "responses": {
             "changed": {
               "200": {
@@ -36306,7 +33470,7 @@
         "get": {
           "responses": {
             "changed": {
-              "200": {
+              "201": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -36327,7 +33491,10 @@
                   }
                 }
               }
-            }
+            },
+            "removed": [
+              "404"
+            ]
           }
         }
       },
@@ -36390,7 +33557,7 @@
         "get": {
           "responses": {
             "changed": {
-              "201": {
+              "200": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -36413,10 +33580,7 @@
                   }
                 }
               }
-            },
-            "removed": [
-              "404"
-            ]
+            }
           }
         }
       },
@@ -36484,7 +33648,7 @@
         "get": {
           "responses": {
             "changed": {
-              "200": {
+              "201": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -37277,6 +34441,12 @@
       "/orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}": [
         "put",
         "delete"
+      ],
+      "/orgs/{org}/codespaces/billing": [
+        "put"
+      ],
+      "/orgs/{org}/codespaces/secrets": [
+        "get"
       ],
       "/orgs/{org}/codespaces/billing": [
         "put"
