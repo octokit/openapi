@@ -3867,15 +3867,15 @@
         }
       }
     },
-    "/repos/{owner}/{repo}/forks": {
+    "/repos/{owner}/{repo}/check-suites/{check_suite_id}": {
       "get": {
         "summary": "List code scanning analyses for a repository",
         "description": "Lists the details of all code scanning analyses for a repository,\nstarting with the most recent.\nThe response is paginated and you can use the `page` and `per_page` parameters\nto list the analyses you're interested in.\nBy default 30 analyses are listed per page.\n\nThe `rules_count` field in the response give the number of rules\nthat were run in the analysis.\nFor very old analyses this data is not available,\nand `0` is returned in this field.\n\nYou must use an access token with the `security_events` scope to use this endpoint with private repos,\nthe `public_repo` scope also grants permission to read security events on public repos only.\nGitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.",
         "operationId": "code-scanning/list-recent-analyses",
         "tags": [
-          "repos"
+          "checks"
         ],
-        "operationId": "repos/list-forks",
+        "operationId": "checks/get-suite",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository"
@@ -3888,26 +3888,7 @@
             "$ref": "#/components/parameters/repo"
           },
           {
-            "name": "sort",
-            "description": "The sort order. `stargazers` will sort by star count.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "newest",
-                "oldest",
-                "stargazers",
-                "watchers"
-              ],
-              "default": "newest"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
+            "$ref": "#/components/parameters/check-suite-id"
           }
         ],
         "responses": {
@@ -3916,32 +3897,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/minimal-repository"
-                  }
+                  "$ref": "#/components/schemas/check-suite"
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/minimal-repository-items-2"
+                    "$ref": "#/components/examples/check-suite"
                   }
                 }
               }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
             }
-          },
-          "400": {
-            "$ref": "#/components/responses/bad_request"
           }
         },
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "commits"
+          "category": "checks",
+          "subcategory": "suites"
         },
         "x-octokit": {
           "diff": {
@@ -3975,36 +3946,62 @@
             "$ref": "#/components/parameters/username"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/repository-invitation"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/repository-invitation-items"
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "permission": {
+                    "type": "string",
+                    "description": "The permission to grant the collaborator. **Only valid on organization-owned repositories.**",
+                    "default": "push"
                   }
                 }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
+              },
+              "examples": {
+                "new-invitation-is-created": {
+                  "summary": "Add a collaborator with triage permissions",
+                  "value": {
+                    "permission": "triage"
+                  }
+                }
               }
             }
           }
         },
+        "responses": {
+          "201": {
+            "description": "Response when a new invitation is created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/repository-invitation"
+                },
+                "examples": {
+                  "new-invitation-is-created": {
+                    "$ref": "#/components/examples/repository-invitation-response-when-a-new-invitation-is-created"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Response when:\n- an existing collaborator is added as a collaborator\n- an organization member is added as an individual collaborator\n- an existing team member (whose team is also a repository collaborator) is added as an individual collaborator"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
         "x-github": {
+          "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "collaborators",
-          "subcategory": "invitations"
+          "category": "collaborators"
         },
         "x-octokit": {
           "diff": {
@@ -4509,6 +4506,15 @@
                     "labels": [
                       "bug"
                     ]
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "organization": "octocat",
+                    "name": "Hello-World",
+                    "default_branch_only": true
                   }
                 }
               },
@@ -6145,7 +6151,19 @@
             "$ref": "#/components/parameters/page"
           },
           {
-            "$ref": "#/components/parameters/per-page"
+            "name": "visibility",
+            "description": "Specifies the types of repositories to return. This endpoint will only list repositories available to all users on the enterprise.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "public",
+              "example": "all",
+              "enum": [
+                "all",
+                "public"
+              ]
+            }
           }
         ],
         "responses": {
@@ -6194,413 +6212,12 @@
         "summary": "Transfer a repository",
         "description": "A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://docs.github.com/enterprise-server@3.6/articles/about-repository-transfers/).",
         "tags": [
-          "repos"
-        ],
-        "operationId": "repos/transfer",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#transfer-a-repository"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "new_owner": {
-                    "type": "string",
-                    "description": "The username or organization name the repository will be transferred to."
-                  },
-                  "team_ids": {
-                    "type": "array",
-                    "description": "ID of the team or teams to add to the repository. Teams can only be added to organization-owned repositories.",
-                    "items": {
-                      "type": "integer"
-                    }
-                  }
-                },
-                "required": [
-                  "new_owner"
-                ]
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "new_owner": "github",
-                    "team_ids": [
-                      12,
-                      345
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "202": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/minimal-repository"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/minimal-repository"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": null
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{template_owner}/{template_repo}/generate": {
-      "post": {
-        "summary": "Create a repository using a template",
-        "description": "Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.6/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.\n\n**OAuth scope requirements**\n\nWhen using [OAuth](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:\n\n*   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.\n*   `repo` scope to create a private repository",
-        "tags": [
-          "repos"
-        ],
-        "operationId": "repos/create-using-template",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#create-a-repository-using-a-template"
-        },
-        "parameters": [
-          {
-            "name": "template_owner",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "template_repo",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "owner": {
-                    "type": "string",
-                    "description": "The organization or person who will own the new repository. To create a new repository in an organization, the authenticated user must be a member of the specified organization."
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the new repository."
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "A short description of the new repository."
-                  },
-                  "include_all_branches": {
-                    "type": "boolean",
-                    "description": "Set to `true` to include the directory structure and files from all branches in the template repository, and not just the default branch. Default: `false`.",
-                    "default": false
-                  },
-                  "private": {
-                    "type": "boolean",
-                    "description": "Either `true` to create a new private repository or `false` to create a new public one.",
-                    "default": false
-                  }
-                },
-                "required": [
-                  "name"
-                ]
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "owner": "octocat",
-                    "name": "Hello-World",
-                    "description": "This is your first repository",
-                    "include_all_branches": false,
-                    "private": false
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/repository"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/repository-3"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Location": {
-                "example": "https://api.github.com/repos/octocat/Hello-World",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "repos",
-          "previews": [
-            {
-              "required": true,
-              "name": "baptiste",
-              "note": "Creating and using repository templates is currently available for developers to preview. To access this new endpoint during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
-            }
-          ]
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repositories": {
-      "get": {
-        "summary": "List public repositories",
-        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.",
-        "tags": [
-          "repos"
-        ],
-        "operationId": "repos/list-public",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#list-public-repositories"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/since-repo"
-          },
-          {
-            "name": "visibility",
-            "description": "Specifies the types of repositories to return. This endpoint will only list repositories available to all users on the enterprise.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "public",
-              "example": "all",
-              "enum": [
-                "all",
-                "public"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/minimal-repository"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/public-repository-items"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "example": "<https://api.github.com/repositories?since=364>; rel=\"next\"",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": null
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/search/code": {
-      "get": {
-        "summary": "Search code",
-        "description": "Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:\n\n`q=addClass+in:file+language:js+repo:jquery/jquery`\n\nThis query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.\n\n#### Considerations for code search\n\nDue to the complexity of searching code, there are a few restrictions on how searches are performed:\n\n*   Only the _default branch_ is considered. In most cases, this will be the `master` branch.\n*   Only files smaller than 384 KB are searchable.\n*   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing\nlanguage:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.",
-        "tags": [
-          "search"
-        ],
-        "operationId": "search/code",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-code"
-        },
-        "parameters": [
-          {
-            "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.6/rest/reference/search#constructing-a-search-query). See \"[Searching code](https://docs.github.com/enterprise-server@3.6/search-github/searching-on-github/searching-code)\" for a detailed list of qualifiers.",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sort",
-            "description": "Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub Enterprise Server search infrastructure. Default: [best match](https://docs.github.com/enterprise-server@3.6/rest/reference/search#ranking-search-results)",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "indexed"
-              ]
-            }
-          },
-          {
-            "$ref": "#/components/parameters/order"
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "total_count",
-                    "incomplete_results",
-                    "items"
-                  ],
-                  "properties": {
-                    "total_count": {
-                      "type": "integer"
-                    },
-                    "incomplete_results": {
-                      "type": "boolean"
-                    },
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/code-search-result-item"
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/code-search-result-item-paginated"
-                  }
-                }
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          },
-          "503": {
-            "$ref": "#/components/responses/service_unavailable"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "search",
-          "subcategory": null
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/search/commits": {
-      "get": {
-        "summary": "Search commits",
-        "description": "Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match\nmetadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:\n\n`q=repo:octocat/Spoon-Knife+css`",
-        "tags": [
           "search"
         ],
         "operationId": "search/commits",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-commits"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#transfer-a-repository"
         },
         "parameters": [
           {
@@ -6689,17 +6306,17 @@
         }
       }
     },
-    "/search/issues": {
-      "get": {
-        "summary": "Search issues and pull requests",
-        "description": "Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted\nsearch results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.\n\n`q=windows+label:bug+language:python+state:open&sort=created&order=asc`\n\nThis query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the search results.\n\n**Note:** For [user-to-server](https://docs.github.com/enterprise-server@3.6/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests) GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see \"[Searching only issues or pull requests](https://docs.github.com/enterprise-server@3.6/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests).\"",
+    "/repos/{template_owner}/{template_repo}/generate": {
+      "post": {
+        "summary": "Create a repository using a template",
+        "description": "Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.6/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.\n\n**OAuth scope requirements**\n\nWhen using [OAuth](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:\n\n*   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.\n*   `repo` scope to create a private repository",
         "tags": [
           "search"
         ],
         "operationId": "search/issues-and-pull-requests",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-issues-and-pull-requests"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#create-a-repository-using-a-template"
         },
         "parameters": [
           {
@@ -6793,10 +6410,388 @@
         },
         "x-github": {
           "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "repos",
+          "previews": [
+            {
+              "required": true,
+              "name": "baptiste",
+              "note": "Creating and using repository templates is currently available for developers to preview. To access this new endpoint during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
+            }
+          ]
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/search/repositories": {
+      "get": {
+        "summary": "List public repositories",
+        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/list-public",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#list-public-repositories"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/since-repo"
+          },
+          {
+            "name": "visibility",
+            "description": "Specifies the types of repositories to return. This endpoint will only list repositories available to all users on the enterprise.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "public",
+              "example": "all",
+              "enum": [
+                "all",
+                "public"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/minimal-repository"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/public-repository-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "example": "<https://api.github.com/repositories?since=364>; rel=\"next\"",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/search/code": {
+      "get": {
+        "summary": "Search code",
+        "description": "Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:\n\n`q=addClass+in:file+language:js+repo:jquery/jquery`\n\nThis query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.\n\n#### Considerations for code search\n\nDue to the complexity of searching code, there are a few restrictions on how searches are performed:\n\n*   Only the _default branch_ is considered. In most cases, this will be the `master` branch.\n*   Only files smaller than 384 KB are searchable.\n*   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing\nlanguage:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.",
+        "tags": [
+          "search"
+        ],
+        "operationId": "search/repos",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-code"
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.6/rest/reference/search#constructing-a-search-query). See \"[Searching code](https://docs.github.com/enterprise-server@3.6/search-github/searching-on-github/searching-code)\" for a detailed list of qualifiers.",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub Enterprise Server search infrastructure. Default: [best match](https://docs.github.com/enterprise-server@3.6/rest/reference/search#ranking-search-results)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "stars",
+                "forks",
+                "help-wanted-issues",
+                "updated"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/order"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "incomplete_results",
+                    "items"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "incomplete_results": {
+                      "type": "boolean"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/repo-search-result-item"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/repo-search-result-item-paginated"
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          },
+          "503": {
+            "$ref": "#/components/responses/service_unavailable"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "category": "search",
           "subcategory": null
         },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/teams/{team_id}/repos": {
+      "get": {
+        "summary": "Search commits",
+        "description": "Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match\nmetadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:\n\n`q=repo:octocat/Spoon-Knife+css`",
+        "tags": [
+          "teams"
+        ],
+        "operationId": "teams/list-repos-legacy",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-commits"
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.6/rest/reference/search#constructing-a-search-query). See \"[Searching commits](https://docs.github.com/enterprise-server@3.6/search-github/searching-on-github/searching-commits)\" for a detailed list of qualifiers.",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "Sorts the results of your query by `author-date` or `committer-date`. Default: [best match](https://docs.github.com/enterprise-server@3.6/rest/reference/search#ranking-search-results)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "author-date",
+                "committer-date"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/order"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/minimal-repository"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "search",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/teams/{team_id}/repos/{owner}/{repo}": {
+      "get": {
+        "summary": "Search issues and pull requests",
+        "description": "Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted\nsearch results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.\n\n`q=windows+label:bug+language:python+state:open&sort=created&order=asc`\n\nThis query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the search results.\n\n**Note:** For [user-to-server](https://docs.github.com/enterprise-server@3.6/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests) GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see \"[Searching only issues or pull requests](https://docs.github.com/enterprise-server@3.6/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests).\"",
+        "tags": [
+          "teams"
+        ],
+        "operationId": "teams/check-permissions-for-repo-legacy",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-issues-and-pull-requests"
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.6/rest/reference/search#constructing-a-search-query). See \"[Searching issues and pull requests](https://docs.github.com/enterprise-server@3.6/search-github/searching-on-github/searching-issues-and-pull-requests)\" for a detailed list of qualifiers.",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "Sorts the results of your query by the number of `comments`, `reactions`, `reactions-+1`, `reactions--1`, `reactions-smile`, `reactions-thinking_face`, `reactions-heart`, `reactions-tada`, or `interactions`. You can also sort results by how recently the items were `created` or `updated`, Default: [best match](https://docs.github.com/enterprise-server@3.6/rest/reference/search#ranking-search-results)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "comments",
+                "reactions",
+                "reactions-+1",
+                "reactions--1",
+                "reactions-smile",
+                "reactions-thinking_face",
+                "reactions-heart",
+                "reactions-tada",
+                "interactions",
+                "created",
+                "updated"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/order"
+          },
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alternative response with extra repository information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/team-repository"
+                },
+                "examples": {
+                  "alternative-response-with-extra-repository-information": {
+                    "$ref": "#/components/examples/team-repository-alternative-response-with-extra-repository-information"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Response if repository is managed by this team"
+          },
+          "404": {
+            "description": "Not Found if repository is not managed by this team"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "removalDate": "2021-02-01",
+          "deprecationDate": "2020-01-21",
+          "category": "teams",
+          "subcategory": null
+        },
+        "deprecated": true,
         "x-octokit": {
           "diff": {
             "ghes-3.7": {
@@ -6811,7 +6806,7 @@
         "summary": "Search repositories",
         "description": "Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:\n\n`q=tetris+language:assembly&sort=stars&order=desc`\n\nThis query searches for repositories with the word `tetris` in the name, the description, or the README. The results are limited to repositories where the primary language is assembly. The results are sorted by stars in descending order, so that the most popular repositories appear first in the search results.",
         "tags": [
-          "search"
+          "apps"
         ],
         "operationId": "search/repos",
         "externalDocs": {
@@ -7576,7 +7571,7 @@
           },
           {
             "name": "affiliation",
-            "description": "Comma-separated list of values. Can include:  \n\\* `owner`: Repositories that are owned by the authenticated user.  \n\\* `collaborator`: Repositories that the user has been added to as a collaborator.  \n\\* `organization_member`: Repositories that the user has access to through being a member of an organization. This includes every repository on every team that the user is on.",
+            "description": "Comma-separated list of values. Can include:  \n * `owner`: Repositories that are owned by the authenticated user.  \n * `collaborator`: Repositories that the user has been added to as a collaborator.  \n * `organization_member`: Repositories that the user has access to through being a member of an organization. This includes every repository on every team that the user is on.",
             "in": "query",
             "required": false,
             "schema": {

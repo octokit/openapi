@@ -9049,10 +9049,10 @@
           },
           "summary": "Create a custom role",
           "tags": [
-            "orgs"
+            "teams"
           ],
           "x-github": {
-            "category": "orgs",
+            "category": "teams",
             "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": "custom-roles"
@@ -9799,212 +9799,6 @@
               "name": "org",
               "required": true,
               "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "The unique identifier of the group.",
-              "in": "path",
-              "name": "group_id",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              },
-              "style": "simple"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "group_id": "123",
-                        "group_name": "Octocat admins",
-                        "members": [
-                          {
-                            "member_email": "mona_lisa@github.com",
-                            "member_id": 1,
-                            "member_login": "mona-lisa_eocsaxrs",
-                            "member_name": "Mona Lisa"
-                          },
-                          {
-                            "member_email": "octo_lisa@github.com",
-                            "member_id": 2,
-                            "member_login": "octo-lisa_eocsaxrs",
-                            "member_name": "Octo Lisa"
-                          }
-                        ],
-                        "teams": [
-                          {
-                            "team_id": 1,
-                            "team_name": "team-test"
-                          },
-                          {
-                            "team_id": 2,
-                            "team_name": "team-test2"
-                          }
-                        ],
-                        "updated_at": "2021-01-24T11:31:04-06:00"
-                      }
-                    }
-                  },
-                  "schema": {
-                    "description": "Information about an external group's usage and its members",
-                    "properties": {
-                      "group_id": {
-                        "description": "The internal ID of the group",
-                        "example": 1,
-                        "type": "integer"
-                      },
-                      "group_name": {
-                        "description": "The display name for the group",
-                        "example": "group-azuread-test",
-                        "type": "string"
-                      },
-                      "members": {
-                        "description": "An array of external members linked to this group",
-                        "example": [
-                          {
-                            "member_email": "mona_lisa@github.com",
-                            "member_id": 1,
-                            "member_login": "mona-lisa_eocsaxrs",
-                            "member_name": "Mona Lisa"
-                          },
-                          {
-                            "member_email": "octo_lisa@github.com",
-                            "member_id": 2,
-                            "member_login": "octo-lisa_eocsaxrs",
-                            "member_name": "Octo Lisa"
-                          }
-                        ],
-                        "items": {
-                          "properties": {
-                            "member_email": {
-                              "description": "An email attached to a user",
-                              "example": "mona_lisa@github.com",
-                              "type": "string"
-                            },
-                            "member_id": {
-                              "description": "The internal user ID of the identity",
-                              "example": 1,
-                              "type": "integer"
-                            },
-                            "member_login": {
-                              "description": "The handle/login for the user",
-                              "example": "mona-lisa_eocsaxrs",
-                              "type": "string"
-                            },
-                            "member_name": {
-                              "description": "The user display name/profile name",
-                              "example": "Mona Lisa",
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "member_id",
-                            "member_login",
-                            "member_name",
-                            "member_email"
-                          ],
-                          "type": "object"
-                        },
-                        "type": "array"
-                      },
-                      "teams": {
-                        "description": "An array of teams linked to this group",
-                        "example": [
-                          {
-                            "team_id": 1,
-                            "team_name": "team-test"
-                          },
-                          {
-                            "team_id": 2,
-                            "team_name": "team-test2"
-                          }
-                        ],
-                        "items": {
-                          "properties": {
-                            "team_id": {
-                              "description": "The id for a team",
-                              "example": 1,
-                              "type": "integer"
-                            },
-                            "team_name": {
-                              "description": "The name of the team",
-                              "example": "team-test",
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "team_id",
-                            "team_name"
-                          ],
-                          "type": "object"
-                        },
-                        "type": "array"
-                      },
-                      "updated_at": {
-                        "description": "The date when the group was last updated_at",
-                        "example": "2021-01-03 22:27:15:000 -700",
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "group_id",
-                      "group_name",
-                      "teams",
-                      "members"
-                    ],
-                    "title": "ExternalGroup",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response"
-            }
-          },
-          "summary": "Get an external group",
-          "tags": [
-            "teams"
-          ],
-          "x-github": {
-            "category": "teams",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": true,
-            "subcategory": "external-groups"
-          }
-        }
-      },
-      "/orgs/{org}/external-groups": {
-        "get": {
-          "deprecated": null,
-          "description": "Lists external groups available in an organization. You can query the groups using the `display_name` parameter, only groups with a `group_name` containing the text provided in the `display_name` parameter will be returned.  You can also limit your page results using the `per_page` parameter. GitHub Enterprise Cloud generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see \"[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89).\"\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#list-external-idp-groups-for-an-organization"
-          },
-          "operationId": "teams/list-external-idp-groups-for-org",
-          "parameters": [
-            {
-              "description": "The organization name. The name is not case sensitive.",
-              "in": "path",
-              "name": "org",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "allowReserved": null,
-              "description": "The number of results per page (max 100).",
-              "in": "query",
-              "name": "per_page",
-              "required": false,
-              "schema": {
                 "default": 30,
                 "type": "integer"
               },
@@ -10012,11 +9806,12 @@
             },
             {
               "allowReserved": null,
-              "description": "Page token",
+              "description": "Page number of the results to fetch.",
               "in": "query",
               "name": "page",
               "required": false,
               "schema": {
+                "default": 1,
                 "type": "integer"
               },
               "style": "form"
@@ -10238,18 +10033,6 @@
               "required": false,
               "schema": {
                 "default": 30,
-                "type": "integer"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "Page number of the results to fetch.",
-              "in": "query",
-              "name": "page",
-              "required": false,
-              "schema": {
-                "default": 1,
                 "type": "integer"
               },
               "style": "form"
