@@ -4433,97 +4433,7 @@
                   },
                   "body": {
                     "type": "string",
-                    "description": "The contents of the issue."
-                  },
-                  "assignee": {
-                    "type": "string",
-                    "description": "Login for the user that this issue should be assigned to. _NOTE: Only users with push access can set the assignee for new issues. The assignee is silently dropped otherwise. **This field is deprecated.**_",
-                    "nullable": true
-                  },
-                  "milestone": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer",
-                        "description": "The `number` of the milestone to associate this issue with. _NOTE: Only users with push access can set the milestone for new issues. The milestone is silently dropped otherwise._"
-                      }
-                    ],
-                    "nullable": true
-                  },
-                  "labels": {
-                    "type": "array",
-                    "description": "Labels to associate with this issue. _NOTE: Only users with push access can set labels for new issues. Labels are silently dropped otherwise._",
-                    "items": {
-                      "oneOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer"
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "description": {
-                              "type": "string",
-                              "nullable": true
-                            },
-                            "color": {
-                              "type": "string",
-                              "nullable": true
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  "assignees": {
-                    "type": "array",
-                    "description": "Logins for Users to assign to this issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "required": [
-                  "title"
-                ]
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "title": "Found a bug",
-                    "body": "I'm having a problem with this.",
-                    "assignees": [
-                      "octocat"
-                    ],
-                    "milestone": 1,
-                    "labels": [
-                      "bug"
-                    ]
-                  }
-                }
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "organization": "octocat",
-                    "name": "Hello-World",
-                    "default_branch_only": true
-                  }
-                }
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "organization": "octocat",
-                    "name": "Hello-World",
-                    "default_branch_only": true
+                    "description": "Optional parameter to specify the organization name if forking into an organization."
                   }
                 }
               },
@@ -4540,25 +4450,17 @@
           }
         },
         "responses": {
-          "201": {
+          "202": {
             "description": "Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/issue"
+                  "$ref": "#/components/schemas/full-repository"
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/issue"
+                    "$ref": "#/components/examples/full-repository"
                   }
-                }
-              }
-            },
-            "headers": {
-              "Location": {
-                "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -5122,103 +5024,6 @@
                 "$ref": "#/components/headers/link"
               }
             }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "keys"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a deploy key",
-        "description": "You can create a read-only deploy key.",
-        "tags": [
-          "repos"
-        ],
-        "operationId": "repos/create-deploy-key",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#create-a-deploy-key"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "type": "string",
-                    "description": "A name for the key."
-                  },
-                  "key": {
-                    "type": "string",
-                    "description": "The contents of the key."
-                  },
-                  "read_only": {
-                    "type": "boolean",
-                    "description": "If `true`, the key will only be able to read repository contents. Otherwise, the key will be able to read and write.  \n  \nDeploy keys with write access can perform the same actions as an organization member with admin access, or a collaborator on a personal repository. For more information, see \"[Repository permission levels for an organization](https://docs.github.com/enterprise-server@3.6/articles/repository-permission-levels-for-an-organization/)\" and \"[Permission levels for a user account repository](https://docs.github.com/enterprise-server@3.6/articles/permission-levels-for-a-user-account-repository/).\""
-                  }
-                },
-                "required": [
-                  "key"
-                ]
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "title": "octocat@octomac",
-                    "key": "ssh-rsa AAA...",
-                    "read_only": true
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/deploy-key"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/deploy-key"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Location": {
-                "example": "https://api.github.com/repos/octocat/Hello-World/keys/1",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
           }
         },
         "x-github": {
@@ -5953,32 +5758,65 @@
             "$ref": "#/components/parameters/page"
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "A name for the key."
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The contents of the key."
+                  },
+                  "read_only": {
+                    "type": "boolean",
+                    "description": "If `true`, the key will only be able to read repository contents. Otherwise, the key will be able to read and write.  \n  \nDeploy keys with write access can perform the same actions as an organization member with admin access, or a collaborator on a personal repository. For more information, see \"[Repository permission levels for an organization](https://docs.github.com/enterprise-server@3.6/articles/repository-permission-levels-for-an-organization/)\" and \"[Permission levels for a user account repository](https://docs.github.com/enterprise-server@3.6/articles/permission-levels-for-a-user-account-repository/).\""
+                  }
+                },
+                "required": [
+                  "key"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "title": "octocat@octomac",
+                    "key": "ssh-rsa AAA...",
+                    "read_only": true
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
-          "200": {
+          "201": {
             "description": "Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/pull-request-simple"
-                  }
+                  "$ref": "#/components/schemas/deploy-key"
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/pull-request-simple-items"
+                    "$ref": "#/components/examples/deploy-key"
                   }
                 }
               }
             },
             "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
+              "Location": {
+                "example": "https://api.github.com/repos/octocat/Hello-World/keys/1",
+                "schema": {
+                  "type": "string"
+                }
               }
             }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
           },
           "422": {
             "$ref": "#/components/responses/validation_failed"
@@ -5987,8 +5825,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "pulls",
-          "subcategory": null
+          "category": "deploy-keys"
         },
         "x-octokit": {
           "diff": {
@@ -6004,9 +5841,9 @@
         "summary": "Request reviewers for a pull request",
         "description": "This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.6/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
         "tags": [
-          "pulls"
+          "repos"
         ],
-        "operationId": "pulls/request-reviewers",
+        "operationId": "repos/get-deploy-key",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#request-reviewers-for-a-pull-request"
@@ -6017,6 +5854,78 @@
           },
           {
             "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/key-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/deploy-key"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/deploy-key"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "deploy-keys"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/secret-scanning/alerts": {
+      "get": {
+        "summary": "List secret scanning alerts for a repository",
+        "description": "Lists secret scanning alerts for an eligible repository, from newest to oldest.\nTo use this endpoint, you must be an administrator for the repository or for the organization that owns the repository, and you must use a personal access token with the `repo` scope or `security_events` scope.\nFor public repositories, you may instead use the `public_repo` scope.\n\nGitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.",
+        "tags": [
+          "secret-scanning"
+        ],
+        "operationId": "secret-scanning/list-alerts-for-repo",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/secret-scanning#list-secret-scanning-alerts-for-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/secret-scanning-alert-state"
+          },
+          {
+            "$ref": "#/components/parameters/secret-scanning-alert-secret-type"
+          },
+          {
+            "$ref": "#/components/parameters/secret-scanning-alert-resolution"
+          },
+          {
+            "$ref": "#/components/parameters/secret-scanning-alert-sort"
+          },
+          {
+            "$ref": "#/components/parameters/direction"
           },
           {
             "$ref": "#/components/parameters/pull-number"
@@ -6076,98 +5985,6 @@
         },
         "responses": {
           "201": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pull-request-simple"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/pull-request-review-request"
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "422": {
-            "description": "Unprocessable Entity if user is not a collaborator"
-          }
-        },
-        "x-github": {
-          "triggersNotification": true,
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "pulls",
-          "subcategory": "review-requests"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/secret-scanning/alerts": {
-      "get": {
-        "summary": "List secret scanning alerts for a repository",
-        "description": "Lists secret scanning alerts for an eligible repository, from newest to oldest.\nTo use this endpoint, you must be an administrator for the repository or for the organization that owns the repository, and you must use a personal access token with the `repo` scope or `security_events` scope.\nFor public repositories, you may instead use the `public_repo` scope.\n\nGitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.",
-        "tags": [
-          "secret-scanning"
-        ],
-        "operationId": "secret-scanning/list-alerts-for-repo",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/secret-scanning#list-secret-scanning-alerts-for-a-repository"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-state"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-secret-type"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-resolution"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-sort"
-          },
-          {
-            "$ref": "#/components/parameters/direction"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          },
-          {
-            "name": "visibility",
-            "description": "Specifies the types of repositories to return. This endpoint will only list repositories available to all users on the enterprise.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "public",
-              "example": "all",
-              "enum": [
-                "all",
-                "public"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
             "description": "Response",
             "content": {
               "application/json": {
@@ -9738,16 +9555,16 @@
               "admin": {
                 "type": "boolean"
               },
-              "pull": {
+              "private": {
                 "type": "boolean"
               },
-              "triage": {
-                "type": "boolean"
+              "html_url": {
+                "type": "string"
               },
-              "push": {
-                "type": "boolean"
+              "description": {
+                "type": "string"
               },
-              "maintain": {
+              "fork": {
                 "type": "boolean"
               }
             },

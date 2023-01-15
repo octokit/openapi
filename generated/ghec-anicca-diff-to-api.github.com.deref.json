@@ -9049,10 +9049,10 @@
           },
           "summary": "Create a custom role",
           "tags": [
-            "teams"
+            "enterprise-admin"
           ],
           "x-github": {
-            "category": "teams",
+            "category": "orgs",
             "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": "custom-roles"
@@ -9070,9 +9070,318 @@
           "operationId": "orgs/delete-custom-role",
           "parameters": [
             {
-              "description": "The organization name. The name is not case sensitive.",
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
               "in": "path",
-              "name": "org",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "selected_organization_ids": [
+                        32,
+                        91
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "selected_organization_ids": {
+                      "description": "List of organization IDs that can access the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the organization.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "selected_organization_ids"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Set organization access for a self-hosted runner group in an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists the self-hosted runners that are in a specific enterprise group.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/list-self-hosted-runners-in-group-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "runners": [
+                          {
+                            "busy": true,
+                            "id": 23,
+                            "labels": [
+                              {
+                                "id": 5,
+                                "name": "self-hosted",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 7,
+                                "name": "X64",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 11,
+                                "name": "Linux",
+                                "type": "read-only"
+                              }
+                            ],
+                            "name": "linux_runner",
+                            "os": "linux",
+                            "status": "online"
+                          },
+                          {
+                            "busy": false,
+                            "id": 24,
+                            "labels": [
+                              {
+                                "id": 5,
+                                "name": "self-hosted",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 7,
+                                "name": "X64",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 20,
+                                "name": "macOS",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 21,
+                                "name": "no-gpu",
+                                "type": "custom"
+                              }
+                            ],
+                            "name": "mac_runner",
+                            "os": "macos",
+                            "status": "offline"
+                          }
+                        ],
+                        "total_count": 2
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "runners": {
+                        "items": {
+                          "description": "A self hosted runner",
+                          "properties": {
+                            "busy": {
+                              "type": "boolean"
+                            },
+                            "id": {
+                              "description": "The id of the runner.",
+                              "example": 5,
+                              "type": "integer"
+                            },
+                            "labels": {
+                              "items": {
+                                "description": "A label for a self hosted runner",
+                                "properties": {
+                                  "id": {
+                                    "description": "Unique identifier of the label.",
+                                    "type": "integer"
+                                  },
+                                  "name": {
+                                    "description": "Name of the label.",
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                                    "enum": [
+                                      "read-only",
+                                      "custom"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "name"
+                                ],
+                                "title": "Self hosted runner label",
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "name": {
+                              "description": "The name of the runner.",
+                              "example": "iMac",
+                              "type": "string"
+                            },
+                            "os": {
+                              "description": "The Operating System of the runner.",
+                              "example": "macos",
+                              "type": "string"
+                            },
+                            "status": {
+                              "description": "The status of the runner.",
+                              "example": "online",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "os",
+                            "status",
+                            "busy",
+                            "labels"
+                          ],
+                          "title": "Self hosted runners",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "runners"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response",
+              "headers": {
+                "Link": {
+                  "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
+                  "required": null,
+                  "schema": {
+                    "type": "string"
+                  },
+                  "style": "simple"
+                }
+              }
+            }
+          },
+          "summary": "List self-hosted runners in a group for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Replaces the list of self-hosted runners that are part of an enterprise runner group.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-self-hosted-runners-in-a-group-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/set-self-hosted-runners-in-group-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
               "required": true,
               "schema": {
                 "type": "string"
@@ -9375,10 +9684,10 @@
           },
           "summary": "Get a custom role",
           "tags": [
-            "orgs"
+            "teams"
           ],
           "x-github": {
-            "category": "orgs",
+            "category": "teams",
             "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": "custom-roles"
@@ -9678,6 +9987,24 @@
             "404": {
               "content": {
                 "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "description": "Assign or remove a user",
+                          "name": "add_assignee"
+                        },
+                        {
+                          "description": "Remove an assigned user",
+                          "name": "remove_assignee"
+                        },
+                        {
+                          "description": "Add or remove a label",
+                          "name": "add_label"
+                        }
+                      ]
+                    }
+                  },
                   "schema": {
                     "description": "Basic Error",
                     "properties": {
@@ -9783,15 +10110,15 @@
           }
         }
       },
-      "/orgs/{org}/external-group/{group_id}": {
+      "/orgs/{org}/settings/billing/advanced-security": {
         "get": {
           "deprecated": null,
-          "description": "Displays information about the specific group's usage.  Provides a list of the group's external members as well as a list of teams that this group is connected to.\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+          "description": "Gets the GitHub Advanced Security active committers for an organization per repository.\n\nEach distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of advanced_security_committers for each repository.\n\nIf this organization defers to an enterprise for billing, the `total_advanced_security_committers` returned from the organization API may include some users that are in more than one organization, so they will only consume a single Advanced Security seat at the enterprise level.\n\nThe total number of repositories with committer information is tracked by the `total_count` field.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#external-idp-group-info-for-an-organization"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/billing#get-github-advanced-security-active-committers-for-an-organization"
           },
-          "operationId": "teams/external-idp-group-info-for-org",
+          "operationId": "billing/get-github-advanced-security-billing-org",
           "parameters": [
             {
               "description": "The organization name. The name is not case sensitive.",
@@ -9799,19 +10126,18 @@
               "name": "org",
               "required": true,
               "schema": {
-                "default": 30,
-                "type": "integer"
+                "type": "string"
               },
-              "style": "form"
+              "style": "simple"
             },
             {
               "allowReserved": null,
-              "description": "Page number of the results to fetch.",
+              "description": "The number of results per page (max 100).",
               "in": "query",
-              "name": "page",
+              "name": "per_page",
               "required": false,
               "schema": {
-                "default": 1,
+                "default": 30,
                 "type": "integer"
               },
               "style": "form"
