@@ -26482,7 +26482,7 @@
           ],
           "x-github": {
             "category": "enterprise-admin",
-            "enabledForGitHubApps": false,
+            "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": "scim"
           }
@@ -26996,16 +26996,6 @@
                     "title": "Scim Error",
                     "type": "object"
                   }
-                },
-                "schema": {
-                  "nullable": true,
-                  "properties": {
-                    "reason": {
-                      "description": "The reason the user is being unsuspended. This message will be logged in the [audit log](https://docs.github.com/enterprise-server@3.7/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/about-the-audit-log-for-your-enterprise). If you don't provide a `reason`, it will default to \"Unsuspended via API by _SITE\\_ADMINISTRATOR_\", where _SITE\\_ADMINISTRATOR_ is the person who performed the action.",
-                      "type": "string"
-                    }
-                  },
-                  "type": "object"
                 }
               },
               "description": "Too many requests"
@@ -27400,8 +27390,17 @@
                         ],
                         "userName": "E012345"
                       }
-                    }
-                  },
+                    },
+                    "title": "Scim Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Too many requests"
+            },
+            "500": {
+              "content": {
+                "application/json": {
                   "schema": {
                     "allOf": [
                       {
@@ -27653,7 +27652,31 @@
                         "nullable": true,
                         "type": "string"
                       },
-                      "schemas": {
+                      "status": {
+                        "type": "integer"
+                      }
+                    },
+                    "title": "Scim Error",
+                    "type": "object"
+                  }
+                },
+                "application/scim+json": {
+                  "schema": {
+                    "description": "Scim Error",
+                    "properties": {
+                      "detail": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "documentation_url": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "message": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "run_list": {
                         "items": {
                           "type": "string"
                         },
@@ -28650,9 +28673,9 @@
           ],
           "x-github": {
             "category": "enterprise-admin",
-            "enabledForGitHubApps": true,
+            "enabledForGitHubApps": false,
             "githubCloudOnly": false,
-            "subcategory": "scim"
+            "subcategory": "users"
           }
         },
         "patch": {
@@ -28736,6 +28759,7 @@
                   }
                 },
                 "schema": {
+                  "nullable": true,
                   "properties": {
                     "Operations": {
                       "description": "patch operations list",
@@ -30076,9 +30100,7 @@
                         "items": {
                           "type": "string"
                         },
-                        "pretty-print": {
-                          "type": "string"
-                        }
+                        "type": "array"
                       },
                       "scimType": {
                         "nullable": true,
@@ -30094,82 +30116,6 @@
                 }
               },
               "description": "Internal server error"
-            }
-          },
-          "servers": [
-            {
-              "url": "{protocol}://{hostname}",
-              "variables": {
-                "hostname": {
-                  "default": "HOSTNAME",
-                  "description": "Self-hosted Enterprise Server hostname"
-                },
-                "protocol": {
-                  "default": "http",
-                  "description": "Self-hosted Enterprise Server protocol"
-                }
-              }
-            }
-          ],
-          "summary": "Add an authorized SSH key",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": false,
-            "subcategory": "management-console"
-          }
-        }
-      },
-      "/setup/api/start": {
-        "post": {
-          "deprecated": null,
-          "description": "When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.\n\nNote that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.\n\nWhen using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:\n\n1.  If you're working directly with the API before accessing the web interface, you must pass in the password parameter to set your password.\n2.  If you set up your instance via the web interface before accessing the API, your calls to this endpoint do not need the password parameter.\n\n**Note:** The request body for this operation must be submitted as `multipart/form-data` data. You can can reference the license file by prefixing the filename with the `@` symbol using `curl`. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#-F).",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-configuration-status"
-          },
-          "operationId": "enterprise-admin/create-enterprise-server-license",
-          "requestBody": {
-            "content": {
-              "multipart/form-data": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "license": "@enterprise.ghl",
-                      "password": "secret"
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "license": {
-                      "description": "The content of your _.ghl_ license file.",
-                      "type": "string"
-                    },
-                    "password": {
-                      "description": "You **must** provide a password _only if_ you are uploading your license for the first time. If you previously set a password through the web interface, you don't need this parameter.",
-                      "type": "string"
-                    },
-                    "settings": {
-                      "description": "An optional JSON string containing the installation settings. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings).",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "license"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "202": {
-              "description": "Response"
             }
           },
           "servers": [
@@ -30205,7 +30151,31 @@
           "description": "This API upgrades your license and also triggers the configuration process.\n\n**Note:** The request body for this operation must be submitted as `multipart/form-data` data. You can can reference the license file by prefixing the filename with the `@` symbol using `curl`. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#-F).",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process"
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-configuration-status"
+          },
+          "operationId": "enterprise-admin/upgrade-license",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "license": "@enterprise.ghl"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "license": {
+                      "description": "The content of your new _.ghl_ license file.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": null
           },
           "responses": {
             "202": {
@@ -30245,7 +30215,7 @@
           "description": "You can demote any user account except your own.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-maintenance-status"
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#demote-a-site-administrator"
           },
           "operationId": "enterprise-admin/demote-site-administrator",
           "parameters": [
@@ -30281,7 +30251,7 @@
           "description": "Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs).\"",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#promote-a-user-to-be-a-site-administrator"
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process"
           },
           "operationId": "enterprise-admin/promote-user-to-be-site-administrator",
           "parameters": [
@@ -30319,7 +30289,7 @@
           "description": "If your GitHub instance uses [LDAP Sync with Active Directory LDAP servers](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap), this API is disabled and will return a `403` response. Active Directory LDAP-authenticated users cannot be unsuspended using the API.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#enable-or-disable-maintenance-mode"
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-maintenance-status"
           },
           "operationId": "enterprise-admin/unsuspend-user",
           "parameters": [
@@ -30379,7 +30349,7 @@
           "description": "If your GitHub instance uses [LDAP Sync with Active Directory LDAP servers](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap), Active Directory LDAP-authenticated users cannot be suspended through this API. If you attempt to suspend an Active Directory LDAP-authenticated user through this API, it will return a `403` response.\n\nYou can suspend any user account except your own.\n\nNote that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs).\"",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#suspend-a-user"
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#enable-or-disable-maintenance-mode"
           },
           "operationId": "enterprise-admin/suspend-user",
           "parameters": [
@@ -30439,13 +30409,6 @@
     "changed": {
       "/app/installations": {
         "get": {
-          "deprecated": null,
-          "description": "Gets the settings for your instance. To change settings, see the [Set settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#set-settings).\n\n**Note:** You cannot retrieve the management console password with the Enterprise administration API.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings"
-          },
-          "operationId": "enterprise-admin/get-settings",
           "responses": {
             "changed": {
               "200": {
@@ -30479,22 +30442,436 @@
       },
       "/app/installations/{installation_id}": {
         "get": {
+          "deprecated": null,
+          "description": "Gets the settings for your instance. To change settings, see the [Set settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#set-settings).\n\n**Note:** You cannot retrieve the management console password with the Enterprise administration API.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings"
+          },
+          "operationId": "enterprise-admin/get-settings",
           "responses": {
-            "changed": {
-              "200": {
-                "content": {
-                  "changed": {
-                    "application/json": {
-                      "schema_changed": {
-                        "properties_changed": {
-                          "changed": {
-                            "permissions": {
-                              "properties_changed": {
-                                "removed": [
-                                  "organization_announcement_banners",
-                                  "organization_custom_roles",
-                                  "repository_announcement_banners"
-                                ]
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "enterprise": {
+                          "admin_password": null,
+                          "assets": null,
+                          "auth_mode": "default",
+                          "avatar": {
+                            "enabled": false
+                          },
+                          "cas": {
+                            "url": null
+                          },
+                          "collectd": {
+                            "enabled": false,
+                            "encryption": null,
+                            "password": null,
+                            "port": 0,
+                            "server": null,
+                            "username": null
+                          },
+                          "configuration_id": 1401777404,
+                          "configuration_run_count": 4,
+                          "customer": {
+                            "email": "stannis@themannis.biz",
+                            "name": "GitHub",
+                            "public_key_data": "-----BEGIN PGP PUBLIC KEY BLOCK-----\nVersion: GnuPG v1.4.10 (GNU/Linux)\n\nmI0ETqzZYgEEALSe6snowdenXyqvLfSQ34HWD6C7....\n-----END PGP PUBLIC KEY BLOCK-----\n",
+                            "secret_key_data": "-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: GnuPG v1.4.10 (GNU/Linux)\n\nlQcYBE5TCgsBEACk4yHpUcapplebaumBMXYMiLF+nCQ0lxpx...\n-----END PGP PRIVATE KEY BLOCK-----\n",
+                            "uuid": "af6cac80-e4e1-012e-d822-1231380e52e9"
+                          },
+                          "expire_sessions": false,
+                          "github_hostname": "ghe.local",
+                          "github_oauth": {
+                            "client_id": "12313412",
+                            "client_secret": "kj123131132",
+                            "organization_name": "Homestar Runners",
+                            "organization_team": "homestarrunners/characters"
+                          },
+                          "github_ssl": {
+                            "cert": null,
+                            "enabled": false,
+                            "key": null
+                          },
+                          "http_proxy": null,
+                          "identicons_host": "dotcom",
+                          "ldap": {
+                            "admin_group": null,
+                            "bind_dn": null,
+                            "host": null,
+                            "method": "Plain",
+                            "password": null,
+                            "port": 0,
+                            "posix_support": true,
+                            "profile": {
+                              "key": null,
+                              "mail": null,
+                              "name": null,
+                              "uid": "uid"
+                            },
+                            "reconciliation": {
+                              "org": null,
+                              "user": null
+                            },
+                            "recursive_group_search": false,
+                            "search_strategy": "detect",
+                            "sync_enabled": false,
+                            "team_sync_interval": 4,
+                            "uid": null,
+                            "user_sync_emails": false,
+                            "user_sync_interval": 4,
+                            "user_sync_keys": false,
+                            "virtual_attribute_enabled": false
+                          },
+                          "license": {
+                            "cluster_support": false,
+                            "evaluation": false,
+                            "expire_at": "2016-04-27T00:00:00-07:00",
+                            "perpetual": false,
+                            "seats": 0,
+                            "ssh_allowed": true,
+                            "support_key": "ssh-rsa AAAAB3N....",
+                            "unlimited_seating": true
+                          },
+                          "load_balancer": null,
+                          "mapping": {
+                            "basemap": "company.map-qsz2zrvs",
+                            "enabled": true,
+                            "tileserver": null,
+                            "token": null
+                          },
+                          "ntp": {
+                            "primary_server": "0.pool.ntp.org",
+                            "secondary_server": "1.pool.ntp.org"
+                          },
+                          "pages": {
+                            "enabled": true
+                          },
+                          "private_mode": false,
+                          "public_pages": false,
+                          "saml": {
+                            "certificate": null,
+                            "certificate_path": null,
+                            "disable_admin_demote": false,
+                            "idp_initiated_sso": false,
+                            "issuer": null,
+                            "sso_url": null
+                          },
+                          "signup_enabled": false,
+                          "smtp": {
+                            "address": "smtp.example.com",
+                            "authentication": "plain",
+                            "discard-to-noreply-address": true,
+                            "domain": "blah",
+                            "enable_starttls_auto": true,
+                            "enabled": true,
+                            "noreply_address": "noreply@github.com",
+                            "password": "bar",
+                            "port": "1234",
+                            "support_address": "enterprise@github.com",
+                            "support_address_type": "email",
+                            "user_name": "mr_foo",
+                            "username": "foo"
+                          },
+                          "snmp": {
+                            "enabled": false
+                          },
+                          "subdomain_isolation": true,
+                          "syslog": {
+                            "enabled": false,
+                            "protocol_name": "udp",
+                            "server": null
+                          },
+                          "timezone": null
+                        },
+                        "run_list": [
+                          "recipe[enterprise-configure]"
+                        ]
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "enterprise": {
+                        "properties": {
+                          "admin_password": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "assets": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "auth_mode": {
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean"
+                              },
+                              "uri": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "cas": {
+                            "properties": {
+                              "url": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "collectd": {
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean"
+                              },
+                              "encryption": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "password": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "port": {
+                                "type": "integer"
+                              },
+                              "server": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "username": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "configuration_id": {
+                            "type": "integer"
+                          },
+                          "configuration_run_count": {
+                            "type": "integer"
+                          },
+                          "customer": {
+                            "properties": {
+                              "email": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "public_key_data": {
+                                "type": "string"
+                              },
+                              "secret_key_data": {
+                                "type": "string"
+                              },
+                              "uuid": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "expire_sessions": {
+                            "type": "boolean"
+                          },
+                          "github_hostname": {
+                            "type": "string"
+                          },
+                          "github_oauth": {
+                            "properties": {
+                              "client_id": {
+                                "type": "string"
+                              },
+                              "client_secret": {
+                                "type": "string"
+                              },
+                              "organization_name": {
+                                "type": "string"
+                              },
+                              "organization_team": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "github_ssl": {
+                            "properties": {
+                              "cert": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "enabled": {
+                                "type": "boolean"
+                              },
+                              "key": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "http_proxy": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "identicons_host": {
+                            "type": "string"
+                          },
+                          "ldap": {
+                            "properties": {
+                              "admin_group": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "base": {
+                                "type": "array"
+                              },
+                              "bind_dn": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "host": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "method": {
+                                "type": "string"
+                              },
+                              "password": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "port": {
+                                "type": "integer"
+                              },
+                              "posix_support": {
+                                "type": "boolean"
+                              },
+                              "profile": {
+                                "properties": {
+                                  "key": {
+                                    "nullable": true,
+                                    "type": "string"
+                                  },
+                                  "mail": {
+                                    "nullable": true,
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "nullable": true,
+                                    "type": "string"
+                                  },
+                                  "uid": {
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "reconciliation": {
+                                "properties": {
+                                  "org": {
+                                    "nullable": true,
+                                    "type": "string"
+                                  },
+                                  "user": {
+                                    "nullable": true,
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "recursive_group_search": {
+                                "type": "boolean"
+                              },
+                              "search_strategy": {
+                                "type": "string"
+                              },
+                              "sync_enabled": {
+                                "type": "boolean"
+                              },
+                              "team_sync_interval": {
+                                "type": "integer"
+                              },
+                              "uid": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "user_groups": {
+                                "type": "array"
+                              },
+                              "user_sync_emails": {
+                                "type": "boolean"
+                              },
+                              "user_sync_interval": {
+                                "type": "integer"
+                              },
+                              "user_sync_keys": {
+                                "type": "boolean"
+                              },
+                              "virtual_attribute_enabled": {
+                                "type": "boolean"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "license": {
+                            "properties": {
+                              "cluster_support": {
+                                "type": "boolean"
+                              },
+                              "evaluation": {
+                                "type": "boolean"
+                              },
+                              "expire_at": {
+                                "type": "string"
+                              },
+                              "perpetual": {
+                                "type": "boolean"
+                              },
+                              "seats": {
+                                "type": "integer"
+                              },
+                              "ssh_allowed": {
+                                "type": "boolean"
+                              },
+                              "support_key": {
+                                "type": "string"
+                              },
+                              "unlimited_seating": {
+                                "type": "boolean"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "load_balancer": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "mapping": {
+                            "properties": {
+                              "basemap": {
+                                "type": "string"
+                              },
+                              "enabled": {
+                                "type": "boolean"
+                              },
+                              "tileserver": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "token": {
+                                "nullable": true,
+                                "type": "string"
                               }
                             },
                             "type": "object"
@@ -32374,7 +32751,7 @@
         "get": {
           "responses": {
             "changed": {
-              "201": {
+              "200": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -32404,42 +32781,6 @@
                                     "display_title"
                                   ]
                                 }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/repos/{owner}/{repo}/actions/runs/{run_id}": {
-        "get": {
-          "responses": {
-            "changed": {
-              "200": {
-                "content": {
-                  "changed": {
-                    "application/json": {
-                      "schema_changed": {
-                        "properties_changed": {
-                          "changed": {
-                            "head_repository": {
-                              "properties_changed": {
-                                "removed": [
-                                  "security_and_analysis"
-                                ]
-                              }
-                            },
-                            "repository": {
-                              "properties_changed": {
-                                "removed": [
-                                  "security_and_analysis"
-                                ]
                               }
                             }
                           },
@@ -32538,7 +32879,7 @@
         "get": {
           "responses": {
             "changed": {
-              "201": {
+              "200": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -32591,11 +32932,7 @@
                                 }
                               }
                             }
-                          },
-                          "removed": [
-                            "allow_fork_syncing",
-                            "lock_branch"
-                          ]
+                          }
                         }
                       }
                     }
@@ -32610,7 +32947,7 @@
         "get": {
           "responses": {
             "changed": {
-              "200": {
+              "201": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -32698,7 +33035,7 @@
         "get": {
           "responses": {
             "changed": {
-              "201": {
+              "200": {
                 "content": {
                   "changed": {
                     "application/json": {
@@ -32724,7 +33061,11 @@
                             }
                           }
                         }
-                      }
+                      },
+                      "removed": [
+                        "allow_fork_syncing",
+                        "lock_branch"
+                      ]
                     }
                   }
                 }
@@ -32756,29 +33097,6 @@
                             "allow_fork_syncing",
                             "lock_branch"
                           ]
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "put": {
-          "request_body": {
-            "content_changed": {
-              "changed": {
-                "application/json": {
-                  "schema_changed": {
-                    "properties_changed": {
-                      "changed": {
-                        "required_pull_request_reviews": {
-                          "properties_changed": {
-                            "removed": [
-                              "require_last_push_approval"
-                            ]
-                          }
                         }
                       },
                       "removed": [
@@ -33153,7 +33471,7 @@
         "get": {
           "responses": {
             "changed": {
-              "200": {
+              "201": {
                 "content": {
                   "changed": {
                     "application/json": {

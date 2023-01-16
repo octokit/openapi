@@ -61247,12 +61247,39 @@
           },
           "delete_branch_on_merge": {
             "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "type",
+          "name",
+          "active",
+          "events",
+          "config",
+          "ping_url",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "org-membership": {
+        "title": "Org Membership",
+        "description": "Org Membership",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/orgs/octocat/memberships/defunkt"
           },
-          "subscribers_count": {
-            "type": "integer"
-          },
-          "network_count": {
-            "type": "integer"
+          "state": {
+            "type": "string",
+            "description": "The state of the member in the organization. The `pending` state indicates the user has not yet accepted an invitation.",
+            "example": "active",
+            "enum": [
+              "active",
+              "pending"
+            ]
           },
           "code_of_conduct": {
             "$ref": "#/components/schemas/code-of-conduct"
@@ -61295,413 +61322,79 @@
           }
         },
         "required": [
-          "id",
-          "url",
-          "type",
-          "name",
-          "active",
-          "events",
-          "config",
-          "ping_url",
-          "created_at",
-          "updated_at"
-        ]
-      },
-      "org-membership": {
-        "title": "Org Membership",
-        "description": "Org Membership",
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/orgs/octocat/memberships/defunkt"
-          },
-          "state": {
-            "type": "string",
-            "description": "The state of the member in the organization. The `pending` state indicates the user has not yet accepted an invitation.",
-            "example": "active",
-            "enum": [
-              "active",
-              "pending"
-            ]
-          },
-          "role": {
-            "type": "string",
-            "description": "The user's membership type in the organization.",
-            "example": "admin",
-            "enum": [
-              "admin",
-              "member",
-              "billing_manager"
-            ]
-          },
-          "organization_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/orgs/octocat"
-          },
-          "organization": {
-            "$ref": "#/components/schemas/organization-simple"
-          },
-          "user": {
-            "$ref": "#/components/schemas/nullable-simple-user"
-          },
-          "permissions": {
-            "type": "object",
-            "properties": {
-              "can_create_repository": {
-                "type": "boolean"
-              }
-            },
-            "required": [
-              "can_create_repository"
-            ]
-          }
-        },
-        "required": [
-          "state",
-          "role",
-          "organization_url",
-          "url",
-          "organization",
-          "user"
-        ]
-      },
-      "migration": {
-        "title": "Migration",
-        "description": "A migration.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 79
-          },
-          "owner": {
-            "$ref": "#/components/schemas/nullable-simple-user"
-          },
-          "guid": {
-            "type": "string",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516"
-          },
-          "state": {
-            "type": "string",
-            "example": "pending"
-          },
-          "lock_repositories": {
-            "type": "boolean",
-            "example": true
-          },
-          "exclude_metadata": {
-            "type": "boolean"
-          },
-          "exclude_git_data": {
-            "type": "boolean"
-          },
-          "exclude_attachments": {
-            "type": "boolean"
-          },
-          "exclude_releases": {
-            "type": "boolean"
-          },
-          "exclude_owner_projects": {
-            "type": "boolean"
-          },
-          "org_metadata_only": {
-            "type": "boolean"
-          },
-          "repositories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/repository"
-            }
-          },
-          "url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/orgs/octo-org/migrations/79"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2015-07-06T15:33:38-07:00"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2015-07-06T15:33:38-07:00"
-          },
-          "node_id": {
-            "type": "string"
-          },
-          "archive_url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "exclude": {
-            "type": "array",
-            "items": {}
-          }
-        },
-        "required": [
-          "id",
-          "node_id",
-          "owner",
-          "guid",
-          "state",
-          "lock_repositories",
-          "exclude_metadata",
-          "exclude_git_data",
-          "exclude_attachments",
-          "exclude_releases",
-          "exclude_owner_projects",
-          "org_metadata_only",
-          "repositories",
-          "url",
-          "created_at",
-          "updated_at"
-        ]
-      },
-      "org-pre-receive-hook": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-          "enforcement": {
-            "type": "string"
-          },
-          "configuration_url": {
-            "type": "string"
-          },
-          "allow_downstream_configuration": {
-            "type": "boolean"
-          }
-        }
-      },
-      "project": {
-        "title": "Project",
-        "description": "Projects are a way to organize columns and cards of work.",
-        "type": "object",
-        "properties": {
-          "owner_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/repos/api-playground/projects-test"
-          },
-          "url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/projects/1002604"
-          },
-          "html_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://github.com/api-playground/projects-test/projects/12"
-          },
-          "columns_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/projects/1002604/columns"
-          },
-          "id": {
-            "type": "integer",
-            "example": 1002604
-          },
-          "node_id": {
-            "type": "string",
-            "example": "MDc6UHJvamVjdDEwMDI2MDQ="
-          },
-          "name": {
-            "description": "Name of the project",
-            "example": "Week One Sprint",
-            "type": "string"
-          },
-          "body": {
-            "description": "Body of the project",
-            "example": "This project represents the sprint of the first week in January",
-            "type": "string",
-            "nullable": true
-          },
-          "number": {
-            "type": "integer",
-            "example": 1
-          },
-          "state": {
-            "description": "State of the project; either 'open' or 'closed'",
-            "example": "open",
-            "type": "string"
-          },
-          "creator": {
-            "$ref": "#/components/schemas/nullable-simple-user"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2011-04-10T20:09:31Z"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2014-03-03T18:58:10Z"
-          },
-          "organization_permission": {
-            "description": "The baseline permission that all organization members have on this project. Only present if owner is an organization.",
-            "type": "string",
-            "enum": [
-              "read",
-              "write",
-              "admin",
-              "none"
-            ]
-          },
-          "private": {
-            "description": "Whether or not this project can be seen by everyone. Only present if owner is an organization.",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "id",
-          "node_id",
-          "number",
-          "name",
-          "body",
-          "state",
-          "url",
-          "html_url",
-          "owner_url",
-          "creator",
-          "columns_url",
-          "created_at",
-          "updated_at"
-        ]
-      },
-      "nullable-team-simple": {
-        "title": "Team Simple",
-        "description": "Groups of organization members that gives permissions on specified repositories.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "description": "Unique identifier of the team",
-            "type": "integer",
-            "example": 1
-          },
-          "node_id": {
-            "type": "string",
-            "example": "MDQ6VGVhbTE="
-          },
-          "url": {
-            "description": "URL for the team",
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/organizations/1/team/1"
-          },
-          "members_url": {
-            "type": "string",
-            "example": "https://api.github.com/organizations/1/team/1/members{/member}"
-          },
-          "name": {
-            "description": "Name of the team",
-            "type": "string",
-            "example": "Justice League"
-          },
-          "description": {
-            "description": "Description of the team",
-            "type": "string",
-            "nullable": true,
-            "example": "A great team."
-          },
-          "permission": {
-            "description": "Permission that the team will have for its repositories",
-            "type": "string",
-            "example": "admin"
-          },
-          "privacy": {
-            "description": "The level of privacy this team should have",
-            "type": "string",
-            "example": "closed"
-          },
-          "html_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://github.com/orgs/rails/teams/core"
-          },
-          "repositories_url": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://api.github.com/organizations/1/team/1/repos"
-          },
-          "slug": {
-            "type": "string",
-            "example": "justice-league"
-          },
-          "ldap_dn": {
-            "description": "Distinguished Name (DN) that team maps to within LDAP environment",
-            "example": "uid=example,ou=users,dc=github,dc=com",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "node_id",
-          "url",
-          "members_url",
-          "name",
+          "archive_url",
+          "assignees_url",
+          "blobs_url",
+          "branches_url",
+          "collaborators_url",
+          "comments_url",
+          "commits_url",
+          "compare_url",
+          "contents_url",
+          "contributors_url",
+          "deployments_url",
           "description",
-          "permission",
+          "downloads_url",
+          "events_url",
+          "fork",
+          "forks_url",
+          "full_name",
+          "git_commits_url",
+          "git_refs_url",
+          "git_tags_url",
+          "hooks_url",
           "html_url",
-          "repositories_url",
-          "slug"
-        ],
-        "nullable": true
+          "id",
+          "node_id",
+          "issue_comment_url",
+          "issue_events_url",
+          "issues_url",
+          "keys_url",
+          "labels_url",
+          "languages_url",
+          "merges_url",
+          "milestones_url",
+          "name",
+          "notifications_url",
+          "owner",
+          "private",
+          "pulls_url",
+          "releases_url",
+          "stargazers_url",
+          "statuses_url",
+          "subscribers_url",
+          "subscription_url",
+          "tags_url",
+          "teams_url",
+          "trees_url",
+          "url"
+        ]
       },
-      "team": {
-        "title": "Team",
-        "description": "Groups of organization members that gives permissions on specified repositories.",
+      "thread": {
+        "title": "Thread",
+        "description": "Thread",
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer"
-          },
-          "node_id": {
             "type": "string"
           },
-          "name": {
-            "type": "string"
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
           },
-          "slug": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "privacy": {
-            "type": "string"
-          },
-          "permission": {
-            "type": "string"
-          },
-          "permissions": {
+          "subject": {
             "type": "object",
             "properties": {
-              "pull": {
-                "type": "boolean"
+              "title": {
+                "type": "string"
               },
-              "triage": {
-                "type": "boolean"
+              "url": {
+                "type": "string"
               },
-              "push": {
-                "type": "boolean"
+              "latest_comment_url": {
+                "type": "string"
               },
-              "maintain": {
-                "type": "boolean"
-              },
-              "admin": {
-                "type": "boolean"
+              "type": {
+                "type": "string"
               }
             },
             "required": [
@@ -63267,6 +62960,94 @@
                 "type": "integer"
               }
             }
+          },
+          "body": {
+            "description": "The main text of the comment.",
+            "example": "I agree with this suggestion.",
+            "type": "string"
+          },
+          "body_html": {
+            "type": "string",
+            "example": "<p>Do you like apples?</p>"
+          },
+          "body_version": {
+            "description": "The current version of the body content. If provided, this update operation will be rejected if the given version does not match the latest version on the server.",
+            "example": "0307116bbf7ced493b8d8a346c650b71",
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2018-01-15T23:53:58Z"
+          },
+          "last_edited_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "discussion_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/organizations/1/team/2403582/discussions/1"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/orgs/github/teams/justice-league/discussions/1/comments/1"
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDIxOlRlYW1EaXNjdXNzaW9uQ29tbWVudDE="
+          },
+          "number": {
+            "description": "The unique sequence number of a team discussion comment.",
+            "example": 42,
+            "type": "integer"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2018-01-15T23:53:58Z"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/organizations/1/team/2403582/discussions/1/comments/1"
+          },
+          "reactions": {
+            "$ref": "#/components/schemas/reaction-rollup"
+          }
+        },
+        "required": [
+          "author",
+          "body",
+          "body_html",
+          "body_version",
+          "created_at",
+          "last_edited_at",
+          "discussion_url",
+          "html_url",
+          "node_id",
+          "number",
+          "updated_at",
+          "url"
+        ]
+      },
+      "reaction": {
+        "title": "Reaction",
+        "description": "Reactions to conversations provide a way to help people express their feelings more simply and effectively.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDg6UmVhY3Rpb24x"
+          },
+          "user": {
+            "$ref": "#/components/schemas/nullable-simple-user"
           },
           "body": {
             "description": "The main text of the comment.",

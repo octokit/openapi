@@ -1645,6 +1645,28 @@
                               "description": "The status of the runner.",
                               "example": "online",
                               "type": "string"
+                            },
+                            "resource": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "oneOf": [
+                                {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                {
+                                  "nullable": true,
+                                  "type": "integer"
+                                },
+                                {
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "nullable": true,
+                                  "type": "array"
+                                }
+                              ]
                             }
                           },
                           "required": [
@@ -9049,7 +9071,7 @@
           },
           "summary": "Create a custom role",
           "tags": [
-            "enterprise-admin"
+            "orgs"
           ],
           "x-github": {
             "category": "orgs",
@@ -9070,318 +9092,9 @@
           "operationId": "orgs/delete-custom-role",
           "parameters": [
             {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "description": "The organization name. The name is not case sensitive.",
               "in": "path",
-              "name": "enterprise",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "Unique identifier of the self-hosted runner group.",
-              "in": "path",
-              "name": "runner_group_id",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              },
-              "style": "simple"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "selected_organization_ids": [
-                        32,
-                        91
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "selected_organization_ids": {
-                      "description": "List of organization IDs that can access the runner group.",
-                      "items": {
-                        "description": "Unique identifier of the organization.",
-                        "type": "integer"
-                      },
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "selected_organization_ids"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "204": {
-              "description": "Response"
-            }
-          },
-          "summary": "Set organization access for a self-hosted runner group in an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": false,
-            "subcategory": "self-hosted-runner-groups"
-          }
-        }
-      },
-      "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners": {
-        "get": {
-          "deprecated": null,
-          "description": "Lists the self-hosted runners that are in a specific enterprise group.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-enterprise"
-          },
-          "operationId": "enterprise-admin/list-self-hosted-runners-in-group-for-enterprise",
-          "parameters": [
-            {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
-              "in": "path",
-              "name": "enterprise",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "Unique identifier of the self-hosted runner group.",
-              "in": "path",
-              "name": "runner_group_id",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              },
-              "style": "simple"
-            },
-            {
-              "allowReserved": null,
-              "description": "The number of results per page (max 100).",
-              "in": "query",
-              "name": "per_page",
-              "required": false,
-              "schema": {
-                "default": 30,
-                "type": "integer"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "Page number of the results to fetch.",
-              "in": "query",
-              "name": "page",
-              "required": false,
-              "schema": {
-                "default": 1,
-                "type": "integer"
-              },
-              "style": "form"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "runners": [
-                          {
-                            "busy": true,
-                            "id": 23,
-                            "labels": [
-                              {
-                                "id": 5,
-                                "name": "self-hosted",
-                                "type": "read-only"
-                              },
-                              {
-                                "id": 7,
-                                "name": "X64",
-                                "type": "read-only"
-                              },
-                              {
-                                "id": 11,
-                                "name": "Linux",
-                                "type": "read-only"
-                              }
-                            ],
-                            "name": "linux_runner",
-                            "os": "linux",
-                            "status": "online"
-                          },
-                          {
-                            "busy": false,
-                            "id": 24,
-                            "labels": [
-                              {
-                                "id": 5,
-                                "name": "self-hosted",
-                                "type": "read-only"
-                              },
-                              {
-                                "id": 7,
-                                "name": "X64",
-                                "type": "read-only"
-                              },
-                              {
-                                "id": 20,
-                                "name": "macOS",
-                                "type": "read-only"
-                              },
-                              {
-                                "id": 21,
-                                "name": "no-gpu",
-                                "type": "custom"
-                              }
-                            ],
-                            "name": "mac_runner",
-                            "os": "macos",
-                            "status": "offline"
-                          }
-                        ],
-                        "total_count": 2
-                      }
-                    }
-                  },
-                  "schema": {
-                    "properties": {
-                      "runners": {
-                        "items": {
-                          "description": "A self hosted runner",
-                          "properties": {
-                            "busy": {
-                              "type": "boolean"
-                            },
-                            "id": {
-                              "description": "The id of the runner.",
-                              "example": 5,
-                              "type": "integer"
-                            },
-                            "labels": {
-                              "items": {
-                                "description": "A label for a self hosted runner",
-                                "properties": {
-                                  "id": {
-                                    "description": "Unique identifier of the label.",
-                                    "type": "integer"
-                                  },
-                                  "name": {
-                                    "description": "Name of the label.",
-                                    "type": "string"
-                                  },
-                                  "type": {
-                                    "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
-                                    "enum": [
-                                      "read-only",
-                                      "custom"
-                                    ],
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "name"
-                                ],
-                                "title": "Self hosted runner label",
-                                "type": "object"
-                              },
-                              "type": "array"
-                            },
-                            "name": {
-                              "description": "The name of the runner.",
-                              "example": "iMac",
-                              "type": "string"
-                            },
-                            "os": {
-                              "description": "The Operating System of the runner.",
-                              "example": "macos",
-                              "type": "string"
-                            },
-                            "status": {
-                              "description": "The status of the runner.",
-                              "example": "online",
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "name",
-                            "os",
-                            "status",
-                            "busy",
-                            "labels"
-                          ],
-                          "title": "Self hosted runners",
-                          "type": "object"
-                        },
-                        "type": "array"
-                      },
-                      "total_count": {
-                        "type": "number"
-                      }
-                    },
-                    "required": [
-                      "total_count",
-                      "runners"
-                    ],
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response",
-              "headers": {
-                "Link": {
-                  "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
-                  "required": null,
-                  "schema": {
-                    "type": "string"
-                  },
-                  "style": "simple"
-                }
-              }
-            }
-          },
-          "summary": "List self-hosted runners in a group for an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": false,
-            "subcategory": "self-hosted-runner-groups"
-          }
-        },
-        "put": {
-          "deprecated": null,
-          "description": "Replaces the list of self-hosted runners that are part of an enterprise runner group.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-self-hosted-runners-in-a-group-for-an-enterprise"
-          },
-          "operationId": "enterprise-admin/set-self-hosted-runners-in-group-for-enterprise",
-          "parameters": [
-            {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
-              "in": "path",
-              "name": "enterprise",
+              "name": "org",
               "required": true,
               "schema": {
                 "type": "string"

@@ -11206,6 +11206,15 @@
             }
           },
           {
+            "name": "actor",
+            "description": "Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "branch",
             "description": "Returns workflow runs associated with a branch. Use the name of the branch of the `push`.",
             "in": "query",
@@ -11223,11 +11232,13 @@
               "type": "string"
             }
           },
+          "204": {
+            "description": "Response if team has permission for the repository. This is the response when the repository media type hasn't been provded in the Accept header."
+          },
           {
             "name": "status",
             "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`.",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -11247,16 +11258,24 @@
               ]
             }
           },
-          "204": {
-            "description": "Response if team has permission for the repository. This is the response when the repository media type hasn't been provded in the Accept header."
+          {
+            "name": "created",
+            "description": "Returns workflow runs created within the given date-time range. For more information on the syntax, see \"[Understanding the search syntax](https://docs.github.com/enterprise-server@3.4/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates).\"",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
           },
           {
-            "name": "page",
-            "description": "Page number of the results to fetch.",
+            "name": "exclude_pull_requests",
+            "description": "If `true` pull requests are omitted from the response (empty array).",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "integer",
-              "default": 1
+              "type": "boolean",
+              "default": false
             }
           },
           {
@@ -12048,113 +12067,6 @@
                                   "key",
                                   "name"
                                 ]
-                              },
-                              "license": {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string"
-                                  },
-                                  "name": {
-                                    "type": "string"
-                                  },
-                                  "spdx_id": {
-                                    "type": "string"
-                                  },
-                                  "url": {
-                                    "type": "string"
-                                  },
-                                  "node_id": {
-                                    "type": "string"
-                                  }
-                                },
-                                "nullable": true
-                              },
-                              "forks": {
-                                "type": "integer",
-                                "example": 0
-                              },
-                              "open_issues": {
-                                "type": "integer",
-                                "example": 0
-                              },
-                              "watchers": {
-                                "type": "integer",
-                                "example": 0
-                              },
-                              "allow_forking": {
-                                "type": "boolean"
-                              }
-                            },
-                            "required": [
-                              "archive_url",
-                              "assignees_url",
-                              "blobs_url",
-                              "branches_url",
-                              "collaborators_url",
-                              "comments_url",
-                              "commits_url",
-                              "compare_url",
-                              "contents_url",
-                              "contributors_url",
-                              "deployments_url",
-                              "description",
-                              "downloads_url",
-                              "events_url",
-                              "fork",
-                              "forks_url",
-                              "full_name",
-                              "git_commits_url",
-                              "git_refs_url",
-                              "git_tags_url",
-                              "hooks_url",
-                              "html_url",
-                              "id",
-                              "node_id",
-                              "issue_comment_url",
-                              "issue_events_url",
-                              "issues_url",
-                              "keys_url",
-                              "labels_url",
-                              "languages_url",
-                              "merges_url",
-                              "milestones_url",
-                              "name",
-                              "notifications_url",
-                              "owner",
-                              "private",
-                              "pulls_url",
-                              "releases_url",
-                              "stargazers_url",
-                              "statuses_url",
-                              "subscribers_url",
-                              "subscription_url",
-                              "tags_url",
-                              "teams_url",
-                              "trees_url",
-                              "url"
-                            ]
-                          },
-                          "head_repository": {
-                            "title": "Minimal Repository",
-                            "description": "Minimal Repository",
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "integer",
-                                "example": 1296269
-                              },
-                              "node_id": {
-                                "type": "string",
-                                "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
-                              },
-                              "name": {
-                                "type": "string",
-                                "example": "Hello-World"
-                              },
-                              "full_name": {
-                                "type": "string",
-                                "example": "octocat/Hello-World"
                               },
                               "license": {
                                 "type": "object",
