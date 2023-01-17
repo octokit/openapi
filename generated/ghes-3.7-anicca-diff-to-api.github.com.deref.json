@@ -27391,6 +27391,43 @@
                         "userName": "E012345"
                       }
                     },
+                    "user": {
+                      "value": {
+                        "active": true,
+                        "displayName": "Mona Lisa",
+                        "emails": [
+                          {
+                            "primary": true,
+                            "type": "work",
+                            "value": "mlisa@example.com"
+                          }
+                        ],
+                        "externalId": "E012345",
+                        "id": "7fce0092-d52e-4f76-b727-3955bd72c939",
+                        "meta": {
+                          "created": "2012-03-27T19:59:26.000Z",
+                          "lastModified": "2018-03-27T19:59:26.000Z",
+                          "location": "https://api.github.localhost/scim/v2/Users/7fce0092-d52e-4f76-b727-3955bd72c939",
+                          "resourceType": "User"
+                        },
+                        "name": {
+                          "familyName": "Octocat",
+                          "formatted": "Ms. Mona Lisa Octocat",
+                          "givenName": "Mona",
+                          "middleName": "Lisa"
+                        },
+                        "roles": [
+                          {
+                            "primary": false,
+                            "value": "User"
+                          }
+                        ],
+                        "schemas": [
+                          "urn:ietf:params:scim:schemas:core:2.0:User"
+                        ],
+                        "userName": "E012345"
+                      }
+                    },
                     "title": "Scim Error",
                     "type": "object"
                   }
@@ -27625,6 +27662,30 @@
                         "type": "array"
                       },
                       "scimType": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      }
+                    },
+                    "title": "Scim Error",
+                    "type": "object"
+                  }
+                },
+                "application/scim+json": {
+                  "schema": {
+                    "description": "Scim Error",
+                    "properties": {
+                      "detail": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "documentation_url": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "message": {
                         "nullable": true,
                         "type": "string"
                       },
@@ -29357,6 +29418,10 @@
                         "nullable": true,
                         "type": "string"
                       },
+                      "message": {
+                        "nullable": true,
+                        "type": "string"
+                      },
                       "run_list": {
                         "items": {
                           "type": "string"
@@ -29991,9 +30056,7 @@
                         "items": {
                           "type": "string"
                         },
-                        "pretty-print": {
-                          "type": "string"
-                        }
+                        "type": "array"
                       },
                       "scimType": {
                         "nullable": true,
@@ -30045,6 +30108,104 @@
               "description": "Too many requests"
             },
             "500": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Scim Error",
+                    "properties": {
+                      "detail": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "documentation_url": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "message": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "pretty-print": {
+                          "type": "string"
+                        }
+                      },
+                      "scimType": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      }
+                    },
+                    "title": "Scim Error",
+                    "type": "object"
+                  }
+                },
+                "application/scim+json": {
+                  "schema": {
+                    "description": "Scim Error",
+                    "properties": {
+                      "detail": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "documentation_url": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "message": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "schemas": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "scimType": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      }
+                    },
+                    "title": "Scim Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Internal server error"
+            }
+          },
+          "summary": "Set SCIM information for a provisioned enterprise user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "scim"
+          }
+        }
+      },
+      "/setup/api/configcheck": {
+        "get": {
+          "deprecated": null,
+          "description": "This endpoint allows you to check the status of the most recent configuration process:\n\nNote that you may need to wait several seconds after you start a process before you can check its status.\n\nThe different statuses are:\n\n| Status        | Description                       |\n| ------------- | --------------------------------- |\n| `PENDING`     | The job has not started yet       |\n| `CONFIGURING` | The job is running                |\n| `DONE`        | The job has finished correctly    |\n| `FAILED`      | The job has finished unexpectedly |",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-configuration-status"
+          },
+          "operationId": "enterprise-admin/get-configuration-status",
+          "responses": {
+            "200": {
               "content": {
                 "application/json": {
                   "schema": {
@@ -30151,31 +30312,7 @@
           "description": "This API upgrades your license and also triggers the configuration process.\n\n**Note:** The request body for this operation must be submitted as `multipart/form-data` data. You can can reference the license file by prefixing the filename with the `@` symbol using `curl`. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#-F).",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-configuration-status"
-          },
-          "operationId": "enterprise-admin/upgrade-license",
-          "requestBody": {
-            "content": {
-              "multipart/form-data": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "license": "@enterprise.ghl"
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "license": {
-                      "description": "The content of your new _.ghl_ license file.",
-                      "type": "string"
-                    }
-                  },
-                  "type": "object"
-                }
-              }
-            },
-            "required": null
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process"
           },
           "responses": {
             "202": {
@@ -30215,7 +30352,7 @@
           "description": "You can demote any user account except your own.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#demote-a-site-administrator"
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-the-maintenance-status"
           },
           "operationId": "enterprise-admin/demote-site-administrator",
           "parameters": [
@@ -30872,6 +31009,918 @@
                               "token": {
                                 "nullable": true,
                                 "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "ntp": {
+                            "properties": {
+                              "primary_server": {
+                                "type": "string"
+                              },
+                              "secondary_server": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "pages": {
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "private_mode": {
+                            "type": "boolean"
+                          },
+                          "public_pages": {
+                            "type": "boolean"
+                          },
+                          "saml": {
+                            "properties": {
+                              "certificate": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "certificate_path": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "disable_admin_demote": {
+                                "type": "boolean"
+                              },
+                              "idp_initiated_sso": {
+                                "type": "boolean"
+                              },
+                              "issuer": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "sso_url": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "signup_enabled": {
+                            "type": "boolean"
+                          },
+                          "smtp": {
+                            "properties": {
+                              "address": {
+                                "type": "string"
+                              },
+                              "authentication": {
+                                "type": "string"
+                              },
+                              "discard-to-noreply-address": {
+                                "type": "boolean"
+                              },
+                              "domain": {
+                                "type": "string"
+                              },
+                              "enable_starttls_auto": {
+                                "type": "boolean"
+                              },
+                              "enabled": {
+                                "type": "boolean"
+                              },
+                              "noreply_address": {
+                                "type": "string"
+                              },
+                              "password": {
+                                "type": "string"
+                              },
+                              "port": {
+                                "type": "string"
+                              },
+                              "support_address": {
+                                "type": "string"
+                              },
+                              "support_address_type": {
+                                "type": "string"
+                              },
+                              "user_name": {
+                                "type": "string"
+                              },
+                              "username": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "snmp": {
+                            "properties": {
+                              "community": {
+                                "type": "string"
+                              },
+                              "enabled": {
+                                "type": "boolean"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "subdomain_isolation": {
+                            "type": "boolean"
+                          },
+                          "syslog": {
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean"
+                              },
+                              "protocol_name": {
+                                "type": "string"
+                              },
+                              "server": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "timezone": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "run_list": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Get settings",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Applies settings on your instance. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings).\n\n**Notes:**\n\n- The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).\n- You cannot set the management console password with the Enterprise administration API. Use the `ghe-set-password` utility to change the management console password. For more information, see \"[Command-line utilities](https://docs.github.com/enterprise-server@3.7/admin/configuration/configuring-your-enterprise/command-line-utilities#ghe-set-password).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#set-settings"
+          },
+          "operationId": "enterprise-admin/set-settings",
+          "requestBody": {
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "examples": {
+                  "204": {
+                    "value": {
+                      "settings": "{ \"enterprise\": { \"public_pages\": true }}"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "settings": {
+                      "description": "A JSON string with the new settings. Note that you only need to pass the specific settings you want to modify. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "settings"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Set settings",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        }
+      },
+      "/setup/api/settings/authorized-keys": {
+        "delete": {
+          "deprecated": null,
+          "description": "**Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#remove-an-authorized-ssh-key"
+          },
+          "operationId": "enterprise-admin/remove-authorized-ssh-key",
+          "requestBody": {
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "authorized_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCssTL/Vtu/ODLTj0VtZoRAbvf7uiv5997GyDq0MoAZUjb5jmA5wYe2/wF6sFuhiZTnZoF1ZtCHunPp0hM/GHrn6VySBhNncx14YO8FPt1CIhEeRMSEjUK9cY3xAbS365oXY8vnUHJsS9+1tr/2bx/+4NJfcUt/Ezf1OR/0LStQXw=="
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "authorized_key": {
+                      "description": "The public SSH key.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "authorized_key"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        }
+                      ]
+                    }
+                  },
+                  "schema": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "pretty-print": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Remove an authorized SSH key",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-all-authorized-ssh-keys"
+          },
+          "operationId": "enterprise-admin/get-all-authorized-ssh-keys",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        }
+                      ]
+                    }
+                  },
+                  "schema": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "pretty-print": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Get all authorized SSH keys",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        },
+        "post": {
+          "deprecated": null,
+          "description": "**Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#add-an-authorized-ssh-key"
+          },
+          "operationId": "enterprise-admin/add-authorized-ssh-key",
+          "requestBody": {
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "authorized_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCssTL/Vtu/ODLTj0VtZoRAbvf7uiv5997GyDq0MoAZUjb5jmA5wYe2/wF6sFuhiZTnZoF1ZtCHunPp0hM/GHrn6VySBhNncx14YO8FPt1CIhEeRMSEjUK9cY3xAbS365oXY8vnUHJsS9+1tr/2bx/+4NJfcUt/Ezf1OR/0LStQXw=="
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "authorized_key": {
+                      "description": "The public SSH key.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "authorized_key"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        },
+                        {
+                          "key": "ssh-rsa AAAAB3NzaC1yc2EAAAAB...",
+                          "pretty-print": "ssh-rsa 01:14:0f:f2:0f:e2:fe:e8:f4:72:62:af:75:f7:1a:88:3e:04:92:64"
+                        }
+                      ]
+                    }
+                  },
+                  "schema": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "pretty-print": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Add an authorized SSH key",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        }
+      },
+      "/setup/api/start": {
+        "post": {
+          "deprecated": null,
+          "description": "When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.\n\nNote that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.\n\nWhen using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:\n\n1.  If you're working directly with the API before accessing the web interface, you must pass in the password parameter to set your password.\n2.  If you set up your instance via the web interface before accessing the API, your calls to this endpoint do not need the password parameter.\n\n**Note:** The request body for this operation must be submitted as `multipart/form-data` data. You can can reference the license file by prefixing the filename with the `@` symbol using `curl`. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#-F).",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#create-a-github-enterprise-server-license"
+          },
+          "operationId": "enterprise-admin/create-enterprise-server-license",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "license": "@enterprise.ghl",
+                      "password": "secret"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "license": {
+                      "description": "The content of your _.ghl_ license file.",
+                      "type": "string"
+                    },
+                    "password": {
+                      "description": "You **must** provide a password _only if_ you are uploading your license for the first time. If you previously set a password through the web interface, you don't need this parameter.",
+                      "type": "string"
+                    },
+                    "settings": {
+                      "description": "An optional JSON string containing the installation settings. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "license"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "202": {
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Create a GitHub license",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        }
+      },
+      "/setup/api/upgrade": {
+        "post": {
+          "deprecated": null,
+          "description": "This API upgrades your license and also triggers the configuration process.\n\n**Note:** The request body for this operation must be submitted as `multipart/form-data` data. You can can reference the license file by prefixing the filename with the `@` symbol using `curl`. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#-F).",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#upgrade-a-license"
+          },
+          "operationId": "enterprise-admin/upgrade-license",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "license": "@enterprise.ghl"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "license": {
+                      "description": "The content of your new _.ghl_ license file.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": null
+          },
+          "responses": {
+            "202": {
+              "description": "Response"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Upgrade a license",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "management-console"
+          }
+        }
+      },
+      "/users/{username}/site_admin": {
+        "delete": {
+          "deprecated": null,
+          "description": "You can demote any user account except your own.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#demote-a-site-administrator"
+          },
+          "operationId": "enterprise-admin/demote-site-administrator",
+          "parameters": [
+            {
+              "description": "The handle for the GitHub user account.",
+              "in": "path",
+              "name": "username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Demote a site administrator",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "users"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#promote-a-user-to-be-a-site-administrator"
+          },
+          "operationId": "enterprise-admin/promote-user-to-be-site-administrator",
+          "parameters": [
+            {
+              "description": "The handle for the GitHub user account.",
+              "in": "path",
+              "name": "username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Promote a user to be a site administrator",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "users"
+          }
+        }
+      },
+      "/users/{username}/suspended": {
+        "delete": {
+          "deprecated": null,
+          "description": "If your GitHub instance uses [LDAP Sync with Active Directory LDAP servers](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap), this API is disabled and will return a `403` response. Active Directory LDAP-authenticated users cannot be unsuspended using the API.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#unsuspend-a-user"
+          },
+          "operationId": "enterprise-admin/unsuspend-user",
+          "parameters": [
+            {
+              "description": "The handle for the GitHub user account.",
+              "in": "path",
+              "name": "username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "reason": {
+                    "value": {
+                      "reason": "Unsuspended after leave of absence."
+                    }
+                  }
+                },
+                "schema": {
+                  "nullable": true,
+                  "properties": {
+                    "reason": {
+                      "description": "The reason the user is being unsuspended. This message will be logged in the [audit log](https://docs.github.com/enterprise-server@3.7/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/about-the-audit-log-for-your-enterprise). If you don't provide a `reason`, it will default to \"Unsuspended via API by _SITE\\_ADMINISTRATOR_\", where _SITE\\_ADMINISTRATOR_ is the person who performed the action.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": null
+          },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Unsuspend a user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "users"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "If your GitHub instance uses [LDAP Sync with Active Directory LDAP servers](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap), Active Directory LDAP-authenticated users cannot be suspended through this API. If you attempt to suspend an Active Directory LDAP-authenticated user through this API, it will return a `403` response.\n\nYou can suspend any user account except your own.\n\nNote that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see \"[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#suspend-a-user"
+          },
+          "operationId": "enterprise-admin/suspend-user",
+          "parameters": [
+            {
+              "description": "The handle for the GitHub user account.",
+              "in": "path",
+              "name": "username",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "reason": {
+                    "value": {
+                      "reason": "Suspended during leave of absence."
+                    }
+                  }
+                },
+                "schema": {
+                  "nullable": true,
+                  "properties": {
+                    "reason": {
+                      "description": "The reason the user is being suspended. This message will be logged in the [audit log](https://docs.github.com/enterprise-server@3.7/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/about-the-audit-log-for-your-enterprise). If you don't provide a `reason`, it will default to \"Suspended via API by _SITE\\_ADMINISTRATOR_\", where _SITE\\_ADMINISTRATOR_ is the person who performed the action.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": null
+          },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Suspend a user",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "users"
+          }
+        }
+      }
+    },
+    "changed": {
+      "/app/installations": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "changed": {
+                              "permissions": {
+                                "properties_changed": {
+                                  "removed": [
+                                    "organization_announcement_banners",
+                                    "organization_custom_roles",
+                                    "repository_announcement_banners"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/app/installations/{installation_id}": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "permissions": {
+                              "properties_changed": {
+                                "removed": [
+                                  "organization_announcement_banners",
+                                  "organization_custom_roles",
+                                  "repository_announcement_banners"
+                                ]
                               }
                             },
                             "type": "object"
@@ -33097,6 +34146,33 @@
                             "allow_fork_syncing",
                             "lock_branch"
                           ]
+                        }
+                      },
+                      "removed": [
+                        "allow_fork_syncing",
+                        "lock_branch"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "changed": {
+                        "required_pull_request_reviews": {
+                          "properties_changed": {
+                            "removed": [
+                              "require_last_push_approval"
+                            ]
+                          }
                         }
                       },
                       "removed": [
