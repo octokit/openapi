@@ -2210,7 +2210,10 @@
                       "type": "string"
                     }
                   }
-                }
+                },
+                "required": [
+                  "scopes"
+                ]
               },
               "examples": {
                 "default": {
@@ -34984,6 +34987,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
           "category": "pages"
         }
       },
@@ -35163,6 +35167,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
           "category": "pages"
         }
       }
@@ -44852,177 +44857,6 @@
                     "type": "string"
                   }
                 }
-              },
-              "examples": {
-                "default": {
-                  "summary": "Example of updating blog and name",
-                  "value": {
-                    "blog": "https://github.com/blog",
-                    "name": "monalisa octocat"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/private-user"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/private-user"
-                  }
-                }
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "401": {
-            "$ref": "#/components/responses/requires_authentication"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "users",
-          "subcategory": null
-        }
-      }
-    },
-    "/user/emails": {
-      "get": {
-        "summary": "List email addresses for the authenticated user",
-        "description": "Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with the `user:email` scope.",
-        "tags": [
-          "users"
-        ],
-        "operationId": "users/list-emails-for-authenticated-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/users#list-email-addresses-for-the-authenticated-user"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/email"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/email-items-2"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "401": {
-            "$ref": "#/components/responses/requires_authentication"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "users",
-          "subcategory": "emails"
-        }
-      },
-      "post": {
-        "summary": "Add an email address for the authenticated user",
-        "description": "This endpoint is accessible with the `user` scope.",
-        "tags": [
-          "users"
-        ],
-        "operationId": "users/add-email-for-authenticated-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/users#add-an-email-address-for-the-authenticated-user"
-        },
-        "parameters": [],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "emails": {
-                        "description": "Adds one or more email addresses to your GitHub account. Must contain at least one email address. **Note:** Alternatively, you can pass a single email address or an `array` of emails addresses directly, but we recommend that you pass an object using the `emails` key.",
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "example": "username@example.com",
-                          "minItems": 1
-                        },
-                        "example": []
-                      }
-                    },
-                    "required": [
-                      "emails"
-                    ],
-                    "example": {
-                      "emails": [
-                        "octocat@github.com",
-                        "mona@github.com"
-                      ]
-                    }
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "example": "username@example.com",
-                      "minItems": 1
-                    }
-                  },
-                  {
-                    "type": "string"
-                  }
-                ]
               },
               "examples": {
                 "default": {
@@ -55231,15 +55065,9 @@
               "pull": {
                 "type": "boolean"
               }
-            },
-            "required": [
-              "title",
-              "url",
-              "latest_comment_url",
-              "type"
-            ]
+            }
           },
-          "reason": {
+          "temp_clone_token": {
             "type": "string"
           },
           "delete_branch_on_merge": {
