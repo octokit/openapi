@@ -2834,11 +2834,6 @@
                     "description": "Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.",
                     "default": true
                   },
-                  "allow_auto_merge": {
-                    "type": "boolean",
-                    "description": "Either `true` to allow auto-merge on pull requests, or `false` to disallow auto-merge.",
-                    "default": false
-                  },
                   "delete_branch_on_merge": {
                     "type": "boolean",
                     "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.",
@@ -3445,6 +3440,7 @@
           }
         },
         "x-github": {
+          "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "category": "repos",
           "subcategory": "autolinks"
@@ -3477,7 +3473,7 @@
           }
         ],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -3503,8 +3499,7 @@
                 ]
               },
               "examples": {
-                "new-invitation-is-created": {
-                  "summary": "Add a collaborator with triage permissions",
+                "default": {
                   "value": {
                     "key_prefix": "TICKET-",
                     "url_template": "https://example.com/TICKET?query=<num>",
@@ -3675,11 +3670,6 @@
                     "$ref": "#/components/examples/check-suite"
                   }
                 }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
               }
             }
           },
@@ -3867,15 +3857,14 @@
         }
       }
     },
-    "/repos/{owner}/{repo}/check-suites/{check_suite_id}": {
+    "/repos/{owner}/{repo}/code-scanning/analyses": {
       "get": {
         "summary": "List code scanning analyses for a repository",
         "description": "Lists the details of all code scanning analyses for a repository,\nstarting with the most recent.\nThe response is paginated and you can use the `page` and `per_page` parameters\nto list the analyses you're interested in.\nBy default 30 analyses are listed per page.\n\nThe `rules_count` field in the response give the number of rules\nthat were run in the analysis.\nFor very old analyses this data is not available,\nand `0` is returned in this field.\n\nYou must use an access token with the `security_events` scope to use this endpoint with private repos,\nthe `public_repo` scope also grants permission to read security events on public repos only.\nGitHub Apps must have the `security_events` read permission to use this endpoint.\n\n**Deprecation notice**:\nThe `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.",
         "operationId": "code-scanning/list-recent-analyses",
         "tags": [
-          "checks"
+          "code-scanning"
         ],
-        "operationId": "checks/get-suite",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/code-scanning#list-code-scanning-analyses-for-a-repository"
@@ -3888,7 +3877,34 @@
             "$ref": "#/components/parameters/repo"
           },
           {
-            "$ref": "#/components/parameters/check-suite-id"
+            "$ref": "#/components/parameters/tool-name"
+          },
+          {
+            "$ref": "#/components/parameters/tool-guid"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "name": "ref",
+            "in": "query",
+            "description": "The Git reference for the analyses you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`.",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/code-scanning-ref"
+            }
+          },
+          {
+            "name": "sarif_id",
+            "in": "query",
+            "description": "Filter analyses belonging to the same SARIF upload.",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/code-scanning-analysis-sarif-id"
+            }
           }
         ],
         "responses": {
@@ -3897,22 +3913,33 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/check-suite"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/code-scanning-analysis"
+                  }
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/check-suite"
+                    "$ref": "#/components/examples/code-scanning-analysis-items"
                   }
                 }
               }
             }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "503": {
+            "$ref": "#/components/responses/service_unavailable"
           }
         },
         "x-github": {
-          "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "checks",
-          "subcategory": "suites"
+          "githubCloudOnly": false,
+          "category": "code-scanning"
         },
         "x-octokit": {
           "diff": {
@@ -4012,14 +4039,14 @@
         }
       }
     },
-    "/repos/{owner}/{repo}/issues": {
+    "/repos/{owner}/{repo}/commits/{commit_sha}/pulls": {
       "get": {
         "summary": "List pull requests associated with a commit",
         "description": "Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, will only return open pull requests associated with the commit.",
         "tags": [
-          "issues"
+          "repos"
         ],
-        "operationId": "issues/list-for-repo",
+        "operationId": "repos/list-pull-requests-associated-with-commit",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/commits/commits#list-pull-requests-associated-with-a-commit"
@@ -4032,13 +4059,10 @@
             "$ref": "#/components/parameters/repo"
           },
           {
-            "name": "milestone",
-            "description": "If an `integer` is passed, it should refer to a milestone by its `number` field. If the string `*` is passed, issues with any milestone are accepted. If the string `none` is passed, issues without milestones are returned.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/commit-sha"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
           },
           {
             "$ref": "#/components/parameters/page"
@@ -4097,55 +4121,33 @@
         },
         "parameters": [
           {
-            "name": "assignee",
-            "description": "Can be the name of a user. Pass in `none` for issues with no assigned user, and `*` for issues assigned to any user.",
-            "in": "query",
-            "required": false,
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "name": "ref",
+            "description": "ref parameter",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "x-multi-segment": true
           },
           {
-            "name": "creator",
-            "description": "The user that created the issue.",
+            "name": "app_id",
+            "description": "Filters check suites by GitHub App `id`.",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
-            }
+              "type": "integer"
+            },
+            "example": 1
           },
           {
-            "name": "mentioned",
-            "description": "A user that's mentioned in the issue.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/labels"
-          },
-          {
-            "name": "sort",
-            "description": "What to sort results by.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "created",
-                "updated",
-                "comments"
-              ],
-              "default": "created"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/direction"
-          },
-          {
-            "$ref": "#/components/parameters/since"
+            "$ref": "#/components/parameters/check-name"
           },
           {
             "$ref": "#/components/parameters/per-page"
@@ -4160,14 +4162,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/issue"
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "check_suites"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "check_suites": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/check-suite"
+                      }
+                    }
                   }
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/issue-items"
+                    "$ref": "#/components/examples/check-suite-paginated"
                   }
                 }
               }
@@ -4226,21 +4240,35 @@
           {
             "$ref": "#/components/parameters/per-page"
           },
-          "301": {
-            "$ref": "#/components/responses/moved_permanently"
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/combined-commit-status"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/combined-commit-status"
+                  }
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/not_found"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
           }
         },
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "issues",
-          "subcategory": null
+          "category": "commits",
+          "subcategory": "statuses"
         },
         "x-octokit": {
           "diff": {
@@ -4249,14 +4277,16 @@
             }
           }
         }
-      },
-      "post": {
-        "summary": "Create an issue",
-        "description": "Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://docs.github.com/enterprise-server@3.6/articles/disabling-issues/), the API returns a `410 Gone` status.\n\nThis endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.6/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
+      }
+    },
+    "/repos/{owner}/{repo}/events": {
+      "get": {
+        "summary": "List repository events",
+        "description": "",
         "tags": [
-          "issues"
+          "activity"
         ],
-        "operationId": "issues/create",
+        "operationId": "activity/list-repo-events",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/activity#list-repository-events"
@@ -4414,24 +4444,14 @@
           }
         ],
         "requestBody": {
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "nullable": true,
                 "properties": {
-                  "title": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer"
-                      }
-                    ],
-                    "description": "The title of the issue."
-                  },
-                  "body": {
+                  "organization": {
                     "type": "string",
                     "description": "Optional parameter to specify the organization name if forking into an organization."
                   }
@@ -4461,6 +4481,477 @@
                   "default": {
                     "$ref": "#/components/examples/full-repository"
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": "forks"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/invitations": {
+      "get": {
+        "summary": "List repository invitations",
+        "description": "When authenticating as a user with admin rights to a repository, this endpoint will list all currently open repository invitations.",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/list-invitations",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/collaborators/invitations#list-repository-invitations"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/repository-invitation"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/repository-invitation-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "collaborators",
+          "subcategory": "invitations"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/invitations/{invitation_id}": {
+      "patch": {
+        "summary": "Update a repository invitation",
+        "description": "",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/update-invitation",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/collaborators/invitations#update-a-repository-invitation"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/invitation-id"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "permissions": {
+                    "type": "string",
+                    "description": "The permissions that the associated user will have on the repository. Valid values are `read`, `write`, `maintain`, `triage`, and `admin`.",
+                    "enum": [
+                      "read",
+                      "write",
+                      "maintain",
+                      "triage",
+                      "admin"
+                    ]
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "summary": "Example request body",
+                  "value": {
+                    "permissions": "write"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/repository-invitation"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/repository-invitation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "collaborators",
+          "subcategory": "invitations"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/issues": {
+      "get": {
+        "summary": "List repository issues",
+        "description": "List issues in a repository. Only open issues will be listed.\n\n**Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#list-pull-requests)\" endpoint.",
+        "tags": [
+          "issues"
+        ],
+        "operationId": "issues/list-for-repo",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#list-repository-issues"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "name": "milestone",
+            "description": "If an `integer` is passed, it should refer to a milestone by its `number` field. If the string `*` is passed, issues with any milestone are accepted. If the string `none` is passed, issues without milestones are returned.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "description": "Indicates the state of the issues to return.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "closed",
+                "all"
+              ],
+              "default": "open"
+            }
+          },
+          {
+            "name": "assignee",
+            "description": "Can be the name of a user. Pass in `none` for issues with no assigned user, and `*` for issues assigned to any user.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creator",
+            "description": "The user that created the issue.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mentioned",
+            "description": "A user that's mentioned in the issue.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/labels"
+          },
+          {
+            "name": "sort",
+            "description": "What to sort results by.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created",
+                "updated",
+                "comments"
+              ],
+              "default": "created"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/direction"
+          },
+          {
+            "$ref": "#/components/parameters/since"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/issue"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/issue-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "301": {
+            "$ref": "#/components/responses/moved_permanently"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "issues",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an issue",
+        "description": "Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://docs.github.com/enterprise-server@3.6/articles/disabling-issues/), the API returns a `410 Gone` status.\n\nThis endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.6/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
+        "tags": [
+          "issues"
+        ],
+        "operationId": "issues/create",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#create-an-issue"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ],
+                    "description": "The title of the issue."
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "The contents of the issue."
+                  },
+                  "assignee": {
+                    "type": "string",
+                    "description": "Login for the user that this issue should be assigned to. _NOTE: Only users with push access can set the assignee for new issues. The assignee is silently dropped otherwise. **This field is deprecated.**_",
+                    "nullable": true
+                  },
+                  "milestone": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer",
+                        "description": "The `number` of the milestone to associate this issue with. _NOTE: Only users with push access can set the milestone for new issues. The milestone is silently dropped otherwise._"
+                      }
+                    ],
+                    "nullable": true
+                  },
+                  "labels": {
+                    "type": "array",
+                    "description": "Labels to associate with this issue. _NOTE: Only users with push access can set labels for new issues. Labels are silently dropped otherwise._",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "description": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "color": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "assignees": {
+                    "type": "array",
+                    "description": "Logins for Users to assign to this issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "title"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "title": "Found a bug",
+                    "body": "I'm having a problem with this.",
+                    "assignees": [
+                      "octocat"
+                    ],
+                    "milestone": 1,
+                    "labels": [
+                      "bug"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/issue"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/issue"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4507,7 +4998,7 @@
         "operationId": "issues/list-events-for-repo",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/collaborators/invitations#list-repository-invitations"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#list-issue-events-for-a-repository"
         },
         "parameters": [
           {
@@ -4576,7 +5067,7 @@
         "operationId": "issues/get-event",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/collaborators/invitations#update-a-repository-invitation"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#get-an-issue-event"
         },
         "parameters": [
           {
@@ -4637,15 +5128,15 @@
     },
     "/repos/{owner}/{repo}/issues/{issue_number}": {
       "get": {
-        "summary": "List repository issues",
-        "description": "List issues in a repository. Only open issues will be listed.\n\n**Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#list-pull-requests)\" endpoint.",
+        "summary": "Get an issue",
+        "description": "The API returns a [`301 Moved Permanently` status](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was\n[transferred](https://docs.github.com/enterprise-server@3.6/articles/transferring-an-issue-to-another-repository/) to another repository. If\nthe issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API\nreturns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read\naccess, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe\nto the [`issues`](https://docs.github.com/enterprise-server@3.6/webhooks/event-payloads/#issues) webhook.\n\n**Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#list-pull-requests)\" endpoint.",
         "tags": [
           "issues"
         ],
         "operationId": "issues/get",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#list-repository-issues"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#get-an-issue"
         },
         "parameters": [
           {
@@ -4701,412 +5192,13 @@
           }
         }
       },
-      "post": {
-        "summary": "Create an issue",
-        "description": "Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://docs.github.com/enterprise-server@3.6/articles/disabling-issues/), the API returns a `410 Gone` status.\n\nThis endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.6/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
+      "patch": {
+        "summary": "Update an issue",
+        "description": "Issue owners and users with push access can edit an issue.",
         "tags": [
           "issues"
         ],
         "operationId": "issues/update",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#create-an-issue"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/issue-number"
-          }
-        ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer"
-                      }
-                    ],
-                    "description": "The title of the issue.",
-                    "nullable": true
-                  },
-                  "body": {
-                    "type": "string",
-                    "description": "The contents of the issue.",
-                    "nullable": true
-                  },
-                  "assignee": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "Login for the user that this issue should be assigned to. **This field is deprecated.**"
-                  },
-                  "state": {
-                    "type": "string",
-                    "description": "State of the issue. Either `open` or `closed`.",
-                    "enum": [
-                      "open",
-                      "closed"
-                    ]
-                  },
-                  "state_reason": {
-                    "type": "string",
-                    "enum": [
-                      "completed",
-                      "not_planned",
-                      "reopened"
-                    ],
-                    "nullable": true,
-                    "description": "The reason for the current state",
-                    "example": "not_planned"
-                  },
-                  "milestone": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer",
-                        "description": "The `number` of the milestone to associate this issue with or `null` to remove current. _NOTE: Only users with push access can set the milestone for issues. The milestone is silently dropped otherwise._"
-                      }
-                    ],
-                    "nullable": true
-                  },
-                  "labels": {
-                    "type": "array",
-                    "description": "Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._",
-                    "items": {
-                      "oneOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer"
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "description": {
-                              "type": "string",
-                              "nullable": true
-                            },
-                            "color": {
-                              "type": "string",
-                              "nullable": true
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  "assignees": {
-                    "type": "array",
-                    "description": "Logins for Users to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this Issue. Send an empty array (`[]`) to clear all assignees from the Issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "title": "Found a bug",
-                    "body": "I'm having a problem with this.",
-                    "assignees": [
-                      "octocat"
-                    ],
-                    "milestone": 1,
-                    "state": "open",
-                    "labels": [
-                      "bug"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/issue"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/issue"
-                  }
-                }
-              }
-            }
-          },
-          "301": {
-            "$ref": "#/components/responses/moved_permanently"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          },
-          "410": {
-            "$ref": "#/components/responses/gone"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          },
-          "503": {
-            "$ref": "#/components/responses/service_unavailable"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "issues",
-          "subcategory": null
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/issues/{issue_number}/assignees": {
-      "post": {
-        "summary": "Add assignees to an issue",
-        "description": "Adds up to 10 assignees to an issue. Users already assigned to an issue are not replaced.",
-        "tags": [
-          "issues"
-        ],
-        "operationId": "issues/add-assignees",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#list-issue-events-for-a-repository"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/issue-number"
-          }
-        ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "assignees": {
-                    "type": "array",
-                    "description": "Usernames of people to assign this issue to. _NOTE: Only users with push access can add assignees to an issue. Assignees are silently ignored otherwise._",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "assignees": [
-                      "hubot",
-                      "other_user"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/issue"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/issue"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "issues",
-          "subcategory": "events"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/keys": {
-      "get": {
-        "summary": "List deploy keys",
-        "description": "",
-        "tags": [
-          "repos"
-        ],
-        "operationId": "repos/list-deploy-keys",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#get-an-issue-event"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/deploy-key"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/deploy-key-items"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
-            }
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "issues",
-          "subcategory": "events"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/keys/{key_id}": {
-      "get": {
-        "summary": "Get an issue",
-        "description": "The API returns a [`301 Moved Permanently` status](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was\n[transferred](https://docs.github.com/enterprise-server@3.6/articles/transferring-an-issue-to-another-repository/) to another repository. If\nthe issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API\nreturns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read\naccess, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe\nto the [`issues`](https://docs.github.com/enterprise-server@3.6/webhooks/event-payloads/#issues) webhook.\n\n**Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#list-pull-requests)\" endpoint.",
-        "tags": [
-          "repos"
-        ],
-        "operationId": "repos/get-deploy-key",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#get-an-issue"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/key-id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/deploy-key"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/deploy-key"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "issues",
-          "subcategory": null
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/notifications": {
-      "get": {
-        "summary": "List repository notifications for the authenticated user",
-        "description": "Lists all notifications for the current user in the specified repository.",
-        "tags": [
-          "activity"
-        ],
-        "operationId": "activity/list-repo-notifications-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#update-an-issue"
@@ -5758,65 +5850,32 @@
             "$ref": "#/components/parameters/page"
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "type": "string",
-                    "description": "A name for the key."
-                  },
-                  "key": {
-                    "type": "string",
-                    "description": "The contents of the key."
-                  },
-                  "read_only": {
-                    "type": "boolean",
-                    "description": "If `true`, the key will only be able to read repository contents. Otherwise, the key will be able to read and write.  \n  \nDeploy keys with write access can perform the same actions as an organization member with admin access, or a collaborator on a personal repository. For more information, see \"[Repository permission levels for an organization](https://docs.github.com/enterprise-server@3.6/articles/repository-permission-levels-for-an-organization/)\" and \"[Permission levels for a user account repository](https://docs.github.com/enterprise-server@3.6/articles/permission-levels-for-a-user-account-repository/).\""
-                  }
-                },
-                "required": [
-                  "key"
-                ]
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "title": "octocat@octomac",
-                    "key": "ssh-rsa AAA...",
-                    "read_only": true
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/deploy-key"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/pull-request-simple"
+                  }
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/deploy-key"
+                    "$ref": "#/components/examples/pull-request-simple-items"
                   }
                 }
               }
             },
             "headers": {
-              "Location": {
-                "example": "https://api.github.com/repos/octocat/Hello-World/keys/1",
-                "schema": {
-                  "type": "string"
-                }
+              "Link": {
+                "$ref": "#/components/headers/link"
               }
             }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
           },
           "422": {
             "$ref": "#/components/responses/validation_failed"
@@ -5825,7 +5884,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "deploy-keys"
+          "category": "pulls",
+          "subcategory": null
         },
         "x-octokit": {
           "diff": {
@@ -5841,9 +5901,9 @@
         "summary": "Request reviewers for a pull request",
         "description": "This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.6/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.6/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
         "tags": [
-          "repos"
+          "pulls"
         ],
-        "operationId": "repos/get-deploy-key",
+        "operationId": "pulls/request-reviewers",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#request-reviewers-for-a-pull-request"
@@ -5854,78 +5914,6 @@
           },
           {
             "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/key-id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/deploy-key"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/deploy-key"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "deploy-keys"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/secret-scanning/alerts": {
-      "get": {
-        "summary": "List secret scanning alerts for a repository",
-        "description": "Lists secret scanning alerts for an eligible repository, from newest to oldest.\nTo use this endpoint, you must be an administrator for the repository or for the organization that owns the repository, and you must use a personal access token with the `repo` scope or `security_events` scope.\nFor public repositories, you may instead use the `public_repo` scope.\n\nGitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.",
-        "tags": [
-          "secret-scanning"
-        ],
-        "operationId": "secret-scanning/list-alerts-for-repo",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#request-reviewers-for-a-pull-request"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-state"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-secret-type"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-resolution"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-sort"
-          },
-          {
-            "$ref": "#/components/parameters/direction"
           },
           {
             "$ref": "#/components/parameters/pull-number"
@@ -5989,31 +5977,29 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/secret-scanning-alert"
-                  }
+                  "$ref": "#/components/schemas/pull-request-simple"
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/secret-scanning-alert-list"
+                    "$ref": "#/components/examples/pull-request-review-request"
                   }
                 }
               }
             }
           },
-          "404": {
-            "description": "Repository is public or secret scanning is disabled for the repository"
+          "403": {
+            "$ref": "#/components/responses/forbidden"
           },
-          "503": {
-            "$ref": "#/components/responses/service_unavailable"
+          "422": {
+            "description": "Unprocessable Entity if user is not a collaborator"
           }
         },
         "x-github": {
+          "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "secret-scanning",
-          "subcategory": null
+          "category": "pulls",
+          "subcategory": "review-requests"
         },
         "x-octokit": {
           "diff": {
@@ -6038,36 +6024,6 @@
         },
         "parameters": [
           {
-            "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.6/rest/reference/search#constructing-a-search-query). See \"[Searching commits](https://docs.github.com/enterprise-server@3.6/search-github/searching-on-github/searching-commits)\" for a detailed list of qualifiers.",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-state"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-secret-type"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-resolution"
-          },
-          {
-            "$ref": "#/components/parameters/secret-scanning-alert-sort"
-          },
-          {
-            "$ref": "#/components/parameters/direction"
-          },
-          {
-            "$ref": "#/components/parameters/order"
-          },
-          {
             "$ref": "#/components/parameters/owner"
           },
           {
@@ -6089,13 +6045,10 @@
             "$ref": "#/components/parameters/direction"
           },
           {
-            "$ref": "#/components/parameters/order"
+            "$ref": "#/components/parameters/page"
           },
           {
             "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
           }
         ],
         "responses": {
@@ -6144,12 +6097,306 @@
         "summary": "Transfer a repository",
         "description": "A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://docs.github.com/enterprise-server@3.6/articles/about-repository-transfers/).",
         "tags": [
-          "search"
+          "repos"
         ],
-        "operationId": "search/repos",
+        "operationId": "repos/transfer",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#transfer-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "new_owner": {
+                    "type": "string",
+                    "description": "The username or organization name the repository will be transferred to."
+                  },
+                  "team_ids": {
+                    "type": "array",
+                    "description": "ID of the team or teams to add to the repository. Teams can only be added to organization-owned repositories.",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "required": [
+                  "new_owner"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "new_owner": "github",
+                    "team_ids": [
+                      12,
+                      345
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/minimal-repository"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{template_owner}/{template_repo}/generate": {
+      "post": {
+        "summary": "Create a repository using a template",
+        "description": "Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.6/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.\n\n**OAuth scope requirements**\n\nWhen using [OAuth](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:\n\n*   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.\n*   `repo` scope to create a private repository",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/create-using-template",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#create-a-repository-using-a-template"
+        },
+        "parameters": [
+          {
+            "name": "template_owner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "template_repo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "owner": {
+                    "type": "string",
+                    "description": "The organization or person who will own the new repository. To create a new repository in an organization, the authenticated user must be a member of the specified organization."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the new repository."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A short description of the new repository."
+                  },
+                  "include_all_branches": {
+                    "type": "boolean",
+                    "description": "Set to `true` to include the directory structure and files from all branches in the template repository, and not just the default branch. Default: `false`.",
+                    "default": false
+                  },
+                  "private": {
+                    "type": "boolean",
+                    "description": "Either `true` to create a new private repository or `false` to create a new public one.",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "owner": "octocat",
+                    "name": "Hello-World",
+                    "description": "This is your first repository",
+                    "include_all_branches": false,
+                    "private": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/repository"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/repository-3"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "example": "https://api.github.com/repos/octocat/Hello-World",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "repos",
+          "previews": [
+            {
+              "required": true,
+              "name": "baptiste",
+              "note": "Creating and using repository templates is currently available for developers to preview. To access this new endpoint during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
+            }
+          ]
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repositories": {
+      "get": {
+        "summary": "List public repositories",
+        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.",
+        "tags": [
+          "repos"
+        ],
+        "operationId": "repos/list-public",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#list-public-repositories"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/since-repo"
+          },
+          {
+            "name": "visibility",
+            "description": "Specifies the types of repositories to return. This endpoint will only list repositories available to all users on the enterprise.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "public",
+              "example": "all",
+              "enum": [
+                "all",
+                "public"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/minimal-repository"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/public-repository-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "example": "<https://api.github.com/repositories?since=364>; rel=\"next\"",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "repos",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/search/code": {
+      "get": {
+        "summary": "Search code",
+        "description": "Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:\n\n`q=addClass+in:file+language:js+repo:jquery/jquery`\n\nThis query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.\n\n#### Considerations for code search\n\nDue to the complexity of searching code, there are a few restrictions on how searches are performed:\n\n*   Only the _default branch_ is considered. In most cases, this will be the `master` branch.\n*   Only files smaller than 384 KB are searchable.\n*   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing\nlanguage:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.",
+        "tags": [
+          "search"
+        ],
+        "operationId": "search/code",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-code"
         },
         "parameters": [
           {
@@ -6169,10 +6416,7 @@
             "schema": {
               "type": "string",
               "enum": [
-                "stars",
-                "forks",
-                "help-wanted-issues",
-                "updated"
+                "indexed"
               ]
             }
           },
@@ -6208,14 +6452,14 @@
                     "items": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/repo-search-result-item"
+                        "$ref": "#/components/schemas/code-search-result-item"
                       }
                     }
                   }
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/repo-search-result-item-paginated"
+                    "$ref": "#/components/examples/code-search-result-item-paginated"
                   }
                 }
               }
@@ -6223,6 +6467,9 @@
           },
           "304": {
             "$ref": "#/components/responses/not_modified"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
           },
           "422": {
             "$ref": "#/components/responses/validation_failed"
@@ -6246,17 +6493,17 @@
         }
       }
     },
-    "/repos/{template_owner}/{template_repo}/generate": {
-      "post": {
-        "summary": "Create a repository using a template",
-        "description": "Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.6/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.\n\n**OAuth scope requirements**\n\nWhen using [OAuth](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:\n\n*   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.\n*   `repo` scope to create a private repository",
+    "/search/commits": {
+      "get": {
+        "summary": "Search commits",
+        "description": "Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match\nmetadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:\n\n`q=repo:octocat/Spoon-Knife+css`",
         "tags": [
-          "teams"
+          "search"
         ],
-        "operationId": "teams/list-repos-legacy",
+        "operationId": "search/commits",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#create-a-repository-using-a-template"
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-commits"
         },
         "parameters": [
           {
@@ -6297,239 +6544,37 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/minimal-repository"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/minimal-repository-items"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
-            }
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "repos",
-          "previews": [
-            {
-              "required": true,
-              "name": "baptiste",
-              "note": "Creating and using repository templates is currently available for developers to preview. To access this new endpoint during the preview period, you must provide a custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types) in the `Accept` header:\n\n```shell\napplication/vnd.github.baptiste-preview+json\n```"
-            }
-          ]
-        },
-        "deprecated": true,
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/teams/{team_id}/repos/{owner}/{repo}": {
-      "get": {
-        "summary": "List public repositories",
-        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.",
-        "tags": [
-          "teams"
-        ],
-        "operationId": "teams/check-permissions-for-repo-legacy",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/repos#list-public-repositories"
-        },
-        "parameters": [
-          {
-            "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.6/rest/reference/search#constructing-a-search-query). See \"[Searching issues and pull requests](https://docs.github.com/enterprise-server@3.6/search-github/searching-on-github/searching-issues-and-pull-requests)\" for a detailed list of qualifiers.",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sort",
-            "description": "Sorts the results of your query by the number of `comments`, `reactions`, `reactions-+1`, `reactions--1`, `reactions-smile`, `reactions-thinking_face`, `reactions-heart`, `reactions-tada`, or `interactions`. You can also sort results by how recently the items were `created` or `updated`, Default: [best match](https://docs.github.com/enterprise-server@3.6/rest/reference/search#ranking-search-results)",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "comments",
-                "reactions",
-                "reactions-+1",
-                "reactions--1",
-                "reactions-smile",
-                "reactions-thinking_face",
-                "reactions-heart",
-                "reactions-tada",
-                "interactions",
-                "created",
-                "updated"
-              ]
-            }
-          },
-          {
-            "$ref": "#/components/parameters/order"
-          },
-          {
-            "$ref": "#/components/parameters/owner"
-          },
-          {
-            "$ref": "#/components/parameters/repo"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Alternative response with extra repository information",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/team-repository"
-                },
-                "examples": {
-                  "alternative-response-with-extra-repository-information": {
-                    "$ref": "#/components/examples/team-repository-alternative-response-with-extra-repository-information"
-                  }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "Response if repository is managed by this team"
-          },
-          "404": {
-            "description": "Not Found if repository is not managed by this team"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "removalDate": "2021-02-01",
-          "deprecationDate": "2020-01-21",
-          "category": "teams",
-          "subcategory": null
-        },
-        "deprecated": true,
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/search/repositories": {
-      "get": {
-        "summary": "Search code",
-        "description": "Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:\n\n`q=addClass+in:file+language:js+repo:jquery/jquery`\n\nThis query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.\n\n#### Considerations for code search\n\nDue to the complexity of searching code, there are a few restrictions on how searches are performed:\n\n*   Only the _default branch_ is considered. In most cases, this will be the `master` branch.\n*   Only files smaller than 384 KB are searchable.\n*   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing\nlanguage:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.",
-        "tags": [
-          "apps"
-        ],
-        "operationId": "search/repos",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-code"
-        },
-        "parameters": [
-          {
-            "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.6/rest/reference/search#constructing-a-search-query). See \"[Searching code](https://docs.github.com/enterprise-server@3.6/search-github/searching-on-github/searching-code)\" for a detailed list of qualifiers.",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sort",
-            "description": "Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub Enterprise Server search infrastructure. Default: [best match](https://docs.github.com/enterprise-server@3.6/rest/reference/search#ranking-search-results)",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "stars",
-                "forks",
-                "help-wanted-issues",
-                "updated"
-              ]
-            }
-          },
-          {
-            "$ref": "#/components/parameters/order"
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The access the user has to each repository is included in the hash under the `permissions` key.",
-            "content": {
-              "application/json": {
-                "schema": {
                   "type": "object",
                   "required": [
                     "total_count",
-                    "repositories"
+                    "incomplete_results",
+                    "items"
                   ],
                   "properties": {
                     "total_count": {
                       "type": "integer"
                     },
-                    "repository_selection": {
-                      "type": "string"
+                    "incomplete_results": {
+                      "type": "boolean"
                     },
-                    "repositories": {
+                    "items": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/repo-search-result-item"
+                        "$ref": "#/components/schemas/commit-search-result-item"
                       }
                     }
                   }
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/repo-search-result-item-paginated"
+                    "$ref": "#/components/examples/commit-search-result-item-paginated"
                   }
                 }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
               }
             }
           },
           "304": {
             "$ref": "#/components/responses/not_modified"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          },
-          "503": {
-            "$ref": "#/components/responses/service_unavailable"
           }
         },
         "x-github": {
@@ -6547,137 +6592,14 @@
         }
       }
     },
-    "/user/issues": {
-      "get": {
-        "summary": "Search commits",
-        "description": "Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match\nmetadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:\n\n`q=repo:octocat/Spoon-Knife+css`",
-        "tags": [
-          "issues"
-        ],
-        "operationId": "issues/list-for-authenticated-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-commits"
-        },
-        "parameters": [
-          {
-            "name": "q",
-            "description": "The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.6/rest/reference/search#constructing-a-search-query). See \"[Searching commits](https://docs.github.com/enterprise-server@3.6/search-github/searching-on-github/searching-commits)\" for a detailed list of qualifiers.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "assigned",
-                "created",
-                "mentioned",
-                "subscribed",
-                "repos",
-                "all"
-              ],
-              "default": "assigned"
-            }
-          },
-          {
-            "name": "state",
-            "description": "Indicates the state of the issues to return.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "open",
-                "closed",
-                "all"
-              ],
-              "default": "open"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/labels"
-          },
-          {
-            "name": "sort",
-            "description": "Sorts the results of your query by `author-date` or `committer-date`. Default: [best match](https://docs.github.com/enterprise-server@3.6/rest/reference/search#ranking-search-results)",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "created",
-                "updated",
-                "comments"
-              ],
-              "default": "created"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/direction"
-          },
-          {
-            "$ref": "#/components/parameters/since"
-          },
-          {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/issue"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/issue-with-repo-items"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "404": {
-            "$ref": "#/components/responses/not_found"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "search",
-          "subcategory": null
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/user/migrations": {
+    "/search/issues": {
       "get": {
         "summary": "Search issues and pull requests",
         "description": "Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted\nsearch results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.\n\n`q=windows+label:bug+language:python+state:open&sort=created&order=asc`\n\nThis query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the search results.\n\n**Note:** For [user-to-server](https://docs.github.com/enterprise-server@3.6/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests) GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see \"[Searching only issues or pull requests](https://docs.github.com/enterprise-server@3.6/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests).\"",
         "tags": [
-          "migrations"
+          "search"
         ],
-        "operationId": "migrations/list-for-authenticated-user",
+        "operationId": "search/issues-and-pull-requests",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/search#search-issues-and-pull-requests"
@@ -6730,39 +6652,53 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/migration"
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "incomplete_results",
+                    "items"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "incomplete_results": {
+                      "type": "boolean"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/issue-search-result-item"
+                      }
+                    }
                   }
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/migration-items"
+                    "$ref": "#/components/examples/issue-search-result-item-paginated"
                   }
                 }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
               }
             }
           },
           "304": {
             "$ref": "#/components/responses/not_modified"
           },
-          "401": {
-            "$ref": "#/components/responses/requires_authentication"
-          },
           "403": {
             "$ref": "#/components/responses/forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          },
+          "503": {
+            "$ref": "#/components/responses/service_unavailable"
           }
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
+          "enabledForGitHubApps": true,
+          "category": "search",
+          "subcategory": null
         },
         "x-octokit": {
           "diff": {
@@ -6778,7 +6714,7 @@
         "summary": "Search repositories",
         "description": "Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.6/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.6/rest/reference/search#text-match-metadata).\n\nFor example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:\n\n`q=tetris+language:assembly&sort=stars&order=desc`\n\nThis query searches for repositories with the word `tetris` in the name, the description, or the README. The results are limited to repositories where the primary language is assembly. The results are sorted by stars in descending order, so that the most popular repositories appear first in the search results.",
         "tags": [
-          "migrations"
+          "search"
         ],
         "operationId": "search/repos",
         "externalDocs": {
@@ -6853,11 +6789,6 @@
                   }
                 }
               }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
             }
           },
           "304": {
@@ -6885,388 +6816,21 @@
         }
       }
     },
-    "/user/issues": {
+    "/teams/{team_id}/repos": {
       "get": {
         "summary": "List team repositories (Legacy)",
         "description": "**Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/enterprise-server@3.6/rest/reference/teams#list-team-repositories) endpoint.",
         "tags": [
-          "migrations"
+          "teams"
         ],
-        "operationId": "migrations/start-for-authenticated-user",
+        "operationId": "teams/list-repos-legacy",
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams/#list-team-repositories-legacy"
         },
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "lock_repositories": {
-                    "description": "Lock the repositories being migrated at the start of the migration",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_metadata": {
-                    "description": "Indicates whether metadata should be excluded and only git source should be included for the migration.",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_git_data": {
-                    "description": "Indicates whether the repository git data should be excluded from the migration.",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_attachments": {
-                    "description": "Do not include attachments in the migration",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_releases": {
-                    "description": "Do not include releases in the migration",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_owner_projects": {
-                    "description": "Indicates whether projects owned by the organization or users should be excluded.",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "org_metadata_only": {
-                    "type": "boolean",
-                    "example": true,
-                    "description": "Indicates whether this should only include organization metadata (repositories array should be empty and will ignore other flags).",
-                    "default": false
-                  },
-                  "exclude": {
-                    "description": "Exclude attributes from the API response to improve performance",
-                    "example": [
-                      "repositories"
-                    ],
-                    "readOnly": false,
-                    "type": "array",
-                    "items": {
-                      "description": "Allowed values that can be passed to the exclude param.",
-                      "enum": [
-                        "repositories"
-                      ],
-                      "example": "repositories",
-                      "type": "string"
-                    }
-                  },
-                  "repositories": {
-                    "type": "array",
-                    "items": {
-                      "description": "Repository path, owner and name",
-                      "example": "acme/widgets",
-                      "type": "string"
-                    }
-                  }
-                },
-                "required": [
-                  "repositories"
-                ],
-                "type": "object"
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "repositories": [
-                      "octocat/Hello-World"
-                    ],
-                    "lock_repositories": true
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/migration"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/migration-2"
-                  }
-                }
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "401": {
-            "$ref": "#/components/responses/requires_authentication"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "issues",
-          "subcategory": null
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/user/migrations": {
-      "get": {
-        "summary": "Check team permissions for a repository (Legacy)",
-        "description": "**Note**: Repositories inherited through a parent team will also be checked.\n\n**Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/enterprise-server@3.6/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.\n\nYou can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header:",
-        "tags": [
-          "migrations"
-        ],
-        "operationId": "migrations/list-for-authenticated-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams/#check-team-permissions-for-a-repository-legacy"
-        },
         "parameters": [
           {
-            "$ref": "#/components/parameters/per-page"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/migration"
-                  }
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/migration-items"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "401": {
-            "$ref": "#/components/responses/requires_authentication"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "migrations",
-          "subcategory": "users"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/user/installations/{installation_id}/repositories": {
-      "get": {
-        "summary": "List repositories accessible to the user access token",
-        "description": "List repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access for an installation.\n\nThe authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.\n\nYou must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@3.6/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.\n\nThe access the user has to each repository is included in the hash under the `permissions` key.",
-        "tags": [
-          "migrations"
-        ],
-        "operationId": "migrations/start-for-authenticated-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/apps#list-repositories-accessible-to-the-user-access-token"
-        },
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "lock_repositories": {
-                    "description": "Lock the repositories being migrated at the start of the migration",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_metadata": {
-                    "description": "Indicates whether metadata should be excluded and only git source should be included for the migration.",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_git_data": {
-                    "description": "Indicates whether the repository git data should be excluded from the migration.",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_attachments": {
-                    "description": "Do not include attachments in the migration",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_releases": {
-                    "description": "Do not include releases in the migration",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "exclude_owner_projects": {
-                    "description": "Indicates whether projects owned by the organization or users should be excluded.",
-                    "example": true,
-                    "readOnly": false,
-                    "type": "boolean"
-                  },
-                  "org_metadata_only": {
-                    "type": "boolean",
-                    "example": true,
-                    "description": "Indicates whether this should only include organization metadata (repositories array should be empty and will ignore other flags).",
-                    "default": false
-                  },
-                  "exclude": {
-                    "description": "Exclude attributes from the API response to improve performance",
-                    "example": [
-                      "repositories"
-                    ],
-                    "readOnly": false,
-                    "type": "array",
-                    "items": {
-                      "description": "Allowed values that can be passed to the exclude param.",
-                      "enum": [
-                        "repositories"
-                      ],
-                      "example": "repositories",
-                      "type": "string"
-                    }
-                  },
-                  "repositories": {
-                    "type": "array",
-                    "items": {
-                      "description": "Repository path, owner and name",
-                      "example": "acme/widgets",
-                      "type": "string"
-                    }
-                  }
-                },
-                "required": [
-                  "repositories"
-                ],
-                "type": "object"
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "repositories": [
-                      "octocat/Hello-World"
-                    ],
-                    "lock_repositories": true
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/migration"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/migration-2"
-                  }
-                }
-              }
-            },
-            "headers": {
-              "Link": {
-                "$ref": "#/components/headers/link"
-              }
-            }
-          },
-          "304": {
-            "$ref": "#/components/responses/not_modified"
-          },
-          "401": {
-            "$ref": "#/components/responses/requires_authentication"
-          },
-          "403": {
-            "$ref": "#/components/responses/forbidden"
-          },
-          "422": {
-            "$ref": "#/components/responses/validation_failed"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
-          "category": "apps",
-          "subcategory": "installations"
-        },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.7": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
-    "/user/migrations/{migration_id}/repositories": {
-      "get": {
-        "summary": "List user account issues assigned to the authenticated user",
-        "description": "List issues across owned and member repositories assigned to the authenticated user.\n\n**Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#list-pull-requests)\" endpoint.",
-        "tags": [
-          "migrations"
-        ],
-        "operationId": "migrations/list-repos-for-authenticated-user",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#list-user-account-issues-assigned-to-the-authenticated-user"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/migration-id"
+            "$ref": "#/components/parameters/team-id"
           },
           {
             "$ref": "#/components/parameters/per-page"
@@ -7298,6 +6862,283 @@
                 "$ref": "#/components/headers/link"
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "removalDate": "2021-02-01",
+          "deprecationDate": "2020-01-21",
+          "category": "teams",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/teams/{team_id}/repos/{owner}/{repo}": {
+      "get": {
+        "summary": "Check team permissions for a repository (Legacy)",
+        "description": "**Note**: Repositories inherited through a parent team will also be checked.\n\n**Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/enterprise-server@3.6/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.\n\nYou can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header:",
+        "tags": [
+          "teams"
+        ],
+        "operationId": "teams/check-permissions-for-repo-legacy",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/teams/#check-team-permissions-for-a-repository-legacy"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/team-id"
+          },
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alternative response with extra repository information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/team-repository"
+                },
+                "examples": {
+                  "alternative-response-with-extra-repository-information": {
+                    "$ref": "#/components/examples/team-repository-alternative-response-with-extra-repository-information"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Response if repository is managed by this team"
+          },
+          "404": {
+            "description": "Not Found if repository is not managed by this team"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "removalDate": "2021-02-01",
+          "deprecationDate": "2020-01-21",
+          "category": "teams",
+          "subcategory": null
+        },
+        "deprecated": true,
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/user/installations/{installation_id}/repositories": {
+      "get": {
+        "summary": "List repositories accessible to the user access token",
+        "description": "List repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access for an installation.\n\nThe authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.\n\nYou must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@3.6/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.\n\nThe access the user has to each repository is included in the hash under the `permissions` key.",
+        "tags": [
+          "apps"
+        ],
+        "operationId": "apps/list-installation-repos-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/apps#list-repositories-accessible-to-the-user-access-token"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/installation-id"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The access the user has to each repository is included in the hash under the `permissions` key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "repositories"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "repository_selection": {
+                      "type": "string"
+                    },
+                    "repositories": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/repository"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/repository-paginated"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "apps",
+          "subcategory": "installations"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/user/issues": {
+      "get": {
+        "summary": "List user account issues assigned to the authenticated user",
+        "description": "List issues across owned and member repositories assigned to the authenticated user.\n\n**Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this\nreason, \"Issues\" endpoints may return both issues and pull requests in the response. You can identify pull requests by\nthe `pull_request` key. Be aware that the `id` of a pull request returned from \"Issues\" endpoints will be an _issue id_. To find out the pull\nrequest id, use the \"[List pull requests](https://docs.github.com/enterprise-server@3.6/rest/reference/pulls#list-pull-requests)\" endpoint.",
+        "tags": [
+          "issues"
+        ],
+        "operationId": "issues/list-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/issues#list-user-account-issues-assigned-to-the-authenticated-user"
+        },
+        "parameters": [
+          {
+            "name": "filter",
+            "description": "Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "assigned",
+                "created",
+                "mentioned",
+                "subscribed",
+                "repos",
+                "all"
+              ],
+              "default": "assigned"
+            }
+          },
+          {
+            "name": "state",
+            "description": "Indicates the state of the issues to return.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "closed",
+                "all"
+              ],
+              "default": "open"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/labels"
+          },
+          {
+            "name": "sort",
+            "description": "What to sort results by.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created",
+                "updated",
+                "comments"
+              ],
+              "default": "created"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/direction"
+          },
+          {
+            "$ref": "#/components/parameters/since"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/issue"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/issue-with-repo-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
           },
           "404": {
             "$ref": "#/components/responses/not_found"
@@ -9805,16 +9646,16 @@
               "admin": {
                 "type": "boolean"
               },
-              "private": {
+              "pull": {
                 "type": "boolean"
               },
-              "html_url": {
-                "type": "string"
+              "triage": {
+                "type": "boolean"
               },
-              "description": {
-                "type": "string"
+              "push": {
+                "type": "boolean"
               },
-              "fork": {
+              "maintain": {
                 "type": "boolean"
               }
             },
