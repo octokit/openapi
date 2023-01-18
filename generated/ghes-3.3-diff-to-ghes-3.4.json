@@ -12,7 +12,9 @@
     "contact": {
       "name": "Support",
       "url": "https://github.com/octokit/openapi"
-    }
+    },
+    "x-github-plan": "ghes",
+    "x-github-release": 3.3
   },
   "tags": [
     {
@@ -150,6 +152,14 @@
     {
       "name": "users",
       "description": "Interact with and view information about users and also current user."
+    },
+    {
+      "name": "enterprise-admin",
+      "description": "Enterprise Administration"
+    },
+    {
+      "name": "server-statistics",
+      "description": "Server statistics"
     }
   ],
   "servers": [
@@ -294,6 +304,18 @@
                     "items": {
                       "type": "string"
                     }
+                  }
+                },
+                "required": [
+                  "scopes"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "scopes": [
+                      "public_repo"
+                    ]
                   }
                 }
               }
@@ -1105,7 +1127,7 @@
       },
       "post": {
         "summary": "Create a new authorization",
-        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.3/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.3/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.3/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\n**Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.3/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).\n\nCreates OAuth tokens using [Basic Authentication](https://docs.github.com/enterprise-server@3.3/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see \"[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.3/rest/overview/other-authentication-methods#working-with-two-factor-authentication).\"\n\nTo create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.\n\nYou can also create tokens on GitHub Enterprise Server from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://docs.github.com/articles/creating-an-access-token-for-command-line-use).\n\nOrganizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://docs.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).",
+        "description": "**Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.3/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.3/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.3/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).\n\n**Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.3/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).\n\nCreates OAuth tokens using [Basic Authentication](https://docs.github.com/enterprise-server@3.3/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see \"[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.3/rest/overview/other-authentication-methods#working-with-two-factor-authentication).\"\n\nTo create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.\n\nYou can also create tokens on GitHub Enterprise Server from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://docs.github.com/enterprise-server@3.3/articles/creating-an-access-token-for-command-line-use).\n\nOrganizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://docs.github.com/enterprise-server@3.3/articles/about-identity-and-access-management-with-saml-single-sign-on).",
         "tags": [
           "oauth-authorizations"
         ],
@@ -1658,6 +1680,20 @@
                     "type": "string"
                   }
                 }
+              },
+              "examples": {
+                "default": {
+                  "summary": "Example of updating scopes and note",
+                  "value": {
+                    "add_scopes": [
+                      "public_repo"
+                    ],
+                    "remove_scopes": [
+                      "user"
+                    ],
+                    "note": "optional note"
+                  }
+                }
               }
             }
           }
@@ -1782,7 +1818,7 @@
     "/orgs/{org}": {
       "get": {
         "summary": "Get an organization",
-        "description": "To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).\n\nGitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub Enterprise Server plan. See \"[Authenticating with GitHub Apps](https://docs.github.com/enterprise-server@3.3/apps/building-github-apps/authenticating-with-github-apps/)\" for details. For an example response, see 'Response with GitHub Enterprise Server plan information' below.\"",
+        "description": "To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://docs.github.com/enterprise-server@3.3/articles/securing-your-account-with-two-factor-authentication-2fa/).\n\nGitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub Enterprise Server plan. See \"[Authenticating with GitHub Apps](https://docs.github.com/enterprise-server@3.3/apps/building-github-apps/authenticating-with-github-apps/)\" for details. For an example response, see 'Response with GitHub Enterprise Server plan information' below.\"",
         "tags": [
           "orgs"
         ],
@@ -1839,7 +1875,7 @@
         "operationId": "orgs/update",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/orgs/#update-an-organization"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/orgs#update-an-organization"
         },
         "parameters": [
           {
@@ -1907,15 +1943,15 @@
                   },
                   "members_can_create_internal_repositories": {
                     "type": "boolean",
-                    "description": "Whether organization members can create internal repositories, which are visible to all enterprise members. You can only allow members to create internal repositories if your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see \"[Restricting repository creation in your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
+                    "description": "Whether organization members can create internal repositories, which are visible to all enterprise members. You can only allow members to create internal repositories if your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see \"[Restricting repository creation in your organization](https://docs.github.com/enterprise-server@3.3/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
                   },
                   "members_can_create_private_repositories": {
                     "type": "boolean",
-                    "description": "Whether organization members can create private repositories, which are visible to organization members with permission. For more information, see \"[Restricting repository creation in your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
+                    "description": "Whether organization members can create private repositories, which are visible to organization members with permission. For more information, see \"[Restricting repository creation in your organization](https://docs.github.com/enterprise-server@3.3/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
                   },
                   "members_can_create_public_repositories": {
                     "type": "boolean",
-                    "description": "Whether organization members can create public repositories, which are visible to anyone. For more information, see \"[Restricting repository creation in your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
+                    "description": "Whether organization members can create public repositories, which are visible to anyone. For more information, see \"[Restricting repository creation in your organization](https://docs.github.com/enterprise-server@3.3/github/setting-up-and-managing-organizations-and-teams/restricting-repository-creation-in-your-organization)\" in the GitHub Help documentation."
                   },
                   "members_allowed_repository_creation_type": {
                     "type": "string",
@@ -2011,7 +2047,7 @@
     "/orgs/{org}/actions/secrets/{secret_name}": {
       "put": {
         "summary": "Create or update an organization secret",
-        "description": "Creates or updates an organization secret with an encrypted value. Encrypt your secret using\n[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access\ntoken with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to\nuse this endpoint.\n\n#### Example encrypting a secret using Node.js\n\nEncrypt your secret using the [tweetsodium](https://github.com/github/tweetsodium) library.\n\n```\nconst sodium = require('tweetsodium');\n\nconst key = \"base64-encoded-public-key\";\nconst value = \"plain-text-secret\";\n\n// Convert the message and key to Uint8Array's (Buffer implements that interface)\nconst messageBytes = Buffer.from(value);\nconst keyBytes = Buffer.from(key, 'base64');\n\n// Encrypt using LibSodium.\nconst encryptedBytes = sodium.seal(messageBytes, keyBytes);\n\n// Base64 the encrypted secret\nconst encrypted = Buffer.from(encryptedBytes).toString('base64');\n\nconsole.log(encrypted);\n```\n\n\n#### Example encrypting a secret using Python\n\nEncrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.\n\n```\nfrom base64 import b64encode\nfrom nacl import encoding, public\n\ndef encrypt(public_key: str, secret_value: str) -> str:\n  \"\"\"Encrypt a Unicode string using the public key.\"\"\"\n  public_key = public.PublicKey(public_key.encode(\"utf-8\"), encoding.Base64Encoder())\n  sealed_box = public.SealedBox(public_key)\n  encrypted = sealed_box.encrypt(secret_value.encode(\"utf-8\"))\n  return b64encode(encrypted).decode(\"utf-8\")\n```\n\n#### Example encrypting a secret using C#\n\nEncrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.\n\n```\nvar secretValue = System.Text.Encoding.UTF8.GetBytes(\"mySecret\");\nvar publicKey = Convert.FromBase64String(\"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=\");\n\nvar sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);\n\nConsole.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));\n```\n\n#### Example encrypting a secret using Ruby\n\nEncrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.\n\n```ruby\nrequire \"rbnacl\"\nrequire \"base64\"\n\nkey = Base64.decode64(\"+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=\")\npublic_key = RbNaCl::PublicKey.new(key)\n\nbox = RbNaCl::Boxes::Sealed.from_public_key(public_key)\nencrypted_secret = box.encrypt(\"my_secret\")\n\n# Print the base64 encoded secret\nputs Base64.strict_encode64(encrypted_secret)\n```",
+        "description": "Creates or updates an organization secret with an encrypted value. Encrypt your secret using\n[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access\ntoken with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to\nuse this endpoint.\n\n#### Example encrypting a secret using Node.js\n\nEncrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.\n\n```\nconst sodium = require('libsodium-wrappers')\nconst secret = 'plain-text-secret' // replace with the secret you want to encrypt\nconst key = 'base64-encoded-public-key' // replace with the Base64 encoded public key\n\n//Check if libsodium is ready and then proceed.\nsodium.ready.then(() => {\n  // Convert Secret & Base64 key to Uint8Array.\n  let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)\n  let binsec = sodium.from_string(secret)\n\n  //Encrypt the secret using LibSodium\n  let encBytes = sodium.crypto_box_seal(binsec, binkey)\n\n  // Convert encrypted Uint8Array to Base64\n  let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)\n\n  console.log(output)\n});\n```\n\n#### Example encrypting a secret using Python\n\nEncrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.\n\n```\nfrom base64 import b64encode\nfrom nacl import encoding, public\n\ndef encrypt(public_key: str, secret_value: str) -> str:\n  \"\"\"Encrypt a Unicode string using the public key.\"\"\"\n  public_key = public.PublicKey(public_key.encode(\"utf-8\"), encoding.Base64Encoder())\n  sealed_box = public.SealedBox(public_key)\n  encrypted = sealed_box.encrypt(secret_value.encode(\"utf-8\"))\n  return b64encode(encrypted).decode(\"utf-8\")\n```\n\n#### Example encrypting a secret using C#\n\nEncrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.\n\n```\nvar secretValue = System.Text.Encoding.UTF8.GetBytes(\"mySecret\");\nvar publicKey = Convert.FromBase64String(\"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=\");\n\nvar sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);\n\nConsole.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));\n```\n\n#### Example encrypting a secret using Ruby\n\nEncrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.\n\n```ruby\nrequire \"rbnacl\"\nrequire \"base64\"\n\nkey = Base64.decode64(\"+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=\")\npublic_key = RbNaCl::PublicKey.new(key)\n\nbox = RbNaCl::Boxes::Sealed.from_public_key(public_key)\nencrypted_secret = box.encrypt(\"my_secret\")\n\n# Print the base64 encoded secret\nputs Base64.strict_encode64(encrypted_secret)\n```",
         "tags": [
           "actions"
         ],
@@ -2313,7 +2349,7 @@
     "/orgs/{org}/teams": {
       "post": {
         "summary": "Create a team",
-        "description": "To create a team, the authenticated user must be a member or owner of `{org}`. By default, organization members can create teams. Organization owners can limit team creation to organization owners. For more information, see \"[Setting team creation permissions](https://docs.github.com/en/articles/setting-team-creation-permissions-in-your-organization).\"\n\nWhen you create a new team, you automatically become a team maintainer without explicitly adding yourself to the optional array of `maintainers`. For more information, see \"[About teams](https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/about-teams)\".",
+        "description": "To create a team, the authenticated user must be a member or owner of `{org}`. By default, organization members can create teams. Organization owners can limit team creation to organization owners. For more information, see \"[Setting team creation permissions](https://docs.github.com/enterprise-server@3.3/articles/setting-team-creation-permissions-in-your-organization).\"\n\nWhen you create a new team, you automatically become a team maintainer without explicitly adding yourself to the optional array of `maintainers`. For more information, see \"[About teams](https://docs.github.com/enterprise-server@3.3/github/setting-up-and-managing-organizations-and-teams/about-teams)\".",
         "tags": [
           "teams"
         ],
@@ -2358,7 +2394,7 @@
                   },
                   "privacy": {
                     "type": "string",
-                    "description": "The level of privacy this team should have. The options are:  \n**For a non-nested team:**  \n\\* `secret` - only visible to organization owners and members of this team.  \n\\* `closed` - visible to all members of this organization.  \nDefault: `secret`  \n**For a parent or child team:**  \n\\* `closed` - visible to all members of this organization.  \nDefault for child team: `closed`",
+                    "description": "The level of privacy this team should have. The options are:  \n**For a non-nested team:**  \n * `secret` - only visible to organization owners and members of this team.  \n * `closed` - visible to all members of this organization.  \nDefault: `secret`  \n**For a parent or child team:**  \n * `closed` - visible to all members of this organization.  \nDefault for child team: `closed`",
                     "enum": [
                       "secret",
                       "closed"
@@ -2527,7 +2563,7 @@
                   },
                   "privacy": {
                     "type": "string",
-                    "description": "The level of privacy this team should have. Editing teams without specifying this parameter leaves `privacy` intact. When a team is nested, the `privacy` for parent teams cannot be `secret`. The options are:  \n**For a non-nested team:**  \n\\* `secret` - only visible to organization owners and members of this team.  \n\\* `closed` - visible to all members of this organization.  \n**For a parent or child team:**  \n\\* `closed` - visible to all members of this organization.",
+                    "description": "The level of privacy this team should have. Editing teams without specifying this parameter leaves `privacy` intact. When a team is nested, the `privacy` for parent teams cannot be `secret`. The options are:  \n**For a non-nested team:**  \n * `secret` - only visible to organization owners and members of this team.  \n * `closed` - visible to all members of this organization.  \n**For a parent or child team:**  \n * `closed` - visible to all members of this organization.",
                     "enum": [
                       "secret",
                       "closed"
@@ -2628,7 +2664,7 @@
         "operationId": "repos/list-branches",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#list-branches"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branches#list-branches"
         },
         "parameters": [
           {
@@ -2684,8 +2720,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches"
         },
         "x-octokit": {
           "diff": {
@@ -2706,7 +2741,7 @@
         "operationId": "repos/get-branch",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#get-a-branch"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branches#get-a-branch"
         },
         "parameters": [
           {
@@ -2745,8 +2780,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches"
         },
         "x-octokit": {
           "diff": {
@@ -2760,14 +2794,14 @@
     "/repos/{owner}/{repo}/branches/{branch}/protection": {
       "get": {
         "summary": "Get branch protection",
-        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
+        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.3/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
         "tags": [
           "repos"
         ],
         "operationId": "repos/get-branch-protection",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#get-branch-protection"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branch-protection#get-branch-protection"
         },
         "parameters": [
           {
@@ -2803,8 +2837,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches",
+          "subcategory": "branch-protection"
         },
         "x-octokit": {
           "diff": {
@@ -2816,14 +2850,14 @@
       },
       "put": {
         "summary": "Update branch protection",
-        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nProtecting a branch requires admin or owner permissions to the repository.\n\n**Note**: Passing new arrays of `users` and `teams` replaces their previous values.\n\n**Note**: The list of users, apps, and teams in total is limited to 100 items.",
+        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.3/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nProtecting a branch requires admin or owner permissions to the repository.\n\n**Note**: Passing new arrays of `users` and `teams` replaces their previous values.\n\n**Note**: The list of users, apps, and teams in total is limited to 100 items.",
         "tags": [
           "repos"
         ],
         "operationId": "repos/update-branch-protection",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#update-branch-protection"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branch-protection#update-branch-protection"
         },
         "parameters": [
           {
@@ -2929,7 +2963,7 @@
                       },
                       "require_code_owner_reviews": {
                         "type": "boolean",
-                        "description": "Blocks merging pull requests until [code owners](https://docs.github.com/articles/about-code-owners/) review them."
+                        "description": "Blocks merging pull requests until [code owners](https://docs.github.com/enterprise-server@3.3/articles/about-code-owners/) review them."
                       },
                       "required_approving_review_count": {
                         "type": "integer",
@@ -2971,16 +3005,16 @@
                   },
                   "required_linear_history": {
                     "type": "boolean",
-                    "description": "Enforces a linear commit Git history, which prevents anyone from pushing merge commits to a branch. Set to `true` to enforce a linear commit history. Set to `false` to disable a linear commit Git history. Your repository must allow squash merging or rebase merging before you can enable a linear commit history. Default: `false`. For more information, see \"[Requiring a linear commit history](https://docs.github.com/github/administering-a-repository/requiring-a-linear-commit-history)\" in the GitHub Help documentation."
+                    "description": "Enforces a linear commit Git history, which prevents anyone from pushing merge commits to a branch. Set to `true` to enforce a linear commit history. Set to `false` to disable a linear commit Git history. Your repository must allow squash merging or rebase merging before you can enable a linear commit history. Default: `false`. For more information, see \"[Requiring a linear commit history](https://docs.github.com/enterprise-server@3.3/github/administering-a-repository/requiring-a-linear-commit-history)\" in the GitHub Help documentation."
                   },
                   "allow_force_pushes": {
                     "type": "boolean",
-                    "description": "Permits force pushes to the protected branch by anyone with write access to the repository. Set to `true` to allow force pushes. Set to `false` or `null` to block force pushes. Default: `false`. For more information, see \"[Enabling force pushes to a protected branch](https://docs.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)\" in the GitHub Help documentation.\"",
+                    "description": "Permits force pushes to the protected branch by anyone with write access to the repository. Set to `true` to allow force pushes. Set to `false` or `null` to block force pushes. Default: `false`. For more information, see \"[Enabling force pushes to a protected branch](https://docs.github.com/enterprise-server@3.3/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)\" in the GitHub Help documentation.\"",
                     "nullable": true
                   },
                   "allow_deletions": {
                     "type": "boolean",
-                    "description": "Allows deletion of the protected branch by anyone with write access to the repository. Set to `false` to prevent deletion of the protected branch. Default: `false`. For more information, see \"[Enabling force pushes to a protected branch](https://docs.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)\" in the GitHub Help documentation."
+                    "description": "Allows deletion of the protected branch by anyone with write access to the repository. Set to `false` to prevent deletion of the protected branch. Default: `false`. For more information, see \"[Enabling force pushes to a protected branch](https://docs.github.com/enterprise-server@3.3/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)\" in the GitHub Help documentation."
                   },
                   "block_creations": {
                     "type": "boolean",
@@ -3087,8 +3121,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches",
+          "subcategory": "branch-protection"
         },
         "x-octokit": {
           "diff": {
@@ -3102,14 +3136,14 @@
     "/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews": {
       "get": {
         "summary": "Get pull request review protection",
-        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
+        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.3/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
         "tags": [
           "repos"
         ],
         "operationId": "repos/get-pull-request-review-protection",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#get-pull-request-review-protection"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branch-protection#get-pull-request-review-protection"
         },
         "parameters": [
           {
@@ -3142,8 +3176,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches",
+          "subcategory": "branch-protection"
         },
         "x-octokit": {
           "diff": {
@@ -3155,14 +3189,14 @@
       },
       "patch": {
         "summary": "Update pull request review protection",
-        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nUpdating pull request review enforcement requires admin or owner permissions to the repository and branch protection to be enabled.\n\n**Note**: Passing new arrays of `users` and `teams` replaces their previous values.",
+        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.3/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nUpdating pull request review enforcement requires admin or owner permissions to the repository and branch protection to be enabled.\n\n**Note**: Passing new arrays of `users` and `teams` replaces their previous values.",
         "tags": [
           "repos"
         ],
         "operationId": "repos/update-pull-request-review-protection",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#update-pull-request-review-protection"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branch-protection#update-pull-request-review-protection"
         },
         "parameters": [
           {
@@ -3215,7 +3249,7 @@
                   },
                   "require_code_owner_reviews": {
                     "type": "boolean",
-                    "description": "Blocks merging pull requests until [code owners](https://docs.github.com/articles/about-code-owners/) have reviewed."
+                    "description": "Blocks merging pull requests until [code owners](https://docs.github.com/enterprise-server@3.3/articles/about-code-owners/) have reviewed."
                   },
                   "required_approving_review_count": {
                     "type": "integer",
@@ -3280,8 +3314,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches",
+          "subcategory": "branch-protection"
         },
         "x-octokit": {
           "diff": {
@@ -3295,14 +3329,14 @@
     "/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks": {
       "get": {
         "summary": "Get status checks protection",
-        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
+        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.3/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.",
         "tags": [
           "repos"
         ],
         "operationId": "repos/get-status-checks-protection",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#get-status-checks-protection"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branch-protection#get-status-checks-protection"
         },
         "parameters": [
           {
@@ -3338,8 +3372,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches",
+          "subcategory": "branch-protection"
         },
         "x-octokit": {
           "diff": {
@@ -3351,14 +3385,14 @@
       },
       "patch": {
         "summary": "Update status check protection",
-        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nUpdating required status checks requires admin or owner permissions to the repository and branch protection to be enabled.",
+        "description": "Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.3/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nUpdating required status checks requires admin or owner permissions to the repository and branch protection to be enabled.",
         "tags": [
           "repos"
         ],
         "operationId": "repos/update-status-check-protection",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#update-status-check-protection"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branch-protection#update-status-check-protection"
         },
         "parameters": [
           {
@@ -3431,8 +3465,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches",
+          "subcategory": "branch-protection"
         },
         "x-octokit": {
           "changes": [
@@ -3462,7 +3496,7 @@
         "operationId": "repos/rename-branch",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.3/rest/reference/repos#rename-a-branch"
+          "url": "https://docs.github.com/enterprise-server@3.3/rest/branches/branches#rename-a-branch"
         },
         "parameters": [
           {
@@ -3530,8 +3564,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
-          "category": "repos",
-          "subcategory": "branches"
+          "category": "branches"
         },
         "x-octokit": {
           "diff": {
@@ -4135,7 +4168,7 @@
                   },
                   "privacy": {
                     "type": "string",
-                    "description": "The level of privacy this team should have. Editing teams without specifying this parameter leaves `privacy` intact. The options are:  \n**For a non-nested team:**  \n\\* `secret` - only visible to organization owners and members of this team.  \n\\* `closed` - visible to all members of this organization.  \n**For a parent or child team:**  \n\\* `closed` - visible to all members of this organization.",
+                    "description": "The level of privacy this team should have. Editing teams without specifying this parameter leaves `privacy` intact. The options are:  \n**For a non-nested team:**  \n * `secret` - only visible to organization owners and members of this team.  \n * `closed` - visible to all members of this organization.  \n**For a parent or child team:**  \n * `closed` - visible to all members of this organization.",
                     "enum": [
                       "secret",
                       "closed"
@@ -4794,7 +4827,7 @@
       },
       "branch": {
         "name": "branch",
-        "description": "The name of the branch.",
+        "description": "The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/enterprise-server@3.3/graphql).",
         "in": "path",
         "required": true,
         "schema": {
@@ -5532,6 +5565,12 @@
           "org_id": {
             "type": "integer"
           },
+          "user_id": {
+            "type": "integer"
+          },
+          "business_id": {
+            "type": "integer"
+          },
           "blocked_user": {
             "type": "string",
             "description": "The username of the account being blocked."
@@ -5552,6 +5591,9 @@
             }
           },
           "content_type": {
+            "type": "string"
+          },
+          "operation_type": {
             "type": "string"
           },
           "created_at": {
@@ -6603,7 +6645,7 @@
             "$ref": "#/components/schemas/nullable-simple-user"
           },
           "dismissed_at": {
-            "$ref": "#/components/schemas/code-scanning-alert-dismissed-at"
+            "$ref": "#/components/schemas/alert-dismissed-at"
           },
           "dismissed_reason": {
             "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
@@ -6658,7 +6700,7 @@
             "$ref": "#/components/schemas/nullable-simple-user"
           },
           "dismissed_at": {
-            "$ref": "#/components/schemas/code-scanning-alert-dismissed-at"
+            "$ref": "#/components/schemas/alert-dismissed-at"
           },
           "dismissed_reason": {
             "$ref": "#/components/schemas/code-scanning-alert-dismissed-reason"
@@ -6798,7 +6840,7 @@
       },
       "nullable-simple-user": {
         "title": "Simple User",
-        "description": "Simple User",
+        "description": "A GitHub user.",
         "type": "object",
         "properties": {
           "name": {
@@ -6970,7 +7012,7 @@
       },
       "simple-user": {
         "title": "Simple User",
-        "description": "Simple User",
+        "description": "A GitHub user.",
         "type": "object",
         "properties": {
           "name": {
@@ -7089,7 +7131,7 @@
       },
       "enterprise": {
         "title": "Enterprise",
-        "description": "An enterprise account",
+        "description": "An enterprise on GitHub.",
         "type": "object",
         "properties": {
           "description": {
@@ -7176,7 +7218,7 @@
       },
       "repository": {
         "title": "Repository",
-        "description": "A git repository",
+        "description": "A repository on GitHub.",
         "type": "object",
         "properties": {
           "id": {
@@ -9243,7 +9285,7 @@
         "format": "uri",
         "readOnly": true
       },
-      "code-scanning-alert-dismissed-at": {
+      "alert-dismissed-at": {
         "type": "string",
         "description": "The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
         "format": "date-time",
