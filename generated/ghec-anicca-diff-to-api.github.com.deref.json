@@ -1645,28 +1645,6 @@
                               "description": "The status of the runner.",
                               "example": "online",
                               "type": "string"
-                            },
-                            "resource": {
-                              "type": "string"
-                            },
-                            "value": {
-                              "oneOf": [
-                                {
-                                  "nullable": true,
-                                  "type": "string"
-                                },
-                                {
-                                  "nullable": true,
-                                  "type": "integer"
-                                },
-                                {
-                                  "items": {
-                                    "type": "string"
-                                  },
-                                  "nullable": true,
-                                  "type": "array"
-                                }
-                              ]
                             }
                           },
                           "required": [
@@ -7562,7 +7540,7 @@
       "/organizations/{organization_id}/custom_roles": {
         "get": {
           "deprecated": null,
-          "description": "List the custom repository roles available in this organization. In order to see custom\nrepository roles in an organization, the authenticated user must be an organization owner.\n\nTo use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organizaiton and must use an access token with `admin:org repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "description": "List the custom repository roles available in this organization. In order to see custom\nrepository roles in an organization, the authenticated user must be an organization owner.\n\nTo use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organization and must use an access token with `admin:org repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#list-custom-repository-roles-in-an-organization"
@@ -9397,10 +9375,10 @@
           },
           "summary": "Get a custom role",
           "tags": [
-            "teams"
+            "orgs"
           ],
           "x-github": {
-            "category": "teams",
+            "category": "orgs",
             "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": "custom-roles"
@@ -9700,24 +9678,6 @@
             "404": {
               "content": {
                 "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": [
-                        {
-                          "description": "Assign or remove a user",
-                          "name": "add_assignee"
-                        },
-                        {
-                          "description": "Remove an assigned user",
-                          "name": "remove_assignee"
-                        },
-                        {
-                          "description": "Add or remove a label",
-                          "name": "add_label"
-                        }
-                      ]
-                    }
-                  },
                   "schema": {
                     "description": "Basic Error",
                     "properties": {
@@ -9823,15 +9783,210 @@
           }
         }
       },
-      "/orgs/{org}/settings/billing/advanced-security": {
+      "/orgs/{org}/external-group/{group_id}": {
         "get": {
           "deprecated": null,
-          "description": "Gets the GitHub Advanced Security active committers for an organization per repository.\n\nEach distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of advanced_security_committers for each repository.\n\nIf this organization defers to an enterprise for billing, the `total_advanced_security_committers` returned from the organization API may include some users that are in more than one organization, so they will only consume a single Advanced Security seat at the enterprise level.\n\nThe total number of repositories with committer information is tracked by the `total_count` field.",
+          "description": "Displays information about the specific group's usage.  Provides a list of the group's external members as well as a list of teams that this group is connected to.\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/billing#get-github-advanced-security-active-committers-for-an-organization"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#external-idp-group-info-for-an-organization"
           },
-          "operationId": "billing/get-github-advanced-security-billing-org",
+          "operationId": "teams/external-idp-group-info-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the group.",
+              "in": "path",
+              "name": "group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "group_id": "123",
+                        "group_name": "Octocat admins",
+                        "members": [
+                          {
+                            "member_email": "mona_lisa@github.com",
+                            "member_id": 1,
+                            "member_login": "mona-lisa_eocsaxrs",
+                            "member_name": "Mona Lisa"
+                          },
+                          {
+                            "member_email": "octo_lisa@github.com",
+                            "member_id": 2,
+                            "member_login": "octo-lisa_eocsaxrs",
+                            "member_name": "Octo Lisa"
+                          }
+                        ],
+                        "teams": [
+                          {
+                            "team_id": 1,
+                            "team_name": "team-test"
+                          },
+                          {
+                            "team_id": 2,
+                            "team_name": "team-test2"
+                          }
+                        ],
+                        "updated_at": "2021-01-24T11:31:04-06:00"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "Information about an external group's usage and its members",
+                    "properties": {
+                      "group_id": {
+                        "description": "The internal ID of the group",
+                        "example": 1,
+                        "type": "integer"
+                      },
+                      "group_name": {
+                        "description": "The display name for the group",
+                        "example": "group-azuread-test",
+                        "type": "string"
+                      },
+                      "members": {
+                        "description": "An array of external members linked to this group",
+                        "example": [
+                          {
+                            "member_email": "mona_lisa@github.com",
+                            "member_id": 1,
+                            "member_login": "mona-lisa_eocsaxrs",
+                            "member_name": "Mona Lisa"
+                          },
+                          {
+                            "member_email": "octo_lisa@github.com",
+                            "member_id": 2,
+                            "member_login": "octo-lisa_eocsaxrs",
+                            "member_name": "Octo Lisa"
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "member_email": {
+                              "description": "An email attached to a user",
+                              "example": "mona_lisa@github.com",
+                              "type": "string"
+                            },
+                            "member_id": {
+                              "description": "The internal user ID of the identity",
+                              "example": 1,
+                              "type": "integer"
+                            },
+                            "member_login": {
+                              "description": "The handle/login for the user",
+                              "example": "mona-lisa_eocsaxrs",
+                              "type": "string"
+                            },
+                            "member_name": {
+                              "description": "The user display name/profile name",
+                              "example": "Mona Lisa",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "member_id",
+                            "member_login",
+                            "member_name",
+                            "member_email"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "teams": {
+                        "description": "An array of teams linked to this group",
+                        "example": [
+                          {
+                            "team_id": 1,
+                            "team_name": "team-test"
+                          },
+                          {
+                            "team_id": 2,
+                            "team_name": "team-test2"
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "team_id": {
+                              "description": "The id for a team",
+                              "example": 1,
+                              "type": "integer"
+                            },
+                            "team_name": {
+                              "description": "The name of the team",
+                              "example": "team-test",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "team_id",
+                            "team_name"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "updated_at": {
+                        "description": "The date when the group was last updated_at",
+                        "example": "2021-01-03 22:27:15:000 -700",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "group_id",
+                      "group_name",
+                      "teams",
+                      "members"
+                    ],
+                    "title": "ExternalGroup",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get an external group",
+          "tags": [
+            "teams"
+          ],
+          "x-github": {
+            "category": "teams",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "external-groups"
+          }
+        }
+      },
+      "/orgs/{org}/external-groups": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists external groups available in an organization. You can query the groups using the `display_name` parameter, only groups with a `group_name` containing the text provided in the `display_name` parameter will be returned.  You can also limit your page results using the `per_page` parameter. GitHub Enterprise Cloud generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see \"[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89).\"\n\nYou can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see \"[GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products)\" in the GitHub Help documentation.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#list-external-idp-groups-for-an-organization"
+          },
+          "operationId": "teams/list-external-idp-groups-for-org",
           "parameters": [
             {
               "description": "The organization name. The name is not case sensitive.",
@@ -9851,6 +10006,17 @@
               "required": false,
               "schema": {
                 "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page token",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
                 "type": "integer"
               },
               "style": "form"
@@ -9967,10 +10133,10 @@
       "/orgs/{org}/fine_grained_permissions": {
         "get": {
           "deprecated": null,
-          "description": "**Note**: This operation is in beta and subject to change.\n\nLists the fine-grained permissions available for an organization.\n\nTo use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organization and must use an access token with `admin:org repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.",
+          "description": "**Note**: This operation is in beta and subject to change.\n\nLists the fine-grained permissions that can be used in custom repository roles for an organization. For more information, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"\n\nTo use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organization and must use an access token with `admin:org repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#list-fine-grained-permissions-for-an-organization"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#list-repository-fine-grained-permissions-for-an-organization"
           },
           "operationId": "orgs/list-fine-grained-permissions",
           "parameters": [
@@ -10009,7 +10175,7 @@
                   },
                   "schema": {
                     "items": {
-                      "description": "Fine-grained permissions available for the organization",
+                      "description": "A fine-grained permission that protects repository resources.",
                       "properties": {
                         "description": {
                           "type": "string"
@@ -10022,7 +10188,7 @@
                         "name",
                         "description"
                       ],
-                      "title": "Organization Fine-Grained Permission",
+                      "title": "Repository Fine-Grained Permission",
                       "type": "object"
                     },
                     "type": "array"
@@ -10032,228 +10198,7 @@
               "description": "Response"
             }
           },
-          "summary": "List fine-grained permissions for an organization",
-          "tags": [
-            "orgs"
-          ],
-          "x-github": {
-            "category": "orgs",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": false,
-            "subcategory": "custom-roles"
-          }
-        }
-      },
-      "/orgs/{org}/settings/billing/advanced-security": {
-        "get": {
-          "deprecated": null,
-          "description": "Gets the GitHub Advanced Security active committers for an organization per repository.\n\nEach distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of advanced_security_committers for each repository.\n\nIf this organization defers to an enterprise for billing, the `total_advanced_security_committers` returned from the organization API may include some users that are in more than one organization, so they will only consume a single Advanced Security seat at the enterprise level.\n\nThe total number of repositories with committer information is tracked by the `total_count` field.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/billing#get-github-advanced-security-active-committers-for-an-organization"
-          },
-          "operationId": "billing/get-github-advanced-security-billing-org",
-          "parameters": [
-            {
-              "description": "The organization name. The name is not case sensitive.",
-              "in": "path",
-              "name": "org",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "allowReserved": null,
-              "description": "The number of results per page (max 100).",
-              "in": "query",
-              "name": "per_page",
-              "required": false,
-              "schema": {
-                "default": 30,
-                "type": "integer"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "Limits the list to groups containing the text in the group name",
-              "in": "query",
-              "name": "display_name",
-              "required": false,
-              "schema": {
-                "type": "string"
-              },
-              "style": "form"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "groups": [
-                          {
-                            "group_id": "123",
-                            "group_name": "Octocat admins",
-                            "updated_at": "2021-01-24T11:31:04-06:00"
-                          },
-                          {
-                            "group_id": "456",
-                            "group_name": "Octocat docs members",
-                            "updated_at": "2021-03-24T11:31:04-06:00"
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  "schema": {
-                    "description": "A list of external groups available to be connected to a team",
-                    "properties": {
-                      "groups": {
-                        "description": "An array of external groups available to be mapped to a team",
-                        "example": [
-                          {
-                            "group_id": 1,
-                            "group_name": "group-azuread-test",
-                            "updated_at": "2021-01-03 22:27:15:000 -700"
-                          },
-                          {
-                            "group_id": 2,
-                            "group_name": "group-azuread-test2",
-                            "updated_at": "2021-06-03 22:27:15:000 -700"
-                          }
-                        ],
-                        "items": {
-                          "properties": {
-                            "group_id": {
-                              "description": "The internal ID of the group",
-                              "example": 1,
-                              "type": "integer"
-                            },
-                            "group_name": {
-                              "description": "The display name of the group",
-                              "example": "group-azuread-test",
-                              "type": "string"
-                            },
-                            "updated_at": {
-                              "description": "The time of the last update for this group",
-                              "example": "2019-06-03 22:27:15:000 -700",
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "group_id",
-                            "group_name",
-                            "updated_at"
-                          ],
-                          "type": "object"
-                        },
-                        "type": "array"
-                      }
-                    },
-                    "title": "ExternalGroups",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response",
-              "headers": {
-                "Link": {
-                  "example": "<https://api.github.com/resource?per_page=2&page=url-encoded-next-page-token>; rel=\"next\"",
-                  "required": null,
-                  "schema": {
-                    "type": "string"
-                  },
-                  "style": "simple"
-                }
-              }
-            }
-          },
-          "summary": "List external groups in an organization",
-          "tags": [
-            "teams"
-          ],
-          "x-github": {
-            "category": "teams",
-            "enabledForGitHubApps": true,
-            "githubCloudOnly": true,
-            "subcategory": "external-groups"
-          }
-        }
-      },
-      "/orgs/{org}/fine_grained_permissions": {
-        "get": {
-          "deprecated": null,
-          "description": "**Note**: This operation is in beta and subject to change.\n\nLists the fine-grained permissions available for an organization.\n\nTo use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organization and must use an access token with `admin:org repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#list-fine-grained-permissions-for-an-organization"
-          },
-          "operationId": "orgs/list-fine-grained-permissions",
-          "parameters": [
-            {
-              "description": "The organization name. The name is not case sensitive.",
-              "in": "path",
-              "name": "org",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": [
-                        {
-                          "description": "Assign or remove a user",
-                          "name": "add_assignee"
-                        },
-                        {
-                          "description": "Remove an assigned user",
-                          "name": "remove_assignee"
-                        },
-                        {
-                          "description": "Add or remove a label",
-                          "name": "add_label"
-                        }
-                      ]
-                    }
-                  },
-                  "schema": {
-                    "items": {
-                      "description": "Fine-grained permissions available for the organization",
-                      "properties": {
-                        "description": {
-                          "type": "string"
-                        },
-                        "name": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "name",
-                        "description"
-                      ],
-                      "title": "Organization Fine-Grained Permission",
-                      "type": "object"
-                    },
-                    "type": "array"
-                  }
-                }
-              },
-              "description": "Response"
-            }
-          },
-          "summary": "List fine-grained permissions for an organization",
+          "summary": "List repository fine-grained permissions for an organization",
           "tags": [
             "orgs"
           ],
