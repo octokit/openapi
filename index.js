@@ -4,8 +4,6 @@ module.exports = {
     ["api.github.com"]: require("./generated/api.github.com.json"),
     ["ghec.deref"]: require("./generated/ghec.deref.json"),
     ["ghec"]: require("./generated/ghec.json"),
-    ["ghes-3.3.deref"]: require("./generated/ghes-3.3.deref.json"),
-    ["ghes-3.3"]: require("./generated/ghes-3.3.json"),
     ["ghes-3.4.deref"]: require("./generated/ghes-3.4.deref.json"),
     ["ghes-3.4"]: require("./generated/ghes-3.4.json"),
     ["ghes-3.5.deref"]: require("./generated/ghes-3.5.deref.json"),
