@@ -15086,6 +15086,100 @@
           }
         }
       },
+      "/enterprises/{enterprise}/actions/permissions/organizations/{org_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Removes an organization from the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise).\"\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#disable-a-selected-organization-for-github-actions-in-an-enterprise"
+          },
+          "operationId": "enterprise-admin/disable-selected-organization-github-actions-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the organization.",
+              "in": "path",
+              "name": "org_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Disable a selected organization for GitHub Actions in an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "permissions"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Adds an organization to the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see \"[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise).\"\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#enable-a-selected-organization-for-github-actions-in-an-enterprise"
+          },
+          "operationId": "enterprise-admin/enable-selected-organization-github-actions-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the organization.",
+              "in": "path",
+              "name": "org_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Enable a selected organization for GitHub Actions in an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "permissions"
+          }
+        }
+      },
       "/enterprises/{enterprise}/actions/permissions/selected-actions": {
         "get": {
           "deprecated": null,
@@ -15130,7 +15224,7 @@
                         "type": "boolean"
                       },
                       "patterns_allowed": {
-                        "description": "Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`.\"",
+                        "description": "Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`.",
                         "items": {
                           "type": "string"
                         },
@@ -15201,7 +15295,7 @@
                       "type": "boolean"
                     },
                     "patterns_allowed": {
-                      "description": "Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`.\"",
+                      "description": "Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`.",
                       "items": {
                         "type": "string"
                       },
@@ -15373,6 +15467,728 @@
             "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": "permissions"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/actions/runner-groups": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists all self-hosted runner groups for an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#list-self-hosted-runner-groups-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/list-self-hosted-runner-groups-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Only return runner groups that are allowed to be used by this organization.",
+              "in": "query",
+              "name": "visible_to_organization",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "runner_groups": [
+                          {
+                            "allows_public_repositories": false,
+                            "default": true,
+                            "id": 1,
+                            "name": "Default",
+                            "restricted_to_workflows": false,
+                            "runners_url": "https://api.github.com/enterprises/octo-corp/actions/runner_groups/1/runners",
+                            "visibility": "all",
+                            "workflow_restrictions_read_only": false
+                          },
+                          {
+                            "allows_public_repositories": true,
+                            "default": false,
+                            "id": 2,
+                            "name": "octo-runner-group",
+                            "restricted_to_workflows": true,
+                            "runners_url": "https://api.github.com/enterprises/octo-corp/actions/runner_groups/2/runners",
+                            "selected_organizations_url": "https://api.github.com/enterprises/octo-corp/actions/runner_groups/2/organizations",
+                            "selected_workflows": [
+                              "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                            ],
+                            "visibility": "selected",
+                            "workflow_restrictions_read_only": false
+                          },
+                          {
+                            "allows_public_repositories": true,
+                            "default": false,
+                            "id": 3,
+                            "name": "expensive-hardware",
+                            "restricted_to_workflows": false,
+                            "runners_url": "https://api.github.com/enterprises/octo-corp/actions/runner_groups/3/runners",
+                            "selected_workflows": [
+                              "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                            ],
+                            "visibility": "private",
+                            "workflow_restrictions_read_only": false
+                          }
+                        ],
+                        "total_count": 3
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "runner_groups": {
+                        "items": {
+                          "properties": {
+                            "allows_public_repositories": {
+                              "type": "boolean"
+                            },
+                            "default": {
+                              "type": "boolean"
+                            },
+                            "id": {
+                              "type": "number"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "restricted_to_workflows": {
+                              "default": false,
+                              "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                              "type": "boolean"
+                            },
+                            "runners_url": {
+                              "type": "string"
+                            },
+                            "selected_organizations_url": {
+                              "type": "string"
+                            },
+                            "selected_workflows": {
+                              "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                              "items": {
+                                "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                                "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "visibility": {
+                              "type": "string"
+                            },
+                            "workflow_restrictions_read_only": {
+                              "default": false,
+                              "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "visibility",
+                            "allows_public_repositories",
+                            "default",
+                            "runners_url"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "runner_groups"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "List self-hosted runner groups for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "post": {
+          "deprecated": null,
+          "description": "Creates a new self-hosted runner group for an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#create-self-hosted-runner-group-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/create-self-hosted-runner-group-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "name": "Expensive hardware runners",
+                      "runners": [
+                        9,
+                        2
+                      ],
+                      "selected_organization_ids": [
+                        32,
+                        91
+                      ],
+                      "visibility": "selected"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "allows_public_repositories": {
+                      "default": false,
+                      "description": "Whether the runner group can be used by `public` repositories.",
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "description": "Name of the runner group.",
+                      "type": "string"
+                    },
+                    "restricted_to_workflows": {
+                      "default": false,
+                      "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                      "type": "boolean"
+                    },
+                    "runners": {
+                      "description": "List of runner IDs to add to the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the runner.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "selected_organization_ids": {
+                      "description": "List of organization IDs that can access the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the organization.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "selected_workflows": {
+                      "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                      "items": {
+                        "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                        "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "visibility": {
+                      "description": "Visibility of a runner group. You can select all organizations or select individual organization.",
+                      "enum": [
+                        "selected",
+                        "all"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "allows_public_repositories": false,
+                        "default": false,
+                        "id": 2,
+                        "name": "octo-runner-group",
+                        "restricted_to_workflows": true,
+                        "runners_url": "https://api.github.com/enterprises/octo-corp/actions/runner-groups/2/runners",
+                        "selected_organizations_url": "https://api.github.com/enterprises/octo-corp/actions/runner-groups/2/organizations",
+                        "selected_workflows": [
+                          "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                        ],
+                        "visibility": "selected",
+                        "workflow_restrictions_read_only": false
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "default": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "restricted_to_workflows": {
+                        "default": false,
+                        "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                        "type": "boolean"
+                      },
+                      "runners_url": {
+                        "type": "string"
+                      },
+                      "selected_organizations_url": {
+                        "type": "string"
+                      },
+                      "selected_workflows": {
+                        "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                        "items": {
+                          "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                          "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "visibility": {
+                        "type": "string"
+                      },
+                      "workflow_restrictions_read_only": {
+                        "default": false,
+                        "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "visibility",
+                      "allows_public_repositories",
+                      "default",
+                      "runners_url"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Create a self-hosted runner group for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Deletes a self-hosted runner group for an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#delete-a-self-hosted-runner-group-from-an-enterprise"
+          },
+          "operationId": "enterprise-admin/delete-self-hosted-runner-group-from-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Delete a self-hosted runner group from an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "description": "Gets a specific self-hosted runner group for an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#get-a-self-hosted-runner-group-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/get-self-hosted-runner-group-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "allows_public_repositories": false,
+                        "default": false,
+                        "id": 2,
+                        "name": "octo-runner-group",
+                        "restricted_to_workflows": true,
+                        "runners_url": "https://api.github.com/enterprises/octo-corp/actions/runner-groups/2/runners",
+                        "selected_organizations_url": "https://api.github.com/enterprises/octo-corp/actions/runner-groups/2/organizations",
+                        "selected_workflows": [
+                          "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                        ],
+                        "visibility": "selected",
+                        "workflow_restrictions_read_only": false
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "default": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "restricted_to_workflows": {
+                        "default": false,
+                        "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                        "type": "boolean"
+                      },
+                      "runners_url": {
+                        "type": "string"
+                      },
+                      "selected_organizations_url": {
+                        "type": "string"
+                      },
+                      "selected_workflows": {
+                        "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                        "items": {
+                          "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                          "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "visibility": {
+                        "type": "string"
+                      },
+                      "workflow_restrictions_read_only": {
+                        "default": false,
+                        "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "visibility",
+                      "allows_public_repositories",
+                      "default",
+                      "runners_url"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get a self-hosted runner group for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "patch": {
+          "deprecated": null,
+          "description": "Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#update-a-self-hosted-runner-group-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/update-self-hosted-runner-group-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "name": "Expensive hardware runners",
+                      "visibility": "selected"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "allows_public_repositories": {
+                      "default": false,
+                      "description": "Whether the runner group can be used by `public` repositories.",
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "description": "Name of the runner group.",
+                      "type": "string"
+                    },
+                    "restricted_to_workflows": {
+                      "default": false,
+                      "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                      "type": "boolean"
+                    },
+                    "selected_workflows": {
+                      "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                      "items": {
+                        "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                        "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "visibility": {
+                      "default": "all",
+                      "description": "Visibility of a runner group. You can select all organizations or select individual organizations.",
+                      "enum": [
+                        "selected",
+                        "all"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": false
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "allows_public_repositories": true,
+                        "default": false,
+                        "id": 2,
+                        "name": "Expensive hardware runners",
+                        "restricted_to_workflows": false,
+                        "runners_url": "https://api.github.com/enterprises/octo-corp/actions/runner-groups/2/runners",
+                        "selected_organizations_url": "https://api.github.com/enterprises/octo-corp/actions/runner-groups/2/organizations",
+                        "selected_workflows": [
+                          "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                        ],
+                        "visibility": "selected",
+                        "workflow_restrictions_read_only": false
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "default": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "restricted_to_workflows": {
+                        "default": false,
+                        "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                        "type": "boolean"
+                      },
+                      "runners_url": {
+                        "type": "string"
+                      },
+                      "selected_organizations_url": {
+                        "type": "string"
+                      },
+                      "selected_workflows": {
+                        "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                        "items": {
+                          "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                          "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "visibility": {
+                        "type": "string"
+                      },
+                      "workflow_restrictions_read_only": {
+                        "default": false,
+                        "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "visibility",
+                      "allows_public_repositories",
+                      "default",
+                      "runners_url"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Update a self-hosted runner group for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
           }
         }
       },
@@ -15631,6 +16447,120 @@
             }
           },
           "summary": "Set organization access for a self-hosted runner group in an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see \"[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise).\"\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#remove-organization-access-to-a-self-hosted-runner-group-in-an-enterprise"
+          },
+          "operationId": "enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the organization.",
+              "in": "path",
+              "name": "org_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Remove organization access to a self-hosted runner group in an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see \"[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise).\"\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#add-organization-access-to-a-self-hosted-runner-group-in-an-enterprise"
+          },
+          "operationId": "enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the organization.",
+              "in": "path",
+              "name": "org_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Add organization access to a self-hosted runner group in an enterprise",
           "tags": [
             "enterprise-admin"
           ],
@@ -15940,6 +16870,120 @@
             }
           },
           "summary": "Set self-hosted runners in a group for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners/{runner_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#remove-a-self-hosted-runner-from-a-group-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/remove-self-hosted-runner-from-group-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Remove a self-hosted runner from a group for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Adds a self-hosted runner to a runner group configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise`\nscope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#add-a-self-hosted-runner-to-a-group-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/add-self-hosted-runner-to-group-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Add a self-hosted runner to a group for an enterprise",
           "tags": [
             "enterprise-admin"
           ],
@@ -18884,6 +19928,943 @@
           }
         }
       },
+      "/enterprises/{enterprise}/actions/runners/{runner_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#delete-self-hosted-runner-from-an-enterprise"
+          },
+          "operationId": "enterprise-admin/delete-self-hosted-runner-from-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Delete a self-hosted runner from an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runners"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "description": "Gets a specific self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#get-a-self-hosted-runner-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/get-self-hosted-runner-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "busy": true,
+                        "id": 23,
+                        "labels": [
+                          {
+                            "id": 5,
+                            "name": "self-hosted",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 7,
+                            "name": "X64",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 20,
+                            "name": "macOS",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 21,
+                            "name": "no-gpu",
+                            "type": "custom"
+                          }
+                        ],
+                        "name": "MBP",
+                        "os": "macos",
+                        "status": "online"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "A self hosted runner",
+                    "properties": {
+                      "busy": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "description": "The id of the runner.",
+                        "example": 5,
+                        "type": "integer"
+                      },
+                      "labels": {
+                        "items": {
+                          "description": "A label for a self hosted runner",
+                          "properties": {
+                            "id": {
+                              "description": "Unique identifier of the label.",
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "Name of the label.",
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                              "enum": [
+                                "read-only",
+                                "custom"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "title": "Self hosted runner label",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "name": {
+                        "description": "The name of the runner.",
+                        "example": "iMac",
+                        "type": "string"
+                      },
+                      "os": {
+                        "description": "The Operating System of the runner.",
+                        "example": "macos",
+                        "type": "string"
+                      },
+                      "status": {
+                        "description": "The status of the runner.",
+                        "example": "online",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "os",
+                      "status",
+                      "busy",
+                      "labels"
+                    ],
+                    "title": "Self hosted runners",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get a self-hosted runner for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runners"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/actions/runners/{runner_id}/labels": {
+        "delete": {
+          "deprecated": null,
+          "description": "Remove all custom labels from a self-hosted runner configured in an\nenterprise. Returns the remaining read-only labels from the runner.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#remove-all-custom-labels-from-a-self-hosted-runner-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/remove-all-custom-labels-from-self-hosted-runner-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "labels": [
+                          {
+                            "id": 5,
+                            "name": "self-hosted",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 7,
+                            "name": "X64",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 20,
+                            "name": "macOS",
+                            "type": "read-only"
+                          }
+                        ],
+                        "total_count": 3
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "labels": {
+                        "items": {
+                          "description": "A label for a self hosted runner",
+                          "properties": {
+                            "id": {
+                              "description": "Unique identifier of the label.",
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "Name of the label.",
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                              "enum": [
+                                "read-only",
+                                "custom"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "title": "Self hosted runner label",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "labels"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Resource not found"
+            },
+            "422": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Validation Error Simple",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "errors": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "message",
+                      "documentation_url"
+                    ],
+                    "title": "Validation Error Simple",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Validation failed, or the endpoint has been spammed."
+            }
+          },
+          "summary": "Remove all custom labels from a self-hosted runner for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runners"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "description": "Lists all labels for a self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#list-labels-for-a-self-hosted-runner-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/list-labels-for-self-hosted-runner-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "labels": [
+                          {
+                            "id": 5,
+                            "name": "self-hosted",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 7,
+                            "name": "X64",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 20,
+                            "name": "macOS",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 21,
+                            "name": "no-gpu",
+                            "type": "custom"
+                          }
+                        ],
+                        "total_count": 4
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "labels": {
+                        "items": {
+                          "description": "A label for a self hosted runner",
+                          "properties": {
+                            "id": {
+                              "description": "Unique identifier of the label.",
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "Name of the label.",
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                              "enum": [
+                                "read-only",
+                                "custom"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "title": "Self hosted runner label",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "labels"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Resource not found"
+            }
+          },
+          "summary": "List labels for a self-hosted runner for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runners"
+          }
+        },
+        "post": {
+          "deprecated": null,
+          "description": "Add custom labels to a self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#add-custom-labels-to-a-self-hosted-runner-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/add-custom-labels-to-self-hosted-runner-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "labels": [
+                        "gpu",
+                        "accelerated"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "description": "The names of the custom labels to add to the runner.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "labels"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "labels": [
+                          {
+                            "id": 5,
+                            "name": "self-hosted",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 7,
+                            "name": "X64",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 20,
+                            "name": "macOS",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 21,
+                            "name": "no-gpu",
+                            "type": "custom"
+                          }
+                        ],
+                        "total_count": 4
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "labels": {
+                        "items": {
+                          "description": "A label for a self hosted runner",
+                          "properties": {
+                            "id": {
+                              "description": "Unique identifier of the label.",
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "Name of the label.",
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                              "enum": [
+                                "read-only",
+                                "custom"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "title": "Self hosted runner label",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "labels"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Resource not found"
+            },
+            "422": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Validation Error Simple",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "errors": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "message",
+                      "documentation_url"
+                    ],
+                    "title": "Validation Error Simple",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Validation failed, or the endpoint has been spammed."
+            }
+          },
+          "summary": "Add custom labels to a self-hosted runner for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runners"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Remove all previous custom labels and set the new custom labels for a specific\nself-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#set-custom-labels-for-a-self-hosted-runner-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/set-custom-labels-for-self-hosted-runner-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "labels": [
+                        "gpu",
+                        "accelerated"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "labels"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "labels": [
+                          {
+                            "id": 5,
+                            "name": "self-hosted",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 7,
+                            "name": "X64",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 20,
+                            "name": "macOS",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 21,
+                            "name": "no-gpu",
+                            "type": "custom"
+                          }
+                        ],
+                        "total_count": 4
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "labels": {
+                        "items": {
+                          "description": "A label for a self hosted runner",
+                          "properties": {
+                            "id": {
+                              "description": "Unique identifier of the label.",
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "Name of the label.",
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                              "enum": [
+                                "read-only",
+                                "custom"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "title": "Self hosted runner label",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "labels"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Resource not found"
+            },
+            "422": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Validation Error Simple",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "errors": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "message",
+                      "documentation_url"
+                    ],
+                    "title": "Validation Error Simple",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Validation failed, or the endpoint has been spammed."
+            }
+          },
+          "summary": "Set custom labels for a self-hosted runner for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runners"
+          }
+        }
+      },
       "/enterprises/{enterprise}/actions/runners/{runner_id}/labels/{name}": {
         "delete": {
           "deprecated": null,
@@ -21051,6 +23032,2302 @@
             "enabledForGitHubApps": true,
             "githubCloudOnly": false,
             "subcategory": "custom_roles"
+          }
+        }
+      },
+      "/orgs/{org}/actions/runner-groups": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#list-self-hosted-runner-groups-for-an-organization"
+          },
+          "operationId": "actions/list-self-hosted-runner-groups-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Only return runner groups that are allowed to be used by this repository.",
+              "in": "query",
+              "name": "visible_to_repository",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "runner_groups": [
+                          {
+                            "allows_public_repositories": true,
+                            "default": true,
+                            "id": 1,
+                            "inherited": false,
+                            "name": "Default",
+                            "restricted_to_workflows": false,
+                            "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/1/runners",
+                            "visibility": "all",
+                            "workflow_restrictions_read_only": false
+                          },
+                          {
+                            "allows_public_repositories": true,
+                            "default": false,
+                            "id": 2,
+                            "inherited": true,
+                            "name": "octo-runner-group",
+                            "restricted_to_workflows": true,
+                            "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/runners",
+                            "selected_repositories_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/repositories",
+                            "selected_workflows": [
+                              "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                            ],
+                            "visibility": "selected",
+                            "workflow_restrictions_read_only": true
+                          },
+                          {
+                            "allows_public_repositories": true,
+                            "default": false,
+                            "id": 3,
+                            "inherited": false,
+                            "name": "expensive-hardware",
+                            "restricted_to_workflows": false,
+                            "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/3/runners",
+                            "selected_workflows": [
+                              "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                            ],
+                            "visibility": "private",
+                            "workflow_restrictions_read_only": false
+                          }
+                        ],
+                        "total_count": 3
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "runner_groups": {
+                        "items": {
+                          "properties": {
+                            "allows_public_repositories": {
+                              "type": "boolean"
+                            },
+                            "default": {
+                              "type": "boolean"
+                            },
+                            "id": {
+                              "type": "number"
+                            },
+                            "inherited": {
+                              "type": "boolean"
+                            },
+                            "inherited_allows_public_repositories": {
+                              "type": "boolean"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "restricted_to_workflows": {
+                              "default": false,
+                              "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                              "type": "boolean"
+                            },
+                            "runners_url": {
+                              "type": "string"
+                            },
+                            "selected_repositories_url": {
+                              "description": "Link to the selected repositories resource for this runner group. Not present unless visibility was set to `selected`",
+                              "type": "string"
+                            },
+                            "selected_workflows": {
+                              "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                              "items": {
+                                "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                                "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "visibility": {
+                              "type": "string"
+                            },
+                            "workflow_restrictions_read_only": {
+                              "default": false,
+                              "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "visibility",
+                            "default",
+                            "runners_url",
+                            "inherited",
+                            "allows_public_repositories"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "runner_groups"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "List self-hosted runner groups for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "post": {
+          "deprecated": null,
+          "description": "Creates a new self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#create-a-self-hosted-runner-group-for-an-organization"
+          },
+          "operationId": "actions/create-self-hosted-runner-group-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "name": "Expensive hardware runners",
+                      "runners": [
+                        9,
+                        2
+                      ],
+                      "selected_repository_ids": [
+                        32,
+                        91
+                      ],
+                      "visibility": "selected"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "allows_public_repositories": {
+                      "default": false,
+                      "description": "Whether the runner group can be used by `public` repositories.",
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "description": "Name of the runner group.",
+                      "type": "string"
+                    },
+                    "restricted_to_workflows": {
+                      "default": false,
+                      "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                      "type": "boolean"
+                    },
+                    "runners": {
+                      "description": "List of runner IDs to add to the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the runner.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "selected_repository_ids": {
+                      "description": "List of repository IDs that can access the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the repository.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "selected_workflows": {
+                      "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                      "items": {
+                        "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                        "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "visibility": {
+                      "default": "all",
+                      "description": "Visibility of a runner group. You can select all repositories, select individual repositories, or limit access to private repositories.",
+                      "enum": [
+                        "selected",
+                        "all",
+                        "private"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "allows_public_repositories": true,
+                        "default": false,
+                        "id": 2,
+                        "inherited": false,
+                        "name": "octo-runner-group",
+                        "restricted_to_workflows": true,
+                        "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/runners",
+                        "selected_repositories_url": "https://api.github.com/orgs/octo-org/actions/runner-groups/2/repositories",
+                        "selected_workflows": [
+                          "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                        ],
+                        "visibility": "selected",
+                        "workflow_restrictions_read_only": false
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "default": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "inherited": {
+                        "type": "boolean"
+                      },
+                      "inherited_allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "restricted_to_workflows": {
+                        "default": false,
+                        "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                        "type": "boolean"
+                      },
+                      "runners_url": {
+                        "type": "string"
+                      },
+                      "selected_repositories_url": {
+                        "description": "Link to the selected repositories resource for this runner group. Not present unless visibility was set to `selected`",
+                        "type": "string"
+                      },
+                      "selected_workflows": {
+                        "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                        "items": {
+                          "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                          "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "visibility": {
+                        "type": "string"
+                      },
+                      "workflow_restrictions_read_only": {
+                        "default": false,
+                        "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "visibility",
+                      "default",
+                      "runners_url",
+                      "inherited",
+                      "allows_public_repositories"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Create a self-hosted runner group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/orgs/{org}/actions/runner-groups/{runner_group_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Deletes a self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#delete-a-self-hosted-runner-group-from-an-organization"
+          },
+          "operationId": "actions/delete-self-hosted-runner-group-from-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Delete a self-hosted runner group from an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "description": "Gets a specific self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#get-a-self-hosted-runner-group-for-an-organization"
+          },
+          "operationId": "actions/get-self-hosted-runner-group-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "allows_public_repositories": true,
+                        "default": false,
+                        "id": 2,
+                        "inherited": false,
+                        "name": "octo-runner-group",
+                        "restricted_to_workflows": true,
+                        "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/runners",
+                        "selected_repositories_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/repositories",
+                        "selected_workflows": [
+                          "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                        ],
+                        "visibility": "selected",
+                        "workflow_restrictions_read_only": false
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "default": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "inherited": {
+                        "type": "boolean"
+                      },
+                      "inherited_allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "restricted_to_workflows": {
+                        "default": false,
+                        "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                        "type": "boolean"
+                      },
+                      "runners_url": {
+                        "type": "string"
+                      },
+                      "selected_repositories_url": {
+                        "description": "Link to the selected repositories resource for this runner group. Not present unless visibility was set to `selected`",
+                        "type": "string"
+                      },
+                      "selected_workflows": {
+                        "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                        "items": {
+                          "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                          "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "visibility": {
+                        "type": "string"
+                      },
+                      "workflow_restrictions_read_only": {
+                        "default": false,
+                        "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "visibility",
+                      "default",
+                      "runners_url",
+                      "inherited",
+                      "allows_public_repositories"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get a self-hosted runner group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "patch": {
+          "deprecated": null,
+          "description": "Updates the `name` and `visibility` of a self-hosted runner group in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#update-a-self-hosted-runner-group-for-an-organization"
+          },
+          "operationId": "actions/update-self-hosted-runner-group-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "name": "Expensive hardware runners",
+                      "visibility": "selected"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "allows_public_repositories": {
+                      "default": false,
+                      "description": "Whether the runner group can be used by `public` repositories.",
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "description": "Name of the runner group.",
+                      "type": "string"
+                    },
+                    "restricted_to_workflows": {
+                      "default": false,
+                      "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                      "type": "boolean"
+                    },
+                    "selected_workflows": {
+                      "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                      "items": {
+                        "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                        "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "visibility": {
+                      "description": "Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories.",
+                      "enum": [
+                        "selected",
+                        "all",
+                        "private"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "allows_public_repositories": true,
+                        "default": false,
+                        "id": 2,
+                        "inherited": false,
+                        "name": "octo-runner-group",
+                        "restricted_to_workflows": true,
+                        "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/runners",
+                        "selected_repositories_url": "https://api.github.com/orgs/octo-org/actions/runner-groups/2/repositories",
+                        "selected_workflows": [
+                          "octo-org/octo-repo/.github/workflows/deploy.yaml@refs/heads/main"
+                        ],
+                        "visibility": "selected",
+                        "workflow_restrictions_read_only": false
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "default": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "inherited": {
+                        "type": "boolean"
+                      },
+                      "inherited_allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "restricted_to_workflows": {
+                        "default": false,
+                        "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                        "type": "boolean"
+                      },
+                      "runners_url": {
+                        "type": "string"
+                      },
+                      "selected_repositories_url": {
+                        "description": "Link to the selected repositories resource for this runner group. Not present unless visibility was set to `selected`",
+                        "type": "string"
+                      },
+                      "selected_workflows": {
+                        "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                        "items": {
+                          "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                          "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main",
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "visibility": {
+                        "type": "string"
+                      },
+                      "workflow_restrictions_read_only": {
+                        "default": false,
+                        "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "visibility",
+                      "default",
+                      "runners_url",
+                      "inherited",
+                      "allows_public_repositories"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Update a self-hosted runner group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists the repositories with access to a self-hosted runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#list-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+          },
+          "operationId": "actions/list-repo-access-to-self-hosted-runner-group-in-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "repositories": [
+                          {
+                            "archive_url": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+                            "archived": false,
+                            "assignees_url": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+                            "blobs_url": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+                            "branches_url": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+                            "clone_url": "https://github.com/octocat/Hello-World.git",
+                            "collaborators_url": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+                            "comments_url": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+                            "commits_url": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+                            "compare_url": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+                            "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+                            "contributors_url": "https://api.github.com/repos/octocat/Hello-World/contributors",
+                            "created_at": "2011-01-26T19:01:12Z",
+                            "default_branch": "master",
+                            "delete_branch_on_merge": true,
+                            "deployments_url": "https://api.github.com/repos/octocat/Hello-World/deployments",
+                            "description": "This your first repo!",
+                            "disabled": false,
+                            "downloads_url": "https://api.github.com/repos/octocat/Hello-World/downloads",
+                            "events_url": "https://api.github.com/repos/octocat/Hello-World/events",
+                            "fork": false,
+                            "forks": 1,
+                            "forks_count": 9,
+                            "forks_url": "https://api.github.com/repos/octocat/Hello-World/forks",
+                            "full_name": "octocat/Hello-World",
+                            "git_commits_url": "https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+                            "git_refs_url": "https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+                            "git_tags_url": "https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+                            "git_url": "git:github.com/octocat/Hello-World.git",
+                            "has_downloads": true,
+                            "has_issues": true,
+                            "has_pages": false,
+                            "has_projects": true,
+                            "has_wiki": true,
+                            "homepage": "https://github.com",
+                            "hooks_url": "https://api.github.com/repos/octocat/Hello-World/hooks",
+                            "html_url": "https://github.com/octocat/Hello-World",
+                            "id": 1296269,
+                            "is_template": true,
+                            "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+                            "issue_events_url": "https://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+                            "issues_url": "https://api.github.com/repos/octocat/Hello-World/issues{/number}",
+                            "keys_url": "https://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+                            "labels_url": "https://api.github.com/repos/octocat/Hello-World/labels{/name}",
+                            "language": null,
+                            "languages_url": "https://api.github.com/repos/octocat/Hello-World/languages",
+                            "license": {
+                              "key": "mit",
+                              "name": "MIT License",
+                              "node_id": "MDc6TGljZW5zZW1pdA==",
+                              "spdx_id": "MIT",
+                              "url": "https://api.github.com/licenses/mit"
+                            },
+                            "merges_url": "https://api.github.com/repos/octocat/Hello-World/merges",
+                            "milestones_url": "https://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+                            "mirror_url": "git:git.example.com/octocat/Hello-World",
+                            "name": "Hello-World",
+                            "network_count": 0,
+                            "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+                            "notifications_url": "https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+                            "open_issues": 1,
+                            "open_issues_count": 0,
+                            "owner": {
+                              "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                              "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                              "followers_url": "https://api.github.com/users/octocat/followers",
+                              "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                              "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                              "html_url": "https://github.com/octocat",
+                              "id": 1,
+                              "login": "octocat",
+                              "node_id": "MDQ6VXNlcjE=",
+                              "organizations_url": "https://api.github.com/users/octocat/orgs",
+                              "received_events_url": "https://api.github.com/users/octocat/received_events",
+                              "repos_url": "https://api.github.com/users/octocat/repos",
+                              "site_admin": false,
+                              "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                              "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                              "type": "User",
+                              "url": "https://api.github.com/users/octocat"
+                            },
+                            "permissions": {
+                              "admin": false,
+                              "pull": true,
+                              "push": false
+                            },
+                            "private": false,
+                            "pulls_url": "https://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+                            "pushed_at": "2011-01-26T19:06:43Z",
+                            "releases_url": "https://api.github.com/repos/octocat/Hello-World/releases{/id}",
+                            "size": 108,
+                            "ssh_url": "git@github.com:octocat/Hello-World.git",
+                            "stargazers_count": 80,
+                            "stargazers_url": "https://api.github.com/repos/octocat/Hello-World/stargazers",
+                            "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+                            "subscribers_count": 42,
+                            "subscribers_url": "https://api.github.com/repos/octocat/Hello-World/subscribers",
+                            "subscription_url": "https://api.github.com/repos/octocat/Hello-World/subscription",
+                            "svn_url": "https://svn.github.com/octocat/Hello-World",
+                            "tags_url": "https://api.github.com/repos/octocat/Hello-World/tags",
+                            "teams_url": "https://api.github.com/repos/octocat/Hello-World/teams",
+                            "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
+                            "template_repository": {
+                              "allow_auto_merge": false,
+                              "allow_merge_commit": true,
+                              "allow_rebase_merge": true,
+                              "allow_squash_merge": true,
+                              "archive_url": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+                              "archived": false,
+                              "assignees_url": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+                              "blobs_url": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+                              "branches_url": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+                              "clone_url": "https://github.com/octocat/Hello-World.git",
+                              "collaborators_url": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+                              "comments_url": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+                              "commits_url": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+                              "compare_url": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+                              "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+                              "contributors_url": "https://api.github.com/repos/octocat/Hello-World/contributors",
+                              "created_at": "2011-01-26T19:01:12Z",
+                              "default_branch": "master",
+                              "delete_branch_on_merge": true,
+                              "deployments_url": "https://api.github.com/repos/octocat/Hello-World/deployments",
+                              "description": "This your first repo!",
+                              "disabled": false,
+                              "downloads_url": "https://api.github.com/repos/octocat/Hello-World/downloads",
+                              "events_url": "https://api.github.com/repos/octocat/Hello-World/events",
+                              "fork": false,
+                              "forks": 9,
+                              "forks_count": 9,
+                              "forks_url": "https://api.github.com/repos/octocat/Hello-World/forks",
+                              "full_name": "octocat/Hello-World",
+                              "git_commits_url": "https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+                              "git_refs_url": "https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+                              "git_tags_url": "https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+                              "git_url": "git:github.com/octocat/Hello-World.git",
+                              "has_downloads": true,
+                              "has_issues": true,
+                              "has_pages": false,
+                              "has_projects": true,
+                              "has_wiki": true,
+                              "homepage": "https://github.com",
+                              "hooks_url": "https://api.github.com/repos/octocat/Hello-World/hooks",
+                              "html_url": "https://github.com/octocat/Hello-World",
+                              "id": 1296269,
+                              "is_template": true,
+                              "issue_comment_url": "https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+                              "issue_events_url": "https://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+                              "issues_url": "https://api.github.com/repos/octocat/Hello-World/issues{/number}",
+                              "keys_url": "https://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+                              "labels_url": "https://api.github.com/repos/octocat/Hello-World/labels{/name}",
+                              "language": null,
+                              "languages_url": "https://api.github.com/repos/octocat/Hello-World/languages",
+                              "license": {
+                                "html_url": "https://api.github.com/licenses/mit",
+                                "key": "mit",
+                                "name": "MIT License",
+                                "node_id": "MDc6TGljZW5zZW1pdA==",
+                                "spdx_id": "MIT",
+                                "url": "https://api.github.com/licenses/mit"
+                              },
+                              "merges_url": "https://api.github.com/repos/octocat/Hello-World/merges",
+                              "milestones_url": "https://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+                              "mirror_url": "git:git.example.com/octocat/Hello-World",
+                              "name": "Hello-World",
+                              "network_count": 0,
+                              "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+                              "notifications_url": "https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+                              "open_issues": 0,
+                              "open_issues_count": 0,
+                              "organization": null,
+                              "owner": {
+                                "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                                "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+                                "followers_url": "https://api.github.com/users/octocat/followers",
+                                "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+                                "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+                                "html_url": "https://github.com/octocat",
+                                "id": 1,
+                                "login": "octocat",
+                                "node_id": "MDQ6VXNlcjE=",
+                                "organizations_url": "https://api.github.com/users/octocat/orgs",
+                                "received_events_url": "https://api.github.com/users/octocat/received_events",
+                                "repos_url": "https://api.github.com/users/octocat/repos",
+                                "site_admin": false,
+                                "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                                "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+                                "type": "User",
+                                "url": "https://api.github.com/users/octocat"
+                              },
+                              "permissions": {
+                                "admin": false,
+                                "pull": true,
+                                "push": false
+                              },
+                              "private": false,
+                              "pulls_url": "https://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+                              "pushed_at": "2011-01-26T19:06:43Z",
+                              "releases_url": "https://api.github.com/repos/octocat/Hello-World/releases{/id}",
+                              "size": 108,
+                              "ssh_url": "git@github.com:octocat/Hello-World.git",
+                              "stargazers_count": 80,
+                              "stargazers_url": "https://api.github.com/repos/octocat/Hello-World/stargazers",
+                              "statuses_url": "https://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+                              "subscribers_count": 42,
+                              "subscribers_url": "https://api.github.com/repos/octocat/Hello-World/subscribers",
+                              "subscription_url": "https://api.github.com/repos/octocat/Hello-World/subscription",
+                              "svn_url": "https://svn.github.com/octocat/Hello-World",
+                              "tags_url": "https://api.github.com/repos/octocat/Hello-World/tags",
+                              "teams_url": "https://api.github.com/repos/octocat/Hello-World/teams",
+                              "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
+                              "template_repository": null,
+                              "topics": [
+                                "octocat",
+                                "atom",
+                                "electron",
+                                "api"
+                              ],
+                              "trees_url": "https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+                              "updated_at": "2011-01-26T19:14:43Z",
+                              "url": "https://api.github.com/repos/octocat/Hello-World",
+                              "visibility": "public",
+                              "watchers": 80,
+                              "watchers_count": 80
+                            },
+                            "topics": [
+                              "octocat",
+                              "atom",
+                              "electron",
+                              "api"
+                            ],
+                            "trees_url": "https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+                            "updated_at": "2011-01-26T19:14:43Z",
+                            "url": "https://api.github.com/repos/octocat/Hello-World",
+                            "visibility": "public",
+                            "watchers": 1,
+                            "watchers_count": 80
+                          }
+                        ],
+                        "total_count": 1
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "repositories": {
+                        "items": {
+                          "description": "Minimal Repository",
+                          "properties": {
+                            "allow_forking": {
+                              "type": "boolean"
+                            },
+                            "archive_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+                              "type": "string"
+                            },
+                            "archived": {
+                              "type": "boolean"
+                            },
+                            "assignees_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+                              "type": "string"
+                            },
+                            "blobs_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+                              "type": "string"
+                            },
+                            "branches_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+                              "type": "string"
+                            },
+                            "clone_url": {
+                              "type": "string"
+                            },
+                            "code_of_conduct": {
+                              "description": "Code Of Conduct",
+                              "properties": {
+                                "body": {
+                                  "example": "# Contributor Covenant Code of Conduct\n\n## Our Pledge\n\nIn the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.\n\n## Our Standards\n\nExamples of behavior that contributes to creating a positive environment include:\n\n* Using welcoming and inclusive language\n* Being respectful of differing viewpoints and experiences\n* Gracefully accepting constructive criticism\n* Focusing on what is best for the community\n* Showing empathy towards other community members\n\nExamples of unacceptable behavior by participants include:\n\n* The use of sexualized language or imagery and unwelcome sexual attention or advances\n* Trolling, insulting/derogatory comments, and personal or political attacks\n* Public or private harassment\n* Publishing others' private information, such as a physical or electronic address, without explicit permission\n* Other conduct which could reasonably be considered inappropriate in a professional setting\n\n## Our Responsibilities\n\nProject maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response\n                  to any instances of unacceptable behavior.\n\nProject maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.\n\n## Scope\n\nThis Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community. Examples of representing a project or community include using an official project e-mail address,\n                  posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be further defined and clarified by project maintainers.\n\n## Enforcement\n\nInstances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at [EMAIL]. The project team will review and investigate all complaints, and will respond in a way that it deems appropriate to the circumstances. The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.\n\nProject maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.\n\n## Attribution\n\nThis Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at [http://contributor-covenant.org/version/1/4][version]\n\n[homepage]: http://contributor-covenant.org\n[version]: http://contributor-covenant.org/version/1/4/\n",
+                                  "type": "string"
+                                },
+                                "html_url": {
+                                  "format": "uri",
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "key": {
+                                  "example": "contributor_covenant",
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "example": "Contributor Covenant",
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "example": "https://api.github.com/codes_of_conduct/contributor_covenant",
+                                  "format": "uri",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "html_url",
+                                "key",
+                                "name"
+                              ],
+                              "title": "Code Of Conduct",
+                              "type": "object"
+                            },
+                            "collaborators_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+                              "type": "string"
+                            },
+                            "comments_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/comments{/number}",
+                              "type": "string"
+                            },
+                            "commits_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+                              "type": "string"
+                            },
+                            "compare_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+                              "type": "string"
+                            },
+                            "contents_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+                              "type": "string"
+                            },
+                            "contributors_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/contributors",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "created_at": {
+                              "example": "2011-01-26T19:01:12Z",
+                              "format": "date-time",
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "default_branch": {
+                              "type": "string"
+                            },
+                            "delete_branch_on_merge": {
+                              "type": "boolean"
+                            },
+                            "deployments_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/deployments",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "description": {
+                              "example": "This your first repo!",
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "disabled": {
+                              "type": "boolean"
+                            },
+                            "downloads_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/downloads",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "events_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/events",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "fork": {
+                              "type": "boolean"
+                            },
+                            "forks": {
+                              "example": 0,
+                              "type": "integer"
+                            },
+                            "forks_count": {
+                              "type": "integer"
+                            },
+                            "forks_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/forks",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "full_name": {
+                              "example": "octocat/Hello-World",
+                              "type": "string"
+                            },
+                            "git_commits_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+                              "type": "string"
+                            },
+                            "git_refs_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+                              "type": "string"
+                            },
+                            "git_tags_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+                              "type": "string"
+                            },
+                            "git_url": {
+                              "type": "string"
+                            },
+                            "has_discussions": {
+                              "type": "boolean"
+                            },
+                            "has_downloads": {
+                              "type": "boolean"
+                            },
+                            "has_issues": {
+                              "type": "boolean"
+                            },
+                            "has_pages": {
+                              "type": "boolean"
+                            },
+                            "has_projects": {
+                              "type": "boolean"
+                            },
+                            "has_wiki": {
+                              "type": "boolean"
+                            },
+                            "homepage": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "hooks_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/hooks",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "html_url": {
+                              "example": "https://github.com/octocat/Hello-World",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "id": {
+                              "example": 1296269,
+                              "type": "integer"
+                            },
+                            "is_template": {
+                              "type": "boolean"
+                            },
+                            "issue_comment_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+                              "type": "string"
+                            },
+                            "issue_events_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+                              "type": "string"
+                            },
+                            "issues_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/issues{/number}",
+                              "type": "string"
+                            },
+                            "keys_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+                              "type": "string"
+                            },
+                            "labels_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}",
+                              "type": "string"
+                            },
+                            "language": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "languages_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/languages",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "license": {
+                              "nullable": true,
+                              "properties": {
+                                "key": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "node_id": {
+                                  "type": "string"
+                                },
+                                "spdx_id": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "merges_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/merges",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "milestones_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+                              "type": "string"
+                            },
+                            "mirror_url": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "name": {
+                              "example": "Hello-World",
+                              "type": "string"
+                            },
+                            "network_count": {
+                              "type": "integer"
+                            },
+                            "node_id": {
+                              "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+                              "type": "string"
+                            },
+                            "notifications_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+                              "type": "string"
+                            },
+                            "open_issues": {
+                              "example": 0,
+                              "type": "integer"
+                            },
+                            "open_issues_count": {
+                              "type": "integer"
+                            },
+                            "owner": {
+                              "description": "A GitHub user.",
+                              "properties": {
+                                "avatar_url": {
+                                  "example": "https://github.com/images/error/octocat_happy.gif",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "email": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "events_url": {
+                                  "example": "https://api.github.com/users/octocat/events{/privacy}",
+                                  "type": "string"
+                                },
+                                "followers_url": {
+                                  "example": "https://api.github.com/users/octocat/followers",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "following_url": {
+                                  "example": "https://api.github.com/users/octocat/following{/other_user}",
+                                  "type": "string"
+                                },
+                                "gists_url": {
+                                  "example": "https://api.github.com/users/octocat/gists{/gist_id}",
+                                  "type": "string"
+                                },
+                                "gravatar_id": {
+                                  "example": "41d064eb2195891e12d0413f63227ea7",
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "html_url": {
+                                  "example": "https://github.com/octocat",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "example": 1,
+                                  "type": "integer"
+                                },
+                                "login": {
+                                  "example": "octocat",
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "node_id": {
+                                  "example": "MDQ6VXNlcjE=",
+                                  "type": "string"
+                                },
+                                "organizations_url": {
+                                  "example": "https://api.github.com/users/octocat/orgs",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "received_events_url": {
+                                  "example": "https://api.github.com/users/octocat/received_events",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "repos_url": {
+                                  "example": "https://api.github.com/users/octocat/repos",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "site_admin": {
+                                  "type": "boolean"
+                                },
+                                "starred_at": {
+                                  "example": "\"2020-07-09T00:17:55Z\"",
+                                  "type": "string"
+                                },
+                                "starred_url": {
+                                  "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                                  "type": "string"
+                                },
+                                "subscriptions_url": {
+                                  "example": "https://api.github.com/users/octocat/subscriptions",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "example": "User",
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "example": "https://api.github.com/users/octocat",
+                                  "format": "uri",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "avatar_url",
+                                "events_url",
+                                "followers_url",
+                                "following_url",
+                                "gists_url",
+                                "gravatar_id",
+                                "html_url",
+                                "id",
+                                "node_id",
+                                "login",
+                                "organizations_url",
+                                "received_events_url",
+                                "repos_url",
+                                "site_admin",
+                                "starred_url",
+                                "subscriptions_url",
+                                "type",
+                                "url"
+                              ],
+                              "title": "Simple User",
+                              "type": "object"
+                            },
+                            "permissions": {
+                              "properties": {
+                                "admin": {
+                                  "type": "boolean"
+                                },
+                                "maintain": {
+                                  "type": "boolean"
+                                },
+                                "pull": {
+                                  "type": "boolean"
+                                },
+                                "push": {
+                                  "type": "boolean"
+                                },
+                                "triage": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "private": {
+                              "type": "boolean"
+                            },
+                            "pulls_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+                              "type": "string"
+                            },
+                            "pushed_at": {
+                              "example": "2011-01-26T19:06:43Z",
+                              "format": "date-time",
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "releases_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/releases{/id}",
+                              "type": "string"
+                            },
+                            "role_name": {
+                              "example": "admin",
+                              "type": "string"
+                            },
+                            "size": {
+                              "description": "The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.",
+                              "type": "integer"
+                            },
+                            "ssh_url": {
+                              "type": "string"
+                            },
+                            "stargazers_count": {
+                              "type": "integer"
+                            },
+                            "stargazers_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/stargazers",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "statuses_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+                              "type": "string"
+                            },
+                            "subscribers_count": {
+                              "type": "integer"
+                            },
+                            "subscribers_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/subscribers",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "subscription_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/subscription",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "svn_url": {
+                              "type": "string"
+                            },
+                            "tags_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/tags",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "teams_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/teams",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "temp_clone_token": {
+                              "type": "string"
+                            },
+                            "topics": {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "trees_url": {
+                              "example": "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+                              "type": "string"
+                            },
+                            "updated_at": {
+                              "example": "2011-01-26T19:14:43Z",
+                              "format": "date-time",
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "url": {
+                              "example": "https://api.github.com/repos/octocat/Hello-World",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "visibility": {
+                              "type": "string"
+                            },
+                            "watchers": {
+                              "example": 0,
+                              "type": "integer"
+                            },
+                            "watchers_count": {
+                              "type": "integer"
+                            },
+                            "web_commit_signoff_required": {
+                              "example": false,
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "archive_url",
+                            "assignees_url",
+                            "blobs_url",
+                            "branches_url",
+                            "collaborators_url",
+                            "comments_url",
+                            "commits_url",
+                            "compare_url",
+                            "contents_url",
+                            "contributors_url",
+                            "deployments_url",
+                            "description",
+                            "downloads_url",
+                            "events_url",
+                            "fork",
+                            "forks_url",
+                            "full_name",
+                            "git_commits_url",
+                            "git_refs_url",
+                            "git_tags_url",
+                            "hooks_url",
+                            "html_url",
+                            "id",
+                            "node_id",
+                            "issue_comment_url",
+                            "issue_events_url",
+                            "issues_url",
+                            "keys_url",
+                            "labels_url",
+                            "languages_url",
+                            "merges_url",
+                            "milestones_url",
+                            "name",
+                            "notifications_url",
+                            "owner",
+                            "private",
+                            "pulls_url",
+                            "releases_url",
+                            "stargazers_url",
+                            "statuses_url",
+                            "subscribers_url",
+                            "subscription_url",
+                            "tags_url",
+                            "teams_url",
+                            "trees_url",
+                            "url"
+                          ],
+                          "title": "Minimal Repository",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "repositories"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "List repository access to a self-hosted runner group in an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#set-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+          },
+          "operationId": "actions/set-repo-access-to-self-hosted-runner-group-in-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "selected_repository_ids": [
+                        32,
+                        91
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "selected_repository_ids": {
+                      "description": "List of repository IDs that can access the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the repository.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "selected_repository_ids"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Set repository access for a self-hosted runner group in an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see \"[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization).\"\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#remove-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+          },
+          "operationId": "actions/remove-repo-access-to-self-hosted-runner-group-in-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the repository.",
+              "in": "path",
+              "name": "repository_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Remove repository access to a self-hosted runner group in an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Adds a repository to the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see \"[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization).\"\n\nYou must authenticate using an access token with the `admin:org`\nscope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#add-repository-acess-to-a-self-hosted-runner-group-in-an-organization"
+          },
+          "operationId": "actions/add-repo-access-to-self-hosted-runner-group-in-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the repository.",
+              "in": "path",
+              "name": "repository_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Add repository access to a self-hosted runner group in an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists self-hosted runners that are in a specific organization group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-organization"
+          },
+          "operationId": "actions/list-self-hosted-runners-in-group-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "runners": [
+                          {
+                            "busy": true,
+                            "id": 23,
+                            "labels": [
+                              {
+                                "id": 5,
+                                "name": "self-hosted",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 7,
+                                "name": "X64",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 11,
+                                "name": "Linux",
+                                "type": "read-only"
+                              }
+                            ],
+                            "name": "linux_runner",
+                            "os": "linux",
+                            "status": "online"
+                          },
+                          {
+                            "busy": false,
+                            "id": 24,
+                            "labels": [
+                              {
+                                "id": 5,
+                                "name": "self-hosted",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 7,
+                                "name": "X64",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 20,
+                                "name": "macOS",
+                                "type": "read-only"
+                              },
+                              {
+                                "id": 21,
+                                "name": "no-gpu",
+                                "type": "custom"
+                              }
+                            ],
+                            "name": "mac_runner",
+                            "os": "macos",
+                            "status": "offline"
+                          }
+                        ],
+                        "total_count": 2
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "runners": {
+                        "items": {
+                          "description": "A self hosted runner",
+                          "properties": {
+                            "busy": {
+                              "type": "boolean"
+                            },
+                            "id": {
+                              "description": "The id of the runner.",
+                              "example": 5,
+                              "type": "integer"
+                            },
+                            "labels": {
+                              "items": {
+                                "description": "A label for a self hosted runner",
+                                "properties": {
+                                  "id": {
+                                    "description": "Unique identifier of the label.",
+                                    "type": "integer"
+                                  },
+                                  "name": {
+                                    "description": "Name of the label.",
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                                    "enum": [
+                                      "read-only",
+                                      "custom"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "name"
+                                ],
+                                "title": "Self hosted runner label",
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "name": {
+                              "description": "The name of the runner.",
+                              "example": "iMac",
+                              "type": "string"
+                            },
+                            "os": {
+                              "description": "The Operating System of the runner.",
+                              "example": "macos",
+                              "type": "string"
+                            },
+                            "status": {
+                              "description": "The status of the runner.",
+                              "example": "online",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "os",
+                            "status",
+                            "busy",
+                            "labels"
+                          ],
+                          "title": "Self hosted runners",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "runners"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response",
+              "headers": {
+                "Link": {
+                  "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
+                  "required": null,
+                  "schema": {
+                    "type": "string"
+                  },
+                  "style": "simple"
+                }
+              }
+            }
+          },
+          "summary": "List self-hosted runners in a group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Replaces the list of self-hosted runners that are part of an organization runner group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#set-self-hosted-runners-in-a-group-for-an-organization"
+          },
+          "operationId": "actions/set-self-hosted-runners-in-group-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "runners": [
+                        9,
+                        2
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "runners": {
+                      "description": "List of runner IDs to add to the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the runner.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "runners"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Set self-hosted runners in a group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#remove-a-self-hosted-runner-from-a-group-for-an-organization"
+          },
+          "operationId": "actions/remove-self-hosted-runner-from-group-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Remove a self-hosted runner from a group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "put": {
+          "deprecated": null,
+          "description": "Adds a self-hosted runner to a runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org`\nscope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#add-a-self-hosted-runner-to-a-group-for-an-organization"
+          },
+          "operationId": "actions/add-self-hosted-runner-to-group-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Add a self-hosted runner to a group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
+            "subcategory": "self-hosted-runner-groups"
           }
         }
       },
@@ -32225,34 +36502,17 @@
           }
         }
       },
-      "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories": {
-        "get": {
+      "/orgs/{org}/actions/permissions/workflow": {
+        "put": {
           "responses": {
-            "changed": {
-              "200": {
-                "content": {
-                  "changed": {
-                    "application/json": {
-                      "schema_changed": {
-                        "properties_changed": {
-                          "changed": {
-                            "repositories": {
-                              "items_changed": {
-                                "properties_changed": {
-                                  "removed": [
-                                    "security_and_analysis"
-                                  ]
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+            "added": [
+              [
+                "409",
+                {
+                  "description": "Conflict response when changing a setting is prevented by the owning enterprise"
                 }
-              }
-            }
+              ]
+            ]
           }
         }
       },
@@ -32655,6 +36915,9 @@
                               "enum_changed": {
                                 "added": false,
                                 "removed": false,
+                                "values_added": [
+                                  "enterprise"
+                                ],
                                 "values_removed": [
                                   "user"
                                 ]
@@ -32682,6 +36945,9 @@
                           "enum_changed": {
                             "added": false,
                             "removed": false,
+                            "values_added": [
+                              "enterprise"
+                            ],
                             "values_removed": [
                               "user"
                             ]
@@ -34391,15 +38657,8 @@
       }
     },
     "removed": {
-      "/enterprises/{enterprise}/code_security_and_analysis": [
-        "get",
-        "patch"
-      ],
       "/enterprises/{enterprise}/dependabot/alerts": [
         "get"
-      ],
-      "/enterprises/{enterprise}/{security_product}/{enablement}": [
-        "post"
       ],
       "/marketplace_listing/accounts/{account_id}": [
         "get"
