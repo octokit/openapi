@@ -5053,6 +5053,917 @@
         }
       }
     },
+    "/orgs/{org}/actions/permissions/workflow": {
+      "put": {
+        "summary": "Set default workflow permissions for an organization",
+        "description": "Sets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an organization, and sets if GitHub Actions\ncan submit approving pull request reviews. For more information, see\n\"[Setting the permissions of the GITHUB_TOKEN for your organization](https://docs.github.com/enterprise-cloud@latest//organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#setting-the-permissions-of-the-github_token-for-your-organization).\"\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/set-github-actions-default-workflow-permissions-organization",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-default-workflow-permissions"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success response"
+          },
+          "409": {
+            "description": "Conflict response when changing a setting is prevented by the owning enterprise"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/actions-set-default-workflow-permissions"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/actions-default-workflow-permissions"
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "permissions"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups": {
+      "get": {
+        "summary": "List self-hosted runner groups for an organization",
+        "description": "Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/list-self-hosted-runner-groups-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-self-hosted-runner-groups-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/visible-to-repository"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "runner_groups"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "number"
+                    },
+                    "runner_groups": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner-groups-org"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-groups-org"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a self-hosted runner group for an organization",
+        "description": "Creates a new self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/create-self-hosted-runner-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#create-a-self-hosted-runner-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Name of the runner group.",
+                    "type": "string"
+                  },
+                  "visibility": {
+                    "description": "Visibility of a runner group. You can select all repositories, select individual repositories, or limit access to private repositories.",
+                    "type": "string",
+                    "enum": [
+                      "selected",
+                      "all",
+                      "private"
+                    ],
+                    "default": "all"
+                  },
+                  "selected_repository_ids": {
+                    "description": "List of repository IDs that can access the runner group.",
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "description": "Unique identifier of the repository."
+                    }
+                  },
+                  "runners": {
+                    "description": "List of runner IDs to add to the runner group.",
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "description": "Unique identifier of the runner."
+                    }
+                  },
+                  "allows_public_repositories": {
+                    "description": "Whether the runner group can be used by `public` repositories.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "restricted_to_workflows": {
+                    "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "selected_workflows": {
+                    "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                      "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main"
+                    }
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "Expensive hardware runners",
+                    "visibility": "selected",
+                    "selected_repository_ids": [
+                      32,
+                      91
+                    ],
+                    "runners": [
+                      9,
+                      2
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runner-groups-org"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-group"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}": {
+      "get": {
+        "summary": "Get a self-hosted runner group for an organization",
+        "description": "Gets a specific self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/get-self-hosted-runner-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#get-a-self-hosted-runner-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runner-groups-org"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-group-item"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a self-hosted runner group for an organization",
+        "description": "Updates the `name` and `visibility` of a self-hosted runner group in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/update-self-hosted-runner-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#update-a-self-hosted-runner-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Name of the runner group.",
+                    "type": "string"
+                  },
+                  "visibility": {
+                    "description": "Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories.",
+                    "type": "string",
+                    "enum": [
+                      "selected",
+                      "all",
+                      "private"
+                    ]
+                  },
+                  "allows_public_repositories": {
+                    "description": "Whether the runner group can be used by `public` repositories.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "restricted_to_workflows": {
+                    "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "selected_workflows": {
+                    "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                      "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main"
+                    }
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "Expensive hardware runners",
+                    "visibility": "selected"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runner-groups-org"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-group"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a self-hosted runner group from an organization",
+        "description": "Deletes a self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/delete-self-hosted-runner-group-from-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#delete-a-self-hosted-runner-group-from-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories": {
+      "get": {
+        "summary": "List repository access to a self-hosted runner group in an organization",
+        "description": "Lists the repositories with access to a self-hosted runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/list-repo-access-to-self-hosted-runner-group-in-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "repositories"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "number"
+                    },
+                    "repositories": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/minimal-repository"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository-paginated"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Set repository access for a self-hosted runner group in an organization",
+        "description": "Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/set-repo-access-to-self-hosted-runner-group-in-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "selected_repository_ids": {
+                    "description": "List of repository IDs that can access the runner group.",
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "description": "Unique identifier of the repository."
+                    }
+                  }
+                },
+                "required": [
+                  "selected_repository_ids"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "selected_repository_ids": [
+                      32,
+                      91
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}": {
+      "put": {
+        "summary": "Add repository access to a self-hosted runner group in an organization",
+        "description": "Adds a repository to the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see \"[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization).\"\n\nYou must authenticate using an access token with the `admin:org`\nscope to use this endpoint.",
+        "operationId": "actions/add-repo-access-to-self-hosted-runner-group-in-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#add-repository-acess-to-a-self-hosted-runner-group-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/repository-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": true,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove repository access to a self-hosted runner group in an organization",
+        "description": "Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see \"[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization).\"\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/remove-repo-access-to-self-hosted-runner-group-in-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#remove-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/repository-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners": {
+      "get": {
+        "summary": "List self-hosted runners in a group for an organization",
+        "description": "Lists self-hosted runners that are in a specific organization group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/list-self-hosted-runners-in-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "runners"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "number"
+                    },
+                    "runners": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-paginated"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Set self-hosted runners in a group for an organization",
+        "description": "Replaces the list of self-hosted runners that are part of an organization runner group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/set-self-hosted-runners-in-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-self-hosted-runners-in-a-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "runners": {
+                    "description": "List of runner IDs to add to the runner group.",
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "description": "Unique identifier of the runner."
+                    }
+                  }
+                },
+                "required": [
+                  "runners"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "runners": [
+                      9,
+                      2
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}": {
+      "put": {
+        "summary": "Add a self-hosted runner to a group for an organization",
+        "description": "Adds a self-hosted runner to a runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org`\nscope to use this endpoint.",
+        "operationId": "actions/add-self-hosted-runner-to-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#add-a-self-hosted-runner-to-a-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/runner-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a self-hosted runner from a group for an organization",
+        "description": "Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/remove-self-hosted-runner-from-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#remove-a-self-hosted-runner-from-a-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/runner-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
     "/orgs/{org}/announcement": {
       "get": {
         "summary": "Get announcement banner for organization",
@@ -5199,7 +6110,114 @@
         }
       }
     },
-    "/orgs/{org}/audit-log": {
+    "/repos/{owner}/{repo}/actions/permissions/access": {
+      "get": {
+        "summary": "Get the level of access for workflows outside of the repository",
+        "description": "Gets the level of access that workflows outside of the repository have to actions and reusable workflows in the repository.\nThis endpoint only applies to internal and private repositories.\nFor more information, see \"[Allowing access to components in a private repository](https://docs.github.com/enterprise-cloud@latest//repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository)\" and\n\"[Allowing access to components in an internal repository](https://docs.github.com/enterprise-cloud@latest//repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-an-internal-repository).\"\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the\nrepository `administration` permission to use this endpoint.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/get-workflow-access-to-repository",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#get-workflow-access-level-to-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/actions-workflow-access-to-repository"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/actions-workflow-access-to-repository"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "permissions"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Set the level of access for workflows outside of the repository",
+        "description": "Sets the level of access that workflows outside of the repository have to actions and reusable workflows in the repository.\nThis endpoint only applies to internal and private repositories.\nFor more information, see \"[Allowing access to components in a private repository](https://docs.github.com/enterprise-cloud@latest//repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository)\" and\n\"[Allowing access to components in an internal repository](https://docs.github.com/enterprise-cloud@latest//repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-an-internal-repository).\"\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the\nrepository `administration` permission to use this endpoint.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/set-workflow-access-to-repository",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-workflow-access-to-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/actions-workflow-access-to-repository"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/actions-workflow-access-to-repository"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "permissions"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/alerts": {
       "get": {
         "summary": "Get the audit log for an organization",
         "description": "Gets the audit log for an organization. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization).\"\n\nTo use this endpoint, you must be an organization owner, and you must use an access token with the `read:audit_log` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.\n\nBy default, the response includes up to 30 events from the past three months. Use the `phrase` parameter to filter results and retrieve older events. For example, use the `phrase` parameter with the `created` qualifier to filter events based on when the events occurred. For more information, see \"[Reviewing the audit log for your organization](https://docs.github.com/enterprise-cloud@latest//organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).\"\n\nUse pagination to retrieve fewer or more than 30 events. For more information, see \"[Resources in the REST API](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#pagination).\"",
@@ -5388,10 +6406,10 @@
         }
       }
     },
-    "/orgs/{org}/custom_roles": {
-      "post": {
-        "summary": "Create a custom role",
-        "description": "**Note**: This operation is in beta and is subject to change.\n\nCreates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+    "/repos/{owner}/{repo}/pages": {
+      "put": {
+        "summary": "Update information about a GitHub Enterprise Cloud Pages site",
+        "description": "Updates information for a GitHub Enterprise Cloud Pages site. For more information, see \"[About GitHub Pages](/github/working-with-github-pages/about-github-pages).\n\nTo use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.",
         "tags": [
           "orgs"
         ],
@@ -10503,6 +11521,99 @@
         "description": "A code scanning alert was fixed in a branch by a commit.",
         "operationId": "code-scanning-alert/fixed",
         "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code-scanning-alert"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-code-scanning-alert-fixed"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "code-scanning-alert",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "code-scanning-alert-reopened": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/enterprise-cloud@latest//rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
+        "description": "A previously fixed code scanning alert reappeared in a branch.",
+        "operationId": "code-scanning-alert/reopened",
+        "externalDocs": {
           "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
         },
         "parameters": [
@@ -10754,7 +11865,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/webhook-code-scanning-alert-reopened-by-user"
+                "$ref": "#/components/schemas/webhook-code-scanning-alert-reopened"
               }
             }
           }
@@ -10768,6 +11879,99 @@
           "githubCloudOnly": false,
           "category": "webhooks",
           "subcategory": "dependabot-alert",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "code-scanning-alert-reopened-by-user": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/enterprise-cloud@latest//rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
+        "description": "Someone reopened a code scanning alert.",
+        "operationId": "code-scanning-alert/reopened-by-user",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#commit-comment"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-code-scanning-alert-reopened-by-user"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "commit-comment",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -11338,7 +12542,7 @@
         "description": "A manifest file change introduced a vulnerable dependency that had previously been fixed.",
         "operationId": "dependabot-alert/reintroduced",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
         },
         "parameters": [
           {
@@ -11416,7 +12620,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "dependabot-alert",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -12361,7 +13565,7 @@
         "description": "A discussion was created.",
         "operationId": "discussion/created",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion-comment"
         },
         "parameters": [
           {
@@ -12439,7 +13643,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "discussion-comment",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -12919,7 +14123,7 @@
         "description": "A discussion was transferred to another repository.",
         "operationId": "discussion/transferred",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#fork"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
         },
         "parameters": [
           {
@@ -12997,9 +14201,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "fork",
+          "subcategory": "discussion",
           "supported-webhook-types": [
-            "business",
             "repository",
             "organization",
             "app"
@@ -13013,7 +14216,7 @@
         "description": "A comment on the discussion was unmarked as the answer.",
         "operationId": "discussion/unanswered",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#github-app-authorization"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
         },
         "parameters": [
           {
@@ -13091,8 +14294,10 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "github-app-authorization",
+          "subcategory": "discussion",
           "supported-webhook-types": [
+            "repository",
+            "organization",
             "app"
           ]
         }
@@ -13104,7 +14309,7 @@
         "description": "A label was removed from a discussion.",
         "operationId": "discussion/unlabeled",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#gollum"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#fork"
         },
         "parameters": [
           {
@@ -13182,8 +14387,9 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "gollum",
+          "subcategory": "fork",
           "supported-webhook-types": [
+            "business",
             "repository",
             "organization",
             "app"
@@ -13197,7 +14403,7 @@
         "description": "A discussion was unlocked.",
         "operationId": "discussion/unlocked",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#github-app-authorization"
         },
         "parameters": [
           {
@@ -13275,7 +14481,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "installation",
+          "subcategory": "github-app-authorization",
           "supported-webhook-types": [
             "app"
           ]
@@ -13288,7 +14494,7 @@
         "description": "A discussion was unpinned.",
         "operationId": "discussion/unpinned",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#gollum"
         },
         "parameters": [
           {
@@ -13366,8 +14572,10 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "installation",
+          "subcategory": "gollum",
           "supported-webhook-types": [
+            "repository",
+            "organization",
             "app"
           ]
         }
@@ -13642,6 +14850,9 @@
           "category": "webhooks",
           "subcategory": "gollum",
           "supported-webhook-types": [
+            "business",
+            "repository",
+            "organization",
             "app"
           ]
         }
@@ -14108,7 +15319,7 @@
         "description": "Someone blocked access by a GitHub App to their user or organization account.",
         "operationId": "installation/suspend",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue-comment"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
         },
         "parameters": [
           {
@@ -14186,10 +15397,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "issue-comment",
+          "subcategory": "installation-repositories",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -14281,8 +15490,6 @@
           "category": "webhooks",
           "subcategory": "installation-target",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -14294,7 +15501,7 @@
         "description": "A GitHub App that was blocked from accessing a user or organization account was given access the account again.",
         "operationId": "installation/unsuspend",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue-comment"
         },
         "parameters": [
           {
@@ -14372,7 +15579,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "issues",
+          "subcategory": "issue-comment",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -15689,7 +16896,7 @@
         "description": "An issue was transferred to another repository. For more information, see \"[Transferring an issue to another repository](https://docs.github.com/enterprise-cloud@latest//issues/tracking-your-work-with-issues/transferring-an-issue-to-another-repository).\"",
         "operationId": "issues/transferred",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
         },
         "parameters": [
           {
@@ -15767,7 +16974,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "label",
+          "subcategory": "issues",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -15968,7 +17175,7 @@
         "description": "Conversation on an issue was locked. For more information, see \"[Locking conversations](https://docs.github.com/enterprise-cloud@latest//communities/moderating-comments-and-conversations/locking-conversations).\"",
         "operationId": "issues/unlocked",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#marketplace-purchase"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label"
         },
         "parameters": [
           {
@@ -16046,9 +17253,11 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "marketplace-purchase",
+          "subcategory": "label",
           "supported-webhook-types": [
-            "marketplace"
+            "repository",
+            "organization",
+            "app"
           ]
         }
       }
@@ -16787,7 +17996,7 @@
         "description": "Someone purchased a GitHub Marketplace plan. The change will take effect on the account immediately.",
         "operationId": "marketplace-purchase/purchased",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#membership"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#marketplace-purchase"
         },
         "parameters": [
           {
@@ -16865,11 +18074,9 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "membership",
+          "subcategory": "marketplace-purchase",
           "supported-webhook-types": [
-            "organization",
-            "business",
-            "app"
+            "marketplace"
           ]
         }
       }
@@ -21159,6 +22366,98 @@
           "enabledForGitHubApps": true,
           "category": "webhooks",
           "subcategory": "projects_v2_item",
+          "supported-webhook-types": [
+            "organization"
+          ]
+        }
+      }
+    },
+    "projects-v2-reopened": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to an organization-level project. For more information, see \"[About Projects](https://docs.github.com/enterprise-cloud@latest//issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).\" For information about the Projects API, see [the GraphQL documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#projectv2).\n\nFor activity relating to a item on a project, use the `projects_v2_item` event. For activity relating to Projects (classic), use the `project`, project_card`, and `project_column` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" organization permission.\n\n**Note**: Webhook events for projects are currently in beta and subject to change. To share feedback about projects webhooks with GitHub, see the [Projects webhook feedback discussion](https://github.com/orgs/community/discussions/17405).",
+        "description": "A project in the organization was reopened.",
+        "operationId": "projects-v2/reopened",
+        "externalDocs": {
+          "url": ""
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "project-v2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-projects-v2-project-reopened"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "webhooks",
+          "subcategory": "projects_v2",
           "supported-webhook-types": [
             "organization"
           ]
