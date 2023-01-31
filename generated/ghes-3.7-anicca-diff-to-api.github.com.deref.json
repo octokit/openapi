@@ -21075,7 +21075,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.7/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).",
+              "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.7/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterprise#searching-the-audit-log).",
               "in": "query",
               "name": "phrase",
               "required": false,
@@ -22885,7 +22885,18 @@
                           ],
                           "type": "object"
                         },
-                        "type": "array"
+                        "updated_at": {
+                          "description": "The time that the alert was last updated in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+                          "format": "date-time",
+                          "readOnly": true,
+                          "type": "string"
+                        },
+                        "url": {
+                          "description": "The REST API URL of the alert resource.",
+                          "format": "uri",
+                          "readOnly": true,
+                          "type": "string"
+                        }
                       },
                       "total_advanced_security_committers": {
                         "example": 25,
@@ -22960,9 +22971,10 @@
               "name": "organization_id",
               "required": true,
               "schema": {
-                "type": "string"
+                "default": 1,
+                "type": "integer"
               },
-              "style": "simple"
+              "style": "form"
             }
           ],
           "responses": {
@@ -23009,6 +23021,10 @@
                           "type": "object"
                         },
                         "type": "array"
+                      },
+                      "total_advanced_security_committers": {
+                        "example": 25,
+                        "type": "integer"
                       },
                       "total_count": {
                         "description": "The number of custom roles in this organization",
@@ -36892,6 +36908,25 @@
                           ]
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
+        "put": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "removed": [
+                        "include_claim_keys"
+                      ]
                     }
                   }
                 }

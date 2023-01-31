@@ -2493,7 +2493,7 @@
             "$ref": "#/components/parameters/enterprise"
           },
           {
-            "$ref": "#/components/parameters/audit-log-phrase"
+            "$ref": "#/components/parameters/audit-log-enterprise-phrase"
           },
           {
             "$ref": "#/components/parameters/audit-log-include"
@@ -4901,6 +4901,1024 @@
         "summary": "Set self-hosted runners in a group for an organization",
         "description": "Replaces the list of self-hosted runners that are part of an organization runner group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
         "operationId": "actions/set-self-hosted-runners-in-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-self-hosted-runners-in-a-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "runners": {
+                    "description": "List of runner IDs to add to the runner group.",
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "description": "Unique identifier of the runner."
+                    }
+                  }
+                },
+                "required": [
+                  "runners"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "runners": [
+                      9,
+                      2
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}": {
+      "put": {
+        "summary": "Add a self-hosted runner to a group for an organization",
+        "description": "Adds a self-hosted runner to a runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org`\nscope to use this endpoint.",
+        "operationId": "actions/add-self-hosted-runner-to-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#add-a-self-hosted-runner-to-a-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/runner-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a self-hosted runner from a group for an organization",
+        "description": "Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/remove-self-hosted-runner-from-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#remove-a-self-hosted-runner-from-a-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/runner-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/permissions/workflow": {
+      "put": {
+        "summary": "Set default workflow permissions for an organization",
+        "description": "Sets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an organization, and sets if GitHub Actions\ncan submit approving pull request reviews. For more information, see\n\"[Setting the permissions of the GITHUB_TOKEN for your organization](https://docs.github.com/enterprise-cloud@latest//organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#setting-the-permissions-of-the-github_token-for-your-organization).\"\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/set-github-actions-default-workflow-permissions-organization",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-default-workflow-permissions"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success response"
+          },
+          "409": {
+            "description": "Conflict response when changing a setting is prevented by the owning enterprise"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/actions-set-default-workflow-permissions"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/actions-default-workflow-permissions"
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "permissions"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups": {
+      "get": {
+        "summary": "List self-hosted runner groups for an organization",
+        "description": "Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/list-self-hosted-runner-groups-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-self-hosted-runner-groups-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/visible-to-repository"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "runner_groups"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "number"
+                    },
+                    "runner_groups": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner-groups-org"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-groups-org"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a self-hosted runner group for an organization",
+        "description": "Creates a new self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/create-self-hosted-runner-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#create-a-self-hosted-runner-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Name of the runner group.",
+                    "type": "string"
+                  },
+                  "visibility": {
+                    "description": "Visibility of a runner group. You can select all repositories, select individual repositories, or limit access to private repositories.",
+                    "type": "string",
+                    "enum": [
+                      "selected",
+                      "all",
+                      "private"
+                    ],
+                    "default": "all"
+                  },
+                  "selected_repository_ids": {
+                    "description": "List of repository IDs that can access the runner group.",
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "description": "Unique identifier of the repository."
+                    }
+                  },
+                  "runners": {
+                    "description": "List of runner IDs to add to the runner group.",
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "description": "Unique identifier of the runner."
+                    }
+                  },
+                  "allows_public_repositories": {
+                    "description": "Whether the runner group can be used by `public` repositories.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "restricted_to_workflows": {
+                    "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "selected_workflows": {
+                    "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                      "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main"
+                    }
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "Expensive hardware runners",
+                    "visibility": "selected",
+                    "selected_repository_ids": [
+                      32,
+                      91
+                    ],
+                    "runners": [
+                      9,
+                      2
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runner-groups-org"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-group"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}": {
+      "get": {
+        "summary": "Get a self-hosted runner group for an organization",
+        "description": "Gets a specific self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/get-self-hosted-runner-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#get-a-self-hosted-runner-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runner-groups-org"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-group-item"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a self-hosted runner group for an organization",
+        "description": "Updates the `name` and `visibility` of a self-hosted runner group in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/update-self-hosted-runner-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#update-a-self-hosted-runner-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Name of the runner group.",
+                    "type": "string"
+                  },
+                  "visibility": {
+                    "description": "Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories.",
+                    "type": "string",
+                    "enum": [
+                      "selected",
+                      "all",
+                      "private"
+                    ]
+                  },
+                  "allows_public_repositories": {
+                    "description": "Whether the runner group can be used by `public` repositories.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "restricted_to_workflows": {
+                    "description": "If `true`, the runner group will be restricted to running only the workflows specified in the `selected_workflows` array.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "selected_workflows": {
+                    "description": "List of workflows the runner group should be allowed to run. This setting will be ignored unless `restricted_to_workflows` is set to `true`.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "Name of workflow the runner group should be allowed to run. Note that a ref, tag, or long SHA is required.",
+                      "example": "octo-org/octo-repo/.github/workflows/deploy.yaml@main"
+                    }
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "Expensive hardware runners",
+                    "visibility": "selected"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runner-groups-org"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-group"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a self-hosted runner group from an organization",
+        "description": "Deletes a self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/delete-self-hosted-runner-group-from-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#delete-a-self-hosted-runner-group-from-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories": {
+      "get": {
+        "summary": "List repository access to a self-hosted runner group in an organization",
+        "description": "Lists the repositories with access to a self-hosted runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/list-repo-access-to-self-hosted-runner-group-in-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "repositories"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "number"
+                    },
+                    "repositories": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/minimal-repository"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository-paginated"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Set repository access for a self-hosted runner group in an organization",
+        "description": "Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/set-repo-access-to-self-hosted-runner-group-in-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "selected_repository_ids": {
+                    "description": "List of repository IDs that can access the runner group.",
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "description": "Unique identifier of the repository."
+                    }
+                  }
+                },
+                "required": [
+                  "selected_repository_ids"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "selected_repository_ids": [
+                      32,
+                      91
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}": {
+      "put": {
+        "summary": "Add repository access to a self-hosted runner group in an organization",
+        "description": "Adds a repository to the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see \"[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization).\"\n\nYou must authenticate using an access token with the `admin:org`\nscope to use this endpoint.",
+        "operationId": "actions/add-repo-access-to-self-hosted-runner-group-in-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#add-repository-acess-to-a-self-hosted-runner-group-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/repository-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": true,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/actions/permissions/access": {
+      "get": {
+        "summary": "Get the level of access for workflows outside of the repository",
+        "description": "Gets the level of access that workflows outside of the repository have to actions and reusable workflows in the repository.\nThis endpoint only applies to internal and private repositories.\nFor more information, see \"[Allowing access to components in a private repository](https://docs.github.com/enterprise-cloud@latest//repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository)\" and\n\"[Allowing access to components in an internal repository](https://docs.github.com/enterprise-cloud@latest//repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-an-internal-repository).\"\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the\nrepository `administration` permission to use this endpoint.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/get-workflow-access-to-repository",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#get-workflow-access-level-to-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/actions-workflow-access-to-repository"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/actions-workflow-access-to-repository"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "permissions"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Set the level of access for workflows outside of the repository",
+        "description": "Sets the level of access that workflows outside of the repository have to actions and reusable workflows in the repository.\nThis endpoint only applies to internal and private repositories.\nFor more information, see \"[Allowing access to components in a private repository](https://docs.github.com/enterprise-cloud@latest//repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository)\" and\n\"[Allowing access to components in an internal repository](https://docs.github.com/enterprise-cloud@latest//repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-an-internal-repository).\"\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the\nrepository `administration` permission to use this endpoint.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/set-workflow-access-to-repository",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-workflow-access-to-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/actions-workflow-access-to-repository"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/actions-workflow-access-to-repository"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "permissions"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/code-scanning/alerts": {
+      "get": {
+        "summary": "List code scanning alerts for a repository",
+        "description": "Lists code scanning alerts.\n\nTo use this endpoint, you must use an access token with the `security_events` scope or, for alerts from public repositories only, an access token with the `public_repo` scope.\n\nGitHub Apps must have the `security_events` read\npermission to use this endpoint.\n\nThe response includes a `most_recent_instance` object.\nThis provides details of the most recent instance of this alert\nfor the default branch (or for the specified Git reference if you used `ref` in the request).",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#remove-repository-access-to-a-self-hosted-runner-group-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/repository-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Response"
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners": {
+      "get": {
+        "summary": "List self-hosted runners in a group for an organization",
+        "description": "Lists self-hosted runners that are in a specific organization group.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+        "operationId": "actions/list-self-hosted-runners-in-group-for-org",
+        "tags": [
+          "actions"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-self-hosted-runners-in-a-group-for-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/runner-group-id"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "runners"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "number"
+                    },
+                    "runners": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/runner"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/runner-paginated"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          }
+        },
+        "x-github": {
+          "enabledForGitHubApps": true,
+          "githubCloudOnly": false,
+          "category": "actions",
+          "subcategory": "self-hosted-runner-groups"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update information about a GitHub Enterprise Cloud Pages site",
+        "description": "Updates information for a GitHub Enterprise Cloud Pages site. For more information, see \"[About GitHub Pages](/github/working-with-github-pages/about-github-pages).\n\nTo use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.",
         "tags": [
           "actions"
         ],
@@ -10286,6 +11304,812 @@
           "content": {
             "application/json": {
               "schema": {
+                "$ref": "#/components/schemas/webhook-branch-protection-rule-created"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "branch-protection-rule",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "branch-protection-rule-deleted": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to branch protection rules. For more information, see \"[About protected branches](https://docs.github.com/enterprise-cloud@latest//repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches).\" For information about the APIs to manage branch protection rules, see [the GraphQL documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#branchprotectionrule) or \"[Branch protection](https://docs.github.com/enterprise-cloud@latest//rest/branches/branch-protection)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Administration\" repository permission.",
+        "description": "A branch protection rule was deleted.",
+        "operationId": "branch-protection-rule/deleted",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#branch-protection-rule"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-branch-protection-rule-deleted"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "branch-protection-rule",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "branch-protection-rule-edited": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to branch protection rules. For more information, see \"[About protected branches](https://docs.github.com/enterprise-cloud@latest//repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches).\" For information about the APIs to manage branch protection rules, see [the GraphQL documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#branchprotectionrule) or \"[Branch protection](https://docs.github.com/enterprise-cloud@latest//rest/branches/branch-protection)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Administration\" repository permission.",
+        "description": "A branch protection rule was edited.",
+        "operationId": "branch-protection-rule/edited",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#branch-protection-rule"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-branch-protection-rule-edited"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "branch-protection-rule",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "check-run-completed": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a check run. For information about check runs, see \"[Getting started with the Checks API](https://docs.github.com/enterprise-cloud@latest//rest/guides/getting-started-with-the-checks-api).\" For information about the APIs to manage check runs, see [the GraphQL API documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#checkrun) or \"[Check Runs](https://docs.github.com/enterprise-cloud@latest//rest/checks/runs)\" in the REST API documentation.\n\nFor activity relating to check suites, use the `check-suite` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Checks\" repository permission. To receive the `rerequested` and `requested_action` event types, the app must have at least write-level access for the \"Checks\" permission. GitHub Apps with write-level access for the \"Checks\" permission are automatically subscribed to this webhook event.\n\nRepository and organization webhooks only receive payloads for the `created` and `completed` event types in repositories.\n\n**Note**: The API only looks for pushes in the repository where the check run was created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.",
+        "description": "A check run was completed, and a conclusion is available.",
+        "operationId": "check-run/completed",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check_run"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-run-completed"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/check-run-completed"
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-run-completed-form-encoded"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/check-run-completed-form-encoded"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "webhooks",
+          "subcategory": "check_run",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "check-run-created": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a check run. For information about check runs, see \"[Getting started with the Checks API](https://docs.github.com/enterprise-cloud@latest//rest/guides/getting-started-with-the-checks-api).\" For information about the APIs to manage check runs, see [the GraphQL API documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#checkrun) or \"[Check Runs](https://docs.github.com/enterprise-cloud@latest//rest/checks/runs)\" in the REST API documentation.\n\nFor activity relating to check suites, use the `check-suite` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Checks\" repository permission. To receive the `rerequested` and `requested_action` event types, the app must have at least write-level access for the \"Checks\" permission. GitHub Apps with write-level access for the \"Checks\" permission are automatically subscribed to this webhook event.\n\nRepository and organization webhooks only receive payloads for the `created` and `completed` event types in repositories.\n\n**Note**: The API only looks for pushes in the repository where the check run was created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.",
+        "description": "A new check run was created.",
+        "operationId": "check-run/created",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check_run"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-run-created"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/check-run-created"
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-run-created-form-encoded"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/check-run-created-form-encoded"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "webhooks",
+          "subcategory": "check_run",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "check-run-requested-action": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a check run. For information about check runs, see \"[Getting started with the Checks API](https://docs.github.com/enterprise-cloud@latest//rest/guides/getting-started-with-the-checks-api).\" For information about the APIs to manage check runs, see [the GraphQL API documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#checkrun) or \"[Check Runs](https://docs.github.com/enterprise-cloud@latest//rest/checks/runs)\" in the REST API documentation.\n\nFor activity relating to check suites, use the `check-suite` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Checks\" repository permission. To receive the `rerequested` and `requested_action` event types, the app must have at least write-level access for the \"Checks\" permission. GitHub Apps with write-level access for the \"Checks\" permission are automatically subscribed to this webhook event.\n\nRepository and organization webhooks only receive payloads for the `created` and `completed` event types in repositories.\n\n**Note**: The API only looks for pushes in the repository where the check run was created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.",
+        "description": "A check run completed, and someone requested a followup action that your app provides. Only the GitHub App someone requests to perform an action will receive the `requested_action` payload. For more information, see \"[Creating CI tests with the Checks API](https://docs.github.com/enterprise-cloud@latest//developers/apps/guides/creating-ci-tests-with-the-checks-api).\"",
+        "operationId": "check-run/requested-action",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code-scanning-alert"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-run-requested-action"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/check-run-requested-action"
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-run-requested-action-form-encoded"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/check-run-requested-action-form-encoded"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "code-scanning-alert",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "check-run-rerequested": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a check run. For information about check runs, see \"[Getting started with the Checks API](https://docs.github.com/enterprise-cloud@latest//rest/guides/getting-started-with-the-checks-api).\" For information about the APIs to manage check runs, see [the GraphQL API documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#checkrun) or \"[Check Runs](https://docs.github.com/enterprise-cloud@latest//rest/checks/runs)\" in the REST API documentation.\n\nFor activity relating to check suites, use the `check-suite` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Checks\" repository permission. To receive the `rerequested` and `requested_action` event types, the app must have at least write-level access for the \"Checks\" permission. GitHub Apps with write-level access for the \"Checks\" permission are automatically subscribed to this webhook event.\n\nRepository and organization webhooks only receive payloads for the `created` and `completed` event types in repositories.\n\n**Note**: The API only looks for pushes in the repository where the check run was created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.",
+        "description": "Someone requested to re-run a check run. Only the GitHub App that someone requests to re-run the check will receive the `rerequested` payload.",
+        "operationId": "check-run/rerequested",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code-scanning-alert"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-run-rerequested"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/check-run-rerequested"
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-run-rerequested-form-encoded"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/check-run-rerequested-form-encoded"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "code-scanning-alert",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "check-suite-completed": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a check suite. For information about check suites, see \"[Getting started with the Checks API](https://docs.github.com/enterprise-cloud@latest//rest/guides/getting-started-with-the-checks-api).\" For information about the APIs to manage check suites, see [the GraphQL API documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#checksuite) or \"[Check Suites](https://docs.github.com/enterprise-cloud@latest//rest/checks/suites)\" in the REST API documentation.\n\nFor activity relating to check runs, use the `check_run` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Checks\" permission. To receive the `requested` and `rerequested` event types, the app must have at lease write-level access for the \"Checks\" permission. GitHub Apps with write-level access for the \"Checks\" permission are automatically subscribed to this webhook event.\n\nRepository and organization webhooks only receive payloads for the `completed` event types in repositories.\n\n**Note**: The API only looks for pushes in the repository where the check suite was created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.",
+        "description": "All check runs in a check suite have completed, and a conclusion is available.",
+        "operationId": "check-suite/completed",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check-suite"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-check-suite-completed"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "check-suite",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "check-suite-requested": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a check suite. For information about check suites, see \"[Getting started with the Checks API](https://docs.github.com/enterprise-cloud@latest//rest/guides/getting-started-with-the-checks-api).\" For information about the APIs to manage check suites, see [the GraphQL API documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#checksuite) or \"[Check Suites](https://docs.github.com/enterprise-cloud@latest//rest/checks/suites)\" in the REST API documentation.\n\nFor activity relating to check runs, use the `check_run` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Checks\" permission. To receive the `requested` and `rerequested` event types, the app must have at lease write-level access for the \"Checks\" permission. GitHub Apps with write-level access for the \"Checks\" permission are automatically subscribed to this webhook event.\n\nRepository and organization webhooks only receive payloads for the `completed` event types in repositories.\n\n**Note**: The API only looks for pushes in the repository where the check suite was created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.",
+        "description": "Someone requested to run a check suite. By default, check suites are automatically created when you create a check run. For more information, see [the GraphQL API documentation for creating a check run](https://docs.github.com/enterprise-cloud@latest//graphql/reference/mutations#createcheckrun) or \"[Create a check run](https://docs.github.com/enterprise-cloud@latest//rest/checks/runs#create-a-check-run)\" in the REST API documentation.",
+        "operationId": "check-suite/requested",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check-suite"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
                 "$ref": "#/components/schemas/webhook-check-suite-requested"
               }
             }
@@ -10314,7 +12138,7 @@
         "description": "Someone requested to re-run the check runs in a check suite. For more information, see [the GraphQL API documentation for creating a check suite](https://docs.github.com/enterprise-cloud@latest//graphql/reference/mutations#createchecksuite) or \"[Create a check suite](https://docs.github.com/enterprise-cloud@latest//rest/checks/suites#create-a-check-suite)\" in the REST API documentation.",
         "operationId": "check-suite/rerequested",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check-suite"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#commit-comment"
         },
         "parameters": [
           {
@@ -10392,7 +12216,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "check-suite",
+          "subcategory": "commit-comment",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -10593,7 +12417,7 @@
         "description": "A code scanning alert was created in a repository.",
         "operationId": "code-scanning-alert/created",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code-scanning-alert"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
         },
         "parameters": [
           {
@@ -10671,7 +12495,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "code-scanning-alert",
+          "subcategory": "dependabot-alert",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -10686,7 +12510,7 @@
         "description": "A code scanning alert was fixed in a branch by a commit.",
         "operationId": "code-scanning-alert/fixed",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code-scanning-alert"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
         },
         "parameters": [
           {
@@ -10764,7 +12588,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "code-scanning-alert",
+          "subcategory": "dependabot-alert",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -10951,1027 +12775,6 @@
           "githubCloudOnly": false,
           "category": "webhooks",
           "subcategory": "code-scanning-alert",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "commit-comment-created": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to commit comments. For more information about commit comments, see \"[Commenting on a pull request](https://docs.github.com/enterprise-cloud@latest//pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/commenting-on-a-pull-request).\" For information about the APIs to manage commit comments, see [the GraphQL API documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#commitcomment) or \"[Commit comments](https://docs.github.com/enterprise-cloud@latest//rest/commits/comments)\" in the REST API documentation.\n\nFor activity relating to comments on pull request reviews, use the `pull_request_review_comment` event. For activity relating to issue comments, use the `issue_comment` event. For activity relating to discussion comments, use the `discussion_comment` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Contents\" repository permission.",
-        "description": "Someone commented on a commit.",
-        "operationId": "commit-comment/created",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#commit-comment"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-commit-comment-created"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "commit-comment",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "create": {
-      "post": {
-        "summary": "This event occurs when a Git branch or tag is created.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Contents\" repository permission.\n\n**Note**: This event will not occur when more than three tags are created at once.",
-        "operationId": "create",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#create"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-create"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "create",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "delete": {
-      "post": {
-        "summary": "This event occurs when a Git branch or tag is deleted.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Contents\" repository permission.\n\n**Note**: This event will not occur when more than three tags are deleted at once.",
-        "operationId": "delete",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#delete"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-delete"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "delete",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "dependabot-alert-created": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to Dependabot alerts.\n\nFor more information about Dependabot alerts, see \"[About Dependabot alerts](https://docs.github.com/enterprise-cloud@latest//code-security/dependabot/dependabot-alerts/about-dependabot-alerts).\" For information about the API to manage Dependabot alerts, see \"[Dependabot alerts](https://docs.github.com/enterprise-cloud@latest//rest/dependabot/alerts)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Dependabot alerts\" repository permission.\n\n**Note**: Webhook events for Dependabot alerts are currently in beta and subject to change.",
-        "description": "A manifest file change introduced a vulnerable dependency, or a GitHub Security Advisory was published and an existing dependency was found to be vulnerable.",
-        "operationId": "dependabot-alert/created",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-dependabot-alert-created"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "dependabot-alert",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "dependabot-alert-dismissed": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to Dependabot alerts.\n\nFor more information about Dependabot alerts, see \"[About Dependabot alerts](https://docs.github.com/enterprise-cloud@latest//code-security/dependabot/dependabot-alerts/about-dependabot-alerts).\" For information about the API to manage Dependabot alerts, see \"[Dependabot alerts](https://docs.github.com/enterprise-cloud@latest//rest/dependabot/alerts)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Dependabot alerts\" repository permission.\n\n**Note**: Webhook events for Dependabot alerts are currently in beta and subject to change.",
-        "description": "A Dependabot alert was manually closed.",
-        "operationId": "dependabot-alert/dismissed",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-dependabot-alert-dismissed"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "dependabot-alert",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "code-scanning-alert-created": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/enterprise-cloud@latest//rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
-        "description": "A code scanning alert was created in a repository.",
-        "operationId": "code-scanning-alert/created",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code-scanning-alert"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-code-scanning-alert-created"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "code-scanning-alert",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "code-scanning-alert-fixed": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/enterprise-cloud@latest//rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
-        "description": "A code scanning alert was fixed in a branch by a commit.",
-        "operationId": "code-scanning-alert/fixed",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code-scanning-alert"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-code-scanning-alert-fixed"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "code-scanning-alert",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "code-scanning-alert-reopened": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/enterprise-cloud@latest//rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
-        "description": "A previously fixed code scanning alert reappeared in a branch.",
-        "operationId": "code-scanning-alert/reopened",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-code-scanning-alert-fixed"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "dependabot-alert",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "code-scanning-alert-reopened": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/enterprise-cloud@latest//rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
-        "description": "A previously fixed code scanning alert reappeared in a branch.",
-        "operationId": "code-scanning-alert/reopened",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-code-scanning-alert-reopened"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "dependabot-alert",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "code-scanning-alert-reopened-by-user": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/enterprise-cloud@latest//rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
-        "description": "Someone reopened a code scanning alert.",
-        "operationId": "code-scanning-alert/reopened-by-user",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-code-scanning-alert-reopened"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "dependabot-alert",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "code-scanning-alert-reopened-by-user": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/enterprise-cloud@latest//code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/enterprise-cloud@latest//rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
-        "description": "Someone reopened a code scanning alert.",
-        "operationId": "code-scanning-alert/reopened-by-user",
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#commit-comment"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-code-scanning-alert-reopened-by-user"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "commit-comment",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -12635,7 +13438,7 @@
         "description": "A Dependabot alert was manually reopened.",
         "operationId": "dependabot-alert/reopened",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
         },
         "parameters": [
           {
@@ -12713,7 +13516,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "dependabot-alert",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -13565,7 +14368,7 @@
         "description": "A discussion was created.",
         "operationId": "discussion/created",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion-comment"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
         },
         "parameters": [
           {
@@ -13643,7 +14446,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion-comment",
+          "subcategory": "discussion",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -13751,7 +14554,7 @@
         "description": "The title or body on a discussion was edited, or the category of the discussion was changed.",
         "operationId": "discussion/edited",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion-comment"
         },
         "parameters": [
           {
@@ -13829,7 +14632,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "discussion-comment",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -14309,7 +15112,7 @@
         "description": "A label was removed from a discussion.",
         "operationId": "discussion/unlabeled",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#fork"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
         },
         "parameters": [
           {
@@ -14387,9 +15190,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "fork",
+          "subcategory": "discussion",
           "supported-webhook-types": [
-            "business",
             "repository",
             "organization",
             "app"
@@ -14403,7 +15205,7 @@
         "description": "A discussion was unlocked.",
         "operationId": "discussion/unlocked",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#github-app-authorization"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
         },
         "parameters": [
           {
@@ -14481,8 +15283,10 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "github-app-authorization",
+          "subcategory": "discussion",
           "supported-webhook-types": [
+            "repository",
+            "organization",
             "app"
           ]
         }
@@ -14494,7 +15298,7 @@
         "description": "A discussion was unpinned.",
         "operationId": "discussion/unpinned",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#gollum"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#fork"
         },
         "parameters": [
           {
@@ -14572,8 +15376,9 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "gollum",
+          "subcategory": "fork",
           "supported-webhook-types": [
+            "business",
             "repository",
             "organization",
             "app"
@@ -14850,7 +15655,6 @@
           "category": "webhooks",
           "subcategory": "gollum",
           "supported-webhook-types": [
-            "business",
             "repository",
             "organization",
             "app"
@@ -15397,7 +16201,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "installation-repositories",
+          "subcategory": "installation",
           "supported-webhook-types": [
             "app"
           ]
@@ -15501,7 +16305,7 @@
         "description": "A GitHub App that was blocked from accessing a user or organization account was given access the account again.",
         "operationId": "installation/unsuspend",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue-comment"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
         },
         "parameters": [
           {
@@ -15579,10 +16383,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "issue-comment",
+          "subcategory": "installation-repositories",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -16989,7 +17791,7 @@
         "description": "A user was unassigned from an issue.",
         "operationId": "issues/unassigned",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
         },
         "parameters": [
           {
@@ -17067,7 +17869,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "label",
+          "subcategory": "issues",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -17268,7 +18070,7 @@
         "description": "An issue was unpinned from a repository. For more information, see \"[Pinning an issue to your repository](https://docs.github.com/enterprise-cloud@latest//issues/tracking-your-work-with-issues/pinning-an-issue-to-your-repository).\"",
         "operationId": "issues/unpinned",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#marketplace-purchase"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label"
         },
         "parameters": [
           {
@@ -17346,9 +18148,11 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "marketplace-purchase",
+          "subcategory": "label",
           "supported-webhook-types": [
-            "marketplace"
+            "repository",
+            "organization",
+            "app"
           ]
         }
       }
@@ -19012,7 +19816,6 @@
           "supported-webhook-types": [
             "repository",
             "organization",
-            "business",
             "app"
           ]
         }
@@ -19024,7 +19827,7 @@
         "description": "A milestone was edited.",
         "operationId": "milestone/edited",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#milestone"
         },
         "parameters": [
           {
@@ -19102,10 +19905,10 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "organization",
+          "subcategory": "milestone",
           "supported-webhook-types": [
+            "repository",
             "organization",
-            "business",
             "app"
           ]
         }
@@ -19117,7 +19920,7 @@
         "description": "A milestone was opened.",
         "operationId": "milestone/opened",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#milestone"
         },
         "parameters": [
           {
@@ -19195,8 +19998,9 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "organization",
+          "subcategory": "milestone",
           "supported-webhook-types": [
+            "repository",
             "organization",
             "business",
             "app"
@@ -19569,8 +20373,8 @@
           "category": "webhooks",
           "subcategory": "organization",
           "supported-webhook-types": [
-            "repository",
             "organization",
+            "business",
             "app"
           ]
         }
@@ -19662,8 +20466,8 @@
           "category": "webhooks",
           "subcategory": "organization",
           "supported-webhook-types": [
-            "repository",
             "organization",
+            "business",
             "app"
           ]
         }
@@ -19675,7 +20479,7 @@
         "description": "A member was removed from the organization.",
         "operationId": "organization/member-removed",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#page-build"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization"
         },
         "parameters": [
           {
@@ -19753,7 +20557,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "page-build",
+          "subcategory": "organization",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -19768,7 +20572,7 @@
         "description": "The name of an organization was changed.",
         "operationId": "organization/renamed",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#ping"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization"
         },
         "parameters": [
           {
@@ -19845,15 +20649,12 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
           "category": "webhooks",
-          "subcategory": "ping",
+          "subcategory": "organization",
           "supported-webhook-types": [
             "repository",
             "organization",
-            "app",
-            "business",
-            "marketplace"
+            "app"
           ]
         }
       }
@@ -20034,6 +20835,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
           "category": "webhooks",
           "subcategory": "package",
           "supported-webhook-types": [
@@ -20531,7 +21333,7 @@
         "description": "A note on a classic project was edited.",
         "operationId": "project-card/edited",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project-column"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project-card"
         },
         "parameters": [
           {
@@ -20609,7 +21411,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "project-column",
+          "subcategory": "project-card",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -20624,7 +21426,7 @@
         "description": "A card on a classic project was moved to another column or to another position in its column.",
         "operationId": "project-card/moved",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project-column"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project-card"
         },
         "parameters": [
           {
@@ -21089,7 +21891,7 @@
         "description": "A column was moved to a new position on a classic project.",
         "operationId": "project-column/moved",
         "externalDocs": {
-          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project"
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project-column"
         },
         "parameters": [
           {
@@ -21167,7 +21969,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "project",
+          "subcategory": "project-column",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -21204,7 +22006,7 @@
           {
             "name": "X-Github-Event",
             "in": "header",
-            "example": "project-v2",
+            "example": "issues",
             "schema": {
               "type": "string"
             }
@@ -21259,11 +22061,12 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
           "category": "webhooks",
           "subcategory": "project",
           "supported-webhook-types": [
-            "organization"
+            "repository",
+            "organization",
+            "app"
           ]
         }
       }
@@ -21458,7 +22261,7 @@
         "description": "A classic project was closed.",
         "operationId": "project/reopened",
         "externalDocs": {
-          "url": ""
+          "url": "https://docs.github.com/enterprise-cloud@latest//developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project"
         },
         "parameters": [
           {
@@ -21537,7 +22340,7 @@
           "githubCloudOnly": false,
           "enabledForGitHubApps": true,
           "category": "webhooks",
-          "subcategory": "projects_v2",
+          "subcategory": "project",
           "supported-webhook-types": [
             "organization"
           ]
@@ -21708,6 +22511,98 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/webhook-projects-v2-project-created"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "webhooks",
+          "subcategory": "projects_v2",
+          "supported-webhook-types": [
+            "organization"
+          ]
+        }
+      }
+    },
+    "projects-v2-edited": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to an organization-level project. For more information, see \"[About Projects](https://docs.github.com/enterprise-cloud@latest//issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).\" For information about the Projects API, see [the GraphQL documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#projectv2).\n\nFor activity relating to a item on a project, use the `projects_v2_item` event. For activity relating to Projects (classic), use the `project`, project_card`, and `project_column` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" organization permission.\n\n**Note**: Webhook events for projects are currently in beta and subject to change. To share feedback about projects webhooks with GitHub, see the [Projects webhook feedback discussion](https://github.com/orgs/community/discussions/17405).",
+        "description": "The title, description, or README of a project in the organization was changed.",
+        "operationId": "projects-v2/edited",
+        "externalDocs": {
+          "url": ""
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "project-v2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-projects-v2-project-edited"
               }
             }
           }
@@ -22366,6 +23261,98 @@
           "enabledForGitHubApps": true,
           "category": "webhooks",
           "subcategory": "projects_v2_item",
+          "supported-webhook-types": [
+            "organization"
+          ]
+        }
+      }
+    },
+    "projects-v2-reopened": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to an organization-level project. For more information, see \"[About Projects](https://docs.github.com/enterprise-cloud@latest//issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).\" For information about the Projects API, see [the GraphQL documentation](https://docs.github.com/enterprise-cloud@latest//graphql/reference/objects#projectv2).\n\nFor activity relating to a item on a project, use the `projects_v2_item` event. For activity relating to Projects (classic), use the `project`, project_card`, and `project_column` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" organization permission.\n\n**Note**: Webhook events for projects are currently in beta and subject to change. To share feedback about projects webhooks with GitHub, see the [Projects webhook feedback discussion](https://github.com/orgs/community/discussions/17405).",
+        "description": "A project in the organization was reopened.",
+        "operationId": "projects-v2/reopened",
+        "externalDocs": {
+          "url": ""
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "project-v2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-projects-v2-project-reopened"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "webhooks",
+          "subcategory": "projects_v2",
           "supported-webhook-types": [
             "organization"
           ]
@@ -30914,9 +31901,9 @@
           "type": "string"
         }
       },
-      "audit-log-phrase": {
+      "audit-log-enterprise-phrase": {
         "name": "phrase",
-        "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).",
+        "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-cloud@latest//admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterprise#searching-the-audit-log).",
         "in": "query",
         "required": false,
         "schema": {
@@ -31070,6 +32057,15 @@
         "required": true,
         "schema": {
           "type": "integer"
+        }
+      },
+      "audit-log-phrase": {
+        "name": "phrase",
+        "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
         }
       },
       "role-id": {
