@@ -1269,6 +1269,75 @@
         }
       }
     },
+    "/orgs/{org}/migrations/{migration_id}/repositories": {
+      "get": {
+        "summary": "List repositories in an organization migration",
+        "description": "List all the repositories for this organization migration.",
+        "tags": [
+          "migrations"
+        ],
+        "operationId": "migrations/list-repos-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.4/rest/reference/migrations#list-repositories-in-an-organization-migration"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/migration-id"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/minimal-repository"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "migrations",
+          "subcategory": "orgs"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.5": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
     "/orgs/{org}/repos": {
       "get": {
         "summary": "List organization repositories",
@@ -4134,6 +4203,15 @@
           "type": "string"
         }
       },
+      "migration-id": {
+        "name": "migration_id",
+        "description": "The unique identifier of the migration.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
       "team-slug": {
         "name": "team_slug",
         "description": "The slug of the team name.",
@@ -4338,15 +4416,6 @@
       "team-id": {
         "name": "team_id",
         "description": "The unique identifier of the team.",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      },
-      "migration-id": {
-        "name": "migration_id",
-        "description": "The unique identifier of the migration.",
         "in": "path",
         "required": true,
         "schema": {

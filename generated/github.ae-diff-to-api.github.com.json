@@ -426,6 +426,7 @@
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -1136,6 +1137,7 @@
           }
         },
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -6193,7 +6195,7 @@
     "/orgs/{org}/migrations": {
       "get": {
         "summary": "List organization migrations",
-        "description": "Lists the most recent migrations.",
+        "description": "Lists the most recent migrations, including both exports (which can be started through the REST API) and imports (which cannot be started using the REST API).\n\nA list of `repositories` is only returned for export migrations.",
         "tags": [
           "migrations"
         ],
@@ -6475,6 +6477,75 @@
         }
       }
     },
+    "/orgs/{org}/migrations/{migration_id}/repositories": {
+      "get": {
+        "summary": "List repositories in an organization migration",
+        "description": "List all the repositories for this organization migration.",
+        "tags": [
+          "migrations"
+        ],
+        "operationId": "migrations/list-repos-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/github-ae@latest/rest/reference/migrations#list-repositories-in-an-organization-migration"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/migration-id"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/minimal-repository"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "migrations",
+          "subcategory": "orgs"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
     "/orgs/{org}/repos": {
       "get": {
         "summary": "List organization repositories",
@@ -6697,7 +6768,7 @@
                   },
                   "delete_branch_on_merge": {
                     "type": "boolean",
-                    "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.",
+                    "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion. **The authenticated user must be an organization owner to set this property to `true`.**",
                     "default": false
                   },
                   "use_squash_pr_title_as_default": {
@@ -14924,6 +14995,7 @@
           }
         },
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -17572,6 +17644,1306 @@
           "content": {
             "application/json": {
               "schema": {
+                "$ref": "#/components/schemas/webhook-code-scanning-alert-created"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "code-scanning-alert",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "code-scanning-alert-fixed": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/github-ae@latest/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/github-ae@latest/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/github-ae@latest/rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
+        "description": "A code scanning alert was fixed in a branch by a commit.",
+        "operationId": "code-scanning-alert/fixed",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code-scanning-alert"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-code-scanning-alert-fixed"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "deployment",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "code-scanning-alert-reopened": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/github-ae@latest/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/github-ae@latest/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/github-ae@latest/rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
+        "description": "A previously fixed code scanning alert reappeared in a branch.",
+        "operationId": "code-scanning-alert/reopened",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deployment-status"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-code-scanning-alert-reopened"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "deployment-status",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "code-scanning-alert-reopened-by-user": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to code scanning alerts in a repository. For more information, see \"[About code scanning](https://docs.github.com/github-ae@latest/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)\" and \"[About code scanning alerts](https://docs.github.com/github-ae@latest/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-alerts).\" For information about the API to manage code scanning, see \"[Code scanning](https://docs.github.com/github-ae@latest/rest/code-scanning)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Code scanning alerts\" repository permission.",
+        "description": "Someone reopened a code scanning alert.",
+        "operationId": "code-scanning-alert/reopened-by-user",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-code-scanning-alert-reopened-by-user"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "discussion",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "commit-comment-created": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to commit comments. For more information about commit comments, see \"[Commenting on a pull request](https://docs.github.com/github-ae@latest/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/commenting-on-a-pull-request).\" For information about the APIs to manage commit comments, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#commitcomment) or \"[Commit comments](https://docs.github.com/github-ae@latest/rest/commits/comments)\" in the REST API documentation.\n\nFor activity relating to comments on pull request reviews, use the `pull_request_review_comment` event. For activity relating to issue comments, use the `issue_comment` event. For activity relating to discussion comments, use the `discussion_comment` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Contents\" repository permission.",
+        "description": "Someone commented on a commit.",
+        "operationId": "commit-comment/created",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#commit-comment"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-commit-comment-created"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "commit-comment",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "create": {
+      "post": {
+        "summary": "This event occurs when a Git branch or tag is created.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Contents\" repository permission.\n\n**Note**: This event will not occur when more than three tags are created at once.",
+        "operationId": "create",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#create"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "create",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "delete": {
+      "post": {
+        "summary": "This event occurs when a Git branch or tag is deleted.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Contents\" repository permission.\n\n**Note**: This event will not occur when more than three tags are deleted at once.",
+        "operationId": "delete",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#delete"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-delete"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "delete",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "dependabot-alert-created": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to Dependabot alerts.\n\nFor more information about Dependabot alerts, see \"[About Dependabot alerts](https://docs.github.com/github-ae@latest/code-security/dependabot/dependabot-alerts/about-dependabot-alerts).\" For information about the API to manage Dependabot alerts, see \"[Dependabot alerts](https://docs.github.com/github-ae@latest/rest/dependabot/alerts)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Dependabot alerts\" repository permission.\n\n**Note**: Webhook events for Dependabot alerts are currently in beta and subject to change.",
+        "description": "A manifest file change introduced a vulnerable dependency, or a GitHub Security Advisory was published and an existing dependency was found to be vulnerable.",
+        "operationId": "dependabot-alert/created",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot-alert"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-dependabot-alert-created"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "dependabot-alert",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "dependabot-alert-dismissed": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to Dependabot alerts.\n\nFor more information about Dependabot alerts, see \"[About Dependabot alerts](https://docs.github.com/github-ae@latest/code-security/dependabot/dependabot-alerts/about-dependabot-alerts).\" For information about the API to manage Dependabot alerts, see \"[Dependabot alerts](https://docs.github.com/github-ae@latest/rest/dependabot/alerts)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Dependabot alerts\" repository permission.\n\n**Note**: Webhook events for Dependabot alerts are currently in beta and subject to change.",
+        "description": "A Dependabot alert was manually closed.",
+        "operationId": "dependabot-alert/dismissed",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-dependabot-alert-dismissed"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "discussion",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "dependabot-alert-fixed": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to Dependabot alerts.\n\nFor more information about Dependabot alerts, see \"[About Dependabot alerts](https://docs.github.com/github-ae@latest/code-security/dependabot/dependabot-alerts/about-dependabot-alerts).\" For information about the API to manage Dependabot alerts, see \"[Dependabot alerts](https://docs.github.com/github-ae@latest/rest/dependabot/alerts)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Dependabot alerts\" repository permission.\n\n**Note**: Webhook events for Dependabot alerts are currently in beta and subject to change.",
+        "description": "A manifest file change removed a vulnerability.",
+        "operationId": "dependabot-alert/fixed",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-dependabot-alert-fixed"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "discussion",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "dependabot-alert-reintroduced": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to Dependabot alerts.\n\nFor more information about Dependabot alerts, see \"[About Dependabot alerts](https://docs.github.com/github-ae@latest/code-security/dependabot/dependabot-alerts/about-dependabot-alerts).\" For information about the API to manage Dependabot alerts, see \"[Dependabot alerts](https://docs.github.com/github-ae@latest/rest/dependabot/alerts)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Dependabot alerts\" repository permission.\n\n**Note**: Webhook events for Dependabot alerts are currently in beta and subject to change.",
+        "description": "A manifest file change introduced a vulnerable dependency that had previously been fixed.",
+        "operationId": "dependabot-alert/reintroduced",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-dependabot-alert-reintroduced"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "discussion",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "dependabot-alert-reopened": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to Dependabot alerts.\n\nFor more information about Dependabot alerts, see \"[About Dependabot alerts](https://docs.github.com/github-ae@latest/code-security/dependabot/dependabot-alerts/about-dependabot-alerts).\" For information about the API to manage Dependabot alerts, see \"[Dependabot alerts](https://docs.github.com/github-ae@latest/rest/dependabot/alerts)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Dependabot alerts\" repository permission.\n\n**Note**: Webhook events for Dependabot alerts are currently in beta and subject to change.",
+        "description": "A Dependabot alert was manually reopened.",
+        "operationId": "dependabot-alert/reopened",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-dependabot-alert-reopened"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "discussion",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "deploy-key-created": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to deploy keys. For more information, see \"[Managing deploy keys](https://docs.github.com/github-ae@latest/developers/overview/managing-deploy-keys).\" For information about the APIs to manage deploy keys, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#deploykey) or \"[Deploy keys](https://docs.github.com/github-ae@latest/rest/deploy-keys)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Deployments\" repository permission.",
+        "description": "A deploy key was created.",
+        "operationId": "deploy-key/created",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deploy-key"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-deploy-key-created"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "deploy-key",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "deploy-key-deleted": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to deploy keys. For more information, see \"[Managing deploy keys](https://docs.github.com/github-ae@latest/developers/overview/managing-deploy-keys).\" For information about the APIs to manage deploy keys, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#deploykey) or \"[Deploy keys](https://docs.github.com/github-ae@latest/rest/deploy-keys)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Deployments\" repository permission.",
+        "description": "A deploy key was deleted.",
+        "operationId": "deploy-key/deleted",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-deploy-key-deleted"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "discussion",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "deployment-created": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to deployments. For more information, see \"[About deployments](https://docs.github.com/github-ae@latest/actions/deployment/about-deployments).\" For information about the APIs to manage deployments, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#deployment) or \"[Deployments](https://docs.github.com/github-ae@latest/rest/deployments/deployments)\" in the REST API documentation.\n\nFor activity relating to deployment status, use the `deployment_status` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Deployments\" repository permission.",
+        "description": "A deployment was created.",
+        "operationId": "deployment/created",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deployment"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
                 "$ref": "#/components/schemas/webhook-deployment-created"
               }
             }
@@ -18065,7 +19437,7 @@
         "description": "A comment on a discussion was edited.",
         "operationId": "discussion-comment/edited",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion-comment"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#fork"
         },
         "parameters": [
           {
@@ -18143,8 +19515,9 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion-comment",
+          "subcategory": "fork",
           "supported-webhook-types": [
+            "business",
             "repository",
             "organization",
             "app"
@@ -18238,8 +19611,6 @@
           "category": "webhooks",
           "subcategory": "discussion",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -18344,7 +19715,7 @@
         "description": "The title or body on a discussion was edited, or the category of the discussion was changed.",
         "operationId": "discussion/edited",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
         },
         "parameters": [
           {
@@ -18422,10 +19793,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "installation",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -18437,7 +19806,7 @@
         "description": "A label was added to a discussion.",
         "operationId": "discussion/labeled",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
         },
         "parameters": [
           {
@@ -18515,10 +19884,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "installation",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -18530,7 +19897,7 @@
         "description": "A discussion was locked.",
         "operationId": "discussion/locked",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
         },
         "parameters": [
           {
@@ -18608,10 +19975,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "installation",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -18623,7 +19988,7 @@
         "description": "A discussion was pinned.",
         "operationId": "discussion/pinned",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation-repositories"
         },
         "parameters": [
           {
@@ -18701,10 +20066,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "installation-repositories",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -18716,7 +20079,7 @@
         "description": "A discussion was transferred to another repository.",
         "operationId": "discussion/transferred",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation-repositories"
         },
         "parameters": [
           {
@@ -18794,10 +20157,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "installation-repositories",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -18809,7 +20170,7 @@
         "description": "A comment on the discussion was unmarked as the answer.",
         "operationId": "discussion/unanswered",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
         },
         "parameters": [
           {
@@ -18887,10 +20248,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "installation",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -18902,7 +20261,7 @@
         "description": "A label was removed from a discussion.",
         "operationId": "discussion/unlabeled",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation-target"
         },
         "parameters": [
           {
@@ -18980,10 +20339,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "installation-target",
           "supported-webhook-types": [
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -18995,7 +20352,98 @@
         "description": "A discussion was unlocked.",
         "operationId": "discussion/unlocked",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-installation-unsuspend"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "installation",
+          "supported-webhook-types": [
+            "app"
+          ]
+        }
+      }
+    },
+    "issue-comment-created": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a comment on an issue or pull request. For more information about issues and pull requests, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues)\" and \"[About pull requests](https://docs.github.com/github-ae@latest/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).\" For information about the APIs to manage issue comments, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issuecomment) or \"[Issue comments](https://docs.github.com/github-ae@latest/rest/issues/comments)\" in the REST API documentation.\n\nFor activity relating to an issue as opposed to comments on an issue, use the `issue` event. For activity related to pull request reviews or pull request review comments, use the `pull_request_review` or `pull_request_review_comment` events. For more information about the different types of pull request comments, see \"[Working with comments](https://docs.github.com/github-ae@latest/rest/guides/working-with-comments).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" or \"Pull requests\" repository permissions.",
+        "description": "A comment on an issue or pull request was created.",
+        "operationId": "issue-comment/created",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue-comment"
         },
         "parameters": [
           {
@@ -19073,7 +20521,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "issue-comment",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -19088,7 +20536,7 @@
         "description": "A discussion was unpinned.",
         "operationId": "discussion/unpinned",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue-comment"
         },
         "parameters": [
           {
@@ -19166,7 +20614,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "discussion",
+          "subcategory": "issue-comment",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -19537,6 +20985,8 @@
           "category": "webhooks",
           "subcategory": "installation",
           "supported-webhook-types": [
+            "repository",
+            "organization",
             "app"
           ]
         }
@@ -19639,7 +21089,7 @@
         "description": "Someone granted new permissions to a GitHub App.",
         "operationId": "installation/new-permissions-accepted",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
         },
         "parameters": [
           {
@@ -19717,7 +21167,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "installation",
+          "subcategory": "installation-repositories",
           "supported-webhook-types": [
             "app"
           ]
@@ -20544,1385 +21994,6 @@
           "category": "webhooks",
           "subcategory": "issues",
           "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "issues-closed": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an issue. For more information about issues, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues).\" For information about the APIs to manage issues, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issue) or \"[Issues](https://docs.github.com/github-ae@latest/rest/issues)\" in the REST API documentation.\n\nFor activity relating to a comment on an issue, use the `issue_comment` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" repository permission.",
-        "description": "An issue was closed.",
-        "operationId": "issues/closed",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-issues-closed"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "issues",
-          "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "issues-deleted": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an issue. For more information about issues, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues).\" For information about the APIs to manage issues, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issue) or \"[Issues](https://docs.github.com/github-ae@latest/rest/issues)\" in the REST API documentation.\n\nFor activity relating to a comment on an issue, use the `issue_comment` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" repository permission.",
-        "description": "An issue was deleted.",
-        "operationId": "issues/deleted",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-issues-deleted"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "issues-demilestoned": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an issue. For more information about issues, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues).\" For information about the APIs to manage issues, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issue) or \"[Issues](https://docs.github.com/github-ae@latest/rest/issues)\" in the REST API documentation.\n\nFor activity relating to a comment on an issue, use the `issue_comment` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" repository permission.",
-        "description": "An issue was removed from a milestone.",
-        "operationId": "issues/demilestoned",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation-target"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-issues-demilestoned"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation-target",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "issues-edited": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an issue. For more information about issues, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues).\" For information about the APIs to manage issues, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issue) or \"[Issues](https://docs.github.com/github-ae@latest/rest/issues)\" in the REST API documentation.\n\nFor activity relating to a comment on an issue, use the `issue_comment` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" repository permission.",
-        "description": "The title or body on an issue was edited.",
-        "operationId": "issues/edited",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-installation-repositories-added"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation-repositories",
-          "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "installation-repositories-removed": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to which repositories a GitHub App installation can access. For more information, see \"[About apps](https://docs.github.com/github-ae@latest/developers/apps/getting-started-with-apps/about-apps#about-github-apps).\" For information about the APIs to manage GitHub Apps, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#app) or \"[Apps](https://docs.github.com/github-ae@latest/rest/reference/apps)\" in the REST API documentation.",
-        "description": "Access to one or more repositories was revoked for a GitHub App installation.",
-        "operationId": "installation-repositories/removed",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation-repositories"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-installation-repositories-removed"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation-repositories",
-          "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "installation-suspend": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a GitHub App installation. For more information, see \"[About apps](https://docs.github.com/github-ae@latest/developers/apps/getting-started-with-apps/about-apps#about-github-apps).\" For information about the APIs to manage GitHub Apps, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#app) or \"[Apps](https://docs.github.com/github-ae@latest/rest/reference/apps)\" in the REST API documentation.",
-        "description": "Someone blocked access by a GitHub App to their user or organization account.",
-        "operationId": "installation/suspend",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-installation-suspend"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation",
-          "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "installation-target-renamed": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to the user or organization account that a GitHub App is installed on. For more information, see \"[About apps](https://docs.github.com/github-ae@latest/developers/apps/getting-started-with-apps/about-apps#about-github-apps).\" For information about the APIs to manage GitHub Apps, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#app) or \"[Apps](https://docs.github.com/github-ae@latest/rest/reference/apps)\" in the REST API documentation.",
-        "description": "Somebody renamed the user or organization account that a GitHub App is installed on.",
-        "operationId": "installation-target/renamed",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation-target"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-installation-repositories-added"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation-repositories",
-          "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "installation-repositories-removed": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to which repositories a GitHub App installation can access. For more information, see \"[About apps](https://docs.github.com/github-ae@latest/developers/apps/getting-started-with-apps/about-apps#about-github-apps).\" For information about the APIs to manage GitHub Apps, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#app) or \"[Apps](https://docs.github.com/github-ae@latest/rest/reference/apps)\" in the REST API documentation.",
-        "description": "Access to one or more repositories was revoked for a GitHub App installation.",
-        "operationId": "installation-repositories/removed",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation-repositories"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-installation-repositories-removed"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation-repositories",
-          "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "installation-suspend": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a GitHub App installation. For more information, see \"[About apps](https://docs.github.com/github-ae@latest/developers/apps/getting-started-with-apps/about-apps#about-github-apps).\" For information about the APIs to manage GitHub Apps, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#app) or \"[Apps](https://docs.github.com/github-ae@latest/rest/reference/apps)\" in the REST API documentation.",
-        "description": "Someone blocked access by a GitHub App to their user or organization account.",
-        "operationId": "installation/suspend",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-installation-suspend"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation",
-          "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "installation-target-renamed": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to the user or organization account that a GitHub App is installed on. For more information, see \"[About apps](https://docs.github.com/github-ae@latest/developers/apps/getting-started-with-apps/about-apps#about-github-apps).\" For information about the APIs to manage GitHub Apps, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#app) or \"[Apps](https://docs.github.com/github-ae@latest/rest/reference/apps)\" in the REST API documentation.",
-        "description": "Somebody renamed the user or organization account that a GitHub App is installed on.",
-        "operationId": "installation-target/renamed",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation-target"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-installation-target-renamed"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "installation-target",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "installation-unsuspend": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a GitHub App installation. For more information, see \"[About apps](https://docs.github.com/github-ae@latest/developers/apps/getting-started-with-apps/about-apps#about-github-apps).\" For information about the APIs to manage GitHub Apps, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#app) or \"[Apps](https://docs.github.com/github-ae@latest/rest/reference/apps)\" in the REST API documentation.",
-        "description": "A GitHub App that was blocked from accessing a user or organization account was given access the account again.",
-        "operationId": "installation/unsuspend",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue-comment"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-installation-unsuspend"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "issue-comment",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "issue-comment-created": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a comment on an issue or pull request. For more information about issues and pull requests, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues)\" and \"[About pull requests](https://docs.github.com/github-ae@latest/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).\" For information about the APIs to manage issue comments, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issuecomment) or \"[Issue comments](https://docs.github.com/github-ae@latest/rest/issues/comments)\" in the REST API documentation.\n\nFor activity relating to an issue as opposed to comments on an issue, use the `issue` event. For activity related to pull request reviews or pull request review comments, use the `pull_request_review` or `pull_request_review_comment` events. For more information about the different types of pull request comments, see \"[Working with comments](https://docs.github.com/github-ae@latest/rest/guides/working-with-comments).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" or \"Pull requests\" repository permissions.",
-        "description": "A comment on an issue or pull request was created.",
-        "operationId": "issue-comment/created",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue-comment"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-issue-comment-created"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "issue-comment",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "issue-comment-deleted": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a comment on an issue or pull request. For more information about issues and pull requests, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues)\" and \"[About pull requests](https://docs.github.com/github-ae@latest/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).\" For information about the APIs to manage issue comments, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issuecomment) or \"[Issue comments](https://docs.github.com/github-ae@latest/rest/issues/comments)\" in the REST API documentation.\n\nFor activity relating to an issue as opposed to comments on an issue, use the `issue` event. For activity related to pull request reviews or pull request review comments, use the `pull_request_review` or `pull_request_review_comment` events. For more information about the different types of pull request comments, see \"[Working with comments](https://docs.github.com/github-ae@latest/rest/guides/working-with-comments).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" or \"Pull requests\" repository permissions.",
-        "description": "A comment on an issue or pull request was deleted.",
-        "operationId": "issue-comment/deleted",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue-comment"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-issue-comment-deleted"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "issue-comment",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "issue-comment-edited": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a comment on an issue or pull request. For more information about issues and pull requests, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues)\" and \"[About pull requests](https://docs.github.com/github-ae@latest/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).\" For information about the APIs to manage issue comments, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issuecomment) or \"[Issue comments](https://docs.github.com/github-ae@latest/rest/issues/comments)\" in the REST API documentation.\n\nFor activity relating to an issue as opposed to comments on an issue, use the `issue` event. For activity related to pull request reviews or pull request review comments, use the `pull_request_review` or `pull_request_review_comment` events. For more information about the different types of pull request comments, see \"[Working with comments](https://docs.github.com/github-ae@latest/rest/guides/working-with-comments).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" or \"Pull requests\" repository permissions.",
-        "description": "A comment on an issue or pull request was edited.",
-        "operationId": "issue-comment/edited",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-issue-comment-edited"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "issues",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "issues-assigned": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an issue. For more information about issues, see \"[About issues](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/about-issues).\" For information about the APIs to manage issues, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#issue) or \"[Issues](https://docs.github.com/github-ae@latest/rest/issues)\" in the REST API documentation.\n\nFor activity relating to a comment on an issue, use the `issue_comment` event.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Issues\" repository permission.",
-        "description": "An issue was assigned to a user.",
-        "operationId": "issues/assigned",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-issues-assigned"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "issues",
-          "supported-webhook-types": [
             "repository",
             "organization",
             "app"
@@ -22479,7 +22550,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "label",
+          "subcategory": "issues",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -22494,7 +22565,7 @@
         "description": "An issue was added to a milestone.",
         "operationId": "issues/milestoned",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
         },
         "parameters": [
           {
@@ -22572,7 +22643,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "label",
+          "subcategory": "issues",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -22587,7 +22658,7 @@
         "description": "An issue was created. When a closed issue is reopened, the action will be `reopened` instead.",
         "operationId": "issues/opened",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#member"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
         },
         "parameters": [
           {
@@ -22665,9 +22736,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "member",
+          "subcategory": "label",
           "supported-webhook-types": [
-            "business",
             "repository",
             "organization",
             "app"
@@ -22681,7 +22751,7 @@
         "description": "An issue was pinned to a repository. For more information, see \"[Pinning an issue to your repository](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/pinning-an-issue-to-your-repository).\"",
         "operationId": "issues/pinned",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#member"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label"
         },
         "parameters": [
           {
@@ -22759,7 +22829,7 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "issues",
+          "subcategory": "label",
           "supported-webhook-types": [
             "repository",
             "organization",
@@ -22774,7 +22844,7 @@
         "description": "A closed issue was reopened.",
         "operationId": "issues/reopened",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#member"
         },
         "parameters": [
           {
@@ -22945,8 +23015,9 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "issues",
+          "subcategory": "member",
           "supported-webhook-types": [
+            "business",
             "repository",
             "organization",
             "app"
@@ -22960,7 +23031,7 @@
         "description": "A user was unassigned from an issue.",
         "operationId": "issues/unassigned",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#member"
         },
         "parameters": [
           {
@@ -23038,9 +23109,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "member",
+          "subcategory": "issues",
           "supported-webhook-types": [
-            "business",
             "repository",
             "organization",
             "app"
@@ -23054,7 +23124,7 @@
         "description": "A label was removed from an issue.",
         "operationId": "issues/unlabeled",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#member"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
         },
         "parameters": [
           {
@@ -23132,9 +23202,8 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "member",
+          "subcategory": "issues",
           "supported-webhook-types": [
-            "business",
             "repository",
             "organization",
             "app"
@@ -23148,7 +23217,7 @@
         "description": "Conversation on an issue was locked. For more information, see \"[Locking conversations](https://docs.github.com/github-ae@latest/communities/moderating-comments-and-conversations/locking-conversations).\"",
         "operationId": "issues/unlocked",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#membership"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
         },
         "parameters": [
           {
@@ -23226,10 +23295,10 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "membership",
+          "subcategory": "issues",
           "supported-webhook-types": [
+            "repository",
             "organization",
-            "business",
             "app"
           ]
         }
@@ -23241,7 +23310,7 @@
         "description": "An issue was unpinned from a repository. For more information, see \"[Pinning an issue to your repository](https://docs.github.com/github-ae@latest/issues/tracking-your-work-with-issues/pinning-an-issue-to-your-repository).\"",
         "operationId": "issues/unpinned",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#membership"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues"
         },
         "parameters": [
           {
@@ -23319,10 +23388,11 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "membership",
+          "subcategory": "member",
           "supported-webhook-types": [
-            "organization",
             "business",
+            "repository",
+            "organization",
             "app"
           ]
         }
@@ -23414,98 +23484,6 @@
           "category": "webhooks",
           "subcategory": "label",
           "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
-    "label-deleted": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to labels. For more information, see \"[Managing labels](https://docs.github.com/github-ae@latest/issues/using-labels-and-milestones-to-track-work/managing-labels).\" For information about the APIs to manage labels, see [the GraphQL documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#label) or \"[Labels](https://docs.github.com/github-ae@latest/rest/issues/labels)\" in the REST API documentation.\n\nIf you want to receive an event when a label is added to or removed from an issue, pull request, or discussion, use the `labeled` or `unlabeled` action type for the `issues`, `pull_request`, or `discussion` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Metadata\" repository permission.",
-        "description": "A label was deleted.",
-        "operationId": "label/deleted",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-label-deleted"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "label",
-          "supported-webhook-types": [
-            "marketplace",
             "business",
             "repository",
             "organization",
@@ -23600,8 +23578,8 @@
           "category": "webhooks",
           "subcategory": "label",
           "supported-webhook-types": [
-            "repository",
             "organization",
+            "business",
             "app"
           ]
         }
@@ -23693,9 +23671,6 @@
           "category": "webhooks",
           "subcategory": "label",
           "supported-webhook-types": [
-            "business",
-            "repository",
-            "organization",
             "app"
           ]
         }
@@ -23790,7 +23765,6 @@
             "business",
             "repository",
             "organization",
-            "business",
             "app"
           ]
         }
@@ -23979,7 +23953,6 @@
             "business",
             "repository",
             "organization",
-            "business",
             "app"
           ]
         }
@@ -24645,7 +24618,7 @@
         "description": "A milestone was edited.",
         "operationId": "milestone/edited",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#ping"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#milestone"
         },
         "parameters": [
           {
@@ -24722,15 +24695,12 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
           "category": "webhooks",
-          "subcategory": "ping",
+          "subcategory": "milestone",
           "supported-webhook-types": [
             "repository",
             "organization",
-            "app",
-            "business",
-            "marketplace"
+            "app"
           ]
         }
       }
@@ -24741,7 +24711,7 @@
         "description": "A milestone was opened.",
         "operationId": "milestone/opened",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#milestone"
         },
         "parameters": [
           {
@@ -24819,10 +24789,10 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "organization",
+          "subcategory": "milestone",
           "supported-webhook-types": [
+            "repository",
             "organization",
-            "business",
             "app"
           ]
         }
@@ -25004,6 +24974,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
           "category": "webhooks",
           "subcategory": "organization",
           "supported-webhook-types": [
@@ -25113,7 +25084,7 @@
         "description": "A member was removed from the organization.",
         "operationId": "organization/member-removed",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#package"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization"
         },
         "parameters": [
           {
@@ -25191,10 +25162,10 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "package",
+          "subcategory": "organization",
           "supported-webhook-types": [
-            "repository",
             "organization",
+            "business",
             "app"
           ]
         }
@@ -25206,7 +25177,7 @@
         "description": "The name of an organization was changed.",
         "operationId": "organization/renamed",
         "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#package"
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization"
         },
         "parameters": [
           {
@@ -25284,10 +25255,10 @@
         "x-github": {
           "githubCloudOnly": false,
           "category": "webhooks",
-          "subcategory": "package",
+          "subcategory": "organization",
           "supported-webhook-types": [
-            "repository",
             "organization",
+            "business",
             "app"
           ]
         }
@@ -25376,7 +25347,6 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
           "category": "webhooks",
           "subcategory": "package",
           "supported-webhook-types": [
@@ -25770,9 +25740,7 @@
           "supported-webhook-types": [
             "repository",
             "organization",
-            "app",
-            "business",
-            "marketplace"
+            "app"
           ]
         }
       }
@@ -25865,9 +25833,7 @@
           "supported-webhook-types": [
             "repository",
             "organization",
-            "app",
-            "business",
-            "marketplace"
+            "app"
           ]
         }
       }
@@ -26146,7 +26112,9 @@
           "supported-webhook-types": [
             "repository",
             "organization",
-            "app"
+            "app",
+            "business",
+            "marketplace"
           ]
         }
       }
@@ -26239,7 +26207,9 @@
           "supported-webhook-types": [
             "repository",
             "organization",
-            "app"
+            "app",
+            "business",
+            "marketplace"
           ]
         }
       }
@@ -26458,7 +26428,7 @@
           {
             "name": "X-Github-Event",
             "in": "header",
-            "example": "project-v2",
+            "example": "issues",
             "schema": {
               "type": "string"
             }
@@ -26513,11 +26483,12 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
           "category": "webhooks",
           "subcategory": "project-column",
           "supported-webhook-types": [
-            "organization"
+            "repository",
+            "organization",
+            "app"
           ]
         }
       }
@@ -26529,6 +26500,377 @@
         "operationId": "project-column/moved",
         "externalDocs": {
           "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project-column"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-project-column-moved"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "project-column",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "project-created": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a classic project. For more information, see \"[About projects (classic)](https://docs.github.com/github-ae@latest/issues/organizing-your-work-with-project-boards/managing-project-boards/about-project-boards).\" For information about the API to manage classic projects, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#project) or \"[Projects (classic)](https://docs.github.com/github-ae@latest/rest/projects)\" in the REST API documentation.\n\nFor activity relating to a card or column on a project, use the `project_card` and `project_column` event. For activity relating to Projects instead of Projects (classic), use the `projects_v2` event instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" repository or organization permission.",
+        "description": "A classic project was created.",
+        "operationId": "project/created",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-project-created"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "project",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "project-deleted": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a classic project. For more information, see \"[About projects (classic)](https://docs.github.com/github-ae@latest/issues/organizing-your-work-with-project-boards/managing-project-boards/about-project-boards).\" For information about the API to manage classic projects, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#project) or \"[Projects (classic)](https://docs.github.com/github-ae@latest/rest/projects)\" in the REST API documentation.\n\nFor activity relating to a card or column on a project, use the `project_card` and `project_column` event. For activity relating to Projects instead of Projects (classic), use the `projects_v2` event instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" repository or organization permission.",
+        "description": "A classic project was deleted.",
+        "operationId": "project/deleted",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-project-deleted"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "project",
+          "supported-webhook-types": [
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "project-edited": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a classic project. For more information, see \"[About projects (classic)](https://docs.github.com/github-ae@latest/issues/organizing-your-work-with-project-boards/managing-project-boards/about-project-boards).\" For information about the API to manage classic projects, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#project) or \"[Projects (classic)](https://docs.github.com/github-ae@latest/rest/projects)\" in the REST API documentation.\n\nFor activity relating to a card or column on a project, use the `project_card` and `project_column` event. For activity relating to Projects instead of Projects (classic), use the `projects_v2` event instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" repository or organization permission.",
+        "description": "The name or description of a classic project was changed.",
+        "operationId": "project/edited",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "project-v2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-project-edited"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "webhooks",
+          "subcategory": "project",
+          "supported-webhook-types": [
+            "organization"
+          ]
+        }
+      }
+    },
+    "project-reopened": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to a classic project. For more information, see \"[About projects (classic)](https://docs.github.com/github-ae@latest/issues/organizing-your-work-with-project-boards/managing-project-boards/about-project-boards).\" For information about the API to manage classic projects, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#project) or \"[Projects (classic)](https://docs.github.com/github-ae@latest/rest/projects)\" in the REST API documentation.\n\nFor activity relating to a card or column on a project, use the `project_card` and `project_column` event. For activity relating to Projects instead of Projects (classic), use the `projects_v2` event instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" repository or organization permission.",
+        "description": "A classic project was closed.",
+        "operationId": "project/reopened",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project"
         },
         "parameters": [
           {
@@ -26777,7 +27119,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/webhook-project-deleted"
+                "$ref": "#/components/schemas/webhook-project-reopened"
               }
             }
           }
@@ -26794,192 +27136,6 @@
           "subcategory": "project",
           "supported-webhook-types": [
             "organization"
-          ]
-        }
-      }
-    },
-    "project-edited": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a classic project. For more information, see \"[About projects (classic)](https://docs.github.com/github-ae@latest/issues/organizing-your-work-with-project-boards/managing-project-boards/about-project-boards).\" For information about the API to manage classic projects, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#project) or \"[Projects (classic)](https://docs.github.com/github-ae@latest/rest/projects)\" in the REST API documentation.\n\nFor activity relating to a card or column on a project, use the `project_card` and `project_column` event. For activity relating to Projects instead of Projects (classic), use the `projects_v2` event instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" repository or organization permission.",
-        "description": "The name or description of a classic project was changed.",
-        "operationId": "project/edited",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-project-edited"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "project",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
-          ]
-        }
-      }
-    },
-    "project-reopened": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a classic project. For more information, see \"[About projects (classic)](https://docs.github.com/github-ae@latest/issues/organizing-your-work-with-project-boards/managing-project-boards/about-project-boards).\" For information about the API to manage classic projects, see [the GraphQL API documentation](https://docs.github.com/github-ae@latest/graphql/reference/objects#project) or \"[Projects (classic)](https://docs.github.com/github-ae@latest/rest/projects)\" in the REST API documentation.\n\nFor activity relating to a card or column on a project, use the `project_card` and `project_column` event. For activity relating to Projects instead of Projects (classic), use the `projects_v2` event instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" repository or organization permission.",
-        "description": "A classic project was closed.",
-        "operationId": "project/reopened",
-        "externalDocs": {
-          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-project-reopened"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "project",
-          "supported-webhook-types": [
-            "repository",
-            "organization",
-            "app"
           ]
         }
       }
@@ -39467,6 +39623,7 @@
           },
           "repositories": {
             "type": "array",
+            "description": "The repositories included in the migration. Only returned for export migrations.",
             "items": {
               "$ref": "#/components/schemas/repository"
             }

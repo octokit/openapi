@@ -1846,7 +1846,7 @@
     "/orgs/{org}/migrations": {
       "get": {
         "summary": "List organization migrations",
-        "description": "Lists the most recent migrations.",
+        "description": "Lists the most recent migrations, including both exports (which can be started through the REST API) and imports (which cannot be started using the REST API).\n\nA list of `repositories` is only returned for export migrations.",
         "tags": [
           "migrations"
         ],
@@ -2128,6 +2128,75 @@
         }
       }
     },
+    "/orgs/{org}/migrations/{migration_id}/repositories": {
+      "get": {
+        "summary": "List repositories in an organization migration",
+        "description": "List all the repositories for this organization migration.",
+        "tags": [
+          "migrations"
+        ],
+        "operationId": "migrations/list-repos-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.6/rest/reference/migrations#list-repositories-in-an-organization-migration"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/migration-id"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/minimal-repository"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "migrations",
+          "subcategory": "orgs"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.7": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
     "/orgs/{org}/repos": {
       "get": {
         "summary": "List organization repositories",
@@ -2351,7 +2420,7 @@
                   },
                   "delete_branch_on_merge": {
                     "type": "boolean",
-                    "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.",
+                    "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion. **The authenticated user must be an organization owner to set this property to `true`.**",
                     "default": false
                   },
                   "use_squash_pr_title_as_default": {
@@ -11647,6 +11716,7 @@
           },
           "repositories": {
             "type": "array",
+            "description": "The repositories included in the migration. Only returned for export migrations.",
             "items": {
               "$ref": "#/components/schemas/repository"
             }

@@ -569,7 +569,7 @@
                 }
               }
             },
-            "required": null
+            "required": true
           },
           "responses": {
             "200": {
@@ -1708,7 +1708,7 @@
                 }
               }
             },
-            "required": null
+            "required": false
           },
           "responses": {
             "200": {
@@ -11566,6 +11566,47 @@
               "style": "simple"
             }
           ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "name": "Expensive hardware runners",
+                      "visibility": "selected"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "allows_public_repositories": {
+                      "default": false,
+                      "description": "Whether the runner group can be used by `public` repositories.",
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "description": "Name of the runner group.",
+                      "type": "string"
+                    },
+                    "visibility": {
+                      "description": "Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories.",
+                      "enum": [
+                        "selected",
+                        "all",
+                        "private"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
             "204": {
               "description": "Response"
@@ -13033,7 +13074,7 @@
                 }
               }
             },
-            "required": null
+            "required": false
           },
           "responses": {
             "204": {
@@ -13979,6 +14020,31 @@
                                 }
                               }
                             }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orgs/{org}/migrations/{migration_id}/repositories": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "items_changed": {
+                          "properties_changed": {
+                            "removed": [
+                              "security_and_analysis"
+                            ]
                           }
                         }
                       }
@@ -18041,16 +18107,6 @@
       ],
       "/orgs/{org}/members/{username}/codespaces/{codespace_name}/stop": [
         "post"
-      ],
-      "/orgs/{org}/migrations/{migration_id}/archive": [
-        "get",
-        "delete"
-      ],
-      "/orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock": [
-        "delete"
-      ],
-      "/orgs/{org}/migrations/{migration_id}/repositories": [
-        "get"
       ],
       "/orgs/{org}/packages": [
         "get"
