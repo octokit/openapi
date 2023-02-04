@@ -11321,6 +11321,173 @@
                             },
                             "name": {
                               "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "title": "Self hosted runner label",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "name": {
+                        "description": "The name of the runner.",
+                        "example": "iMac",
+                        "type": "string"
+                      },
+                      "os": {
+                        "description": "The Operating System of the runner.",
+                        "example": "macos",
+                        "type": "string"
+                      },
+                      "status": {
+                        "description": "The status of the runner.",
+                        "example": "online",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "os",
+                      "status",
+                      "busy",
+                      "labels"
+                    ],
+                    "title": "Self hosted runners",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get a self-hosted runner for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": true,
+            "subcategory": "self-hosted-runners"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/audit-log": {
+        "get": {
+          "deprecated": null,
+          "description": "Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/reference/enterprise-admin#get-the-audit-log-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/get-audit-log",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/github-ae@latest/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).",
+              "in": "query",
+              "name": "phrase",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.",
+              "in": "query",
+              "name": "after",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
+              "in": "query",
+              "name": "before",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The order of audit log events. To list newest events first, specify `desc`. To list oldest events first, specify `asc`.\n\nThe default is `desc`.",
+              "in": "query",
+              "name": "order",
+              "required": false,
+              "schema": {
+                "enum": [
+                  "desc",
+                  "asc"
+                ],
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "@timestamp": 1635940599755,
+                          "action": "pull_request.merge",
+                          "actor": "mona-admin",
+                          "actor_id": 7,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
                             },
                             "runners_url": {
                               "type": "string"
@@ -11607,6 +11774,54 @@
             },
             "required": true
           },
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Create a self-hosted runner group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        }
+      },
+      "/orgs/{org}/actions/runner-groups/{runner_group_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Deletes a self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/reference/actions#delete-a-self-hosted-runner-group-from-an-organization"
+          },
+          "operationId": "actions/delete-self-hosted-runner-group-from-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner group.",
+              "in": "path",
+              "name": "runner_group_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
           "responses": {
             "204": {
               "description": "Response"
