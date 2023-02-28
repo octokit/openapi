@@ -6852,7 +6852,7 @@
               "description": "Validation failed, or the endpoint has been spammed."
             }
           },
-          "summary": "Remove all custom labels from a self-hosted runner for an enterprise",
+          "summary": "Add custom labels to a self-hosted runner for an enterprise",
           "tags": [
             "enterprise-admin"
           ],
@@ -6863,14 +6863,14 @@
             "subcategory": "self-hosted-runners"
           }
         },
-        "get": {
+        "put": {
           "deprecated": null,
-          "description": "Lists all labels for a self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "description": "Remove all previous custom labels and set the new custom labels for a specific\nself-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-labels-for-a-self-hosted-runner-for-an-enterprise"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-custom-labels-for-a-self-hosted-runner-for-an-enterprise"
           },
-          "operationId": "enterprise-admin/list-labels-for-self-hosted-runner-for-enterprise",
+          "operationId": "enterprise-admin/set-custom-labels-for-self-hosted-runner-for-enterprise",
           "parameters": [
             {
               "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
@@ -6893,6 +6893,40 @@
               "style": "simple"
             }
           ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "labels": [
+                        "gpu",
+                        "accelerated"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "labels"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
             "200": {
               "content": {
@@ -7595,7 +7629,7 @@
                   }
                 }
               },
-              "description": "Resource not found"
+              "description": "Validation failed, or the endpoint has been spammed."
             }
           },
           "summary": "Get the audit log for an enterprise",
@@ -8077,308 +8111,10 @@
                             "login": {
                               "example": "octocat",
                               "type": "string"
-                            }
-                          },
-                          "required": [
-                            "name"
-                          ],
-                          "title": "Self hosted runner label",
-                          "type": "object"
-                        },
-                        "type": "array"
-                      },
-                      "total_count": {
-                        "type": "integer"
-                      }
-                    },
-                    "required": [
-                      "total_count",
-                      "labels"
-                    ],
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            },
-            "422": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Validation Error Simple",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "errors": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "message": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "message",
-                      "documentation_url"
-                    ],
-                    "title": "Validation Error Simple",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Validation failed, or the endpoint has been spammed."
-            }
-          },
-          "summary": "Set custom labels for a self-hosted runner for an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": true,
-            "subcategory": "self-hosted-runners"
-          }
-        }
-      },
-      "/enterprises/{enterprise}/actions/runners/{runner_id}/labels/{name}": {
-        "delete": {
-          "deprecated": null,
-          "description": "Remove a custom label from a self-hosted runner configured\nin an enterprise. Returns the remaining labels from the runner.\n\nThis endpoint returns a `404 Not Found` status if the custom label is not\npresent on the runner.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#remove-a-custom-label-from-a-self-hosted-runner-for-an-enterprise"
-          },
-          "operationId": "enterprise-admin/remove-custom-label-from-self-hosted-runner-for-enterprise",
-          "parameters": [
-            {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
-              "in": "path",
-              "name": "enterprise",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "Unique identifier of the self-hosted runner.",
-              "in": "path",
-              "name": "runner_id",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "The name of a self-hosted runner's custom label.",
-              "in": "path",
-              "name": "name",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "labels": [
-                          {
-                            "id": 5,
-                            "name": "self-hosted",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 7,
-                            "name": "X64",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 20,
-                            "name": "macOS",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 21,
-                            "name": "no-gpu",
-                            "type": "custom"
-                          }
-                        ],
-                        "total_count": 4
-                      }
-                    }
-                  },
-                  "schema": {
-                    "properties": {
-                      "labels": {
-                        "items": {
-                          "description": "A label for a self hosted runner",
-                          "properties": {
-                            "id": {
-                              "description": "Unique identifier of the label.",
-                              "type": "integer"
                             },
                             "name": {
                               "nullable": true,
                               "type": "string"
-                            }
-                          },
-                          "required": [
-                            "name"
-                          ],
-                          "title": "Self hosted runner label",
-                          "type": "object"
-                        },
-                        "type": "array"
-                      },
-                      "name": {
-                        "description": "The name of the runner.",
-                        "example": "iMac",
-                        "type": "string"
-                      },
-                      "os": {
-                        "description": "The Operating System of the runner.",
-                        "example": "macos",
-                        "type": "string"
-                      },
-                      "status": {
-                        "description": "The status of the runner.",
-                        "example": "online",
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "name",
-                      "os",
-                      "status",
-                      "busy",
-                      "labels"
-                    ],
-                    "title": "Self hosted runners",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response"
-            }
-          },
-          "summary": "Get a self-hosted runner for an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": true,
-            "subcategory": "self-hosted-runners"
-          }
-        }
-      },
-      "/enterprises/{enterprise}/actions/runners/{runner_id}/labels": {
-        "delete": {
-          "deprecated": null,
-          "description": "Remove all custom labels from a self-hosted runner configured in an\nenterprise. Returns the remaining read-only labels from the runner.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#remove-all-custom-labels-from-a-self-hosted-runner-for-an-enterprise"
-          },
-          "operationId": "enterprise-admin/remove-all-custom-labels-from-self-hosted-runner-for-enterprise",
-          "parameters": [
-            {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
-              "in": "path",
-              "name": "enterprise",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "Unique identifier of the self-hosted runner.",
-              "in": "path",
-              "name": "runner_id",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              },
-              "style": "simple"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "labels": [
-                          {
-                            "id": 5,
-                            "name": "self-hosted",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 7,
-                            "name": "X64",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 20,
-                            "name": "macOS",
-                            "type": "read-only"
-                          }
-                        ],
-                        "total_count": 3
-                      }
-                    }
-                  },
-                  "schema": {
-                    "properties": {
-                      "labels": {
-                        "items": {
-                          "description": "A label for a self hosted runner",
-                          "properties": {
-                            "id": {
-                              "description": "Unique identifier of the label.",
-                              "type": "integer"
                             },
                             "node_id": {
                               "example": "MDQ6VXNlcjE=",
@@ -8397,13 +8133,6 @@
                             "repos_url": {
                               "example": "https://api.github.com/users/octocat/repos",
                               "format": "uri",
-                              "type": "string"
-                            },
-                            "site_admin": {
-                              "type": "boolean"
-                            },
-                            "starred_at": {
-                              "example": "\"2020-07-09T00:17:55Z\"",
                               "type": "string"
                             }
                           },
@@ -8542,7 +8271,7 @@
                   }
                 }
               },
-              "description": "Validation failed, or the endpoint has been spammed."
+              "description": "Resource not found"
             }
           },
           "summary": "Get the audit log for an enterprise",
@@ -8738,6 +8467,13 @@
                               "path": "spec-main/api-session-spec.ts",
                               "start_column": 7,
                               "start_line": 917
+                            },
+                            "site_admin": {
+                              "type": "boolean"
+                            },
+                            "starred_at": {
+                              "example": "\"2020-07-09T00:17:55Z\"",
+                              "type": "string"
                             },
                             "starred_url": {
                               "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
@@ -8940,253 +8676,10 @@
                               "description": "A template for the API URL to get information about commits on the repository.",
                               "example": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
                               "type": "string"
-                            }
-                          },
-                          "required": [
-                            "name"
-                          ],
-                          "title": "Self hosted runner label",
-                          "type": "object"
-                        },
-                        "type": "array"
-                      },
-                      "total_count": {
-                        "type": "integer"
-                      }
-                    },
-                    "required": [
-                      "total_count",
-                      "labels"
-                    ],
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            },
-            "422": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Validation Error Simple",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "errors": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "message": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "message",
-                      "documentation_url"
-                    ],
-                    "title": "Validation Error Simple",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Validation failed, or the endpoint has been spammed."
-            }
-          },
-          "summary": "Add custom labels to a self-hosted runner for an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": true,
-            "subcategory": "self-hosted-runners"
-          }
-        },
-        "put": {
-          "deprecated": null,
-          "description": "Remove all previous custom labels and set the new custom labels for a specific\nself-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-custom-labels-for-a-self-hosted-runner-for-an-enterprise"
-          },
-          "operationId": "enterprise-admin/set-custom-labels-for-self-hosted-runner-for-enterprise",
-          "parameters": [
-            {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
-              "in": "path",
-              "name": "enterprise",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "Unique identifier of the self-hosted runner.",
-              "in": "path",
-              "name": "runner_id",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              },
-              "style": "simple"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "labels": [
-                        "gpu",
-                        "accelerated"
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "labels": {
-                      "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
-                      "items": {
-                        "type": "string"
-                      },
-                      "maxItems": 100,
-                      "minItems": 0,
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "labels"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "labels": [
-                          {
-                            "id": 5,
-                            "name": "self-hosted",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 7,
-                            "name": "X64",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 20,
-                            "name": "macOS",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 21,
-                            "name": "no-gpu",
-                            "type": "custom"
-                          }
-                        ],
-                        "total_count": 4
-                      }
-                    }
-                  },
-                  "schema": {
-                    "properties": {
-                      "labels": {
-                        "items": {
-                          "description": "A label for a self hosted runner",
-                          "properties": {
-                            "id": {
-                              "description": "Unique identifier of the label.",
-                              "type": "integer"
                             },
                             "compare_url": {
                               "description": "A template for the API URL to compare two commits or refs.",
                               "example": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
-                              "type": "string"
-                            },
-                            "contents_url": {
-                              "description": "A template for the API URL to get the contents of the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
-                              "type": "string"
-                            },
-                            "contributors_url": {
-                              "description": "A template for the API URL to list the contributors to the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/contributors",
-                              "format": "uri",
-                              "type": "string"
-                            },
-                            "deployments_url": {
-                              "description": "The API URL to list the deployments of the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/deployments",
-                              "format": "uri",
-                              "type": "string"
-                            },
-                            "description": {
-                              "description": "The repository description.",
-                              "example": "This your first repo!",
-                              "nullable": true,
-                              "type": "string"
-                            },
-                            "downloads_url": {
-                              "description": "The API URL to list the downloads on the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/downloads",
-                              "format": "uri",
-                              "type": "string"
-                            },
-                            "events_url": {
-                              "description": "The API URL to list the events of the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/events",
-                              "format": "uri",
-                              "type": "string"
-                            },
-                            "fork": {
-                              "description": "Whether the repository is a fork.",
-                              "type": "boolean"
-                            },
-                            "forks_url": {
-                              "description": "The API URL to list the forks of the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/forks",
-                              "format": "uri",
                               "type": "string"
                             }
                           },
@@ -9325,7 +8818,7 @@
                   }
                 }
               },
-              "description": "Response"
+              "description": "Validation failed, or the endpoint has been spammed."
             }
           },
           "summary": "Get the audit log for an enterprise",
@@ -9521,6 +9014,51 @@
                               "path": "spec-main/api-session-spec.ts",
                               "start_column": 7,
                               "start_line": 917
+                            },
+                            "contents_url": {
+                              "description": "A template for the API URL to get the contents of the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+                              "type": "string"
+                            },
+                            "contributors_url": {
+                              "description": "A template for the API URL to list the contributors to the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/contributors",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "deployments_url": {
+                              "description": "The API URL to list the deployments of the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/deployments",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "description": {
+                              "description": "The repository description.",
+                              "example": "This your first repo!",
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "downloads_url": {
+                              "description": "The API URL to list the downloads on the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/downloads",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "events_url": {
+                              "description": "The API URL to list the events of the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/events",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "fork": {
+                              "description": "Whether the repository is a fork.",
+                              "type": "boolean"
+                            },
+                            "forks_url": {
+                              "description": "The API URL to list the forks of the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/forks",
+                              "format": "uri",
+                              "type": "string"
                             },
                             "full_name": {
                               "description": "The full, globally unique, name of the repository.",
@@ -10073,6 +9611,7 @@
                     "default": {
                       "value": {
                         "advanced_security_enabled_for_new_repositories": true,
+                        "dependabot_alerts_enabled_for_new_repositories": true,
                         "secret_scanning_enabled_for_new_repositories": true,
                         "secret_scanning_push_protection_custom_link": "https://github.com/test-org/test-repo/blob/main/README.md",
                         "secret_scanning_push_protection_enabled_for_new_repositories": true
@@ -10083,6 +9622,11 @@
                     "properties": {
                       "advanced_security_enabled_for_new_repositories": {
                         "description": "Whether GitHub advanced security is automatically enabled for new repositories and repositories transferred to\nthis enterprise.",
+                        "example": false,
+                        "type": "boolean"
+                      },
+                      "dependabot_alerts_enabled_for_new_repositories": {
+                        "description": "Whether Dependabot alerts are automatically enabled for new repositories and repositories transferred to this\nenterprise.",
                         "example": false,
                         "type": "boolean"
                       },
@@ -10105,6 +9649,7 @@
                     },
                     "required": [
                       "advanced_security_enabled_for_new_repositories",
+                      "dependabot_alerts_enabled_for_new_repositories",
                       "secret_scanning_enabled_for_new_repositories",
                       "secret_scanning_push_protection_enabled_for_new_repositories"
                     ],
@@ -10165,7 +9710,7 @@
         },
         "patch": {
           "deprecated": null,
-          "description": "Updates the settings for advanced security, secret scanning, and push protection for new repositories in an enterprise.\nTo use this endpoint, you must be an administrator of the enterprise, and you must use an access token with the `admin:enterprise` scope.",
+          "description": "Updates the settings for advanced security, Dependabot alerts, secret scanning, and push protection for new repositories in an enterprise.\nTo use this endpoint, you must be an administrator of the enterprise, and you must use an access token with the `admin:enterprise` scope.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/enterprise-admin#update-code-security-and-analysis-features-for-an-enterprise"
@@ -10190,6 +9735,7 @@
                   "default": {
                     "value": {
                       "advanced_security_enabled_for_new_repositories": true,
+                      "dependabot_alerts_enabled_for_new_repositories": true,
                       "secret_scanning_enabled_for_new_repositories": true,
                       "secret_scanning_push_protection_custom_link": "https://github.com/test-org/test-repo/blob/main/README.md",
                       "secret_scanning_push_protection_enabled_for_new_repositories": true
@@ -10200,6 +9746,10 @@
                   "properties": {
                     "advanced_security_enabled_for_new_repositories": {
                       "description": "Whether GitHub Advanced Security is automatically enabled for new repositories. For more information, see \"[About GitHub Advanced Security](https://docs.github.com/enterprise-cloud@latest//get-started/learning-about-github/about-github-advanced-security).\"",
+                      "type": "boolean"
+                    },
+                    "dependabot_alerts_enabled_for_new_repositories": {
+                      "description": "Whether Dependabot alerts are automatically enabled for new repositories. For more information, see \"[About Dependabot alerts](https://docs.github.com/enterprise-cloud@latest//code-security/dependabot/dependabot-alerts/about-dependabot-alerts).\"",
                       "type": "boolean"
                     },
                     "secret_scanning_enabled_for_new_repositories": {
@@ -11113,6 +10663,7 @@
               "schema": {
                 "enum": [
                   "advanced_security",
+                  "dependabot_alerts",
                   "secret_scanning",
                   "secret_scanning_push_protection"
                 ],

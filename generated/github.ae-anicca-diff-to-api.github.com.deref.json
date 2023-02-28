@@ -11696,6 +11696,958 @@
           ],
           "x-github": {
             "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": true,
+            "subcategory": "self-hosted-runners"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/actions/runners/{runner_id}": {
+        "delete": {
+          "deprecated": null,
+          "description": "Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/reference/actions#delete-self-hosted-runner-from-an-enterprise"
+          },
+          "operationId": "enterprise-admin/delete-self-hosted-runner-from-enterprise",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Delete a self-hosted runner from an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": true,
+            "subcategory": "self-hosted-runners"
+          }
+        },
+        "get": {
+          "deprecated": null,
+          "description": "Gets a specific self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/reference/actions#get-a-self-hosted-runner-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/get-self-hosted-runner-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "busy": true,
+                        "id": 23,
+                        "labels": [
+                          {
+                            "id": 5,
+                            "name": "self-hosted",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 7,
+                            "name": "X64",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 20,
+                            "name": "macOS",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 21,
+                            "name": "no-gpu",
+                            "type": "custom"
+                          }
+                        ],
+                        "name": "MBP",
+                        "os": "macos",
+                        "status": "online"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "A self hosted runner",
+                    "properties": {
+                      "busy": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "description": "The id of the runner.",
+                        "example": 5,
+                        "type": "integer"
+                      },
+                      "labels": {
+                        "items": {
+                          "description": "A label for a self hosted runner",
+                          "properties": {
+                            "id": {
+                              "description": "Unique identifier of the label.",
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "Name of the label.",
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                              "enum": [
+                                "read-only",
+                                "custom"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "title": "Self hosted runner label",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "name": {
+                        "description": "The name of the runner.",
+                        "example": "iMac",
+                        "type": "string"
+                      },
+                      "os": {
+                        "description": "The Operating System of the runner.",
+                        "example": "macos",
+                        "type": "string"
+                      },
+                      "status": {
+                        "description": "The status of the runner.",
+                        "example": "online",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "os",
+                      "status",
+                      "busy",
+                      "labels"
+                    ],
+                    "title": "Self hosted runners",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get a self-hosted runner for an enterprise",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": true,
+            "subcategory": "self-hosted-runners"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/audit-log": {
+        "get": {
+          "deprecated": null,
+          "description": "Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/reference/enterprise-admin#get-the-audit-log-for-an-enterprise"
+          },
+          "operationId": "enterprise-admin/get-audit-log",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/github-ae@latest/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).",
+              "in": "query",
+              "name": "phrase",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.",
+              "in": "query",
+              "name": "after",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
+              "in": "query",
+              "name": "before",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The order of audit log events. To list newest events first, specify `desc`. To list oldest events first, specify `asc`.\n\nThe default is `desc`.",
+              "in": "query",
+              "name": "order",
+              "required": false,
+              "schema": {
+                "enum": [
+                  "desc",
+                  "asc"
+                ],
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "@timestamp": 1635940599755,
+                          "action": "pull_request.merge",
+                          "actor": "mona-admin",
+                          "actor_id": 7,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business": "github",
+                          "business_id": 1,
+                          "created_at": 1635940599755,
+                          "data": {
+                            "actor_session": 1,
+                            "category_type": "Resource Management",
+                            "client_id": 322299977.1635936,
+                            "controller_action": "merge",
+                            "method": "POST",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/pull/1",
+                            "request_category": "other",
+                            "request_id": "e4dabc4d-ba16-4bca-1234-649be7ae1188",
+                            "server_id": "5d17aab5-fd9f-abcd-a820-16bed246441b",
+                            "url": "https://example.com/octo-org/octo-repo/pull/1/merge",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_requests#merge",
+                          "operation_type": "modify",
+                          "org": "octo-org",
+                          "org_id": 8,
+                          "repo": "octo-org/octo-repo",
+                          "repo_id": 17
+                        },
+                        {
+                          "@timestamp": 1635940593079,
+                          "action": "pull_request_review.submit",
+                          "actor": "mona-admin",
+                          "actor_id": 7,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business_id": 1,
+                          "created_at": 1635940593079,
+                          "data": {
+                            "actor_session": 1,
+                            "allowed": true,
+                            "body": null,
+                            "category_type": "Resource Management",
+                            "client_id": 322299977.1635936,
+                            "controller_action": "create",
+                            "id": 1,
+                            "issue_id": 1,
+                            "method": "PUT",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/pull/1/files",
+                            "request_category": "other",
+                            "request_id": "c0f63bb7-17b6-4796-940c-12345c5a581b",
+                            "review_id": 1,
+                            "server_id": "2abc1234-f651-43e3-9696-e942ad5f8c89",
+                            "spammy": false,
+                            "state": 40,
+                            "url": "https://example.com/octo-org/octo-repo/pull/1/reviews",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_request_review_events#create",
+                          "operation_type": "modify",
+                          "org_id": 8
+                        },
+                        {
+                          "@timestamp": 1635940554161,
+                          "action": "pull_request.create",
+                          "actor": "mona",
+                          "actor_id": 9,
+                          "actor_ip": "88.123.45.123",
+                          "actor_location": {
+                            "city": "Louth",
+                            "country_code": "GB",
+                            "country_name": "United Kingdom",
+                            "location": {
+                              "lat": 53.4457,
+                              "lon": 0.141
+                            },
+                            "postal_code": "LN11",
+                            "region": "ENG",
+                            "region_name": "England"
+                          },
+                          "business": "github",
+                          "business_id": 1,
+                          "created_at": 1635940554161,
+                          "data": {
+                            "actor_session": 2,
+                            "category_type": "Resource Management",
+                            "client_id": 386351111.163594,
+                            "controller_action": "create",
+                            "method": "POST",
+                            "pull_request_id": 1,
+                            "referrer": "https://example.com/octo-org/octo-repo/compare/main...mona:patch-1",
+                            "request_category": "other",
+                            "request_id": "2773abeb-477f-4ebf-a017-f8e8a206c305",
+                            "server_id": "796e3115-4ce8-4606-8fd0-99ea57a2e12b",
+                            "url": "https://example.com/octo-org/octo-repo/pull/create?base=octo-org%3Amain&head=mona%3Apatch-1",
+                            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ..."
+                          },
+                          "device_cookie": null,
+                          "from": "pull_requests#create",
+                          "operation_type": "create",
+                          "org": "octo-org",
+                          "org_id": 8,
+                          "repo": "octo-org/octo-repo",
+                          "repo_id": 17,
+                          "user_id": 9
+                        }
+                      ]
+                    }
+                  },
+                  "schema": {
+                    "items": {
+                      "properties": {
+                        "@timestamp": {
+                          "description": "The time the audit log event occurred, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).",
+                          "type": "integer"
+                        },
+                        "_document_id": {
+                          "description": "A unique identifier for an audit event.",
+                          "type": "string"
+                        },
+                        "action": {
+                          "description": "The name of the action that was performed, for example `user.login` or `repo.create`.",
+                          "type": "string"
+                        },
+                        "active": {
+                          "type": "boolean"
+                        },
+                        "active_was": {
+                          "type": "boolean"
+                        },
+                        "actor": {
+                          "description": "The actor who performed the action.",
+                          "type": "string"
+                        },
+                        "actor_id": {
+                          "description": "The id of the actor who performed the action.",
+                          "type": "integer"
+                        },
+                        "actor_location": {
+                          "properties": {
+                            "country_name": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "blocked_user": {
+                          "description": "The username of the account being blocked.",
+                          "type": "string"
+                        },
+                        "business": {
+                          "type": "string"
+                        },
+                        "business_id": {
+                          "type": "integer"
+                        },
+                        "config": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "config_was": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "content_type": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "description": "The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).",
+                          "type": "integer"
+                        },
+                        "data": {
+                          "additionalProperties": true,
+                          "type": "object"
+                        },
+                        "deploy_key_fingerprint": {
+                          "type": "string"
+                        },
+                        "emoji": {
+                          "type": "string"
+                        },
+                        "events": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "events_were": {
+                          "items": {
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "explanation": {
+                          "type": "string"
+                        },
+                        "fingerprint": {
+                          "type": "string"
+                        },
+                        "hook_id": {
+                          "type": "integer"
+                        },
+                        "limited_availability": {
+                          "type": "boolean"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "old_user": {
+                          "type": "string"
+                        },
+                        "openssh_public_key": {
+                          "type": "string"
+                        },
+                        "operation_type": {
+                          "type": "string"
+                        },
+                        "org": {
+                          "type": "string"
+                        },
+                        "org_id": {
+                          "type": "integer"
+                        },
+                        "previous_visibility": {
+                          "type": "string"
+                        },
+                        "read_only": {
+                          "type": "boolean"
+                        },
+                        "repo": {
+                          "description": "The name of the repository.",
+                          "type": "string"
+                        },
+                        "repository": {
+                          "description": "The name of the repository.",
+                          "type": "string"
+                        },
+                        "repository_public": {
+                          "type": "boolean"
+                        },
+                        "target_login": {
+                          "type": "string"
+                        },
+                        "team": {
+                          "type": "string"
+                        },
+                        "transport_protocol": {
+                          "description": "The type of protocol (for example, HTTP or SSH) used to transfer Git data.",
+                          "type": "integer"
+                        },
+                        "transport_protocol_name": {
+                          "description": "A human readable name for the protocol (for example, HTTP or SSH) used to transfer Git data.",
+                          "type": "string"
+                        },
+                        "user": {
+                          "description": "The user that was affected by the action performed (if available).",
+                          "type": "string"
+                        },
+                        "user_id": {
+                          "type": "integer"
+                        },
+                        "visibility": {
+                          "description": "The repository visibility, for example `public` or `private`.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Get the audit log for an enterprise",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": true,
+            "subcategory": "audit-log"
+          },
+          "x-octokit": {
+            "changes": [
+              {
+                "before": {
+                  "operationId": "audit-log/get-audit-log"
+                },
+                "date": "2021-04-30",
+                "type": "OPERATION"
+              }
+            ]
+          }
+        }
+      },
+      "/orgs/{org}/actions/runner-groups": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/reference/actions#list-self-hosted-runner-groups-for-an-organization"
+          },
+          "operationId": "actions/list-self-hosted-runner-groups-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "allowReserved": null,
+              "description": "The number of results per page (max 100).",
+              "in": "query",
+              "name": "per_page",
+              "required": false,
+              "schema": {
+                "default": 30,
+                "type": "integer"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "Page number of the results to fetch.",
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "type": "integer"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "runner_groups": [
+                          {
+                            "allows_public_repositories": true,
+                            "default": true,
+                            "id": 1,
+                            "inherited": false,
+                            "name": "Default",
+                            "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/1/runners",
+                            "visibility": "all"
+                          },
+                          {
+                            "allows_public_repositories": true,
+                            "default": false,
+                            "id": 2,
+                            "inherited": true,
+                            "name": "octo-runner-group",
+                            "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/runners",
+                            "selected_repositories_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/repositories",
+                            "visibility": "selected"
+                          },
+                          {
+                            "allows_public_repositories": true,
+                            "default": false,
+                            "id": 3,
+                            "inherited": false,
+                            "name": "expensive-hardware",
+                            "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/3/runners",
+                            "visibility": "private"
+                          }
+                        ],
+                        "total_count": 3
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "runner_groups": {
+                        "items": {
+                          "properties": {
+                            "allows_public_repositories": {
+                              "type": "boolean"
+                            },
+                            "default": {
+                              "type": "boolean"
+                            },
+                            "id": {
+                              "type": "number"
+                            },
+                            "inherited": {
+                              "type": "boolean"
+                            },
+                            "inherited_allows_public_repositories": {
+                              "type": "boolean"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "runners_url": {
+                              "type": "string"
+                            },
+                            "selected_repositories_url": {
+                              "description": "Link to the selected repositories resource for this runner group. Not present unless visibility was set to `selected`",
+                              "type": "string"
+                            },
+                            "visibility": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "visibility",
+                            "default",
+                            "runners_url",
+                            "inherited",
+                            "allows_public_repositories"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "total_count",
+                      "runner_groups"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "List self-hosted runner groups for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "self-hosted-runner-groups"
+          }
+        },
+        "post": {
+          "deprecated": null,
+          "description": "Creates a new self-hosted runner group for an organization.\n\nYou must authenticate using an access token with the `admin:org` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/github-ae@latest/rest/reference/actions#create-a-self-hosted-runner-group-for-an-organization"
+          },
+          "operationId": "actions/create-self-hosted-runner-group-for-org",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "name": "Expensive hardware runners",
+                      "runners": [
+                        9,
+                        2
+                      ],
+                      "selected_repository_ids": [
+                        32,
+                        91
+                      ],
+                      "visibility": "selected"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "allows_public_repositories": {
+                      "default": false,
+                      "description": "Whether the runner group can be used by `public` repositories.",
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "description": "Name of the runner group.",
+                      "type": "string"
+                    },
+                    "runners": {
+                      "description": "List of runner IDs to add to the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the runner.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "selected_repository_ids": {
+                      "description": "List of repository IDs that can access the runner group.",
+                      "items": {
+                        "description": "Unique identifier of the repository.",
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "visibility": {
+                      "default": "all",
+                      "description": "Visibility of a runner group. You can select all repositories, select individual repositories, or limit access to private repositories.",
+                      "enum": [
+                        "selected",
+                        "all",
+                        "private"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "allows_public_repositories": true,
+                        "default": false,
+                        "id": 2,
+                        "inherited": false,
+                        "name": "octo-runner-group",
+                        "runners_url": "https://api.github.com/orgs/octo-org/actions/runner_groups/2/runners",
+                        "selected_repositories_url": "https://api.github.com/orgs/octo-org/actions/runner-groups/2/repositories",
+                        "visibility": "selected"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "default": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "inherited": {
+                        "type": "boolean"
+                      },
+                      "inherited_allows_public_repositories": {
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "runners_url": {
+                        "type": "string"
+                      },
+                      "selected_repositories_url": {
+                        "description": "Link to the selected repositories resource for this runner group. Not present unless visibility was set to `selected`",
+                        "type": "string"
+                      },
+                      "visibility": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "visibility",
+                      "default",
+                      "runners_url",
+                      "inherited",
+                      "allows_public_repositories"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Create a self-hosted runner group for an organization",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
             "enabledForGitHubApps": true,
             "githubCloudOnly": true,
             "subcategory": "self-hosted-runner-groups"
@@ -14618,6 +15570,34 @@
           }
         }
       },
+      "/repos/{owner}/{repo}/actions/jobs/{job_id}": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "removed": [
+                            "created_at"
+                          ]
+                        },
+                        "required_changed": {
+                          "removed": [
+                            "created_at"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/repos/{owner}/{repo}/actions/runners/registration-token": {
         "post": {
           "responses": {
@@ -14843,6 +15823,78 @@
                                 "removed": [
                                   "security_and_analysis"
                                 ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "jobs": {
+                              "items_changed": {
+                                "properties_changed": {
+                                  "removed": [
+                                    "created_at"
+                                  ]
+                                },
+                                "required_changed": {
+                                  "removed": [
+                                    "created_at"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/repos/{owner}/{repo}/actions/runs/{run_id}/jobs": {
+        "get": {
+          "responses": {
+            "changed": {
+              "200": {
+                "content": {
+                  "changed": {
+                    "application/json": {
+                      "schema_changed": {
+                        "properties_changed": {
+                          "changed": {
+                            "jobs": {
+                              "items_changed": {
+                                "properties_changed": {
+                                  "removed": [
+                                    "created_at"
+                                  ]
+                                },
+                                "required_changed": {
+                                  "removed": [
+                                    "created_at"
+                                  ]
+                                }
                               }
                             }
                           }
@@ -16580,6 +17632,23 @@
                           }
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "request_body": {
+            "content_changed": {
+              "changed": {
+                "application/json": {
+                  "schema_changed": {
+                    "properties_changed": {
+                      "removed": [
+                        "head_repo"
+                      ]
                     }
                   }
                 }
