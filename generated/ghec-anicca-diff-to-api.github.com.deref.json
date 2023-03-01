@@ -6820,39 +6820,9 @@
                 }
               },
               "description": "Resource not found"
-            },
-            "422": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Validation Error Simple",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "errors": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "message": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "message",
-                      "documentation_url"
-                    ],
-                    "title": "Validation Error Simple",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Validation failed, or the endpoint has been spammed."
             }
           },
-          "summary": "Add custom labels to a self-hosted runner for an enterprise",
+          "summary": "List labels for a self-hosted runner for an enterprise",
           "tags": [
             "enterprise-admin"
           ],
@@ -6863,14 +6833,14 @@
             "subcategory": "self-hosted-runners"
           }
         },
-        "put": {
+        "post": {
           "deprecated": null,
-          "description": "Remove all previous custom labels and set the new custom labels for a specific\nself-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "description": "Add custom labels to a self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-custom-labels-for-a-self-hosted-runner-for-an-enterprise"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#add-custom-labels-to-a-self-hosted-runner-for-an-enterprise"
           },
-          "operationId": "enterprise-admin/set-custom-labels-for-self-hosted-runner-for-enterprise",
+          "operationId": "enterprise-admin/add-custom-labels-to-self-hosted-runner-for-enterprise",
           "parameters": [
             {
               "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
@@ -6909,12 +6879,12 @@
                 "schema": {
                   "properties": {
                     "labels": {
-                      "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
+                      "description": "The names of the custom labels to add to the runner.",
                       "items": {
                         "type": "string"
                       },
                       "maxItems": 100,
-                      "minItems": 0,
+                      "minItems": 1,
                       "type": "array"
                     }
                   },
@@ -7797,6 +7767,40 @@
               "style": "form"
             }
           ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "labels": [
+                        "gpu",
+                        "accelerated"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "labels"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
             "200": {
               "content": {
@@ -8115,197 +8119,106 @@
                             "name": {
                               "nullable": true,
                               "type": "string"
-                            },
-                            "node_id": {
-                              "example": "MDQ6VXNlcjE=",
-                              "type": "string"
-                            },
-                            "organizations_url": {
-                              "example": "https://api.github.com/users/octocat/orgs",
-                              "format": "uri",
-                              "type": "string"
-                            },
-                            "received_events_url": {
-                              "example": "https://api.github.com/users/octocat/received_events",
-                              "format": "uri",
-                              "type": "string"
-                            },
-                            "repos_url": {
-                              "example": "https://api.github.com/users/octocat/repos",
-                              "format": "uri",
-                              "type": "string"
                             }
                           },
+                          "required": [
+                            "name"
+                          ],
+                          "title": "Self hosted runner label",
                           "type": "object"
                         },
-                        "blocked_user": {
-                          "description": "The username of the account being blocked.",
-                          "type": "string"
-                        },
-                        "business": {
-                          "type": "string"
-                        },
-                        "business_id": {
-                          "type": "integer"
-                        },
-                        "config": {
-                          "items": {
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "config_was": {
-                          "items": {
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "content_type": {
-                          "type": "string"
-                        },
-                        "created_at": {
-                          "description": "The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).",
-                          "type": "integer"
-                        },
-                        "data": {
-                          "additionalProperties": true,
-                          "type": "object"
-                        },
-                        "deploy_key_fingerprint": {
-                          "type": "string"
-                        },
-                        "emoji": {
-                          "type": "string"
-                        },
-                        "events": {
-                          "items": {
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "events_were": {
-                          "items": {
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "explanation": {
-                          "type": "string"
-                        },
-                        "fingerprint": {
-                          "type": "string"
-                        },
-                        "hook_id": {
-                          "type": "integer"
-                        },
-                        "limited_availability": {
-                          "type": "boolean"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "name": {
-                          "type": "string"
-                        },
-                        "old_user": {
-                          "type": "string"
-                        },
-                        "openssh_public_key": {
-                          "type": "string"
-                        },
-                        "operation_type": {
-                          "type": "string"
-                        },
-                        "org": {
-                          "type": "string"
-                        },
-                        "org_id": {
-                          "type": "integer"
-                        },
-                        "previous_visibility": {
-                          "type": "string"
-                        },
-                        "read_only": {
-                          "type": "boolean"
-                        },
-                        "repo": {
-                          "description": "The name of the repository.",
-                          "type": "string"
-                        },
-                        "repository": {
-                          "description": "The name of the repository.",
-                          "type": "string"
-                        },
-                        "repository_public": {
-                          "type": "boolean"
-                        },
-                        "target_login": {
-                          "type": "string"
-                        },
-                        "team": {
-                          "type": "string"
-                        },
-                        "transport_protocol": {
-                          "description": "The type of protocol (for example, HTTP or SSH) used to transfer Git data.",
-                          "type": "integer"
-                        },
-                        "transport_protocol_name": {
-                          "description": "A human readable name for the protocol (for example, HTTP or SSH) used to transfer Git data.",
-                          "type": "string"
-                        },
-                        "user": {
-                          "description": "The user that was affected by the action performed (if available).",
-                          "type": "string"
-                        },
-                        "user_id": {
-                          "type": "integer"
-                        },
-                        "visibility": {
-                          "description": "The repository visibility, for example `public` or `private`.",
-                          "type": "string"
-                        }
+                        "type": "array"
                       },
-                      "type": "object"
+                      "total_count": {
+                        "type": "integer"
+                      }
                     },
-                    "type": "array"
+                    "required": [
+                      "total_count",
+                      "labels"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
                   }
                 }
               },
               "description": "Resource not found"
+            },
+            "422": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Validation Error Simple",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "errors": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "message",
+                      "documentation_url"
+                    ],
+                    "title": "Validation Error Simple",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Validation failed, or the endpoint has been spammed."
             }
           },
-          "summary": "Get the audit log for an enterprise",
+          "summary": "Add custom labels to a self-hosted runner for an enterprise",
           "tags": [
             "enterprise-admin"
           ],
           "x-github": {
-            "category": "enterprise-admin",
+            "category": "actions",
             "enabledForGitHubApps": false,
             "githubCloudOnly": true,
-            "subcategory": "audit-log"
-          },
-          "x-octokit": {
-            "changes": [
-              {
-                "before": {
-                  "operationId": "audit-log/get-audit-log"
-                },
-                "date": "2021-04-30",
-                "type": "OPERATION"
-              }
-            ]
+            "subcategory": "self-hosted-runners"
           }
-        }
-      },
-      "/enterprises/{enterprise}/code-scanning/alerts": {
-        "get": {
+        },
+        "put": {
           "deprecated": null,
-          "description": "Lists code scanning alerts for the default branch for all eligible repositories in an enterprise. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n\nTo use this endpoint, you must be a member of the enterprise,\nand you must use an access token with the `repo` scope or `security_events` scope.",
+          "description": "Remove all previous custom labels and set the new custom labels for a specific\nself-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/code-scanning#list-code-scanning-alerts-for-an-enterprise"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-custom-labels-for-a-self-hosted-runner-for-an-enterprise"
           },
-          "operationId": "code-scanning/list-alerts-for-enterprise",
+          "operationId": "enterprise-admin/set-custom-labels-for-self-hosted-runner-for-enterprise",
           "parameters": [
             {
               "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
@@ -8318,368 +8231,100 @@
               "style": "simple"
             },
             {
-              "allowReserved": null,
-              "description": "The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both.",
-              "in": "query",
-              "name": "tool_name",
-              "required": false,
+              "description": "Unique identifier of the self-hosted runner.",
+              "in": "path",
+              "name": "runner_id",
+              "required": true,
               "schema": {
-                "description": "The name of the tool used to generate the code scanning analysis.",
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both.",
-              "in": "query",
-              "name": "tool_guid",
-              "required": false,
-              "schema": {
-                "description": "The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data.",
-                "nullable": true,
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results before this cursor.",
-              "in": "query",
-              "name": "before",
-              "required": false,
-              "schema": {
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results after this cursor.",
-              "in": "query",
-              "name": "after",
-              "required": false,
-              "schema": {
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "Page number of the results to fetch.",
-              "in": "query",
-              "name": "page",
-              "required": false,
-              "schema": {
-                "default": 1,
                 "type": "integer"
               },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "The number of results per page (max 100).",
-              "in": "query",
-              "name": "per_page",
-              "required": false,
-              "schema": {
-                "default": 30,
-                "type": "integer"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "The direction to sort the results by.",
-              "in": "query",
-              "name": "direction",
-              "required": false,
-              "schema": {
-                "default": "desc",
-                "enum": [
-                  "asc",
-                  "desc"
-                ],
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "If specified, only code scanning alerts with this state will be returned.",
-              "in": "query",
-              "name": "state",
-              "required": false,
-              "schema": {
-                "description": "State of a code scanning alert.",
-                "enum": [
-                  "open",
-                  "closed",
-                  "dismissed",
-                  "fixed"
-                ],
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "The property by which to sort the results.",
-              "in": "query",
-              "name": "sort",
-              "required": false,
-              "schema": {
-                "default": "created",
-                "enum": [
-                  "created",
-                  "updated"
-                ],
-                "type": "string"
-              },
-              "style": "form"
+              "style": "simple"
             }
           ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "labels": [
+                        "gpu",
+                        "accelerated"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "labels"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
             "200": {
               "content": {
                 "application/json": {
                   "examples": {
                     "default": {
-                      "value": [
-                        {
-                          "created_at": "2020-02-13T12:29:18Z",
-                          "dismissed_at": null,
-                          "dismissed_by": null,
-                          "dismissed_comment": null,
-                          "dismissed_reason": null,
-                          "html_url": "https://github.com/octocat/hello-world/code-scanning/4",
-                          "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/4/instances",
-                          "most_recent_instance": {
-                            "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-                            "classifications": [
-                              "test"
-                            ],
-                            "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
-                            "environment": "{}",
-                            "location": {
-                              "end_column": 18,
-                              "end_line": 917,
-                              "path": "spec-main/api-session-spec.ts",
-                              "start_column": 7,
-                              "start_line": 917
-                            },
-                            "site_admin": {
-                              "type": "boolean"
-                            },
-                            "starred_at": {
-                              "example": "\"2020-07-09T00:17:55Z\"",
-                              "type": "string"
-                            },
-                            "starred_url": {
-                              "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
-                              "type": "string"
-                            },
-                            "subscriptions_url": {
-                              "example": "https://api.github.com/users/octocat/subscriptions",
-                              "format": "uri",
-                              "type": "string"
-                            },
-                            "type": {
-                              "example": "User",
-                              "type": "string"
-                            },
-                            "url": {
-                              "example": "https://api.github.com/users/octocat",
-                              "format": "uri",
-                              "type": "string"
-                            }
+                      "value": {
+                        "labels": [
+                          {
+                            "id": 5,
+                            "name": "self-hosted",
+                            "type": "read-only"
                           },
-                          "required": [
-                            "avatar_url",
-                            "events_url",
-                            "followers_url",
-                            "following_url",
-                            "gists_url",
-                            "gravatar_id",
-                            "html_url",
-                            "id",
-                            "node_id",
-                            "login",
-                            "organizations_url",
-                            "received_events_url",
-                            "repos_url",
-                            "site_admin",
-                            "starred_url",
-                            "subscriptions_url",
-                            "type",
-                            "url"
-                          ],
-                          "title": "Simple User",
-                          "type": "object"
-                        },
-                        "dismissed_comment": {
-                          "description": "The dismissal comment associated with the dismissal of the alert.",
-                          "maxLength": 280,
-                          "nullable": true,
-                          "type": "string"
-                        },
-                        "dismissed_reason": {
-                          "description": "**Required when the state is dismissed.** The reason for dismissing or closing the alert.",
-                          "enum": [
-                            null,
-                            "false positive",
-                            "won't fix",
-                            "used in tests"
-                          ],
-                          "nullable": true,
-                          "type": "string"
-                        },
-                        "fixed_at": {
-                          "description": "The time that the alert was no longer detected and was considered fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
-                          "format": "date-time",
-                          "nullable": true,
-                          "readOnly": true,
-                          "type": "string"
-                        },
-                        "html_url": {
-                          "description": "The GitHub URL of the alert resource.",
-                          "format": "uri",
-                          "readOnly": true,
-                          "type": "string"
-                        },
-                        "instances_url": {
-                          "description": "The REST API URL for fetching the list of instances for an alert.",
-                          "format": "uri",
-                          "readOnly": true,
-                          "type": "string"
-                        },
-                        "most_recent_instance": {
-                          "properties": {
-                            "analysis_key": {
-                              "description": "Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name.",
-                              "type": "string"
-                            },
-                            "category": {
-                              "description": "Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code.",
-                              "type": "string"
-                            },
-                            "classifications": {
-                              "description": "Classifications that have been applied to the file that triggered the alert.\nFor example identifying it as documentation, or a generated file.",
-                              "items": {
-                                "description": "A classification of the file. For example to identify it as generated.",
-                                "enum": [
-                                  "source",
-                                  "generated",
-                                  "test",
-                                  "library"
-                                ],
-                                "nullable": true,
-                                "type": "string"
-                              },
-                              "type": "array"
-                            },
-                            "commit_sha": {
-                              "type": "string"
-                            },
-                            "environment": {
-                              "description": "Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed.",
-                              "type": "string"
-                            },
-                            "html_url": {
-                              "type": "string"
-                            },
-                            "location": {
-                              "description": "Describe a region within a file for the alert.",
-                              "properties": {
-                                "end_column": {
-                                  "type": "integer"
-                                },
-                                "end_line": {
-                                  "type": "integer"
-                                },
-                                "path": {
-                                  "type": "string"
-                                },
-                                "start_column": {
-                                  "type": "integer"
-                                },
-                                "start_line": {
-                                  "type": "integer"
-                                }
-                              },
-                              "type": "object"
-                            },
-                            "message": {
-                              "properties": {
-                                "text": {
-                                  "type": "string"
-                                }
-                              },
-                              "type": "object"
-                            },
-                            "ref": {
-                              "description": "The full Git reference, formatted as `refs/heads/<branch name>`,\n`refs/pull/<number>/merge`, or `refs/pull/<number>/head`.",
-                              "type": "string"
-                            },
-                            "state": {
-                              "description": "State of a code scanning alert.",
-                              "enum": [
-                                "open",
-                                "closed",
-                                "dismissed",
-                                "fixed"
-                              ],
-                              "type": "string"
-                            }
+                          {
+                            "id": 7,
+                            "name": "X64",
+                            "type": "read-only"
                           },
-                          "type": "object"
-                        },
-                        "number": {
-                          "description": "The security alert number.",
-                          "readOnly": true,
-                          "type": "integer"
-                        },
-                        "repository": {
-                          "description": "A GitHub repository.",
+                          {
+                            "id": 20,
+                            "name": "macOS",
+                            "type": "read-only"
+                          },
+                          {
+                            "id": 21,
+                            "name": "no-gpu",
+                            "type": "custom"
+                          }
+                        ],
+                        "total_count": 4
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "labels": {
+                        "items": {
+                          "description": "A label for a self hosted runner",
                           "properties": {
-                            "archive_url": {
-                              "description": "A template for the API URL to download the repository as an archive.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+                            "id": {
+                              "description": "Unique identifier of the label.",
+                              "type": "integer"
+                            },
+                            "node_id": {
+                              "example": "MDQ6VXNlcjE=",
                               "type": "string"
                             },
-                            "assignees_url": {
-                              "description": "A template for the API URL to list the available assignees for issues in the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
-                              "type": "string"
-                            },
-                            "blobs_url": {
-                              "description": "A template for the API URL to create or retrieve a raw Git blob in the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
-                              "type": "string"
-                            },
-                            "branches_url": {
-                              "description": "A template for the API URL to get information about branches in the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
-                              "type": "string"
-                            },
-                            "collaborators_url": {
-                              "description": "A template for the API URL to get information about collaborators of the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
-                              "type": "string"
-                            },
-                            "comments_url": {
-                              "description": "A template for the API URL to get information about comments on the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
-                              "type": "string"
-                            },
-                            "commits_url": {
-                              "description": "A template for the API URL to get information about commits on the repository.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
-                              "type": "string"
-                            },
-                            "compare_url": {
-                              "description": "A template for the API URL to compare two commits or refs.",
-                              "example": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+                            "organizations_url": {
+                              "example": "https://api.github.com/users/octocat/orgs",
+                              "format": "uri",
                               "type": "string"
                             }
                           },
@@ -9014,6 +8659,230 @@
                               "path": "spec-main/api-session-spec.ts",
                               "start_column": 7,
                               "start_line": 917
+                            },
+                            "received_events_url": {
+                              "example": "https://api.github.com/users/octocat/received_events",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "repos_url": {
+                              "example": "https://api.github.com/users/octocat/repos",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "site_admin": {
+                              "type": "boolean"
+                            },
+                            "starred_at": {
+                              "example": "\"2020-07-09T00:17:55Z\"",
+                              "type": "string"
+                            },
+                            "starred_url": {
+                              "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                              "type": "string"
+                            },
+                            "subscriptions_url": {
+                              "example": "https://api.github.com/users/octocat/subscriptions",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "type": {
+                              "example": "User",
+                              "type": "string"
+                            },
+                            "url": {
+                              "example": "https://api.github.com/users/octocat",
+                              "format": "uri",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "avatar_url",
+                            "events_url",
+                            "followers_url",
+                            "following_url",
+                            "gists_url",
+                            "gravatar_id",
+                            "html_url",
+                            "id",
+                            "node_id",
+                            "login",
+                            "organizations_url",
+                            "received_events_url",
+                            "repos_url",
+                            "site_admin",
+                            "starred_url",
+                            "subscriptions_url",
+                            "type",
+                            "url"
+                          ],
+                          "title": "Simple User",
+                          "type": "object"
+                        },
+                        "dismissed_comment": {
+                          "description": "The dismissal comment associated with the dismissal of the alert.",
+                          "maxLength": 280,
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "dismissed_reason": {
+                          "description": "**Required when the state is dismissed.** The reason for dismissing or closing the alert.",
+                          "enum": [
+                            null,
+                            "false positive",
+                            "won't fix",
+                            "used in tests"
+                          ],
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "fixed_at": {
+                          "description": "The time that the alert was no longer detected and was considered fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
+                          "format": "date-time",
+                          "nullable": true,
+                          "readOnly": true,
+                          "type": "string"
+                        },
+                        "html_url": {
+                          "description": "The GitHub URL of the alert resource.",
+                          "format": "uri",
+                          "readOnly": true,
+                          "type": "string"
+                        },
+                        "instances_url": {
+                          "description": "The REST API URL for fetching the list of instances for an alert.",
+                          "format": "uri",
+                          "readOnly": true,
+                          "type": "string"
+                        },
+                        "most_recent_instance": {
+                          "properties": {
+                            "analysis_key": {
+                              "description": "Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name.",
+                              "type": "string"
+                            },
+                            "category": {
+                              "description": "Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code.",
+                              "type": "string"
+                            },
+                            "classifications": {
+                              "description": "Classifications that have been applied to the file that triggered the alert.\nFor example identifying it as documentation, or a generated file.",
+                              "items": {
+                                "description": "A classification of the file. For example to identify it as generated.",
+                                "enum": [
+                                  "source",
+                                  "generated",
+                                  "test",
+                                  "library"
+                                ],
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "commit_sha": {
+                              "type": "string"
+                            },
+                            "environment": {
+                              "description": "Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed.",
+                              "type": "string"
+                            },
+                            "html_url": {
+                              "type": "string"
+                            },
+                            "location": {
+                              "description": "Describe a region within a file for the alert.",
+                              "properties": {
+                                "end_column": {
+                                  "type": "integer"
+                                },
+                                "end_line": {
+                                  "type": "integer"
+                                },
+                                "path": {
+                                  "type": "string"
+                                },
+                                "start_column": {
+                                  "type": "integer"
+                                },
+                                "start_line": {
+                                  "type": "integer"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "message": {
+                              "properties": {
+                                "text": {
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "ref": {
+                              "description": "The full Git reference, formatted as `refs/heads/<branch name>`,\n`refs/pull/<number>/merge`, or `refs/pull/<number>/head`.",
+                              "type": "string"
+                            },
+                            "state": {
+                              "description": "State of a code scanning alert.",
+                              "enum": [
+                                "open",
+                                "closed",
+                                "dismissed",
+                                "fixed"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "number": {
+                          "description": "The security alert number.",
+                          "readOnly": true,
+                          "type": "integer"
+                        },
+                        "repository": {
+                          "description": "A GitHub repository.",
+                          "properties": {
+                            "archive_url": {
+                              "description": "A template for the API URL to download the repository as an archive.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+                              "type": "string"
+                            },
+                            "assignees_url": {
+                              "description": "A template for the API URL to list the available assignees for issues in the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+                              "type": "string"
+                            },
+                            "blobs_url": {
+                              "description": "A template for the API URL to create or retrieve a raw Git blob in the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+                              "type": "string"
+                            },
+                            "branches_url": {
+                              "description": "A template for the API URL to get information about branches in the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+                              "type": "string"
+                            },
+                            "collaborators_url": {
+                              "description": "A template for the API URL to get information about collaborators of the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+                              "type": "string"
+                            },
+                            "comments_url": {
+                              "description": "A template for the API URL to get information about comments on the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/comments{/number}",
+                              "type": "string"
+                            },
+                            "commits_url": {
+                              "description": "A template for the API URL to get information about commits on the repository.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+                              "type": "string"
+                            },
+                            "compare_url": {
+                              "description": "A template for the API URL to compare two commits or refs.",
+                              "example": "https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+                              "type": "string"
                             },
                             "contents_url": {
                               "description": "A template for the API URL to get the contents of the repository.",
