@@ -54,10 +54,6 @@
       "description": "List emojis available to use on GitHub."
     },
     {
-      "name": "enterprise-admin",
-      "description": "Administer a GitHub enterprise."
-    },
-    {
       "name": "dependabot",
       "description": "Endpoints to manage Dependabot."
     },
@@ -106,6 +102,10 @@
       "description": "Move projects to or from GitHub."
     },
     {
+      "name": "oidc",
+      "description": "Endpoints to manage GitHub OIDC configuration using the REST API."
+    },
+    {
       "name": "orgs",
       "description": "Interact with GitHub Orgs."
     },
@@ -142,8 +142,8 @@
       "description": "Retrieve secret scanning alerts from a repository."
     },
     {
-      "name": "server-statistics",
-      "description": "GHES statistics"
+      "name": "security-advisories",
+      "description": "Manage security advisories."
     },
     {
       "name": "teams",
@@ -156,10 +156,6 @@
     {
       "name": "enterprise-admin",
       "description": "Enterprise Administration"
-    },
-    {
-      "name": "server-statistics",
-      "description": "Server statistics"
     }
   ],
   "servers": [
@@ -344,7 +340,7 @@
         },
         "x-github": {
           "enabledForGitHubApps": false,
-          "githubCloudOnly": false,
+          "githubCloudOnly": true,
           "category": "actions",
           "subcategory": "self-hosted-runner-groups"
         },
@@ -393,7 +389,7 @@
         },
         "x-github": {
           "enabledForGitHubApps": false,
-          "githubCloudOnly": false,
+          "githubCloudOnly": true,
           "category": "actions",
           "subcategory": "self-hosted-runners"
         },
@@ -442,7 +438,7 @@
         },
         "x-github": {
           "enabledForGitHubApps": false,
-          "githubCloudOnly": false,
+          "githubCloudOnly": true,
           "category": "actions",
           "subcategory": "self-hosted-runners"
         },
@@ -1091,7 +1087,7 @@
                 },
                 "examples": {
                   "default-response": {
-                    "$ref": "#/components/examples/organization-full-default-response"
+                    "$ref": "#/components/examples/organization-full"
                   }
                 }
               }
@@ -1425,7 +1421,7 @@
         },
         "x-github": {
           "enabledForGitHubApps": true,
-          "githubCloudOnly": false,
+          "githubCloudOnly": true,
           "category": "actions",
           "subcategory": "self-hosted-runner-groups"
         },
@@ -1498,7 +1494,7 @@
         },
         "x-github": {
           "enabledForGitHubApps": true,
-          "githubCloudOnly": false,
+          "githubCloudOnly": true,
           "category": "actions",
           "subcategory": "self-hosted-runner-groups"
         },
@@ -1692,7 +1688,7 @@
         "operationId": "code-scanning/list-alerts-for-org",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/code-scanning#list-code-scanning-alerts-by-organization"
+          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/code-scanning#list-code-scanning-alerts-for-an-organization"
         },
         "parameters": [
           {
@@ -2046,14 +2042,14 @@
     "/orgs/{org}/migrations": {
       "get": {
         "summary": "List organization migrations",
-        "description": "Lists the most recent migrations.",
+        "description": "Lists the most recent migrations, including both exports (which can be started through the REST API) and imports (which cannot be started using the REST API).\n\nA list of `repositories` is only returned for export migrations.",
         "tags": [
           "migrations"
         ],
         "operationId": "migrations/list-for-org",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/migrations#list-organization-migrations"
+          "url": "https://docs.github.com/enterprise-server@3.5/rest/migrations/orgs#list-organization-migrations"
         },
         "parameters": [
           {
@@ -2130,7 +2126,7 @@
         "operationId": "migrations/start-for-org",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/migrations#start-an-organization-migration"
+          "url": "https://docs.github.com/enterprise-server@3.5/rest/migrations/orgs#start-an-organization-migration"
         },
         "parameters": [
           {
@@ -2267,7 +2263,7 @@
         "operationId": "migrations/get-status-for-org",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/migrations#get-an-organization-migration-status"
+          "url": "https://docs.github.com/enterprise-server@3.5/rest/migrations/orgs#get-an-organization-migration-status"
         },
         "parameters": [
           {
@@ -2306,6 +2302,75 @@
                     "$ref": "#/components/examples/migration-with-short-org"
                   }
                 }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "migrations",
+          "subcategory": "orgs"
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.6": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/orgs/{org}/migrations/{migration_id}/repositories": {
+      "get": {
+        "summary": "List repositories in an organization migration",
+        "description": "List all the repositories for this organization migration.",
+        "tags": [
+          "migrations"
+        ],
+        "operationId": "migrations/list-repos-for-org",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.5/rest/migrations/orgs#list-repositories-in-an-organization-migration"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/migration-id"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/minimal-repository"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/minimal-repository-items"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
               }
             }
           },
@@ -2551,7 +2616,7 @@
                   },
                   "delete_branch_on_merge": {
                     "type": "boolean",
-                    "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.",
+                    "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion. **The authenticated user must be an organization owner to set this property to `true`.**",
                     "default": false
                   },
                   "use_squash_pr_title_as_default": {
@@ -2869,7 +2934,7 @@
     "/orgs/{org}/teams/{team_slug}": {
       "get": {
         "summary": "Get a team by name",
-        "description": "Gets a team using the team's `slug`. GitHub Enterprise Server generates the `slug` from the team `name`.\n\n**Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.",
+        "description": "Gets a team using the team's `slug`. To create the `slug`, GitHub Enterprise Server replaces special characters in the `name` string, changes all words to lowercase, and replaces spaces with a `-` separator. For example, `\"My TEam Näme\"` would become `my-team-name`.\n\n**Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.",
         "tags": [
           "teams"
         ],
@@ -4991,7 +5056,7 @@
       },
       "post": {
         "summary": "Create a fork",
-        "description": "Create a fork for the authenticated user.\n\n**Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).",
+        "description": "Create a fork for the authenticated user.\n\n**Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).\n\n**Note**: Although this endpoint works with GitHub Apps, the GitHub App must be installed on the destination account with access to all repositories and on the source account with access to the source repository.",
         "tags": [
           "repos"
         ],
@@ -5806,11 +5871,11 @@
                   "assignee": {
                     "type": "string",
                     "nullable": true,
-                    "description": "Login for the user that this issue should be assigned to. **This field is deprecated.**"
+                    "description": "Username to assign to this issue. **This field is deprecated.**"
                   },
                   "state": {
                     "type": "string",
-                    "description": "State of the issue. Either `open` or `closed`.",
+                    "description": "The open or closed state of the issue.",
                     "enum": [
                       "open",
                       "closed"
@@ -5824,7 +5889,7 @@
                       "reopened"
                     ],
                     "nullable": true,
-                    "description": "The reason for the current state",
+                    "description": "The reason for the state change. Ignored unless `state` is changed.",
                     "example": "not_planned"
                   },
                   "milestone": {
@@ -5834,14 +5899,14 @@
                       },
                       {
                         "type": "integer",
-                        "description": "The `number` of the milestone to associate this issue with or `null` to remove current. _NOTE: Only users with push access can set the milestone for issues. The milestone is silently dropped otherwise._"
+                        "description": "The `number` of the milestone to associate this issue with or use `null` to remove the current milestone. Only users with push access can set the milestone for issues. Without push access to the repository, milestone changes are silently dropped."
                       }
                     ],
                     "nullable": true
                   },
                   "labels": {
                     "type": "array",
-                    "description": "Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._",
+                    "description": "Labels to associate with this issue. Pass one or more labels to _replace_ the set of labels on this issue. Send an empty array (`[]`) to clear all labels from the issue. Only users with push access can set labels for issues. Without push access to the repository, label changes are silently dropped.",
                     "items": {
                       "oneOf": [
                         {
@@ -5871,7 +5936,7 @@
                   },
                   "assignees": {
                     "type": "array",
-                    "description": "Logins for Users to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this Issue. Send an empty array (`[]`) to clear all assignees from the Issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._",
+                    "description": "Usernames to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this issue. Send an empty array (`[]`) to clear all assignees from the issue. Only users with push access can set assignees for new issues. Without push access to the repository, assignee changes are silently dropped.",
                     "items": {
                       "type": "string"
                     }
@@ -6294,6 +6359,7 @@
                   },
                   "issue": {
                     "type": "integer",
+                    "format": "int64",
                     "example": 1,
                     "description": "An issue in the repository to convert to a pull request. The issue title, body, and comments will become the title, body, and comments on the new pull request. Required unless `title` is specified."
                   }
@@ -7095,7 +7161,7 @@
     "/repositories": {
       "get": {
         "summary": "List public repositories",
-        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.",
+        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of repositories.",
         "tags": [
           "repos"
         ],
@@ -7208,7 +7274,18 @@
             }
           },
           {
-            "$ref": "#/components/parameters/order"
+            "name": "order",
+            "description": "Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "desc",
+                "asc"
+              ],
+              "default": "desc"
+            }
           },
           {
             "$ref": "#/components/parameters/per-page"
@@ -8385,7 +8462,7 @@
         "operationId": "migrations/list-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/migrations#list-user-migrations"
+          "url": "https://docs.github.com/enterprise-server@3.5/rest/migrations/users#list-user-migrations"
         },
         "parameters": [
           {
@@ -8452,7 +8529,7 @@
         "operationId": "migrations/start-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/migrations#start-a-user-migration"
+          "url": "https://docs.github.com/enterprise-server@3.5/rest/migrations/users#start-a-user-migration"
         },
         "parameters": [],
         "requestBody": {
@@ -8600,7 +8677,7 @@
         "operationId": "migrations/list-repos-for-authenticated-user",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/migrations#list-repositories-for-a-user-migration"
+          "url": "https://docs.github.com/enterprise-server@3.5/rest/migrations/users#list-repositories-for-a-user-migration"
         },
         "parameters": [
           {
@@ -8756,10 +8833,10 @@
             "$ref": "#/components/parameters/page"
           },
           {
-            "$ref": "#/components/parameters/since"
+            "$ref": "#/components/parameters/since-repo-date"
           },
           {
-            "$ref": "#/components/parameters/before"
+            "$ref": "#/components/parameters/before-repo-date"
           }
         ],
         "responses": {
@@ -9127,7 +9204,7 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/sort"
+            "$ref": "#/components/parameters/sort-starred"
           },
           {
             "$ref": "#/components/parameters/direction"
@@ -9273,7 +9350,7 @@
     "/user/teams": {
       "get": {
         "summary": "List teams for the authenticated user",
-        "description": "List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/).",
+        "description": "List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/). When using a fine-grained personal access token, the resource owner of the token [must be a single organization](https://docs.github.com/enterprise-server@3.5/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#fine-grained-personal-access-tokens), and have at least read-only member organization permissions. The response payload only contains the teams from a single organization when using a fine-grained personal access token.",
         "tags": [
           "teams"
         ],
@@ -9942,7 +10019,7 @@
       },
       "pagination-before": {
         "name": "before",
-        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results before this cursor.",
+        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results before this cursor.",
         "in": "query",
         "required": false,
         "schema": {
@@ -9951,7 +10028,7 @@
       },
       "pagination-after": {
         "name": "after",
-        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results after this cursor.",
+        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor.",
         "in": "query",
         "required": false,
         "schema": {
@@ -10167,7 +10244,8 @@
             "in_progress",
             "queued",
             "requested",
-            "waiting"
+            "waiting",
+            "pending"
           ]
         }
       },
@@ -10347,7 +10425,27 @@
           "type": "integer"
         }
       },
-      "sort": {
+      "since-repo-date": {
+        "name": "since",
+        "description": "Only show repositories updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "before-repo-date": {
+        "name": "before",
+        "description": "Only show repositories updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "sort-starred": {
         "name": "sort",
         "description": "The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to.",
         "in": "query",
@@ -10547,6 +10645,22 @@
           "organization_hooks": {
             "type": "string",
             "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_personal_access_tokens": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing and managing fine-grained personal access token requests to an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_personal_access_token_requests": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing and managing fine-grained personal access tokens that have been approved by an organization.",
             "enum": [
               "read",
               "write"
@@ -11769,7 +11883,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "node_id": {
             "type": "string"
@@ -13014,6 +13129,7 @@
           },
           "repositories": {
             "type": "array",
+            "description": "The repositories included in the migration. Only returned for export migrations.",
             "items": {
               "$ref": "#/components/schemas/repository"
             }
@@ -13041,8 +13157,12 @@
             "format": "uri"
           },
           "exclude": {
+            "description": "Exclude related items from being returned in the response in order to improve performance of the request. The array can include any of: `\"repositories\"`.",
             "type": "array",
-            "items": {}
+            "items": {
+              "description": "Allowed values that can be passed to the exclude parameter. The array can include any of: `\"repositories\"`.",
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -15056,6 +15176,7 @@
         "properties": {
           "id": {
             "type": "integer",
+            "format": "int64",
             "example": 1
           },
           "node_id": {
@@ -15230,7 +15351,7 @@
             "type": "string"
           },
           "user": {
-            "$ref": "#/components/schemas/nullable-simple-user"
+            "$ref": "#/components/schemas/simple-user"
           },
           "body": {
             "type": "string",
@@ -16731,7 +16852,6 @@
         "description": "**Required when the `state` is `resolved`.** The reason for resolving the alert.",
         "nullable": true,
         "enum": [
-          null,
           "false_positive",
           "wont_fix",
           "revoked",
@@ -16970,7 +17090,8 @@
             "format": "uri"
           },
           "id": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "node_id": {
             "type": "string"
@@ -17626,7 +17747,17 @@
                 },
                 "emails": {
                   "type": "array",
-                  "items": {}
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string"
+                      },
+                      "verified": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
                 },
                 "subkeys": {
                   "type": "array",
@@ -18349,7 +18480,8 @@
           "id": {
             "description": "Unique identifier of the issue comment",
             "example": 42,
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "node_id": {
             "type": "string"
@@ -20698,7 +20830,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "node_id": {
             "type": "string"
@@ -22303,62 +22436,6 @@
           "subscription_url": "https://api.github.com/notifications/threads/1/subscription"
         }
       },
-      "organization-full-default-response": {
-        "summary": "Default response",
-        "value": {
-          "login": "github",
-          "id": 1,
-          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
-          "url": "https://api.github.com/orgs/github",
-          "repos_url": "https://api.github.com/orgs/github/repos",
-          "events_url": "https://api.github.com/orgs/github/events",
-          "hooks_url": "https://api.github.com/orgs/github/hooks",
-          "issues_url": "https://api.github.com/orgs/github/issues",
-          "members_url": "https://api.github.com/orgs/github/members{/member}",
-          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
-          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-          "description": "A great organization",
-          "name": "github",
-          "company": "GitHub",
-          "blog": "https://github.com/blog",
-          "location": "San Francisco",
-          "email": "octocat@github.com",
-          "twitter_username": "github",
-          "is_verified": true,
-          "has_organization_projects": true,
-          "has_repository_projects": true,
-          "public_repos": 2,
-          "public_gists": 1,
-          "followers": 20,
-          "following": 0,
-          "html_url": "https://github.com/octocat",
-          "created_at": "2008-01-14T04:33:35Z",
-          "updated_at": "2014-03-03T18:58:10Z",
-          "type": "Organization",
-          "total_private_repos": 100,
-          "owned_private_repos": 100,
-          "private_gists": 81,
-          "disk_usage": 10000,
-          "collaborators": 8,
-          "billing_email": "mona@github.com",
-          "plan": {
-            "name": "Medium",
-            "space": 400,
-            "private_repos": 20,
-            "filled_seats": 4,
-            "seats": 5
-          },
-          "default_repository_permission": "read",
-          "members_can_create_repositories": true,
-          "two_factor_requirement_enabled": true,
-          "members_allowed_repository_creation_type": "all",
-          "members_can_create_public_repositories": false,
-          "members_can_create_private_repositories": false,
-          "members_can_create_internal_repositories": false,
-          "members_can_create_pages": true,
-          "members_can_fork_private_repositories": false
-        }
-      },
       "organization-full": {
         "value": {
           "login": "github",
@@ -22398,7 +22475,9 @@
           "plan": {
             "name": "Medium",
             "space": 400,
-            "private_repos": 20
+            "private_repos": 20,
+            "filled_seats": 4,
+            "seats": 5
           },
           "default_repository_permission": "read",
           "members_can_create_repositories": true,
@@ -22945,6 +23024,7 @@
             "most_recent_instance": {
               "ref": "refs/heads/main",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
               "environment": "{}",
               "state": "open",
               "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -23077,6 +23157,7 @@
             "most_recent_instance": {
               "ref": "refs/heads/main",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
               "environment": "{}",
               "state": "open",
               "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -26316,6 +26397,7 @@
           "most_recent_instance": {
             "ref": "refs/heads/main",
             "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
             "environment": "{}",
             "state": "dismissed",
             "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -26387,6 +26469,7 @@
           "most_recent_instance": {
             "ref": "refs/heads/main",
             "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
             "environment": "{}",
             "state": "dismissed",
             "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -28965,7 +29048,6 @@
             }
           },
           "author_association": "OWNER",
-          "auto_merge": null,
           "draft": false,
           "merged": false,
           "mergeable": true,
@@ -29556,7 +29638,6 @@
             }
           },
           "author_association": "OWNER",
-          "auto_merge": null,
           "draft": false
         }
       },
@@ -31477,6 +31558,7 @@
               "blog": "https://github.com/blog",
               "location": "San Francisco",
               "email": "octocat@github.com",
+              "is_verified": true,
               "has_organization_projects": true,
               "has_repository_projects": true,
               "public_repos": 2,
@@ -31485,9 +31567,9 @@
               "following": 0,
               "html_url": "https://github.com/octocat",
               "created_at": "2008-01-14T04:33:35Z",
+              "updated_at": "2017-08-17T12:37:15Z",
               "type": "Organization"
-            },
-            "ldap_dn": "uid=asdf,ou=users,dc=github,dc=com"
+            }
           }
         ]
       },
