@@ -39,7 +39,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.",
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events after this cursor.",
               "in": "query",
               "name": "date_start",
               "required": false,
@@ -50,7 +50,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events before this cursor.",
               "in": "query",
               "name": "date_end",
               "required": false,
@@ -435,7 +435,7 @@
           ],
           "x-github": {
             "category": "actions",
-            "enabledForGitHubApps": true,
+            "enabledForGitHubApps": false,
             "githubCloudOnly": true,
             "subcategory": "cache"
           }
@@ -444,7 +444,7 @@
       "/enterprises/{enterprise}/actions/oidc/customization/issuer": {
         "put": {
           "deprecated": null,
-          "description": "Sets the GitHub Actions OpenID Connect (OIDC) custom issuer policy for an enterprise.\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.\nGitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.",
+          "description": "Sets the GitHub Actions OpenID Connect (OIDC) custom issuer policy for an enterprise.\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions/oidc#set-actions-oidc-custom-issuer-policy-for-enterprise"
@@ -497,7 +497,7 @@
           ],
           "x-github": {
             "category": "actions",
-            "enabledForGitHubApps": true,
+            "enabledForGitHubApps": false,
             "githubCloudOnly": true,
             "subcategory": "oidc"
           }
@@ -1157,7 +1157,7 @@
       "/enterprises/{enterprise}/actions/permissions/workflow": {
         "get": {
           "deprecated": null,
-          "description": "Gets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an enterprise,\nas well as whether GitHub Actions can submit approving pull request reviews. For more information, see\n\"[Enforcing a policy for workflow permissions in your enterprise](https://docs.github.com/enterprise-cloud@latest//admin/policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise#enforcing-a-policy-for-workflow-permissions-in-your-enterprise).\"\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.\nGitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.",
+          "description": "Gets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an enterprise,\nas well as whether GitHub Actions can submit approving pull request reviews. For more information, see\n\"[Enforcing a policy for workflow permissions in your enterprise](https://docs.github.com/enterprise-cloud@latest//admin/policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise#enforcing-a-policy-for-workflow-permissions-in-your-enterprise).\"\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#get-default-workflow-permissions-for-an-enterprise"
@@ -1220,14 +1220,14 @@
           ],
           "x-github": {
             "category": "actions",
-            "enabledForGitHubApps": true,
+            "enabledForGitHubApps": false,
             "githubCloudOnly": true,
             "subcategory": "permissions"
           }
         },
         "put": {
           "deprecated": null,
-          "description": "Sets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an enterprise, and sets\nwhether GitHub Actions can submit approving pull request reviews. For more information, see\n\"[Enforcing a policy for workflow permissions in your enterprise](https://docs.github.com/enterprise-cloud@latest//admin/policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise#enforcing-a-policy-for-workflow-permissions-in-your-enterprise).\"\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.\nGitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.",
+          "description": "Sets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an enterprise, and sets\nwhether GitHub Actions can submit approving pull request reviews. For more information, see\n\"[Enforcing a policy for workflow permissions in your enterprise](https://docs.github.com/enterprise-cloud@latest//admin/policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise#enforcing-a-policy-for-workflow-permissions-in-your-enterprise).\"\n\nYou must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-default-workflow-permissions-for-an-enterprise"
@@ -1289,7 +1289,7 @@
           ],
           "x-github": {
             "category": "actions",
-            "enabledForGitHubApps": true,
+            "enabledForGitHubApps": false,
             "githubCloudOnly": true,
             "subcategory": "permissions"
           }
@@ -2066,9 +2066,10 @@
               "name": "page",
               "required": false,
               "schema": {
+                "default": 1,
                 "type": "integer"
               },
-              "style": "simple"
+              "style": "form"
             }
           ],
           "responses": {
@@ -2176,13 +2177,8 @@
                         },
                         "type": "array"
                       },
-                      "visibility": {
-                        "type": "string"
-                      },
-                      "workflow_restrictions_read_only": {
-                        "default": false,
-                        "description": "If `true`, the `restricted_to_workflows` and `selected_workflows` fields cannot be modified.",
-                        "type": "boolean"
+                      "total_count": {
+                        "type": "number"
                       }
                     },
                     "required": [
@@ -2298,12 +2294,12 @@
           "operationId": "enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise",
           "parameters": [
             {
-              "description": "Unique identifier of the self-hosted runner group.",
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
               "in": "path",
-              "name": "runner_group_id",
+              "name": "enterprise",
               "required": true,
               "schema": {
-                "type": "integer"
+                "type": "string"
               },
               "style": "simple"
             },
@@ -2574,6 +2570,11 @@
                               "description": "The Operating System of the runner.",
                               "example": "macos",
                               "type": "string"
+                            },
+                            "runner_group_id": {
+                              "description": "The id of the runner group.",
+                              "example": 1,
+                              "type": "integer"
                             },
                             "status": {
                               "description": "The status of the runner.",
@@ -2987,6 +2988,11 @@
                               "description": "The Operating System of the runner.",
                               "example": "macos",
                               "type": "string"
+                            },
+                            "runner_group_id": {
+                              "description": "The id of the runner group.",
+                              "example": 1,
+                              "type": "integer"
                             },
                             "status": {
                               "description": "The status of the runner.",
@@ -5911,6 +5917,11 @@
                         "example": "macos",
                         "type": "string"
                       },
+                      "runner_group_id": {
+                        "description": "The id of the runner group.",
+                        "example": 1,
+                        "type": "integer"
+                      },
                       "status": {
                         "description": "The status of the runner.",
                         "example": "online",
@@ -6771,174 +6782,6 @@
                             "name": {
                               "description": "Name of the label.",
                               "type": "string"
-                            }
-                          },
-                          "required": [
-                            "name"
-                          ],
-                          "title": "Self hosted runner label",
-                          "type": "object"
-                        },
-                        "type": "array"
-                      },
-                      "total_count": {
-                        "type": "integer"
-                      }
-                    },
-                    "required": [
-                      "total_count",
-                      "labels"
-                    ],
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            }
-          },
-          "summary": "List labels for a self-hosted runner for an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": true,
-            "subcategory": "self-hosted-runners"
-          }
-        },
-        "post": {
-          "deprecated": null,
-          "description": "Add custom labels to a self-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#add-custom-labels-to-a-self-hosted-runner-for-an-enterprise"
-          },
-          "operationId": "enterprise-admin/add-custom-labels-to-self-hosted-runner-for-enterprise",
-          "parameters": [
-            {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
-              "in": "path",
-              "name": "enterprise",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "Unique identifier of the self-hosted runner.",
-              "in": "path",
-              "name": "runner_id",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              },
-              "style": "simple"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "labels": [
-                        "gpu",
-                        "accelerated"
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "labels": {
-                      "description": "The names of the custom labels to add to the runner.",
-                      "items": {
-                        "type": "string"
-                      },
-                      "maxItems": 100,
-                      "minItems": 1,
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "labels"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "labels": [
-                          {
-                            "id": 5,
-                            "name": "self-hosted",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 7,
-                            "name": "X64",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 20,
-                            "name": "macOS",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 21,
-                            "name": "no-gpu",
-                            "type": "custom"
-                          }
-                        ],
-                        "total_count": 4
-                      }
-                    }
-                  },
-                  "schema": {
-                    "properties": {
-                      "labels": {
-                        "items": {
-                          "description": "A label for a self hosted runner",
-                          "properties": {
-                            "id": {
-                              "description": "Unique identifier of the label.",
-                              "type": "integer"
                             },
                             "type": {
                               "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
@@ -7331,7 +7174,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.",
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events after this cursor.",
               "in": "query",
               "name": "after",
               "required": false,
@@ -7342,7 +7185,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events before this cursor.",
               "in": "query",
               "name": "before",
               "required": false,
@@ -7599,7 +7442,7 @@
                   }
                 }
               },
-              "description": "Validation failed, or the endpoint has been spammed."
+              "description": "Response"
             }
           },
           "summary": "Get the audit log for an enterprise",
@@ -7672,7 +7515,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results before this cursor.",
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results before this cursor.",
               "in": "query",
               "name": "before",
               "required": false,
@@ -7683,7 +7526,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results after this cursor.",
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor.",
               "in": "query",
               "name": "after",
               "required": false,
@@ -7767,40 +7610,6 @@
               "style": "form"
             }
           ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "labels": [
-                        "gpu",
-                        "accelerated"
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "labels": {
-                      "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
-                      "items": {
-                        "type": "string"
-                      },
-                      "maxItems": 100,
-                      "minItems": 0,
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "labels"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
           "responses": {
             "200": {
               "content": {
@@ -7818,6 +7627,7 @@
                           "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/4/instances",
                           "most_recent_instance": {
                             "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+                            "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
                             "classifications": [
                               "test"
                             ],
@@ -7949,6 +7759,7 @@
                           "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/3/instances",
                           "most_recent_instance": {
                             "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+                            "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
                             "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
                             "environment": "{}",
                             "location": {
@@ -8119,204 +7930,6 @@
                             "name": {
                               "nullable": true,
                               "type": "string"
-                            }
-                          },
-                          "required": [
-                            "name"
-                          ],
-                          "title": "Self hosted runner label",
-                          "type": "object"
-                        },
-                        "type": "array"
-                      },
-                      "total_count": {
-                        "type": "integer"
-                      }
-                    },
-                    "required": [
-                      "total_count",
-                      "labels"
-                    ],
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Response"
-            },
-            "404": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Basic Error",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "url": {
-                        "type": "string"
-                      }
-                    },
-                    "title": "Basic Error",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Resource not found"
-            },
-            "422": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "description": "Validation Error Simple",
-                    "properties": {
-                      "documentation_url": {
-                        "type": "string"
-                      },
-                      "errors": {
-                        "items": {
-                          "type": "string"
-                        },
-                        "type": "array"
-                      },
-                      "message": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "message",
-                      "documentation_url"
-                    ],
-                    "title": "Validation Error Simple",
-                    "type": "object"
-                  }
-                }
-              },
-              "description": "Validation failed, or the endpoint has been spammed."
-            }
-          },
-          "summary": "Add custom labels to a self-hosted runner for an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "actions",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": true,
-            "subcategory": "self-hosted-runners"
-          }
-        },
-        "put": {
-          "deprecated": null,
-          "description": "Remove all previous custom labels and set the new custom labels for a specific\nself-hosted runner configured in an enterprise.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-custom-labels-for-a-self-hosted-runner-for-an-enterprise"
-          },
-          "operationId": "enterprise-admin/set-custom-labels-for-self-hosted-runner-for-enterprise",
-          "parameters": [
-            {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
-              "in": "path",
-              "name": "enterprise",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "description": "Unique identifier of the self-hosted runner.",
-              "in": "path",
-              "name": "runner_id",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              },
-              "style": "simple"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "default": {
-                    "value": {
-                      "labels": [
-                        "gpu",
-                        "accelerated"
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "properties": {
-                    "labels": {
-                      "description": "The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.",
-                      "items": {
-                        "type": "string"
-                      },
-                      "maxItems": 100,
-                      "minItems": 0,
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "labels"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": {
-                        "labels": [
-                          {
-                            "id": 5,
-                            "name": "self-hosted",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 7,
-                            "name": "X64",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 20,
-                            "name": "macOS",
-                            "type": "read-only"
-                          },
-                          {
-                            "id": 21,
-                            "name": "no-gpu",
-                            "type": "custom"
-                          }
-                        ],
-                        "total_count": 4
-                      }
-                    }
-                  },
-                  "schema": {
-                    "properties": {
-                      "labels": {
-                        "items": {
-                          "description": "A label for a self hosted runner",
-                          "properties": {
-                            "id": {
-                              "description": "Unique identifier of the label.",
-                              "type": "integer"
                             },
                             "node_id": {
                               "example": "MDQ6VXNlcjE=",
@@ -8326,339 +7939,6 @@
                               "example": "https://api.github.com/users/octocat/orgs",
                               "format": "uri",
                               "type": "string"
-                            }
-                          },
-                          "type": "object"
-                        },
-                        "blocked_user": {
-                          "description": "The username of the account being blocked.",
-                          "type": "string"
-                        },
-                        "business": {
-                          "type": "string"
-                        },
-                        "business_id": {
-                          "type": "integer"
-                        },
-                        "config": {
-                          "items": {
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "config_was": {
-                          "items": {
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "content_type": {
-                          "type": "string"
-                        },
-                        "created_at": {
-                          "description": "The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).",
-                          "type": "integer"
-                        },
-                        "data": {
-                          "additionalProperties": true,
-                          "type": "object"
-                        },
-                        "deploy_key_fingerprint": {
-                          "type": "string"
-                        },
-                        "emoji": {
-                          "type": "string"
-                        },
-                        "events": {
-                          "items": {
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "events_were": {
-                          "items": {
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "explanation": {
-                          "type": "string"
-                        },
-                        "fingerprint": {
-                          "type": "string"
-                        },
-                        "hook_id": {
-                          "type": "integer"
-                        },
-                        "limited_availability": {
-                          "type": "boolean"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "name": {
-                          "type": "string"
-                        },
-                        "old_user": {
-                          "type": "string"
-                        },
-                        "openssh_public_key": {
-                          "type": "string"
-                        },
-                        "operation_type": {
-                          "type": "string"
-                        },
-                        "org": {
-                          "type": "string"
-                        },
-                        "org_id": {
-                          "type": "integer"
-                        },
-                        "previous_visibility": {
-                          "type": "string"
-                        },
-                        "read_only": {
-                          "type": "boolean"
-                        },
-                        "repo": {
-                          "description": "The name of the repository.",
-                          "type": "string"
-                        },
-                        "repository": {
-                          "description": "The name of the repository.",
-                          "type": "string"
-                        },
-                        "repository_public": {
-                          "type": "boolean"
-                        },
-                        "target_login": {
-                          "type": "string"
-                        },
-                        "team": {
-                          "type": "string"
-                        },
-                        "transport_protocol": {
-                          "description": "The type of protocol (for example, HTTP or SSH) used to transfer Git data.",
-                          "type": "integer"
-                        },
-                        "transport_protocol_name": {
-                          "description": "A human readable name for the protocol (for example, HTTP or SSH) used to transfer Git data.",
-                          "type": "string"
-                        },
-                        "user": {
-                          "description": "The user that was affected by the action performed (if available).",
-                          "type": "string"
-                        },
-                        "user_id": {
-                          "type": "integer"
-                        },
-                        "visibility": {
-                          "description": "The repository visibility, for example `public` or `private`.",
-                          "type": "string"
-                        }
-                      },
-                      "type": "object"
-                    },
-                    "type": "array"
-                  }
-                }
-              },
-              "description": "Validation failed, or the endpoint has been spammed."
-            }
-          },
-          "summary": "Get the audit log for an enterprise",
-          "tags": [
-            "enterprise-admin"
-          ],
-          "x-github": {
-            "category": "enterprise-admin",
-            "enabledForGitHubApps": false,
-            "githubCloudOnly": true,
-            "subcategory": "audit-log"
-          },
-          "x-octokit": {
-            "changes": [
-              {
-                "before": {
-                  "operationId": "audit-log/get-audit-log"
-                },
-                "date": "2021-04-30",
-                "type": "OPERATION"
-              }
-            ]
-          }
-        }
-      },
-      "/enterprises/{enterprise}/code-scanning/alerts": {
-        "get": {
-          "deprecated": null,
-          "description": "Lists code scanning alerts for the default branch for all eligible repositories in an enterprise. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n\nTo use this endpoint, you must be a member of the enterprise,\nand you must use an access token with the `repo` scope or `security_events` scope.",
-          "externalDocs": {
-            "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/code-scanning#list-code-scanning-alerts-for-an-enterprise"
-          },
-          "operationId": "code-scanning/list-alerts-for-enterprise",
-          "parameters": [
-            {
-              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
-              "in": "path",
-              "name": "enterprise",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "style": "simple"
-            },
-            {
-              "allowReserved": null,
-              "description": "The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both.",
-              "in": "query",
-              "name": "tool_name",
-              "required": false,
-              "schema": {
-                "description": "The name of the tool used to generate the code scanning analysis.",
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both.",
-              "in": "query",
-              "name": "tool_guid",
-              "required": false,
-              "schema": {
-                "description": "The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data.",
-                "nullable": true,
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results before this cursor.",
-              "in": "query",
-              "name": "before",
-              "required": false,
-              "schema": {
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results after this cursor.",
-              "in": "query",
-              "name": "after",
-              "required": false,
-              "schema": {
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "Page number of the results to fetch.",
-              "in": "query",
-              "name": "page",
-              "required": false,
-              "schema": {
-                "default": 1,
-                "type": "integer"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "The number of results per page (max 100).",
-              "in": "query",
-              "name": "per_page",
-              "required": false,
-              "schema": {
-                "default": 30,
-                "type": "integer"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "The direction to sort the results by.",
-              "in": "query",
-              "name": "direction",
-              "required": false,
-              "schema": {
-                "default": "desc",
-                "enum": [
-                  "asc",
-                  "desc"
-                ],
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "If specified, only code scanning alerts with this state will be returned.",
-              "in": "query",
-              "name": "state",
-              "required": false,
-              "schema": {
-                "description": "State of a code scanning alert.",
-                "enum": [
-                  "open",
-                  "closed",
-                  "dismissed",
-                  "fixed"
-                ],
-                "type": "string"
-              },
-              "style": "form"
-            },
-            {
-              "allowReserved": null,
-              "description": "The property by which to sort the results.",
-              "in": "query",
-              "name": "sort",
-              "required": false,
-              "schema": {
-                "default": "created",
-                "enum": [
-                  "created",
-                  "updated"
-                ],
-                "type": "string"
-              },
-              "style": "form"
-            }
-          ],
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "default": {
-                      "value": [
-                        {
-                          "created_at": "2020-02-13T12:29:18Z",
-                          "dismissed_at": null,
-                          "dismissed_by": null,
-                          "dismissed_comment": null,
-                          "dismissed_reason": null,
-                          "html_url": "https://github.com/octocat/hello-world/code-scanning/4",
-                          "instances_url": "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/4/instances",
-                          "most_recent_instance": {
-                            "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-                            "classifications": [
-                              "test"
-                            ],
-                            "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
-                            "environment": "{}",
-                            "location": {
-                              "end_column": 18,
-                              "end_line": 917,
-                              "path": "spec-main/api-session-spec.ts",
-                              "start_column": 7,
-                              "start_line": 917
                             },
                             "received_events_url": {
                               "example": "https://api.github.com/users/octocat/received_events",
@@ -9527,17 +8807,7 @@
                   }
                 }
               },
-              "description": "Response",
-              "headers": {
-                "Link": {
-                  "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
-                  "required": null,
-                  "schema": {
-                    "type": "string"
-                  },
-                  "style": "simple"
-                }
-              }
+              "description": "Response"
             },
             "404": {
               "content": {
@@ -9677,7 +8947,7 @@
           },
           "summary": "Update code security and analysis features for an enterprise",
           "tags": [
-            "code-scanning"
+            "enterprise-admin"
           ],
           "x-github": {
             "category": "enterprise-admin",
@@ -9909,7 +9179,7 @@
           },
           "summary": "List enterprise consumed licenses",
           "tags": [
-            "code-scanning"
+            "enterprise-admin"
           ],
           "x-github": {
             "category": "enterprise-admin",
@@ -9941,10 +9211,7 @@
             }
           ],
           "responses": {
-            "204": {
-              "description": "Action started"
-            },
-            "404": {
+            "200": {
               "content": {
                 "application/json": {
                   "examples": {
@@ -10151,17 +9418,7 @@
                   }
                 }
               },
-              "description": "Consumed Licenses Response",
-              "headers": {
-                "Link": {
-                  "example": "<https://api.github.com/resource?page=2>; rel=\"next\", <https://api.github.com/resource?page=5>; rel=\"last\"",
-                  "required": null,
-                  "schema": {
-                    "type": "string"
-                  },
-                  "style": "simple"
-                }
-              }
+              "description": "Response"
             }
           },
           "summary": "Get GitHub Actions billing for an enterprise",
@@ -10218,7 +9475,7 @@
                 "default": 1,
                 "type": "integer"
               },
-              "style": "simple"
+              "style": "form"
             }
           ],
           "responses": {
@@ -10603,11 +9860,11 @@
       },
       "/organizations/{organization_id}/custom_roles": {
         "get": {
-          "deprecated": null,
-          "description": "List the custom repository roles available in this organization. In order to see custom\nrepository roles in an organization, the authenticated user must be an organization owner.\n\nTo use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organization and must use an access token with `admin:org repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "deprecated": true,
+          "description": "**Note**: This operation is deprecated and will be removed in the future.\nUse the \"[List custom repository roles](https://docs.github.com/enterprise-cloud@latest//rest/orgs/custom-roles#list-custom-repository-roles-in-an-organization)\" endpoint instead.\n\nList the custom repository roles available in this organization. In order to see custom\nrepository roles in an organization, the authenticated user must be an organization owner.\n\nTo use this endpoint the authenticated user must be an administrator of the organization or of a repository of the organization and must use an access token with the `admin:org` or `repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` or `organization_administration:read` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#list-custom-repository-roles-in-an-organization"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#deprecated-list-custom-repository-roles-in-an-organization"
           },
           "operationId": "orgs/list-custom-roles",
           "parameters": [
@@ -10629,74 +9886,34 @@
                   "examples": {
                     "default": {
                       "value": {
-                        "custom_roles": [
-                          {
-                            "base_role": "maintain",
-                            "created_at": "2022-07-04T22:19:11Z",
-                            "description": "Able to contribute code and maintain the security pipeline",
-                            "id": 8030,
-                            "name": "Security Engineer",
-                            "organization": {
-                              "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
-                              "events_url": "https://api.github.com/users/github/events{/privacy}",
-                              "followers_url": "https://api.github.com/users/github/followers",
-                              "following_url": "https://api.github.com/users/github/following{/other_user}",
-                              "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
-                              "html_url": "https://github.com/github",
-                              "id": 9919,
-                              "login": "github",
-                              "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
-                              "organizations_url": "https://api.github.com/users/github/orgs",
-                              "received_events_url": "https://api.github.com/users/github/received_events",
-                              "repos_url": "https://api.github.com/users/github/repos",
-                              "site_admin": false,
-                              "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
-                              "subscriptions_url": "https://api.github.com/users/github/subscriptions",
-                              "type": "Organization",
-                              "url": "https://api.github.com/users/github"
-                            },
-                            "permissions": [
-                              "delete_alerts_code_scanning"
-                            ],
-                            "updated_at": "2022-07-04T22:20:11Z"
-                          },
-                          {
-                            "base_role": "read",
-                            "created_at": "2022-07-05T12:01:11Z",
-                            "description": "Able to handle all the community interactions without being able to contribute code",
-                            "id": 8031,
-                            "name": "Community manager",
-                            "organization": {
-                              "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
-                              "events_url": "https://api.github.com/users/github/events{/privacy}",
-                              "followers_url": "https://api.github.com/users/github/followers",
-                              "following_url": "https://api.github.com/users/github/following{/other_user}",
-                              "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
-                              "html_url": "https://github.com/github",
-                              "id": 9919,
-                              "login": "github",
-                              "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
-                              "organizations_url": "https://api.github.com/users/github/orgs",
-                              "received_events_url": "https://api.github.com/users/github/received_events",
-                              "repos_url": "https://api.github.com/users/github/repos",
-                              "site_admin": false,
-                              "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
-                              "subscriptions_url": "https://api.github.com/users/github/subscriptions",
-                              "type": "Organization",
-                              "url": "https://api.github.com/users/github"
-                            },
-                            "permissions": [
-                              "mark_as_duplicate",
-                              "manage_settings_pages",
-                              "manage_settings_wiki",
-                              "set_social_preview",
-                              "edit_repo_metadata",
-                              "toggle_discussion_comment_minimize"
-                            ],
-                            "updated_at": "2022-07-05T12:20:11Z"
-                          }
+                        "base_role": "maintain",
+                        "created_at": "2022-07-04T22:19:11Z",
+                        "description": "Able to contribute code and maintain the security pipeline",
+                        "id": 8030,
+                        "name": "Security Engineer",
+                        "organization": {
+                          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+                          "events_url": "https://api.github.com/users/github/events{/privacy}",
+                          "followers_url": "https://api.github.com/users/github/followers",
+                          "following_url": "https://api.github.com/users/github/following{/other_user}",
+                          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+                          "html_url": "https://github.com/github",
+                          "id": 9919,
+                          "login": "github",
+                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+                          "organizations_url": "https://api.github.com/users/github/orgs",
+                          "received_events_url": "https://api.github.com/users/github/received_events",
+                          "repos_url": "https://api.github.com/users/github/repos",
+                          "site_admin": false,
+                          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+                          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+                          "type": "Organization",
+                          "url": "https://api.github.com/users/github"
+                        },
+                        "permissions": [
+                          "delete_alerts_code_scanning"
                         ],
-                        "total_count": 2
+                        "updated_at": "2022-07-04T22:20:11Z"
                       }
                     }
                   },
@@ -10866,7 +10083,12 @@
                           },
                           "required": [
                             "id",
-                            "name"
+                            "name",
+                            "base_role",
+                            "permissions",
+                            "organization",
+                            "created_at",
+                            "updated_at"
                           ],
                           "title": "Organization Custom Repository Role",
                           "type": "object"
@@ -10886,15 +10108,17 @@
               "description": "Response - list of custom role names"
             }
           },
-          "summary": "List custom repository roles in an organization",
+          "summary": "Deprecated - List custom repository roles in an organization",
           "tags": [
             "orgs"
           ],
           "x-github": {
             "category": "orgs",
+            "deprecationDate": "2023-02-15",
             "enabledForGitHubApps": true,
             "githubCloudOnly": true,
-            "subcategory": "custom_roles"
+            "removalDate": "2025-02-15",
+            "subcategory": "custom-roles"
           }
         }
       },
@@ -12987,6 +12211,11 @@
                               "example": "macos",
                               "type": "string"
                             },
+                            "runner_group_id": {
+                              "description": "The id of the runner group.",
+                              "example": 1,
+                              "type": "integer"
+                            },
                             "status": {
                               "description": "The status of the runner.",
                               "example": "online",
@@ -13527,7 +12756,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.",
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events after this cursor.",
               "in": "query",
               "name": "after",
               "required": false,
@@ -13538,7 +12767,7 @@
             },
             {
               "allowReserved": null,
-              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor.",
+              "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-cloud@latest//rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events before this cursor.",
               "in": "query",
               "name": "before",
               "required": false,
@@ -14068,15 +13297,315 @@
           }
         }
       },
-      "/orgs/{org}/custom_roles": {
-        "post": {
+      "/orgs/{org}/custom-repository-roles": {
+        "get": {
           "deprecated": null,
-          "description": "**Note**: This operation is in beta and is subject to change.\n\nCreates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "description": "List the custom repository roles available in this organization. In order to see custom\nrepository roles in an organization, the authenticated user must be an organization owner.\n\nTo use this endpoint the authenticated user must be an administrator of the organization or of a repository of the organization and must use an access token with the `admin:org` or `repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` or `organization_administration:read` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#create-a-custom-role"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/custom-roles#list-custom-repository-roles-in-an-organization"
           },
-          "operationId": "orgs/create-custom-role",
+          "operationId": "orgs/list-custom-repo-roles",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "custom_roles": [
+                          {
+                            "base_role": "maintain",
+                            "created_at": "2022-07-04T22:19:11Z",
+                            "description": "Able to contribute code and maintain the security pipeline",
+                            "id": 8030,
+                            "name": "Security Engineer",
+                            "organization": {
+                              "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+                              "events_url": "https://api.github.com/users/github/events{/privacy}",
+                              "followers_url": "https://api.github.com/users/github/followers",
+                              "following_url": "https://api.github.com/users/github/following{/other_user}",
+                              "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+                              "html_url": "https://github.com/github",
+                              "id": 9919,
+                              "login": "github",
+                              "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+                              "organizations_url": "https://api.github.com/users/github/orgs",
+                              "received_events_url": "https://api.github.com/users/github/received_events",
+                              "repos_url": "https://api.github.com/users/github/repos",
+                              "site_admin": false,
+                              "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+                              "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+                              "type": "Organization",
+                              "url": "https://api.github.com/users/github"
+                            },
+                            "permissions": [
+                              "delete_alerts_code_scanning"
+                            ],
+                            "updated_at": "2022-07-04T22:20:11Z"
+                          },
+                          {
+                            "base_role": "read",
+                            "created_at": "2022-07-05T12:01:11Z",
+                            "description": "Able to handle all the community interactions without being able to contribute code",
+                            "id": 8031,
+                            "name": "Community manager",
+                            "organization": {
+                              "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+                              "events_url": "https://api.github.com/users/github/events{/privacy}",
+                              "followers_url": "https://api.github.com/users/github/followers",
+                              "following_url": "https://api.github.com/users/github/following{/other_user}",
+                              "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+                              "html_url": "https://github.com/github",
+                              "id": 9919,
+                              "login": "github",
+                              "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+                              "organizations_url": "https://api.github.com/users/github/orgs",
+                              "received_events_url": "https://api.github.com/users/github/received_events",
+                              "repos_url": "https://api.github.com/users/github/repos",
+                              "site_admin": false,
+                              "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+                              "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+                              "type": "Organization",
+                              "url": "https://api.github.com/users/github"
+                            },
+                            "permissions": [
+                              "mark_as_duplicate",
+                              "manage_settings_pages",
+                              "manage_settings_wiki",
+                              "set_social_preview",
+                              "edit_repo_metadata",
+                              "toggle_discussion_comment_minimize"
+                            ],
+                            "updated_at": "2022-07-05T12:20:11Z"
+                          }
+                        ],
+                        "total_count": 2
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "custom_roles": {
+                        "items": {
+                          "description": "Custom repository roles created by organization administrators",
+                          "properties": {
+                            "base_role": {
+                              "description": "The system role from which this role inherits permissions.",
+                              "enum": [
+                                "read",
+                                "triage",
+                                "write",
+                                "maintain"
+                              ],
+                              "type": "string"
+                            },
+                            "created_at": {
+                              "format": "date-time",
+                              "type": "string"
+                            },
+                            "description": {
+                              "description": "A short description about who this role is for or what permissions it grants.",
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "id": {
+                              "description": "The unique identifier of the custom role.",
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "The name of the custom role.",
+                              "type": "string"
+                            },
+                            "organization": {
+                              "description": "A GitHub user.",
+                              "properties": {
+                                "avatar_url": {
+                                  "example": "https://github.com/images/error/octocat_happy.gif",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "email": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "events_url": {
+                                  "example": "https://api.github.com/users/octocat/events{/privacy}",
+                                  "type": "string"
+                                },
+                                "followers_url": {
+                                  "example": "https://api.github.com/users/octocat/followers",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "following_url": {
+                                  "example": "https://api.github.com/users/octocat/following{/other_user}",
+                                  "type": "string"
+                                },
+                                "gists_url": {
+                                  "example": "https://api.github.com/users/octocat/gists{/gist_id}",
+                                  "type": "string"
+                                },
+                                "gravatar_id": {
+                                  "example": "41d064eb2195891e12d0413f63227ea7",
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "html_url": {
+                                  "example": "https://github.com/octocat",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "example": 1,
+                                  "type": "integer"
+                                },
+                                "login": {
+                                  "example": "octocat",
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "node_id": {
+                                  "example": "MDQ6VXNlcjE=",
+                                  "type": "string"
+                                },
+                                "organizations_url": {
+                                  "example": "https://api.github.com/users/octocat/orgs",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "received_events_url": {
+                                  "example": "https://api.github.com/users/octocat/received_events",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "repos_url": {
+                                  "example": "https://api.github.com/users/octocat/repos",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "site_admin": {
+                                  "type": "boolean"
+                                },
+                                "starred_at": {
+                                  "example": "\"2020-07-09T00:17:55Z\"",
+                                  "type": "string"
+                                },
+                                "starred_url": {
+                                  "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                                  "type": "string"
+                                },
+                                "subscriptions_url": {
+                                  "example": "https://api.github.com/users/octocat/subscriptions",
+                                  "format": "uri",
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "example": "User",
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "example": "https://api.github.com/users/octocat",
+                                  "format": "uri",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "avatar_url",
+                                "events_url",
+                                "followers_url",
+                                "following_url",
+                                "gists_url",
+                                "gravatar_id",
+                                "html_url",
+                                "id",
+                                "node_id",
+                                "login",
+                                "organizations_url",
+                                "received_events_url",
+                                "repos_url",
+                                "site_admin",
+                                "starred_url",
+                                "subscriptions_url",
+                                "type",
+                                "url"
+                              ],
+                              "title": "Simple User",
+                              "type": "object"
+                            },
+                            "permissions": {
+                              "description": "A list of additional permissions included in this role.",
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "updated_at": {
+                              "format": "date-time",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "base_role",
+                            "permissions",
+                            "organization",
+                            "created_at",
+                            "updated_at"
+                          ],
+                          "title": "Organization Custom Repository Role",
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "total_count": {
+                        "description": "The number of custom roles in this organization",
+                        "example": 3,
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response - list of custom role names"
+            }
+          },
+          "summary": "List custom repository roles in an organization",
+          "tags": [
+            "orgs"
+          ],
+          "x-github": {
+            "category": "orgs",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "custom-roles"
+          }
+        },
+        "post": {
+          "deprecated": null,
+          "description": "Creates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint, the authenticated user must be an administrator for the organization and must use an personal access token (classic) with `admin:org` scope or a fine-grained personal access token with the `organization_custom_roles:write` organization permission.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/custom-roles#create-a-custom-repository-role"
+          },
+          "operationId": "orgs/create-custom-repo-role",
           "parameters": [
             {
               "description": "The organization name. The name is not case sensitive.",
@@ -14096,7 +13625,7 @@
                   "default": {
                     "value": {
                       "base_role": "read",
-                      "description": "A role for issue and PR labelers",
+                      "description": "A role for issue and pull request labelers",
                       "name": "Labeler",
                       "permissions": [
                         "add_label"
@@ -14117,7 +13646,8 @@
                       "type": "string"
                     },
                     "description": {
-                      "description": "A short description about the intended usage of this role or what permissions it grants.",
+                      "description": "A short description about who this role is for or what permissions it grants.",
+                      "nullable": true,
                       "type": "string"
                     },
                     "name": {
@@ -14150,11 +13680,11 @@
                   "examples": {
                     "default": {
                       "value": {
-                        "base_role": "read",
+                        "base_role": "maintain",
                         "created_at": "2022-07-04T22:19:11Z",
-                        "description": "A role for issue and PR labelers",
+                        "description": "Able to contribute code and maintain the security pipeline",
                         "id": 8030,
-                        "name": "Labeler",
+                        "name": "Security Engineer",
                         "organization": {
                           "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
                           "events_url": "https://api.github.com/users/github/events{/privacy}",
@@ -14175,9 +13705,9 @@
                           "url": "https://api.github.com/users/github"
                         },
                         "permissions": [
-                          "add_label"
+                          "delete_alerts_code_scanning"
                         ],
-                        "updated_at": "2022-07-04T22:19:11Z"
+                        "updated_at": "2022-07-04T22:20:11Z"
                       }
                     }
                   },
@@ -14344,7 +13874,12 @@
                     },
                     "required": [
                       "id",
-                      "name"
+                      "name",
+                      "base_role",
+                      "permissions",
+                      "organization",
+                      "created_at",
+                      "updated_at"
                     ],
                     "title": "Organization Custom Repository Role",
                     "type": "object"
@@ -14449,7 +13984,7 @@
               "description": "Validation failed, or the endpoint has been spammed."
             }
           },
-          "summary": "Create a custom role",
+          "summary": "Create a custom repository role",
           "tags": [
             "orgs"
           ],
@@ -14461,15 +13996,15 @@
           }
         }
       },
-      "/orgs/{org}/custom_roles/{role_id}": {
+      "/orgs/{org}/custom-repository-roles/{role_id}": {
         "delete": {
           "deprecated": null,
-          "description": "**Note**: This operation is in beta and is subject to change.\n\nDeletes a custom role from an organization. Once the custom role has been deleted, any\nuser, team, or invitation with the deleted custom role will be reassigned the inherited role.\n\nTo use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information about custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "description": "Deletes a custom role from an organization. Once the custom role has been deleted, any\nuser, team, or invitation with the deleted custom role will be reassigned the inherited role.\n\nTo use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information about custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#delete-a-custom-role"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/custom-roles#delete-a-custom-repository-role"
           },
-          "operationId": "orgs/delete-custom-role",
+          "operationId": "orgs/delete-custom-repo-role",
           "parameters": [
             {
               "description": "The organization name. The name is not case sensitive.",
@@ -14497,7 +14032,7 @@
               "description": "Response"
             }
           },
-          "summary": "Delete a custom role",
+          "summary": "Delete a custom repository role",
           "tags": [
             "orgs"
           ],
@@ -14510,12 +14045,12 @@
         },
         "get": {
           "deprecated": null,
-          "description": "**Note**: This operation is in beta and is subject to change.\n\nGets a custom repository role that is available to all repositories owned by the organization.\n\nTo use this operation, the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "description": "Gets a custom repository role that is available to all repositories owned by the organization.\n\nTo use this endpoint the authenticated user must be an administrator of the organization or of a repository of the organization and must use an access token with the `admin:org` or `repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` or `organization_administration:read` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
           "externalDocs": {
             "description": "API method documentation",
-            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/#get-a-custom-role"
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/custom-roles#get-a-custom-repository-role"
           },
-          "operationId": "orgs/get-custom-role",
+          "operationId": "orgs/get-custom-repo-role",
           "parameters": [
             {
               "description": "The organization name. The name is not case sensitive.",
@@ -14545,11 +14080,11 @@
                   "examples": {
                     "default": {
                       "value": {
-                        "base_role": "read",
+                        "base_role": "maintain",
                         "created_at": "2022-07-04T22:19:11Z",
-                        "description": "A role for who can label issues and PRs",
+                        "description": "Able to contribute code and maintain the security pipeline",
                         "id": 8030,
-                        "name": "Labeler",
+                        "name": "Security Engineer",
                         "organization": {
                           "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
                           "events_url": "https://api.github.com/users/github/events{/privacy}",
@@ -14570,9 +14105,9 @@
                           "url": "https://api.github.com/users/github"
                         },
                         "permissions": [
-                          "add_label"
+                          "delete_alerts_code_scanning"
                         ],
-                        "updated_at": "2022-07-04T22:19:11Z"
+                        "updated_at": "2022-07-04T22:20:11Z"
                       }
                     }
                   },
@@ -14739,7 +14274,12 @@
                     },
                     "required": [
                       "id",
-                      "name"
+                      "name",
+                      "base_role",
+                      "permissions",
+                      "organization",
+                      "created_at",
+                      "updated_at"
                     ],
                     "title": "Organization Custom Repository Role",
                     "type": "object"
@@ -14775,7 +14315,7 @@
               "description": "Resource not found"
             }
           },
-          "summary": "Get a custom role",
+          "summary": "Get a custom repository role",
           "tags": [
             "orgs"
           ],
@@ -14788,7 +14328,1146 @@
         },
         "patch": {
           "deprecated": null,
-          "description": "**Note**: This operation is in beta and subject to change.\n\nUpdates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information about custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "description": "Updates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information about custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/custom-roles#update-a-custom-repository-role"
+          },
+          "operationId": "orgs/update-custom-repo-role",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the role.",
+              "in": "path",
+              "name": "role_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "base_role": "read",
+                      "description": "A role for issue and PR labelers",
+                      "name": "Labeler",
+                      "permissions": [
+                        "add_label",
+                        "remove_label"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "base_role": {
+                      "description": "The system role from which this role inherits permissions.",
+                      "enum": [
+                        "read",
+                        "triage",
+                        "write",
+                        "maintain"
+                      ],
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "A short description about who this role is for or what permissions it grants.",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "The name of the custom role.",
+                      "type": "string"
+                    },
+                    "permissions": {
+                      "description": "A list of additional permissions included in this role.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "base_role": "maintain",
+                        "created_at": "2022-07-04T22:19:11Z",
+                        "description": "Able to contribute code and maintain the security pipeline",
+                        "id": 8030,
+                        "name": "Security Engineer",
+                        "organization": {
+                          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+                          "events_url": "https://api.github.com/users/github/events{/privacy}",
+                          "followers_url": "https://api.github.com/users/github/followers",
+                          "following_url": "https://api.github.com/users/github/following{/other_user}",
+                          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+                          "html_url": "https://github.com/github",
+                          "id": 9919,
+                          "login": "github",
+                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+                          "organizations_url": "https://api.github.com/users/github/orgs",
+                          "received_events_url": "https://api.github.com/users/github/received_events",
+                          "repos_url": "https://api.github.com/users/github/repos",
+                          "site_admin": false,
+                          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+                          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+                          "type": "Organization",
+                          "url": "https://api.github.com/users/github"
+                        },
+                        "permissions": [
+                          "delete_alerts_code_scanning"
+                        ],
+                        "updated_at": "2022-07-04T22:20:11Z"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "Custom repository roles created by organization administrators",
+                    "properties": {
+                      "base_role": {
+                        "description": "The system role from which this role inherits permissions.",
+                        "enum": [
+                          "read",
+                          "triage",
+                          "write",
+                          "maintain"
+                        ],
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "description": {
+                        "description": "A short description about who this role is for or what permissions it grants.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "The unique identifier of the custom role.",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "The name of the custom role.",
+                        "type": "string"
+                      },
+                      "organization": {
+                        "description": "A GitHub user.",
+                        "properties": {
+                          "avatar_url": {
+                            "example": "https://github.com/images/error/octocat_happy.gif",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "email": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "events_url": {
+                            "example": "https://api.github.com/users/octocat/events{/privacy}",
+                            "type": "string"
+                          },
+                          "followers_url": {
+                            "example": "https://api.github.com/users/octocat/followers",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "following_url": {
+                            "example": "https://api.github.com/users/octocat/following{/other_user}",
+                            "type": "string"
+                          },
+                          "gists_url": {
+                            "example": "https://api.github.com/users/octocat/gists{/gist_id}",
+                            "type": "string"
+                          },
+                          "gravatar_id": {
+                            "example": "41d064eb2195891e12d0413f63227ea7",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "html_url": {
+                            "example": "https://github.com/octocat",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "id": {
+                            "example": 1,
+                            "type": "integer"
+                          },
+                          "login": {
+                            "example": "octocat",
+                            "type": "string"
+                          },
+                          "name": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "node_id": {
+                            "example": "MDQ6VXNlcjE=",
+                            "type": "string"
+                          },
+                          "organizations_url": {
+                            "example": "https://api.github.com/users/octocat/orgs",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "received_events_url": {
+                            "example": "https://api.github.com/users/octocat/received_events",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "repos_url": {
+                            "example": "https://api.github.com/users/octocat/repos",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "site_admin": {
+                            "type": "boolean"
+                          },
+                          "starred_at": {
+                            "example": "\"2020-07-09T00:17:55Z\"",
+                            "type": "string"
+                          },
+                          "starred_url": {
+                            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                            "type": "string"
+                          },
+                          "subscriptions_url": {
+                            "example": "https://api.github.com/users/octocat/subscriptions",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "type": {
+                            "example": "User",
+                            "type": "string"
+                          },
+                          "url": {
+                            "example": "https://api.github.com/users/octocat",
+                            "format": "uri",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "avatar_url",
+                          "events_url",
+                          "followers_url",
+                          "following_url",
+                          "gists_url",
+                          "gravatar_id",
+                          "html_url",
+                          "id",
+                          "node_id",
+                          "login",
+                          "organizations_url",
+                          "received_events_url",
+                          "repos_url",
+                          "site_admin",
+                          "starred_url",
+                          "subscriptions_url",
+                          "type",
+                          "url"
+                        ],
+                        "title": "Simple User",
+                        "type": "object"
+                      },
+                      "permissions": {
+                        "description": "A list of additional permissions included in this role.",
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "updated_at": {
+                        "format": "date-time",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "base_role",
+                      "permissions",
+                      "organization",
+                      "created_at",
+                      "updated_at"
+                    ],
+                    "title": "Organization Custom Repository Role",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Resource not found"
+            },
+            "422": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Validation Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "errors": {
+                        "items": {
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            },
+                            "field": {
+                              "type": "string"
+                            },
+                            "index": {
+                              "type": "integer"
+                            },
+                            "message": {
+                              "type": "string"
+                            },
+                            "resource": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "oneOf": [
+                                {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                {
+                                  "nullable": true,
+                                  "type": "integer"
+                                },
+                                {
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "nullable": true,
+                                  "type": "array"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "code"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "message",
+                      "documentation_url"
+                    ],
+                    "title": "Validation Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Validation failed, or the endpoint has been spammed."
+            }
+          },
+          "summary": "Update a custom repository role",
+          "tags": [
+            "orgs"
+          ],
+          "x-github": {
+            "category": "orgs",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "subcategory": "custom-roles"
+          }
+        }
+      },
+      "/orgs/{org}/custom_roles": {
+        "post": {
+          "deprecated": true,
+          "description": "**Note**: This operation is deprecated and will be removed after September 6th 2023.\nUse the \"[Create a custom repository role](https://docs.github.com/enterprise-cloud@latest//rest/orgs/custom-roles#create-a-custom-repository-role)\" endpoint instead.\n\nCreates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint, the authenticated user must be an administrator for the organization and must use an personal access token (classic) with `admin:org` scope or a fine-grained personal access token with the `organization_custom_roles:write` organization permission.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#create-a-custom-role"
+          },
+          "operationId": "orgs/create-custom-role",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "base_role": "read",
+                      "description": "A role for issue and pull request labelers",
+                      "name": "Labeler",
+                      "permissions": [
+                        "add_label"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "base_role": {
+                      "description": "The system role from which this role inherits permissions.",
+                      "enum": [
+                        "read",
+                        "triage",
+                        "write",
+                        "maintain"
+                      ],
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "A short description about who this role is for or what permissions it grants.",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "The name of the custom role.",
+                      "type": "string"
+                    },
+                    "permissions": {
+                      "description": "A list of additional permissions included in this role.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "base_role",
+                    "permissions"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "base_role": "maintain",
+                        "created_at": "2022-07-04T22:19:11Z",
+                        "description": "Able to contribute code and maintain the security pipeline",
+                        "id": 8030,
+                        "name": "Security Engineer",
+                        "organization": {
+                          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+                          "events_url": "https://api.github.com/users/github/events{/privacy}",
+                          "followers_url": "https://api.github.com/users/github/followers",
+                          "following_url": "https://api.github.com/users/github/following{/other_user}",
+                          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+                          "html_url": "https://github.com/github",
+                          "id": 9919,
+                          "login": "github",
+                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+                          "organizations_url": "https://api.github.com/users/github/orgs",
+                          "received_events_url": "https://api.github.com/users/github/received_events",
+                          "repos_url": "https://api.github.com/users/github/repos",
+                          "site_admin": false,
+                          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+                          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+                          "type": "Organization",
+                          "url": "https://api.github.com/users/github"
+                        },
+                        "permissions": [
+                          "delete_alerts_code_scanning"
+                        ],
+                        "updated_at": "2022-07-04T22:20:11Z"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "Custom repository roles created by organization administrators",
+                    "properties": {
+                      "base_role": {
+                        "description": "The system role from which this role inherits permissions.",
+                        "enum": [
+                          "read",
+                          "triage",
+                          "write",
+                          "maintain"
+                        ],
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "description": {
+                        "description": "A short description about who this role is for or what permissions it grants.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "The unique identifier of the custom role.",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "The name of the custom role.",
+                        "type": "string"
+                      },
+                      "organization": {
+                        "description": "A GitHub user.",
+                        "properties": {
+                          "avatar_url": {
+                            "example": "https://github.com/images/error/octocat_happy.gif",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "email": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "events_url": {
+                            "example": "https://api.github.com/users/octocat/events{/privacy}",
+                            "type": "string"
+                          },
+                          "followers_url": {
+                            "example": "https://api.github.com/users/octocat/followers",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "following_url": {
+                            "example": "https://api.github.com/users/octocat/following{/other_user}",
+                            "type": "string"
+                          },
+                          "gists_url": {
+                            "example": "https://api.github.com/users/octocat/gists{/gist_id}",
+                            "type": "string"
+                          },
+                          "gravatar_id": {
+                            "example": "41d064eb2195891e12d0413f63227ea7",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "html_url": {
+                            "example": "https://github.com/octocat",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "id": {
+                            "example": 1,
+                            "type": "integer"
+                          },
+                          "login": {
+                            "example": "octocat",
+                            "type": "string"
+                          },
+                          "name": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "node_id": {
+                            "example": "MDQ6VXNlcjE=",
+                            "type": "string"
+                          },
+                          "organizations_url": {
+                            "example": "https://api.github.com/users/octocat/orgs",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "received_events_url": {
+                            "example": "https://api.github.com/users/octocat/received_events",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "repos_url": {
+                            "example": "https://api.github.com/users/octocat/repos",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "site_admin": {
+                            "type": "boolean"
+                          },
+                          "starred_at": {
+                            "example": "\"2020-07-09T00:17:55Z\"",
+                            "type": "string"
+                          },
+                          "starred_url": {
+                            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                            "type": "string"
+                          },
+                          "subscriptions_url": {
+                            "example": "https://api.github.com/users/octocat/subscriptions",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "type": {
+                            "example": "User",
+                            "type": "string"
+                          },
+                          "url": {
+                            "example": "https://api.github.com/users/octocat",
+                            "format": "uri",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "avatar_url",
+                          "events_url",
+                          "followers_url",
+                          "following_url",
+                          "gists_url",
+                          "gravatar_id",
+                          "html_url",
+                          "id",
+                          "node_id",
+                          "login",
+                          "organizations_url",
+                          "received_events_url",
+                          "repos_url",
+                          "site_admin",
+                          "starred_url",
+                          "subscriptions_url",
+                          "type",
+                          "url"
+                        ],
+                        "title": "Simple User",
+                        "type": "object"
+                      },
+                      "permissions": {
+                        "description": "A list of additional permissions included in this role.",
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "updated_at": {
+                        "format": "date-time",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "base_role",
+                      "permissions",
+                      "organization",
+                      "created_at",
+                      "updated_at"
+                    ],
+                    "title": "Organization Custom Repository Role",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Resource not found"
+            },
+            "422": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Validation Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "errors": {
+                        "items": {
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            },
+                            "field": {
+                              "type": "string"
+                            },
+                            "index": {
+                              "type": "integer"
+                            },
+                            "message": {
+                              "type": "string"
+                            },
+                            "resource": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "oneOf": [
+                                {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                {
+                                  "nullable": true,
+                                  "type": "integer"
+                                },
+                                {
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "nullable": true,
+                                  "type": "array"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "code"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "message",
+                      "documentation_url"
+                    ],
+                    "title": "Validation Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Validation failed, or the endpoint has been spammed."
+            }
+          },
+          "summary": "Deprecated - Create a custom role",
+          "tags": [
+            "orgs"
+          ],
+          "x-github": {
+            "category": "orgs",
+            "deprecationDate": "2023-03-06",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "removalDate": "2023-09-06",
+            "subcategory": "custom-roles"
+          }
+        }
+      },
+      "/orgs/{org}/custom_roles/{role_id}": {
+        "delete": {
+          "deprecated": true,
+          "description": "**Note**: This operation is deprecated and will be removed after September 6th 2023.\nUse the \"[Delete a custom repository role](https://docs.github.com/enterprise-cloud@latest//rest/orgs/custom-roles#delete-a-custom-repository-role)\" endpoint instead.\n\nDeletes a custom role from an organization. Once the custom role has been deleted, any\nuser, team, or invitation with the deleted custom role will be reassigned the inherited role.\n\nTo use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information about custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#delete-a-custom-role"
+          },
+          "operationId": "orgs/delete-custom-role",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the role.",
+              "in": "path",
+              "name": "role_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Response"
+            }
+          },
+          "summary": "Deprecated - Delete a custom role",
+          "tags": [
+            "orgs"
+          ],
+          "x-github": {
+            "category": "orgs",
+            "deprecationDate": "2023-03-06",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "removalDate": "2022-09-06",
+            "subcategory": "custom-roles"
+          }
+        },
+        "get": {
+          "deprecated": true,
+          "description": "**Note**: This operation is deprecated and will be removed after September 6th 2023.\nUse the \"[Get a custom repository role](https://docs.github.com/enterprise-cloud@latest//rest/orgs/custom-roles#get-a-custom-repository-role)\" endpoint instead.\n\nGets a custom repository role that is available to all repositories owned by the organization.\n\nTo use this endpoint the authenticated user must be an administrator of the organization or of a repository of the organization and must use an access token with the `admin:org` or `repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` or `organization_administration:read` organization permission to use this endpoint.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/#get-a-custom-role"
+          },
+          "operationId": "orgs/get-custom-role",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            },
+            {
+              "description": "The unique identifier of the role.",
+              "in": "path",
+              "name": "role_id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "base_role": "maintain",
+                        "created_at": "2022-07-04T22:19:11Z",
+                        "description": "Able to contribute code and maintain the security pipeline",
+                        "id": 8030,
+                        "name": "Security Engineer",
+                        "organization": {
+                          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+                          "events_url": "https://api.github.com/users/github/events{/privacy}",
+                          "followers_url": "https://api.github.com/users/github/followers",
+                          "following_url": "https://api.github.com/users/github/following{/other_user}",
+                          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+                          "html_url": "https://github.com/github",
+                          "id": 9919,
+                          "login": "github",
+                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+                          "organizations_url": "https://api.github.com/users/github/orgs",
+                          "received_events_url": "https://api.github.com/users/github/received_events",
+                          "repos_url": "https://api.github.com/users/github/repos",
+                          "site_admin": false,
+                          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+                          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+                          "type": "Organization",
+                          "url": "https://api.github.com/users/github"
+                        },
+                        "permissions": [
+                          "delete_alerts_code_scanning"
+                        ],
+                        "updated_at": "2022-07-04T22:20:11Z"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "description": "Custom repository roles created by organization administrators",
+                    "properties": {
+                      "base_role": {
+                        "description": "The system role from which this role inherits permissions.",
+                        "enum": [
+                          "read",
+                          "triage",
+                          "write",
+                          "maintain"
+                        ],
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "description": {
+                        "description": "A short description about who this role is for or what permissions it grants.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "The unique identifier of the custom role.",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "The name of the custom role.",
+                        "type": "string"
+                      },
+                      "organization": {
+                        "description": "A GitHub user.",
+                        "properties": {
+                          "avatar_url": {
+                            "example": "https://github.com/images/error/octocat_happy.gif",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "email": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "events_url": {
+                            "example": "https://api.github.com/users/octocat/events{/privacy}",
+                            "type": "string"
+                          },
+                          "followers_url": {
+                            "example": "https://api.github.com/users/octocat/followers",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "following_url": {
+                            "example": "https://api.github.com/users/octocat/following{/other_user}",
+                            "type": "string"
+                          },
+                          "gists_url": {
+                            "example": "https://api.github.com/users/octocat/gists{/gist_id}",
+                            "type": "string"
+                          },
+                          "gravatar_id": {
+                            "example": "41d064eb2195891e12d0413f63227ea7",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "html_url": {
+                            "example": "https://github.com/octocat",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "id": {
+                            "example": 1,
+                            "type": "integer"
+                          },
+                          "login": {
+                            "example": "octocat",
+                            "type": "string"
+                          },
+                          "name": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "node_id": {
+                            "example": "MDQ6VXNlcjE=",
+                            "type": "string"
+                          },
+                          "organizations_url": {
+                            "example": "https://api.github.com/users/octocat/orgs",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "received_events_url": {
+                            "example": "https://api.github.com/users/octocat/received_events",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "repos_url": {
+                            "example": "https://api.github.com/users/octocat/repos",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "site_admin": {
+                            "type": "boolean"
+                          },
+                          "starred_at": {
+                            "example": "\"2020-07-09T00:17:55Z\"",
+                            "type": "string"
+                          },
+                          "starred_url": {
+                            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+                            "type": "string"
+                          },
+                          "subscriptions_url": {
+                            "example": "https://api.github.com/users/octocat/subscriptions",
+                            "format": "uri",
+                            "type": "string"
+                          },
+                          "type": {
+                            "example": "User",
+                            "type": "string"
+                          },
+                          "url": {
+                            "example": "https://api.github.com/users/octocat",
+                            "format": "uri",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "avatar_url",
+                          "events_url",
+                          "followers_url",
+                          "following_url",
+                          "gists_url",
+                          "gravatar_id",
+                          "html_url",
+                          "id",
+                          "node_id",
+                          "login",
+                          "organizations_url",
+                          "received_events_url",
+                          "repos_url",
+                          "site_admin",
+                          "starred_url",
+                          "subscriptions_url",
+                          "type",
+                          "url"
+                        ],
+                        "title": "Simple User",
+                        "type": "object"
+                      },
+                      "permissions": {
+                        "description": "A list of additional permissions included in this role.",
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "updated_at": {
+                        "format": "date-time",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "base_role",
+                      "permissions",
+                      "organization",
+                      "created_at",
+                      "updated_at"
+                    ],
+                    "title": "Organization Custom Repository Role",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Resource not found"
+            }
+          },
+          "summary": "Deprecated - Get a custom role",
+          "tags": [
+            "orgs"
+          ],
+          "x-github": {
+            "category": "orgs",
+            "deprecationDate": "2023-03-06",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "removalDate": "2022-09-06",
+            "subcategory": "custom-roles"
+          }
+        },
+        "patch": {
+          "deprecated": true,
+          "description": "**Note**: This operation is deprecated and will be removed after September 6th 2023.\nUse the \"[Update a custom repository role](https://docs.github.com/enterprise-cloud@latest//rest/orgs/custom-roles#update-a-custom-repository-role)\" endpoint instead.\n\nUpdates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.\nGitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.\n\nFor more information about custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#update-a-custom-role"
@@ -14846,6 +15525,7 @@
                     },
                     "description": {
                       "description": "A short description about who this role is for or what permissions it grants.",
+                      "nullable": true,
                       "type": "string"
                     },
                     "name": {
@@ -14853,7 +15533,7 @@
                       "type": "string"
                     },
                     "permissions": {
-                      "description": "A list of additional permissions included in this role. If specified, these permissions will replace any currently set on the role.",
+                      "description": "A list of additional permissions included in this role.",
                       "items": {
                         "type": "string"
                       },
@@ -14873,11 +15553,11 @@
                   "examples": {
                     "default": {
                       "value": {
-                        "base_role": "read",
+                        "base_role": "maintain",
                         "created_at": "2022-07-04T22:19:11Z",
-                        "description": "A role for issue and PR labelers",
+                        "description": "Able to contribute code and maintain the security pipeline",
                         "id": 8030,
-                        "name": "Labeler",
+                        "name": "Security Engineer",
                         "organization": {
                           "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
                           "events_url": "https://api.github.com/users/github/events{/privacy}",
@@ -14898,10 +15578,9 @@
                           "url": "https://api.github.com/users/github"
                         },
                         "permissions": [
-                          "add_label",
-                          "remove_label"
+                          "delete_alerts_code_scanning"
                         ],
-                        "updated_at": "2022-07-04T22:19:11Z"
+                        "updated_at": "2022-07-04T22:20:11Z"
                       }
                     }
                   },
@@ -15068,7 +15747,12 @@
                     },
                     "required": [
                       "id",
-                      "name"
+                      "name",
+                      "base_role",
+                      "permissions",
+                      "organization",
+                      "created_at",
+                      "updated_at"
                     ],
                     "title": "Organization Custom Repository Role",
                     "type": "object"
@@ -15173,14 +15857,16 @@
               "description": "Validation failed, or the endpoint has been spammed."
             }
           },
-          "summary": "Update a custom role",
+          "summary": "Deprecated - Update a custom role",
           "tags": [
             "orgs"
           ],
           "x-github": {
             "category": "orgs",
+            "deprecationDate": "2023-03-06",
             "enabledForGitHubApps": true,
             "githubCloudOnly": true,
+            "removalDate": "2022-09-06",
             "subcategory": "custom-roles"
           }
         }
@@ -15534,13 +16220,95 @@
       },
       "/orgs/{org}/fine_grained_permissions": {
         "get": {
-          "deprecated": null,
-          "description": "**Note**: This operation is in beta and subject to change.\n\nLists the fine-grained permissions that can be used in custom repository roles for an organization. For more information, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"\n\nTo use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organization and must use an access token with `admin:org repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.",
+          "deprecated": true,
+          "description": "**Note**: This operation is deprecated and will be removed after September 6th 2023.\nUse the \"[List fine-grained repository permissions](https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/custom-roles#list-repository-fine-grained-permissions-for-an-organization)\" endpoint instead.\n\nLists the fine-grained permissions that can be used in custom repository roles for an organization. For more information, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"\n\nTo use this endpoint the authenticated user must be an administrator of the organization or of a repository of the organization and must use an access token with the `admin:org` or `repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` or `organization_administration:read` organization permission to use this endpoint.",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#list-repository-fine-grained-permissions-for-an-organization"
           },
           "operationId": "orgs/list-fine-grained-permissions",
+          "parameters": [
+            {
+              "description": "The organization name. The name is not case sensitive.",
+              "in": "path",
+              "name": "org",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": [
+                        {
+                          "description": "Assign or remove a user",
+                          "name": "add_assignee"
+                        },
+                        {
+                          "description": "Remove an assigned user",
+                          "name": "remove_assignee"
+                        },
+                        {
+                          "description": "Add or remove a label",
+                          "name": "add_label"
+                        }
+                      ]
+                    }
+                  },
+                  "schema": {
+                    "items": {
+                      "description": "A fine-grained permission that protects repository resources.",
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "description"
+                      ],
+                      "title": "Repository Fine-Grained Permission",
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Response"
+            }
+          },
+          "summary": "Deprecated - List fine-grained permissions for an organization",
+          "tags": [
+            "orgs"
+          ],
+          "x-github": {
+            "category": "orgs",
+            "deprecationDate": "2023-03-06",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": true,
+            "removalDate": "2022-09-06",
+            "subcategory": "custom-roles"
+          }
+        }
+      },
+      "/orgs/{org}/repository-fine-grained-permissions": {
+        "get": {
+          "deprecated": null,
+          "description": "Lists the fine-grained permissions that can be used in custom repository roles for an organization. For more information, see \"[About custom repository roles](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"\n\nTo use this endpoint the authenticated user must be an administrator of the organization or of a repository of the organization and must use an access token with the `admin:org` or `repo` scope.\nGitHub Apps must have the `organization_custom_roles:read` or `organization_administration:read` organization permission to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs/custom-roles#list-repo-fine-grained-permissions"
+          },
+          "operationId": "orgs/list-repo-fine-grained-permissions",
           "parameters": [
             {
               "description": "The organization name. The name is not case sensitive.",

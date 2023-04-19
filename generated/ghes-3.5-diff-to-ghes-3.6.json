@@ -142,6 +142,10 @@
       "description": "Retrieve secret scanning alerts from a repository."
     },
     {
+      "name": "security-advisories",
+      "description": "Manage security advisories."
+    },
+    {
       "name": "teams",
       "description": "Interact with GitHub Teams."
     },
@@ -1083,7 +1087,7 @@
                 },
                 "examples": {
                   "default-response": {
-                    "$ref": "#/components/examples/organization-full-default-response"
+                    "$ref": "#/components/examples/organization-full"
                   }
                 }
               }
@@ -5052,7 +5056,7 @@
       },
       "post": {
         "summary": "Create a fork",
-        "description": "Create a fork for the authenticated user.\n\n**Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).",
+        "description": "Create a fork for the authenticated user.\n\n**Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).\n\n**Note**: Although this endpoint works with GitHub Apps, the GitHub App must be installed on the destination account with access to all repositories and on the source account with access to the source repository.",
         "tags": [
           "repos"
         ],
@@ -6355,6 +6359,7 @@
                   },
                   "issue": {
                     "type": "integer",
+                    "format": "int64",
                     "example": 1,
                     "description": "An issue in the repository to convert to a pull request. The issue title, body, and comments will become the title, body, and comments on the new pull request. Required unless `title` is specified."
                   }
@@ -7156,7 +7161,7 @@
     "/repositories": {
       "get": {
         "summary": "List public repositories",
-        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.",
+        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of repositories.",
         "tags": [
           "repos"
         ],
@@ -7269,7 +7274,18 @@
             }
           },
           {
-            "$ref": "#/components/parameters/order"
+            "name": "order",
+            "description": "Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "desc",
+                "asc"
+              ],
+              "default": "desc"
+            }
           },
           {
             "$ref": "#/components/parameters/per-page"
@@ -8817,10 +8833,10 @@
             "$ref": "#/components/parameters/page"
           },
           {
-            "$ref": "#/components/parameters/since"
+            "$ref": "#/components/parameters/since-repo-date"
           },
           {
-            "$ref": "#/components/parameters/before"
+            "$ref": "#/components/parameters/before-repo-date"
           }
         ],
         "responses": {
@@ -9188,7 +9204,7 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/sort"
+            "$ref": "#/components/parameters/sort-starred"
           },
           {
             "$ref": "#/components/parameters/direction"
@@ -9334,7 +9350,7 @@
     "/user/teams": {
       "get": {
         "summary": "List teams for the authenticated user",
-        "description": "List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/).",
+        "description": "List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/). When using a fine-grained personal access token, the resource owner of the token [must be a single organization](https://docs.github.com/enterprise-server@3.5/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#fine-grained-personal-access-tokens), and have at least read-only member organization permissions. The response payload only contains the teams from a single organization when using a fine-grained personal access token.",
         "tags": [
           "teams"
         ],
@@ -10003,7 +10019,7 @@
       },
       "pagination-before": {
         "name": "before",
-        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results before this cursor.",
+        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results before this cursor.",
         "in": "query",
         "required": false,
         "schema": {
@@ -10012,7 +10028,7 @@
       },
       "pagination-after": {
         "name": "after",
-        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results after this cursor.",
+        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor.",
         "in": "query",
         "required": false,
         "schema": {
@@ -10409,7 +10425,27 @@
           "type": "integer"
         }
       },
-      "sort": {
+      "since-repo-date": {
+        "name": "since",
+        "description": "Only show repositories updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "before-repo-date": {
+        "name": "before",
+        "description": "Only show repositories updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "sort-starred": {
         "name": "sort",
         "description": "The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to.",
         "in": "query",
@@ -10609,6 +10645,22 @@
           "organization_hooks": {
             "type": "string",
             "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_personal_access_tokens": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing and managing fine-grained personal access token requests to an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_personal_access_token_requests": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing and managing fine-grained personal access tokens that have been approved by an organization.",
             "enum": [
               "read",
               "write"
@@ -11831,7 +11883,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "node_id": {
             "type": "string"
@@ -13104,8 +13157,12 @@
             "format": "uri"
           },
           "exclude": {
+            "description": "Exclude related items from being returned in the response in order to improve performance of the request. The array can include any of: `\"repositories\"`.",
             "type": "array",
-            "items": {}
+            "items": {
+              "description": "Allowed values that can be passed to the exclude parameter. The array can include any of: `\"repositories\"`.",
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -15119,6 +15176,7 @@
         "properties": {
           "id": {
             "type": "integer",
+            "format": "int64",
             "example": 1
           },
           "node_id": {
@@ -15293,7 +15351,7 @@
             "type": "string"
           },
           "user": {
-            "$ref": "#/components/schemas/nullable-simple-user"
+            "$ref": "#/components/schemas/simple-user"
           },
           "body": {
             "type": "string",
@@ -16794,7 +16852,6 @@
         "description": "**Required when the `state` is `resolved`.** The reason for resolving the alert.",
         "nullable": true,
         "enum": [
-          null,
           "false_positive",
           "wont_fix",
           "revoked",
@@ -17033,7 +17090,8 @@
             "format": "uri"
           },
           "id": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "node_id": {
             "type": "string"
@@ -17689,7 +17747,17 @@
                 },
                 "emails": {
                   "type": "array",
-                  "items": {}
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string"
+                      },
+                      "verified": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
                 },
                 "subkeys": {
                   "type": "array",
@@ -18412,7 +18480,8 @@
           "id": {
             "description": "Unique identifier of the issue comment",
             "example": 42,
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "node_id": {
             "type": "string"
@@ -20761,7 +20830,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "node_id": {
             "type": "string"
@@ -22366,62 +22436,6 @@
           "subscription_url": "https://api.github.com/notifications/threads/1/subscription"
         }
       },
-      "organization-full-default-response": {
-        "summary": "Default response",
-        "value": {
-          "login": "github",
-          "id": 1,
-          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
-          "url": "https://api.github.com/orgs/github",
-          "repos_url": "https://api.github.com/orgs/github/repos",
-          "events_url": "https://api.github.com/orgs/github/events",
-          "hooks_url": "https://api.github.com/orgs/github/hooks",
-          "issues_url": "https://api.github.com/orgs/github/issues",
-          "members_url": "https://api.github.com/orgs/github/members{/member}",
-          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
-          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-          "description": "A great organization",
-          "name": "github",
-          "company": "GitHub",
-          "blog": "https://github.com/blog",
-          "location": "San Francisco",
-          "email": "octocat@github.com",
-          "twitter_username": "github",
-          "is_verified": true,
-          "has_organization_projects": true,
-          "has_repository_projects": true,
-          "public_repos": 2,
-          "public_gists": 1,
-          "followers": 20,
-          "following": 0,
-          "html_url": "https://github.com/octocat",
-          "created_at": "2008-01-14T04:33:35Z",
-          "updated_at": "2014-03-03T18:58:10Z",
-          "type": "Organization",
-          "total_private_repos": 100,
-          "owned_private_repos": 100,
-          "private_gists": 81,
-          "disk_usage": 10000,
-          "collaborators": 8,
-          "billing_email": "mona@github.com",
-          "plan": {
-            "name": "Medium",
-            "space": 400,
-            "private_repos": 20,
-            "filled_seats": 4,
-            "seats": 5
-          },
-          "default_repository_permission": "read",
-          "members_can_create_repositories": true,
-          "two_factor_requirement_enabled": true,
-          "members_allowed_repository_creation_type": "all",
-          "members_can_create_public_repositories": false,
-          "members_can_create_private_repositories": false,
-          "members_can_create_internal_repositories": false,
-          "members_can_create_pages": true,
-          "members_can_fork_private_repositories": false
-        }
-      },
       "organization-full": {
         "value": {
           "login": "github",
@@ -22461,7 +22475,9 @@
           "plan": {
             "name": "Medium",
             "space": 400,
-            "private_repos": 20
+            "private_repos": 20,
+            "filled_seats": 4,
+            "seats": 5
           },
           "default_repository_permission": "read",
           "members_can_create_repositories": true,
@@ -23008,6 +23024,7 @@
             "most_recent_instance": {
               "ref": "refs/heads/main",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
               "environment": "{}",
               "state": "open",
               "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -23140,6 +23157,7 @@
             "most_recent_instance": {
               "ref": "refs/heads/main",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
               "environment": "{}",
               "state": "open",
               "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -26379,6 +26397,7 @@
           "most_recent_instance": {
             "ref": "refs/heads/main",
             "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
             "environment": "{}",
             "state": "dismissed",
             "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -26450,6 +26469,7 @@
           "most_recent_instance": {
             "ref": "refs/heads/main",
             "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+            "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
             "environment": "{}",
             "state": "dismissed",
             "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -29028,7 +29048,6 @@
             }
           },
           "author_association": "OWNER",
-          "auto_merge": null,
           "draft": false,
           "merged": false,
           "mergeable": true,
@@ -29619,7 +29638,6 @@
             }
           },
           "author_association": "OWNER",
-          "auto_merge": null,
           "draft": false
         }
       },
@@ -31540,6 +31558,7 @@
               "blog": "https://github.com/blog",
               "location": "San Francisco",
               "email": "octocat@github.com",
+              "is_verified": true,
               "has_organization_projects": true,
               "has_repository_projects": true,
               "public_repos": 2,
@@ -31548,9 +31567,9 @@
               "following": 0,
               "html_url": "https://github.com/octocat",
               "created_at": "2008-01-14T04:33:35Z",
+              "updated_at": "2017-08-17T12:37:15Z",
               "type": "Organization"
-            },
-            "ldap_dn": "uid=asdf,ou=users,dc=github,dc=com"
+            }
           }
         ]
       },

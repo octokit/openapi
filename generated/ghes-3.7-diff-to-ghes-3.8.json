@@ -142,6 +142,10 @@
       "description": "Retrieve secret scanning alerts from a repository."
     },
     {
+      "name": "security-advisories",
+      "description": "Manage security advisories."
+    },
+    {
       "name": "teams",
       "description": "Interact with GitHub Teams."
     },
@@ -564,7 +568,7 @@
     "/applications/{client_id}/token": {
       "post": {
         "summary": "Check a token",
-        "description": "OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`.",
+        "description": "OAuth applications and GitHub applications with OAuth authorizations can use this API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`.",
         "tags": [
           "apps"
         ],
@@ -585,7 +589,7 @@
               "schema": {
                 "properties": {
                   "access_token": {
-                    "description": "The access_token of the OAuth application.",
+                    "description": "The access_token of the OAuth or GitHub application.",
                     "type": "string"
                   }
                 },
@@ -643,7 +647,7 @@
       },
       "patch": {
         "summary": "Reset a token",
-        "description": "OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the \"token\" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.",
+        "description": "OAuth applications and GitHub applications with OAuth authorizations can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the \"token\" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.",
         "tags": [
           "apps"
         ],
@@ -664,7 +668,7 @@
               "schema": {
                 "properties": {
                   "access_token": {
-                    "description": "The access_token of the OAuth application.",
+                    "description": "The access_token of the OAuth or GitHub application.",
                     "type": "string"
                   }
                 },
@@ -1799,7 +1803,7 @@
                 },
                 "examples": {
                   "default-response": {
-                    "$ref": "#/components/examples/organization-full-default-response"
+                    "$ref": "#/components/examples/organization-full"
                   }
                 }
               }
@@ -2810,6 +2814,84 @@
           "enabledForGitHubApps": true,
           "category": "teams",
           "subcategory": null
+        },
+        "x-octokit": {
+          "diff": {
+            "ghes-3.8": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/actions/artifacts": {
+      "get": {
+        "summary": "List artifacts for a repository",
+        "description": "Lists all artifacts for a repository. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/list-artifacts-for-repo",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.7/rest/reference/actions#list-artifacts-for-a-repository"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/per-page"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "total_count",
+                    "artifacts"
+                  ],
+                  "properties": {
+                    "total_count": {
+                      "type": "integer"
+                    },
+                    "artifacts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/artifact"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/artifact-paginated"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Link": {
+                "$ref": "#/components/headers/link"
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "artifacts"
         },
         "x-octokit": {
           "diff": {
@@ -5477,6 +5559,7 @@
                   },
                   "issue": {
                     "type": "integer",
+                    "format": "int64",
                     "example": 1,
                     "description": "An issue in the repository to convert to a pull request. The issue title, body, and comments will become the title, body, and comments on the new pull request. Required unless `title` is specified."
                   }
@@ -5579,7 +5662,7 @@
                   },
                   "target_commitish": {
                     "type": "string",
-                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
+                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch."
                   },
                   "name": {
                     "type": "string",
@@ -5705,7 +5788,7 @@
                   },
                   "target_commitish": {
                     "type": "string",
-                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`)."
+                    "description": "Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch."
                   },
                   "name": {
                     "type": "string",
@@ -6187,7 +6270,7 @@
     "/repositories": {
       "get": {
         "summary": "List public repositories",
-        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.",
+        "description": "Lists all public repositories in the order that they were created.\n\nNote:\n- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.\n- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.7/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of repositories.",
         "tags": [
           "repos"
         ],
@@ -6300,7 +6383,18 @@
             }
           },
           {
-            "$ref": "#/components/parameters/order"
+            "name": "order",
+            "description": "Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "desc",
+                "asc"
+              ],
+              "default": "desc"
+            }
           },
           {
             "$ref": "#/components/parameters/per-page"
@@ -16364,116 +16458,6 @@
         }
       }
     },
-    "merge-group-checks-requested": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to a merge group in a merge queue. For more information, see \"[Managing a merge queue](https://docs.github.com/enterprise-server@3.7/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Merge queues\" repository permission.\n\n**Note**: The pull request merge queue feature is currently in public beta and subject to change.",
-        "description": "Status checks were requested for a merge group. This happens when a merge group is created or added to by the merge queue because a pull request was queued.\n\nWhen you receive this event, you should perform checks on the head SHA and report status back using check runs or commit statuses.",
-        "operationId": "merge-group/checks-requested",
-        "tags": [
-          "merge-queue"
-        ],
-        "externalDocs": {
-          "url": "https://docs.github.com/enterprise-server@3.7/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#merge-group"
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "issues",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Version",
-            "in": "header",
-            "example": "3.1.9",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Host",
-            "in": "header",
-            "example": "ghes.github.com",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-merge-group-checks-requested"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "category": "webhooks",
-          "subcategory": "merge-group",
-          "supported-webhook-types": [
-            "app"
-          ]
-        }
-      }
-    },
     "meta-deleted": {
       "post": {
         "summary": "This event occurs when there is activity relating to a webhook itself.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Meta\" app permission.",
@@ -19653,330 +19637,6 @@
         }
       }
     },
-    "projects-v2-closed": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an organization-level project. For more information, see \"[About Projects](https://docs.github.com/enterprise-server@3.7/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).\" For information about the Projects API, see [the GraphQL documentation](https://docs.github.com/enterprise-server@3.7/graphql/reference/objects#projectv2).\n\nFor activity relating to a item on a project, use the `projects_v2_item` event. For activity relating to Projects (classic), use the `project`, project_card`, and `project_column` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" organization permission.\n\n**Note**: Webhook events for projects are currently in beta and subject to change. To share feedback about projects webhooks with GitHub, see the [Projects webhook feedback discussion](https://github.com/orgs/community/discussions/17405).",
-        "description": "A project in the organization was closed.",
-        "operationId": "projects-v2/closed",
-        "externalDocs": {
-          "url": ""
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "project-v2",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Version",
-            "in": "header",
-            "example": "3.1.9",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Host",
-            "in": "header",
-            "example": "ghes.github.com",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-projects-v2-project-closed"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "webhooks",
-          "subcategory": "projects_v2",
-          "supported-webhook-types": [
-            "organization"
-          ]
-        }
-      }
-    },
-    "projects-v2-created": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an organization-level project. For more information, see \"[About Projects](https://docs.github.com/enterprise-server@3.7/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).\" For information about the Projects API, see [the GraphQL documentation](https://docs.github.com/enterprise-server@3.7/graphql/reference/objects#projectv2).\n\nFor activity relating to a item on a project, use the `projects_v2_item` event. For activity relating to Projects (classic), use the `project`, project_card`, and `project_column` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" organization permission.\n\n**Note**: Webhook events for projects are currently in beta and subject to change. To share feedback about projects webhooks with GitHub, see the [Projects webhook feedback discussion](https://github.com/orgs/community/discussions/17405).",
-        "description": "A project in the organization was created.",
-        "operationId": "projects-v2/created",
-        "externalDocs": {
-          "url": ""
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "project-v2",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Version",
-            "in": "header",
-            "example": "3.1.9",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Host",
-            "in": "header",
-            "example": "ghes.github.com",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-projects-v2-project-created"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "webhooks",
-          "subcategory": "projects_v2",
-          "supported-webhook-types": [
-            "organization"
-          ]
-        }
-      }
-    },
-    "projects-v2-edited": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an organization-level project. For more information, see \"[About Projects](https://docs.github.com/enterprise-server@3.7/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).\" For information about the Projects API, see [the GraphQL documentation](https://docs.github.com/enterprise-server@3.7/graphql/reference/objects#projectv2).\n\nFor activity relating to a item on a project, use the `projects_v2_item` event. For activity relating to Projects (classic), use the `project`, project_card`, and `project_column` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" organization permission.\n\n**Note**: Webhook events for projects are currently in beta and subject to change. To share feedback about projects webhooks with GitHub, see the [Projects webhook feedback discussion](https://github.com/orgs/community/discussions/17405).",
-        "description": "The title, description, or README of a project in the organization was changed.",
-        "operationId": "projects-v2/edited",
-        "externalDocs": {
-          "url": ""
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "project-v2",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Version",
-            "in": "header",
-            "example": "3.1.9",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Host",
-            "in": "header",
-            "example": "ghes.github.com",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-projects-v2-project-edited"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "webhooks",
-          "subcategory": "projects_v2",
-          "supported-webhook-types": [
-            "organization"
-          ]
-        }
-      }
-    },
     "projects-v2-item-archived": {
       "post": {
         "summary": "This event occurs when there is activity relating to an item on an organization-level project. For more information, see \"[About Projects](https://docs.github.com/enterprise-server@3.7/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).\" For information about the Projects API, see [the GraphQL documentation](https://docs.github.com/enterprise-server@3.7/graphql/reference/objects#projectv2item).\n\nFor activity relating to a project (instead of an item on a project), use the `projects_v2` event. For activity relating to Projects (classic), use the `project`, `project_card`, and `project_column` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" organization permission.\n\n**Note**: Webhook events for projects are currently in beta and subject to change. To share feedback about projects webhooks with GitHub, see the [Projects webhook feedback discussion](https://github.com/orgs/community/discussions/17405).",
@@ -20727,114 +20387,6 @@
           "enabledForGitHubApps": true,
           "category": "webhooks",
           "subcategory": "projects_v2_item",
-          "supported-webhook-types": [
-            "organization"
-          ]
-        }
-      }
-    },
-    "projects-v2-reopened": {
-      "post": {
-        "summary": "This event occurs when there is activity relating to an organization-level project. For more information, see \"[About Projects](https://docs.github.com/enterprise-server@3.7/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).\" For information about the Projects API, see [the GraphQL documentation](https://docs.github.com/enterprise-server@3.7/graphql/reference/objects#projectv2).\n\nFor activity relating to a item on a project, use the `projects_v2_item` event. For activity relating to Projects (classic), use the `project`, project_card`, and `project_column` events instead.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Projects\" organization permission.\n\n**Note**: Webhook events for projects are currently in beta and subject to change. To share feedback about projects webhooks with GitHub, see the [Projects webhook feedback discussion](https://github.com/orgs/community/discussions/17405).",
-        "description": "A project in the organization was reopened.",
-        "operationId": "projects-v2/reopened",
-        "externalDocs": {
-          "url": ""
-        },
-        "parameters": [
-          {
-            "name": "User-Agent",
-            "in": "header",
-            "example": "GitHub-Hookshot/123abc",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Id",
-            "in": "header",
-            "example": 12312312,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Event",
-            "in": "header",
-            "example": "project-v2",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Id",
-            "in": "header",
-            "example": 123123,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Github-Hook-Installation-Target-Type",
-            "in": "header",
-            "example": "repository",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Delivery",
-            "in": "header",
-            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Hub-Signature-256",
-            "in": "header",
-            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Version",
-            "in": "header",
-            "example": "3.1.9",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-GitHub-Enterprise-Host",
-            "in": "header",
-            "example": "ghes.github.com",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/webhook-projects-v2-project-reopened"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "webhooks",
-          "subcategory": "projects_v2",
           "supported-webhook-types": [
             "organization"
           ]
@@ -30591,7 +30143,7 @@
       },
       "pagination-before": {
         "name": "before",
-        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results before this cursor.",
+        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.7/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results before this cursor.",
         "in": "query",
         "required": false,
         "schema": {
@@ -30600,7 +30152,7 @@
       },
       "pagination-after": {
         "name": "after",
-        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results after this cursor.",
+        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.7/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor.",
         "in": "query",
         "required": false,
         "schema": {
@@ -30702,7 +30254,7 @@
       },
       "secret-scanning-pagination-before-org-repo": {
         "name": "before",
-        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor. To receive an initial cursor on your first request, include an empty \"before\" query string.",
+        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.7/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events before this cursor. To receive an initial cursor on your first request, include an empty \"before\" query string.",
         "in": "query",
         "required": false,
         "schema": {
@@ -30711,7 +30263,7 @@
       },
       "secret-scanning-pagination-after-org-repo": {
         "name": "after",
-        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.  To receive an initial cursor on your first request, include an empty \"after\" query string.",
+        "description": "A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.7/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events after this cursor.  To receive an initial cursor on your first request, include an empty \"after\" query string.",
         "in": "query",
         "required": false,
         "schema": {
@@ -31389,6 +30941,22 @@
           "organization_hooks": {
             "type": "string",
             "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_personal_access_tokens": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing and managing fine-grained personal access token requests to an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_personal_access_token_requests": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing and managing fine-grained personal access tokens that have been approved by an organization.",
             "enum": [
               "read",
               "write"
@@ -32525,6 +32093,96 @@
           "tool",
           "most_recent_instance",
           "repository"
+        ]
+      },
+      "artifact": {
+        "title": "Artifact",
+        "description": "An artifact",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 5
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDEwOkNoZWNrU3VpdGU1"
+          },
+          "name": {
+            "description": "The name of the artifact.",
+            "type": "string",
+            "example": "AdventureWorks.Framework"
+          },
+          "size_in_bytes": {
+            "description": "The size in bytes of the artifact.",
+            "type": "integer",
+            "example": 12345
+          },
+          "url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/artifacts/5"
+          },
+          "archive_download_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/artifacts/5/zip"
+          },
+          "expired": {
+            "description": "Whether or not the artifact has expired.",
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "workflow_run": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "example": 10,
+                "type": "integer"
+              },
+              "repository_id": {
+                "example": 42,
+                "type": "integer"
+              },
+              "head_repository_id": {
+                "example": 42,
+                "type": "integer"
+              },
+              "head_branch": {
+                "example": "main",
+                "type": "string"
+              },
+              "head_sha": {
+                "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "name",
+          "size_in_bytes",
+          "url",
+          "archive_download_url",
+          "expired",
+          "created_at",
+          "expires_at",
+          "updated_at"
         ]
       },
       "job": {
@@ -34025,7 +33683,7 @@
             "type": "string"
           },
           "user": {
-            "$ref": "#/components/schemas/nullable-simple-user"
+            "$ref": "#/components/schemas/simple-user"
           },
           "body": {
             "type": "string",
@@ -35661,7 +35319,6 @@
         "description": "**Required when the `state` is `resolved`.** The reason for resolving the alert.",
         "nullable": true,
         "enum": [
-          null,
           "false_positive",
           "wont_fix",
           "revoked",
@@ -40615,62 +40272,6 @@
           "subscription_url": "https://api.github.com/notifications/threads/1/subscription"
         }
       },
-      "organization-full-default-response": {
-        "summary": "Default response",
-        "value": {
-          "login": "github",
-          "id": 1,
-          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
-          "url": "https://api.github.com/orgs/github",
-          "repos_url": "https://api.github.com/orgs/github/repos",
-          "events_url": "https://api.github.com/orgs/github/events",
-          "hooks_url": "https://api.github.com/orgs/github/hooks",
-          "issues_url": "https://api.github.com/orgs/github/issues",
-          "members_url": "https://api.github.com/orgs/github/members{/member}",
-          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
-          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-          "description": "A great organization",
-          "name": "github",
-          "company": "GitHub",
-          "blog": "https://github.com/blog",
-          "location": "San Francisco",
-          "email": "octocat@github.com",
-          "twitter_username": "github",
-          "is_verified": true,
-          "has_organization_projects": true,
-          "has_repository_projects": true,
-          "public_repos": 2,
-          "public_gists": 1,
-          "followers": 20,
-          "following": 0,
-          "html_url": "https://github.com/octocat",
-          "created_at": "2008-01-14T04:33:35Z",
-          "updated_at": "2014-03-03T18:58:10Z",
-          "type": "Organization",
-          "total_private_repos": 100,
-          "owned_private_repos": 100,
-          "private_gists": 81,
-          "disk_usage": 10000,
-          "collaborators": 8,
-          "billing_email": "mona@github.com",
-          "plan": {
-            "name": "Medium",
-            "space": 400,
-            "private_repos": 20,
-            "filled_seats": 4,
-            "seats": 5
-          },
-          "default_repository_permission": "read",
-          "members_can_create_repositories": true,
-          "two_factor_requirement_enabled": true,
-          "members_allowed_repository_creation_type": "all",
-          "members_can_create_public_repositories": false,
-          "members_can_create_private_repositories": false,
-          "members_can_create_internal_repositories": false,
-          "members_can_create_pages": true,
-          "members_can_fork_private_repositories": false
-        }
-      },
       "organization-full": {
         "value": {
           "login": "github",
@@ -40710,7 +40311,9 @@
           "plan": {
             "name": "Medium",
             "space": 400,
-            "private_repos": 20
+            "private_repos": 20,
+            "filled_seats": 4,
+            "seats": 5
           },
           "default_repository_permission": "read",
           "members_can_create_repositories": true,
@@ -40724,7 +40327,13 @@
           "members_can_create_private_pages": true,
           "members_can_fork_private_repositories": false,
           "web_commit_signoff_required": false,
-          "updated_at": "2014-03-03T18:58:10Z"
+          "updated_at": "2014-03-03T18:58:10Z",
+          "dependency_graph_enabled_for_new_repositories": false,
+          "dependabot_alerts_enabled_for_new_repositories": false,
+          "dependabot_security_updates_enabled_for_new_repositories": false,
+          "advanced_security_enabled_for_new_repositories": false,
+          "secret_scanning_enabled_for_new_repositories": false,
+          "secret_scanning_push_protection_enabled_for_new_repositories": false
         }
       },
       "minimal-repository-paginated": {
@@ -41081,6 +40690,7 @@
             "most_recent_instance": {
               "ref": "refs/heads/main",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
               "environment": "{}",
               "state": "open",
               "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -41214,6 +40824,7 @@
             "most_recent_instance": {
               "ref": "refs/heads/main",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
+              "category": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
               "environment": "{}",
               "state": "open",
               "commit_sha": "39406e42cb832f683daa691dd652a8dc36ee8930",
@@ -41517,6 +41128,51 @@
             }
           }
         ]
+      },
+      "artifact-paginated": {
+        "value": {
+          "total_count": 2,
+          "artifacts": [
+            {
+              "id": 11,
+              "node_id": "MDg6QXJ0aWZhY3QxMQ==",
+              "name": "Rails",
+              "size_in_bytes": 556,
+              "url": "https://api.github.com/repos/octo-org/octo-docs/actions/artifacts/11",
+              "archive_download_url": "https://api.github.com/repos/octo-org/octo-docs/actions/artifacts/11/zip",
+              "expired": false,
+              "created_at": "2020-01-10T14:59:22Z",
+              "expires_at": "2020-03-21T14:59:22Z",
+              "updated_at": "2020-02-21T14:59:22Z",
+              "workflow_run": {
+                "id": 2332938,
+                "repository_id": 1296269,
+                "head_repository_id": 1296269,
+                "head_branch": "main",
+                "head_sha": "328faa0536e6fef19753d9d91dc96a9931694ce3"
+              }
+            },
+            {
+              "id": 13,
+              "node_id": "MDg6QXJ0aWZhY3QxMw==",
+              "name": "Test output",
+              "size_in_bytes": 453,
+              "url": "https://api.github.com/repos/octo-org/octo-docs/actions/artifacts/13",
+              "archive_download_url": "https://api.github.com/repos/octo-org/octo-docs/actions/artifacts/13/zip",
+              "expired": false,
+              "created_at": "2020-01-10T14:59:22Z",
+              "expires_at": "2020-03-21T14:59:22Z",
+              "updated_at": "2020-02-21T14:59:22Z",
+              "workflow_run": {
+                "id": 2332942,
+                "repository_id": 1296269,
+                "head_repository_id": 1296269,
+                "head_branch": "main",
+                "head_sha": "178f4f6090b3fccad4a65b3e83d076a622d59652"
+              }
+            }
+          ]
+        }
       },
       "job": {
         "value": {
@@ -44670,7 +44326,6 @@
             }
           },
           "author_association": "OWNER",
-          "auto_merge": null,
           "draft": false,
           "merged": false,
           "mergeable": true,
