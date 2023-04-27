@@ -88,7 +88,6 @@ async function run() {
     )} --format json`;
 
     console.log("$ %s", cmd);
-    
     // generate diff files using `anicca`
     // cargo run --bin cli diff /Users/gregor/Projects/octokit/openapi/generated/api.github.com.deref.json /Users/gregor/Projects/octokit/openapi/generated/ghes-3.1.deref.json --format json > diff.json
 
