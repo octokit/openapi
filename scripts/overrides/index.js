@@ -107,6 +107,12 @@ function overrides(file, schema) {
       "patch",
       "./gists-update.deref.json"
     );
+    replaceOperation(
+      schema,
+      "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers",
+      "post",
+      "./pulls-request-reviewers.deref.json"
+    );
     addOperation(
       schema,
       "/repos/{owner}/{repo}/compare/{base}...{head}",
@@ -125,6 +131,12 @@ function overrides(file, schema) {
       "/gists/{gist_id}",
       "patch",
       "./gists-update.json"
+    );
+    replaceOperation(
+      schema,
+      "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers",
+      "post",
+      "./pulls-request-reviewers.json"
     );
   }
 
