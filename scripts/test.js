@@ -1,5 +1,4 @@
 const { readdirSync, readFileSync } = require("fs");
-
 const VERIFY_FOLDERS = ["cache", "changes", "generated"];
 
 console.log("Verifying folders: %j", VERIFY_FOLDERS);
