@@ -10499,7 +10499,7 @@
     "/repos/{owner}/{repo}/events": {
       "get": {
         "summary": "List repository events",
-        "description": "",
+        "description": "**Note**: This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.\n",
         "tags": [
           "activity"
         ],
@@ -13322,7 +13322,7 @@
     "/search/code": {
       "get": {
         "summary": "Search code",
-        "description": "Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:\n\n`q=addClass+in:file+language:js+repo:jquery/jquery`\n\nThis query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.\n\n#### Considerations for code search\n\nDue to the complexity of searching code, there are a few restrictions on how searches are performed:\n\n*   Only the _default branch_ is considered. In most cases, this will be the `master` branch.\n*   Only files smaller than 384 KB are searchable.\n*   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing\nlanguage:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.\n\n**Note:** Starting on April 10, 2023, code search on GitHub.com will have a separate\nrate limit from other search types, of 10 requests per minute, and all code\nsearch requests will require authentication. For more information, see [this blog post](https://github.blog/changelog/2023-03-10-changes-to-the-code-search-api/).",
+        "description": "Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).\n\nWhen searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).\n\nFor example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:\n\n`q=addClass+in:file+language:js+repo:jquery/jquery`\n\nThis query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.\n\n#### Considerations for code search\n\nDue to the complexity of searching code, there are a few restrictions on how searches are performed:\n\n*   Only the _default branch_ is considered. In most cases, this will be the `master` branch.\n*   Only files smaller than 384 KB are searchable.\n*   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing\nlanguage:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.\n\nThis endpoint requires you to authenticate and limits you to 10 requests per minute.",
         "tags": [
           "search"
         ],
@@ -13344,7 +13344,7 @@
           {
             "name": "sort",
             "deprecated": true,
-            "description": "**Note: This field is deprecated, and will be ignored after April 10, 2023 (except on GitHub Enterprise Server).** Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub AE search infrastructure. Default: [best match](https://docs.github.com/github-ae@latest/rest/reference/search#ranking-search-results)",
+            "description": "**This field is deprecated.** Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub AE search infrastructure. Default: [best match](https://docs.github.com/github-ae@latest/rest/reference/search#ranking-search-results)",
             "in": "query",
             "required": false,
             "schema": {
@@ -13356,7 +13356,7 @@
           },
           {
             "name": "order",
-            "description": "**Note: This field is deprecated, and will be ignored after April 10, 2023 (except on GitHub Enterprise Server).** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. ",
+            "description": "**This field is deprecated.** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. ",
             "in": "query",
             "deprecated": true,
             "required": false,
@@ -18187,6 +18187,97 @@
           "supported-webhook-types": [
             "repository",
             "organization",
+            "app"
+          ]
+        }
+      }
+    },
+    "deployment-protection-rule-requested": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to deployment protection rules. For more information, see \"[Using environments for deployment](https://docs.github.com/github-ae@latest/actions/deployment/targeting-different-environments/using-environments-for-deployment#environment-protection-rules).\" For information about the API to manage deployment protection rules, see [the REST API documentation](https://docs.github.com/github-ae@latest/rest/deployments/environments).\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Deployments\" repository permission.",
+        "description": "A deployment protection rule was requested for an environment.",
+        "operationId": "deployment-protection-rule/requested",
+        "externalDocs": {
+          "url": "https://docs.github.com/github-ae@latest/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deployment_protection_rule"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-deployment-protection-rule-requested"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "deployment-protection-rule",
+          "supported-webhook-types": [
             "app"
           ]
         }
