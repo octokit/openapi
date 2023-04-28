@@ -7651,7 +7651,7 @@
         "operationId": "gists/update",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/gists/#update-a-gist"
+          "url": "https://docs.github.com/rest/reference/gists/#update-a-gist"
         },
         "parameters": [
           {
@@ -7663,6 +7663,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
                 "properties": {
                   "description": {
                     "description": "The description of the gist.",
@@ -7679,29 +7680,20 @@
                     },
                     "type": "object",
                     "additionalProperties": {
-                      "type": "object",
-                      "nullable": true,
-                      "properties": {
-                        "content": {
-                          "description": "The new content of the file.",
-                          "type": "string"
-                        },
-                        "filename": {
-                          "description": "The new filename for the file.",
-                          "type": "string",
-                          "nullable": true
-                        }
-                      },
-                      "anyOf": [
+                      "oneOf": [
                         {
-                          "required": [
-                            "content"
-                          ]
-                        },
-                        {
-                          "required": [
-                            "filename"
-                          ]
+                          "type": "object",
+                          "properties": {
+                            "content": {
+                              "description": "The new content of the file.",
+                              "type": "string"
+                            },
+                            "filename": {
+                              "description": "The new filename for the file.",
+                              "type": "string",
+                              "nullable": true
+                            }
+                          }
                         },
                         {
                           "type": "object",
@@ -7711,19 +7703,6 @@
                     }
                   }
                 },
-                "anyOf": [
-                  {
-                    "required": [
-                      "description"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "files"
-                    ]
-                  }
-                ],
-                "type": "object",
                 "nullable": true
               },
               "examples": {
