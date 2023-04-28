@@ -101,6 +101,12 @@ function overrides(file, schema) {
   );
 
   if (isDeferenced(file)) {
+    replaceOperation(
+      schema,
+      "/gists/{gist_id}",
+      "patch",
+      "./gists-update.deref.json"
+    );
     addOperation(
       schema,
       "/repos/{owner}/{repo}/compare/{base}...{head}",
@@ -113,6 +119,12 @@ function overrides(file, schema) {
       "/repos/{owner}/{repo}/compare/{base}...{head}",
       "get",
       "./repos-compare-commits.json"
+    );
+    replaceOperation(
+      schema,
+      "/gists/{gist_id}",
+      "patch",
+      "./gists-update.json"
     );
   }
 

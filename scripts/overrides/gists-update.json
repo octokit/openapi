@@ -1,0 +1,132 @@
+{
+  "summary": "Update a gist",
+  "description": "Allows you to update a gist's description and to update, delete, or rename gist files. Files from the previous version of the gist that aren't explicitly changed during an edit are unchanged.",
+  "tags": ["gists"],
+  "operationId": "gists/update",
+  "externalDocs": {
+    "description": "API method documentation",
+    "url": "https://docs.github.com/rest/reference/gists/#update-a-gist"
+  },
+  "parameters": [
+    {
+      "$ref": "#/components/parameters/gist-id"
+    }
+  ],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "description": "The description of the gist.",
+              "example": "Example Ruby script",
+              "type": "string"
+            },
+            "files": {
+              "description": "The gist files to be updated, renamed, or deleted. Each `key` must match the current filename\n(including extension) of the targeted gist file. For example: `hello.py`.\n\nTo delete a file, set the whole file to null. For example: `hello.py : null`.",
+              "example": {
+                "hello.rb": {
+                  "content": "blah",
+                  "filename": "goodbye.rb"
+                }
+              },
+              "type": "object",
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "content": {
+                        "description": "The new content of the file.",
+                        "type": "string"
+                      },
+                      "filename": {
+                        "description": "The new filename for the file.",
+                        "type": "string",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "maxProperties": 0
+                  }
+                ]
+              }
+            }
+          },
+          "nullable": true
+        },
+        "examples": {
+          "updateGist": {
+            "summary": "Updating a gist",
+            "value": {
+              "description": "An updated gist description",
+              "files": {
+                "README.md": {
+                  "content": "Hello World from GitHub"
+                }
+              }
+            }
+          },
+          "deleteFile": {
+            "summary": "Deleting a gist file",
+            "value": {
+              "files": {
+                "hello.py": null
+              }
+            }
+          },
+          "renameFile": {
+            "summary": "Renaming a gist file",
+            "value": {
+              "files": {
+                "hello.py": {
+                  "filename": "goodbye.py"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/gist-simple"
+          },
+          "examples": {
+            "updateGist": {
+              "$ref": "#/components/examples/gist"
+            },
+            "deleteFile": {
+              "$ref": "#/components/examples/delete-gist-file"
+            },
+            "renameFile": {
+              "$ref": "#/components/examples/rename-gist-file"
+            }
+          }
+        }
+      }
+    },
+    "404": {
+      "$ref": "#/components/responses/not_found"
+    },
+    "422": {
+      "$ref": "#/components/responses/validation_failed"
+    }
+  },
+  "x-github": {
+    "githubCloudOnly": false,
+    "enabledForGitHubApps": false,
+    "category": "gists",
+    "subcategory": null
+  },
+  "x-octokit": {}
+}
