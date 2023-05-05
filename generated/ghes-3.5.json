@@ -7651,7 +7651,7 @@
         "operationId": "gists/update",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/gists/#update-a-gist"
+          "url": "https://docs.github.com/rest/reference/gists/#update-a-gist"
         },
         "parameters": [
           {
@@ -7663,6 +7663,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
                 "properties": {
                   "description": {
                     "description": "The description of the gist.",
@@ -7679,29 +7680,20 @@
                     },
                     "type": "object",
                     "additionalProperties": {
-                      "type": "object",
-                      "nullable": true,
-                      "properties": {
-                        "content": {
-                          "description": "The new content of the file.",
-                          "type": "string"
-                        },
-                        "filename": {
-                          "description": "The new filename for the file.",
-                          "type": "string",
-                          "nullable": true
-                        }
-                      },
-                      "anyOf": [
+                      "oneOf": [
                         {
-                          "required": [
-                            "content"
-                          ]
-                        },
-                        {
-                          "required": [
-                            "filename"
-                          ]
+                          "type": "object",
+                          "properties": {
+                            "content": {
+                              "description": "The new content of the file.",
+                              "type": "string"
+                            },
+                            "filename": {
+                              "description": "The new filename for the file.",
+                              "type": "string",
+                              "nullable": true
+                            }
+                          }
                         },
                         {
                           "type": "object",
@@ -7711,19 +7703,6 @@
                     }
                   }
                 },
-                "anyOf": [
-                  {
-                    "required": [
-                      "description"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "files"
-                    ]
-                  }
-                ],
-                "type": "object",
                 "nullable": true
               },
               "examples": {
@@ -41485,14 +41464,14 @@
       },
       "post": {
         "summary": "Request reviewers for a pull request",
-        "description": "This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
+        "description": "This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See \"[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)\" and \"[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)\" for details.",
         "tags": [
           "pulls"
         ],
         "operationId": "pulls/request-reviewers",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.5/rest/reference/pulls#request-reviewers-for-a-pull-request"
+          "url": "https://docs.github.com/rest/reference/pulls#request-reviewers-for-a-pull-request"
         },
         "parameters": [
           {
@@ -41526,19 +41505,7 @@
                       "type": "string"
                     }
                   }
-                },
-                "anyOf": [
-                  {
-                    "required": [
-                      "reviewers"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "team_reviewers"
-                    ]
-                  }
-                ]
+                }
               },
               "examples": {
                 "default": {
@@ -41587,13 +41554,7 @@
           "category": "pulls",
           "subcategory": "review-requests"
         },
-        "x-octokit": {
-          "diff": {
-            "ghes-3.6": {
-              "type": "changed"
-            }
-          }
-        }
+        "x-octokit": {}
       },
       "delete": {
         "summary": "Remove requested reviewers from a pull request",

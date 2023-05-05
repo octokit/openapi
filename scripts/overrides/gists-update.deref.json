@@ -1,0 +1,1397 @@
+{
+  "summary": "Update a gist",
+  "description": "Allows you to update a gist's description and to update, delete, or rename gist files. Files from the previous version of the gist that aren't explicitly changed during an edit are unchanged.",
+  "tags": ["gists"],
+  "operationId": "gists/update",
+  "externalDocs": {
+    "description": "API method documentation",
+    "url": "https://docs.github.com/rest/reference/gists/#update-a-gist"
+  },
+  "parameters": [
+    {
+      "name": "gist_id",
+      "description": "The unique identifier of the gist.",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "description": "The description of the gist.",
+              "example": "Example Ruby script",
+              "type": "string"
+            },
+            "files": {
+              "description": "The gist files to be updated, renamed, or deleted. Each `key` must match the current filename\n(including extension) of the targeted gist file. For example: `hello.py`.\n\nTo delete a file, set the whole file to null. For example: `hello.py : null`.",
+              "example": {
+                "hello.rb": {
+                  "content": "blah",
+                  "filename": "goodbye.rb"
+                }
+              },
+              "type": "object",
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "properties": {
+                      "content": {
+                        "description": "The new content of the file.",
+                        "type": "string"
+                      },
+                      "filename": {
+                        "description": "The new filename for the file.",
+                        "type": "string",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "maxProperties": 0
+                  }
+                ]
+              }
+            }
+          },
+          "nullable": true
+        },
+        "examples": {
+          "updateGist": {
+            "summary": "Updating a gist",
+            "value": {
+              "description": "An updated gist description",
+              "files": {
+                "README.md": {
+                  "content": "Hello World from GitHub"
+                }
+              }
+            }
+          },
+          "deleteFile": {
+            "summary": "Deleting a gist file",
+            "value": {
+              "files": {
+                "hello.py": null
+              }
+            }
+          },
+          "renameFile": {
+            "summary": "Renaming a gist file",
+            "value": {
+              "files": {
+                "hello.py": {
+                  "filename": "goodbye.py"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "title": "Gist Simple",
+            "description": "Gist Simple",
+            "type": "object",
+            "properties": {
+              "forks": {
+                "deprecated": true,
+                "nullable": true,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "user": {
+                      "title": "Public User",
+                      "description": "Public User",
+                      "type": "object",
+                      "properties": {
+                        "login": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "node_id": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "gravatar_id": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "html_url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "followers_url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "following_url": {
+                          "type": "string"
+                        },
+                        "gists_url": {
+                          "type": "string"
+                        },
+                        "starred_url": {
+                          "type": "string"
+                        },
+                        "subscriptions_url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "organizations_url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "repos_url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "events_url": {
+                          "type": "string"
+                        },
+                        "received_events_url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "site_admin": {
+                          "type": "boolean"
+                        },
+                        "name": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "company": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "blog": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "location": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email",
+                          "nullable": true
+                        },
+                        "hireable": {
+                          "type": "boolean",
+                          "nullable": true
+                        },
+                        "bio": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "twitter_username": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "public_repos": {
+                          "type": "integer"
+                        },
+                        "public_gists": {
+                          "type": "integer"
+                        },
+                        "followers": {
+                          "type": "integer"
+                        },
+                        "following": {
+                          "type": "integer"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "plan": {
+                          "type": "object",
+                          "properties": {
+                            "collaborators": {
+                              "type": "integer"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "space": {
+                              "type": "integer"
+                            },
+                            "private_repos": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "collaborators",
+                            "name",
+                            "space",
+                            "private_repos"
+                          ]
+                        },
+                        "suspended_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "nullable": true
+                        },
+                        "private_gists": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "total_private_repos": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "owned_private_repos": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "disk_usage": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "collaborators": {
+                          "type": "integer",
+                          "example": 3
+                        }
+                      },
+                      "required": [
+                        "avatar_url",
+                        "events_url",
+                        "followers_url",
+                        "following_url",
+                        "gists_url",
+                        "gravatar_id",
+                        "html_url",
+                        "id",
+                        "node_id",
+                        "login",
+                        "organizations_url",
+                        "received_events_url",
+                        "repos_url",
+                        "site_admin",
+                        "starred_url",
+                        "subscriptions_url",
+                        "type",
+                        "url",
+                        "bio",
+                        "blog",
+                        "company",
+                        "email",
+                        "followers",
+                        "following",
+                        "hireable",
+                        "location",
+                        "name",
+                        "public_gists",
+                        "public_repos",
+                        "created_at",
+                        "updated_at"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              },
+              "history": {
+                "deprecated": true,
+                "nullable": true,
+                "type": "array",
+                "items": {
+                  "title": "Gist History",
+                  "description": "Gist History",
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "title": "Simple User",
+                      "description": "A GitHub user.",
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "email": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "login": {
+                          "type": "string",
+                          "example": "octocat"
+                        },
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "node_id": {
+                          "type": "string",
+                          "example": "MDQ6VXNlcjE="
+                        },
+                        "avatar_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://github.com/images/error/octocat_happy.gif"
+                        },
+                        "gravatar_id": {
+                          "type": "string",
+                          "example": "41d064eb2195891e12d0413f63227ea7",
+                          "nullable": true
+                        },
+                        "url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://api.github.com/users/octocat"
+                        },
+                        "html_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://github.com/octocat"
+                        },
+                        "followers_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://api.github.com/users/octocat/followers"
+                        },
+                        "following_url": {
+                          "type": "string",
+                          "example": "https://api.github.com/users/octocat/following{/other_user}"
+                        },
+                        "gists_url": {
+                          "type": "string",
+                          "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+                        },
+                        "starred_url": {
+                          "type": "string",
+                          "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+                        },
+                        "subscriptions_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://api.github.com/users/octocat/subscriptions"
+                        },
+                        "organizations_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://api.github.com/users/octocat/orgs"
+                        },
+                        "repos_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://api.github.com/users/octocat/repos"
+                        },
+                        "events_url": {
+                          "type": "string",
+                          "example": "https://api.github.com/users/octocat/events{/privacy}"
+                        },
+                        "received_events_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://api.github.com/users/octocat/received_events"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "User"
+                        },
+                        "site_admin": {
+                          "type": "boolean"
+                        },
+                        "starred_at": {
+                          "type": "string",
+                          "example": "\"2020-07-09T00:17:55Z\""
+                        }
+                      },
+                      "required": [
+                        "avatar_url",
+                        "events_url",
+                        "followers_url",
+                        "following_url",
+                        "gists_url",
+                        "gravatar_id",
+                        "html_url",
+                        "id",
+                        "node_id",
+                        "login",
+                        "organizations_url",
+                        "received_events_url",
+                        "repos_url",
+                        "site_admin",
+                        "starred_url",
+                        "subscriptions_url",
+                        "type",
+                        "url"
+                      ],
+                      "nullable": true
+                    },
+                    "version": {
+                      "type": "string"
+                    },
+                    "committed_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "change_status": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "additions": {
+                          "type": "integer"
+                        },
+                        "deletions": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              },
+              "fork_of": {
+                "nullable": true,
+                "title": "Gist",
+                "description": "Gist",
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "forks_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "commits_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "node_id": {
+                    "type": "string"
+                  },
+                  "git_pull_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "git_push_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "html_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "files": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "filename": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "language": {
+                          "type": "string"
+                        },
+                        "raw_url": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "public": {
+                    "type": "boolean"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "description": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "comments": {
+                    "type": "integer"
+                  },
+                  "user": {
+                    "title": "Simple User",
+                    "description": "A GitHub user.",
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "email": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "login": {
+                        "type": "string",
+                        "example": "octocat"
+                      },
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "node_id": {
+                        "type": "string",
+                        "example": "MDQ6VXNlcjE="
+                      },
+                      "avatar_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://github.com/images/error/octocat_happy.gif"
+                      },
+                      "gravatar_id": {
+                        "type": "string",
+                        "example": "41d064eb2195891e12d0413f63227ea7",
+                        "nullable": true
+                      },
+                      "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat"
+                      },
+                      "html_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://github.com/octocat"
+                      },
+                      "followers_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/followers"
+                      },
+                      "following_url": {
+                        "type": "string",
+                        "example": "https://api.github.com/users/octocat/following{/other_user}"
+                      },
+                      "gists_url": {
+                        "type": "string",
+                        "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+                      },
+                      "starred_url": {
+                        "type": "string",
+                        "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+                      },
+                      "subscriptions_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/subscriptions"
+                      },
+                      "organizations_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/orgs"
+                      },
+                      "repos_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/repos"
+                      },
+                      "events_url": {
+                        "type": "string",
+                        "example": "https://api.github.com/users/octocat/events{/privacy}"
+                      },
+                      "received_events_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/received_events"
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "User"
+                      },
+                      "site_admin": {
+                        "type": "boolean"
+                      },
+                      "starred_at": {
+                        "type": "string",
+                        "example": "\"2020-07-09T00:17:55Z\""
+                      }
+                    },
+                    "required": [
+                      "avatar_url",
+                      "events_url",
+                      "followers_url",
+                      "following_url",
+                      "gists_url",
+                      "gravatar_id",
+                      "html_url",
+                      "id",
+                      "node_id",
+                      "login",
+                      "organizations_url",
+                      "received_events_url",
+                      "repos_url",
+                      "site_admin",
+                      "starred_url",
+                      "subscriptions_url",
+                      "type",
+                      "url"
+                    ],
+                    "nullable": true
+                  },
+                  "comments_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "owner": {
+                    "title": "Simple User",
+                    "description": "A GitHub user.",
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "email": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "login": {
+                        "type": "string",
+                        "example": "octocat"
+                      },
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "node_id": {
+                        "type": "string",
+                        "example": "MDQ6VXNlcjE="
+                      },
+                      "avatar_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://github.com/images/error/octocat_happy.gif"
+                      },
+                      "gravatar_id": {
+                        "type": "string",
+                        "example": "41d064eb2195891e12d0413f63227ea7",
+                        "nullable": true
+                      },
+                      "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat"
+                      },
+                      "html_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://github.com/octocat"
+                      },
+                      "followers_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/followers"
+                      },
+                      "following_url": {
+                        "type": "string",
+                        "example": "https://api.github.com/users/octocat/following{/other_user}"
+                      },
+                      "gists_url": {
+                        "type": "string",
+                        "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+                      },
+                      "starred_url": {
+                        "type": "string",
+                        "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+                      },
+                      "subscriptions_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/subscriptions"
+                      },
+                      "organizations_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/orgs"
+                      },
+                      "repos_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/repos"
+                      },
+                      "events_url": {
+                        "type": "string",
+                        "example": "https://api.github.com/users/octocat/events{/privacy}"
+                      },
+                      "received_events_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.github.com/users/octocat/received_events"
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "User"
+                      },
+                      "site_admin": {
+                        "type": "boolean"
+                      },
+                      "starred_at": {
+                        "type": "string",
+                        "example": "\"2020-07-09T00:17:55Z\""
+                      }
+                    },
+                    "required": [
+                      "avatar_url",
+                      "events_url",
+                      "followers_url",
+                      "following_url",
+                      "gists_url",
+                      "gravatar_id",
+                      "html_url",
+                      "id",
+                      "node_id",
+                      "login",
+                      "organizations_url",
+                      "received_events_url",
+                      "repos_url",
+                      "site_admin",
+                      "starred_url",
+                      "subscriptions_url",
+                      "type",
+                      "url"
+                    ],
+                    "nullable": true
+                  },
+                  "truncated": {
+                    "type": "boolean"
+                  },
+                  "forks": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "history": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "id",
+                  "node_id",
+                  "url",
+                  "forks_url",
+                  "commits_url",
+                  "git_pull_url",
+                  "git_push_url",
+                  "html_url",
+                  "comments_url",
+                  "public",
+                  "description",
+                  "comments",
+                  "user",
+                  "files",
+                  "created_at",
+                  "updated_at"
+                ]
+              },
+              "url": {
+                "type": "string"
+              },
+              "forks_url": {
+                "type": "string"
+              },
+              "commits_url": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "node_id": {
+                "type": "string"
+              },
+              "git_pull_url": {
+                "type": "string"
+              },
+              "git_push_url": {
+                "type": "string"
+              },
+              "html_url": {
+                "type": "string"
+              },
+              "files": {
+                "type": "object",
+                "additionalProperties": {
+                  "nullable": true,
+                  "type": "object",
+                  "properties": {
+                    "filename": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "language": {
+                      "type": "string"
+                    },
+                    "raw_url": {
+                      "type": "string"
+                    },
+                    "size": {
+                      "type": "integer"
+                    },
+                    "truncated": {
+                      "type": "boolean"
+                    },
+                    "content": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "public": {
+                "type": "boolean"
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "updated_at": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "comments": {
+                "type": "integer"
+              },
+              "user": {
+                "type": "string",
+                "nullable": true
+              },
+              "comments_url": {
+                "type": "string"
+              },
+              "owner": {
+                "title": "Simple User",
+                "description": "A GitHub user.",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "email": {
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "login": {
+                    "type": "string",
+                    "example": "octocat"
+                  },
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "node_id": {
+                    "type": "string",
+                    "example": "MDQ6VXNlcjE="
+                  },
+                  "avatar_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://github.com/images/error/octocat_happy.gif"
+                  },
+                  "gravatar_id": {
+                    "type": "string",
+                    "example": "41d064eb2195891e12d0413f63227ea7",
+                    "nullable": true
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.github.com/users/octocat"
+                  },
+                  "html_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://github.com/octocat"
+                  },
+                  "followers_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.github.com/users/octocat/followers"
+                  },
+                  "following_url": {
+                    "type": "string",
+                    "example": "https://api.github.com/users/octocat/following{/other_user}"
+                  },
+                  "gists_url": {
+                    "type": "string",
+                    "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+                  },
+                  "starred_url": {
+                    "type": "string",
+                    "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+                  },
+                  "subscriptions_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.github.com/users/octocat/subscriptions"
+                  },
+                  "organizations_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.github.com/users/octocat/orgs"
+                  },
+                  "repos_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.github.com/users/octocat/repos"
+                  },
+                  "events_url": {
+                    "type": "string",
+                    "example": "https://api.github.com/users/octocat/events{/privacy}"
+                  },
+                  "received_events_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.github.com/users/octocat/received_events"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "User"
+                  },
+                  "site_admin": {
+                    "type": "boolean"
+                  },
+                  "starred_at": {
+                    "type": "string",
+                    "example": "\"2020-07-09T00:17:55Z\""
+                  }
+                },
+                "required": [
+                  "avatar_url",
+                  "events_url",
+                  "followers_url",
+                  "following_url",
+                  "gists_url",
+                  "gravatar_id",
+                  "html_url",
+                  "id",
+                  "node_id",
+                  "login",
+                  "organizations_url",
+                  "received_events_url",
+                  "repos_url",
+                  "site_admin",
+                  "starred_url",
+                  "subscriptions_url",
+                  "type",
+                  "url"
+                ]
+              },
+              "truncated": {
+                "type": "boolean"
+              }
+            }
+          },
+          "examples": {
+            "updateGist": {
+              "value": {
+                "url": "https://api.github.com/gists/2decf6c462d9b4418f2",
+                "forks_url": "https://api.github.com/gists/2decf6c462d9b4418f2/forks",
+                "commits_url": "https://api.github.com/gists/2decf6c462d9b4418f2/commits",
+                "id": "2decf6c462d9b4418f2",
+                "node_id": "G_kwDOBhHyLdZDliNDQxOGYy",
+                "git_pull_url": "https://gist.github.com/2decf6c462d9b4418f2.git",
+                "git_push_url": "https://gist.github.com/2decf6c462d9b4418f2.git",
+                "html_url": "https://gist.github.com/2decf6c462d9b4418f2",
+                "files": {
+                  "README.md": {
+                    "filename": "README.md",
+                    "type": "text/markdown",
+                    "language": "Markdown",
+                    "raw_url": "https://gist.githubusercontent.com/monalisa/2decf6c462d9b4418f2/raw/ac3e6daf176fafe73609fd000cd188e4472010fb/README.md",
+                    "size": 23,
+                    "truncated": false,
+                    "content": "Hello world from GitHub"
+                  }
+                },
+                "public": true,
+                "created_at": "2022-09-20T12:11:58Z",
+                "updated_at": "2022-09-21T10:28:06Z",
+                "description": "An updated gist description.",
+                "comments": 0,
+                "user": null,
+                "comments_url": "https://api.github.com/gists/2decf6c462d9b4418f2/comments",
+                "owner": {
+                  "login": "monalisa",
+                  "id": 104456405,
+                  "node_id": "U_kgDOBhHyLQ",
+                  "avatar_url": "https://avatars.githubusercontent.com/u/104456405?v=4",
+                  "gravatar_id": "",
+                  "url": "https://api.github.com/users/monalisa",
+                  "html_url": "https://github.com/monalisa",
+                  "followers_url": "https://api.github.com/users/monalisa/followers",
+                  "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
+                  "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
+                  "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
+                  "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
+                  "organizations_url": "https://api.github.com/users/monalisa/orgs",
+                  "repos_url": "https://api.github.com/users/monalisa/repos",
+                  "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
+                  "received_events_url": "https://api.github.com/users/monalisa/received_events",
+                  "type": "User",
+                  "site_admin": true
+                },
+                "forks": [],
+                "history": [
+                  {
+                    "user": {
+                      "login": "monalisa",
+                      "id": 104456405,
+                      "node_id": "U_kgyLQ",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/104456405?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/monalisa",
+                      "html_url": "https://github.com/monalisa",
+                      "followers_url": "https://api.github.com/users/monalisa/followers",
+                      "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
+                      "organizations_url": "https://api.github.com/users/monalisa/orgs",
+                      "repos_url": "https://api.github.com/users/monalisa/repos",
+                      "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/monalisa/received_events",
+                      "type": "User",
+                      "site_admin": true
+                    },
+                    "version": "468aac8caed5f0c3b859b8286968",
+                    "committed_at": "2022-09-21T10:28:06Z",
+                    "change_status": {
+                      "total": 2,
+                      "additions": 1,
+                      "deletions": 1
+                    },
+                    "url": "https://api.github.com/gists/8481a81af6b7a2d418f2/468aac8caed5f0c3b859b8286968"
+                  }
+                ],
+                "truncated": false
+              }
+            },
+            "deleteFile": {
+              "value": {
+                "url": "https://api.github.com/gists/2decf6c462d9b4418f2",
+                "forks_url": "https://api.github.com/gists/2decf6c462d9b4418f2/forks",
+                "commits_url": "https://api.github.com/gists/2decf6c462d9b4418f2/commits",
+                "id": "2decf6c462d9b4418f2",
+                "node_id": "G_kwDOBhHyLdoAIDg0ODFZDliNDQxOGYy",
+                "git_pull_url": "https://gist.github.com/2decf6c462d9b4418f2.git",
+                "git_push_url": "https://gist.github.com/2decf6c462d9b4418f2.git",
+                "html_url": "https://gist.github.com/2decf6c462d9b4418f2",
+                "files": null,
+                "public": true,
+                "created_at": "2022-09-20T12:11:58Z",
+                "updated_at": "2022-09-21T10:28:06Z",
+                "description": "A gist description.",
+                "comments": 0,
+                "user": null,
+                "comments_url": "https://api.github.com/gists/2decf6c462d9b4418f2/comments",
+                "owner": {
+                  "login": "monalisa",
+                  "id": 104456405,
+                  "node_id": "U_kgDOBhHyLQ",
+                  "avatar_url": "https://avatars.githubusercontent.com/u/104456405?v=4",
+                  "gravatar_id": "",
+                  "url": "https://api.github.com/users/monalisa",
+                  "html_url": "https://github.com/monalisa",
+                  "followers_url": "https://api.github.com/users/monalisa/followers",
+                  "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
+                  "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
+                  "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
+                  "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
+                  "organizations_url": "https://api.github.com/users/monalisa/orgs",
+                  "repos_url": "https://api.github.com/users/monalisa/repos",
+                  "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
+                  "received_events_url": "https://api.github.com/users/monalisa/received_events",
+                  "type": "User",
+                  "site_admin": true
+                },
+                "forks": [],
+                "history": [
+                  {
+                    "user": {
+                      "login": "monalisa",
+                      "id": 104456405,
+                      "node_id": "U_kgyLQ",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/104456405?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/monalisa",
+                      "html_url": "https://github.com/monalisa",
+                      "followers_url": "https://api.github.com/users/monalisa/followers",
+                      "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
+                      "organizations_url": "https://api.github.com/users/monalisa/orgs",
+                      "repos_url": "https://api.github.com/users/monalisa/repos",
+                      "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/monalisa/received_events",
+                      "type": "User",
+                      "site_admin": true
+                    },
+                    "version": "9cc352a89178a6d4",
+                    "committed_at": "2022-09-21T10:28:06Z",
+                    "change_status": {
+                      "total": 1,
+                      "additions": 0,
+                      "deletions": 1
+                    },
+                    "url": "https://api.github.com/gists/8481a81af6b7a2d418f2/468aac8caed5f0c3b859b8286968"
+                  }
+                ],
+                "truncated": false
+              }
+            },
+            "renameFile": {
+              "value": {
+                "url": "https://api.github.com/gists/2decf6c462d9b4418f2",
+                "forks_url": "https://api.github.com/gists/2decf6c462d9b4418f2/forks",
+                "commits_url": "https://api.github.com/gists/2decf6c462d9b4418f2/commits",
+                "id": "2decf6c462d9b4418f2",
+                "node_id": "G_kwDOBhHyLdoAIDg0ODFZDliNDQxOGYy",
+                "git_pull_url": "https://gist.github.com/2decf6c462d9b4418f2.git",
+                "git_push_url": "https://gist.github.com/2decf6c462d9b4418f2.git",
+                "html_url": "https://gist.github.com/2decf6c462d9b4418f2",
+                "files": {
+                  "goodbye.py": {
+                    "filename": "goodbye.py",
+                    "type": "application/x-python",
+                    "language": "Python",
+                    "raw_url": "https://gist.githubusercontent.com/monalisa/8481a81af6b7a2decf6c462d9b4418f2/raw/ac3e6daf176fafe73609fd000cd188e4472010fb/goodbye.py",
+                    "size": 4,
+                    "truncated": false,
+                    "content": "# Hello world"
+                  }
+                },
+                "public": true,
+                "created_at": "2022-09-20T12:11:58Z",
+                "updated_at": "2022-09-21T10:28:06Z",
+                "description": "A gist description.",
+                "comments": 0,
+                "user": null,
+                "comments_url": "https://api.github.com/gists/2decf6c462d9b4418f2/comments",
+                "owner": {
+                  "login": "monalisa",
+                  "id": 104456405,
+                  "node_id": "U_kgDOBhHyLQ",
+                  "avatar_url": "https://avatars.githubusercontent.com/u/104456405?v=4",
+                  "gravatar_id": "",
+                  "url": "https://api.github.com/users/monalisa",
+                  "html_url": "https://github.com/monalisa",
+                  "followers_url": "https://api.github.com/users/monalisa/followers",
+                  "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
+                  "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
+                  "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
+                  "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
+                  "organizations_url": "https://api.github.com/users/monalisa/orgs",
+                  "repos_url": "https://api.github.com/users/monalisa/repos",
+                  "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
+                  "received_events_url": "https://api.github.com/users/monalisa/received_events",
+                  "type": "User",
+                  "site_admin": true
+                },
+                "forks": [],
+                "history": [
+                  {
+                    "user": {
+                      "login": "monalisa",
+                      "id": 104456405,
+                      "node_id": "U_kgyLQ",
+                      "avatar_url": "https://avatars.githubusercontent.com/u/104456405?v=4",
+                      "gravatar_id": "",
+                      "url": "https://api.github.com/users/monalisa",
+                      "html_url": "https://github.com/monalisa",
+                      "followers_url": "https://api.github.com/users/monalisa/followers",
+                      "following_url": "https://api.github.com/users/monalisa/following{/other_user}",
+                      "gists_url": "https://api.github.com/users/monalisa/gists{/gist_id}",
+                      "starred_url": "https://api.github.com/users/monalisa/starred{/owner}{/repo}",
+                      "subscriptions_url": "https://api.github.com/users/monalisa/subscriptions",
+                      "organizations_url": "https://api.github.com/users/monalisa/orgs",
+                      "repos_url": "https://api.github.com/users/monalisa/repos",
+                      "events_url": "https://api.github.com/users/monalisa/events{/privacy}",
+                      "received_events_url": "https://api.github.com/users/monalisa/received_events",
+                      "type": "User",
+                      "site_admin": true
+                    },
+                    "version": "468aac8caed5f0c3b859b8286968",
+                    "committed_at": "2022-09-21T10:28:06Z",
+                    "change_status": {
+                      "total": 0,
+                      "additions": 0,
+                      "deletions": 0
+                    },
+                    "url": "https://api.github.com/gists/8481a81af6b7a2d418f2/468aac8caed5f0c3b859b8286968"
+                  }
+                ],
+                "truncated": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "404": {
+      "description": "Resource not found",
+      "content": {
+        "application/json": {
+          "schema": {
+            "title": "Basic Error",
+            "description": "Basic Error",
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "documentation_url": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "422": {
+      "description": "Validation failed, or the endpoint has been spammed.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "title": "Validation Error",
+            "description": "Validation Error",
+            "type": "object",
+            "required": ["message", "documentation_url"],
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "documentation_url": {
+                "type": "string"
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "resource": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "index": {
+                      "type": "integer"
+                    },
+                    "value": {
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-github": {
+    "githubCloudOnly": false,
+    "enabledForGitHubApps": false,
+    "category": "gists",
+    "subcategory": null
+  }
+}
