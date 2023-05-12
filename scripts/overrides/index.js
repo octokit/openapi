@@ -140,49 +140,6 @@ function overrides(file, schema) {
     );
   }
 
-  if (ghesVersion === 3.2 || ghesVersion === 3.3) {
-    rewriteOperationId(
-      schema,
-      "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments",
-      "post",
-      "apps/create-content-attachment-for-repo"
-    );
-
-    if (isDeferenced(file)) {
-      addOperation(
-        schema,
-        "/content_references/{content_reference_id}/attachments",
-        "post",
-        "./apps-create-content-attachment.deref.json"
-      );
-    } else {
-      addOperation(
-        schema,
-        "/content_references/{content_reference_id}/attachments",
-        "post",
-        "./apps-create-content-attachment.json"
-      );
-    }
-  }
-
-  if (ghesVersion === 3.2 || ghesVersion === 3.3) {
-    if (isDeferenced(file)) {
-      addOperation(
-        schema,
-        "/repos/{owner}/{repo}/community/code_of_conduct",
-        "get",
-        "./codes-of-conduct-get-for-repo.deref.json"
-      );
-    } else {
-      addOperation(
-        schema,
-        "/repos/{owner}/{repo}/community/code_of_conduct",
-        "get",
-        "./codes-of-conduct-get-for-repo.json"
-      );
-    }
-  }
-
   // Mark `assignees` parameter - and in fact, the whole request body - as required for the
   // "Remove assignees" API.
   if (isDeferenced(file)) {
