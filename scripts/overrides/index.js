@@ -116,7 +116,7 @@ function overrides(file, schema) {
       "post",
       "./pulls-request-reviewers.deref.json"
     );
-    addOperation(
+    replaceOperation(
       schema,
       "/repos/{owner}/{repo}/check-runs",
       "post",
@@ -150,7 +150,7 @@ function overrides(file, schema) {
       "post",
       "./pulls-request-reviewers.json"
     );
-    addOperation(
+    replaceOperation(
       schema,
       "/repos/{owner}/{repo}/check-runs",
       "post",
