@@ -205,18 +205,9 @@ function toFromFilename(path, latestGhesVersion) {
     return "api.github.com.deref.json";
   }
 
-  if (filename.startsWith("ghes-2.22")) {
-    return "ghes-3.0.deref.json";
-  }
-
   if (filename.startsWith("ghes-3.")) {
     const v3Version = parseInt(filename.substr("ghes-3.".length));
     return `ghes-3.${v3Version + 1}.deref.json`;
-  }
-
-  if (filename.startsWith("ghes-2.")) {
-    const v2Version = parseInt(filename.substr("ghes-2.".length));
-    return `ghes-2.${v2Version + 1}.deref.json`;
   }
 
   throw new Error(`Cannot calculate base version for ${filename}`);
