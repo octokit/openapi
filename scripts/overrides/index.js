@@ -101,6 +101,9 @@ function overrides(file, schema) {
   );
 
   if (isDeferenced(file)) {
+    // The following 3 endpoints have bad usage of `anyOf` in the request body schema.
+    // See https://github.com/octokit/types.ts/issues/534
+    // See https://github.com/drwpow/openapi-typescript/issues/1020
     replaceOperation(
       schema,
       "/gists/{gist_id}",
@@ -112,6 +115,12 @@ function overrides(file, schema) {
       "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers",
       "post",
       "./pulls-request-reviewers.deref.json"
+    );
+    replaceOperation(
+      schema,
+      "/repos/{owner}/{repo}/check-runs",
+      "post",
+      "./checks-create.deref.json"
     );
     addOperation(
       schema,
@@ -126,6 +135,9 @@ function overrides(file, schema) {
       "get",
       "./repos-compare-commits.json"
     );
+    // The following 3 endpoints have bad usage of `anyOf` in the request body schema.
+    // See https://github.com/octokit/types.ts/issues/534
+    // See https://github.com/drwpow/openapi-typescript/issues/1020
     replaceOperation(
       schema,
       "/gists/{gist_id}",
@@ -137,6 +149,12 @@ function overrides(file, schema) {
       "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers",
       "post",
       "./pulls-request-reviewers.json"
+    );
+    replaceOperation(
+      schema,
+      "/repos/{owner}/{repo}/check-runs",
+      "post",
+      "./checks-create.json"
     );
   }
 
