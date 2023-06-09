@@ -6916,7 +6916,7 @@
     "/orgs/{org}": {
       "patch": {
         "summary": "Update an organization",
-        "description": "**Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).\n\nEnables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.",
+        "description": "**Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).\n\nEnables an authenticated organization owner with the `admin:org` scope or the `repo` scope to update the organization's profile and member privileges.",
         "tags": [
           "orgs"
         ],
@@ -12299,7 +12299,7 @@
     "/repos/{owner}/{repo}/issues/events": {
       "get": {
         "summary": "List issue events for a repository",
-        "description": "",
+        "description": "Lists events for a repository.",
         "tags": [
           "issues"
         ],
@@ -12368,7 +12368,7 @@
     "/repos/{owner}/{repo}/issues/events/{event_id}": {
       "get": {
         "summary": "Get an issue event",
-        "description": "",
+        "description": "Gets a single event by the event id.",
         "tags": [
           "issues"
         ],
@@ -13816,7 +13816,7 @@
     "/repos/{owner}/{repo}/teams": {
       "get": {
         "summary": "List repository teams",
-        "description": "",
+        "description": "Lists the teams that have access to the specified repository and that are also visible to the authenticated user.\n\nFor a public repository, a team is listed only if that team added the public repository explicitly.\n\nPersonal access tokens require the following scopes:\n* `public_repo` to call this endpoint on a public repository\n* `repo` to call this endpoint on a private repository (this scope also includes public repositories)\n\nThis endpoint is not compatible with fine-grained personal access tokens.",
         "tags": [
           "repos"
         ],
@@ -13862,6 +13862,9 @@
                 "$ref": "#/components/headers/link"
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
           }
         },
         "x-github": {
@@ -40358,7 +40361,7 @@
       },
       "repo": {
         "name": "repo",
-        "description": "The name of the repository. The name is not case sensitive.",
+        "description": "The name of the repository without the `.git` extension. The name is not case sensitive.",
         "in": "path",
         "required": true,
         "schema": {
@@ -42444,6 +42447,47 @@
             "example": [
               "192.0.2.1"
             ]
+          },
+          "domains": {
+            "type": "object",
+            "properties": {
+              "website": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": [
+                    "example.com"
+                  ]
+                }
+              },
+              "codespaces": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": [
+                    "example.com"
+                  ]
+                }
+              },
+              "copilot": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": [
+                    "example.com"
+                  ]
+                }
+              },
+              "packages": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": [
+                    "example.com"
+                  ]
+                }
+              }
+            }
           },
           "installed_version": {
             "type": "string",
@@ -55249,6 +55293,20 @@
           "dependabot": [
             "192.0.2.1"
           ],
+          "domains": {
+            "website": [
+              "*.example.com"
+            ],
+            "codespaces": [
+              "*.example.com"
+            ],
+            "copilot": [
+              "*.example.com"
+            ],
+            "packages": [
+              "*.example.com"
+            ]
+          },
           "installed_version": "3.9.0"
         }
       },

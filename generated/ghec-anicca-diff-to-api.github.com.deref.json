@@ -67,6 +67,9 @@
                   "examples": {
                     "default": {
                       "value": {
+                        "actions_stats": {
+                          "$ref": "server-statistics-actions.yaml"
+                        },
                         "collection_date": "2021-12-14T23:59:59Z",
                         "dormant_users": {
                           "dormancy_threshold": "90 days",
@@ -128,7 +131,7 @@
                             "total_users": 2000
                           }
                         },
-                        "ghes_version": "3.5.0",
+                        "ghes_version": "3.9.0",
                         "github_connect": {
                           "features_enabled": [
                             "license_usage_sync",
@@ -137,7 +140,10 @@
                           ]
                         },
                         "host_name": "github.example.com",
-                        "schema_version": "20220111",
+                        "packages_stats": {
+                          "$ref": "server-statistics-packages.yaml"
+                        },
+                        "schema_version": "20230306",
                         "server_id": "ea6088f3-f095-4bf2-8d7f-c573819e8768"
                       }
                     }
@@ -146,6 +152,20 @@
                     "description": "Response of S4 Proxy endpoint that provides GHES statistics",
                     "items": {
                       "properties": {
+                        "actions_stats": {
+                          "description": "Actions metrics that are included in the Server Statistics payload/export from GHES",
+                          "properties": {
+                            "number_of_repos_using_actions": {
+                              "description": "The total number of repositories in a GHES installation that have Actions enabled",
+                              "type": "integer"
+                            },
+                            "percentage_of_repos_using_actions": {
+                              "description": "The percentage of repositories in a GHES installation that have Actions enabled",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
                         "collection_date": {
                           "type": "string"
                         },
@@ -333,6 +353,90 @@
                         },
                         "host_name": {
                           "type": "string"
+                        },
+                        "packages_stats": {
+                          "description": "Packages metrics that are included in the Server Statistics payload/export from GHES",
+                          "properties": {
+                            "ecosystems": {
+                              "description": "The details of the package ecosystems that are enabled in a GHES installation",
+                              "items": {
+                                "properties": {
+                                  "daily_create_count": {
+                                    "description": "The total number of packages in an ecosystem that have been created in the 24 hours prior to `collection_date` for a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "daily_delete_count": {
+                                    "description": "The total number of packages in an ecosystem that have been deleted in the 24 hours prior to `collection_date` for a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "daily_download_count": {
+                                    "description": "The total number of packages in an ecosystem that have been downloaded in the 24 hours prior to `collection_date` for a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "daily_update_count": {
+                                    "description": "The total number of packages in an ecosystem that have been updated in the 24 hours prior to `collection_date` for a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "enabled": {
+                                    "description": "Shows if a package system is enabled, disabled, or read-only in a GHES installation",
+                                    "enum": [
+                                      "TRUE",
+                                      "FALSE",
+                                      "READONLY"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "internal_packages_count": {
+                                    "description": "The total number of internal packages in a package ecosystem in a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "name": {
+                                    "description": "The name of the package ecosystem",
+                                    "enum": [
+                                      "npm",
+                                      "maven",
+                                      "docker",
+                                      "nuget",
+                                      "rubygems",
+                                      "containers"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "organization_packages_count": {
+                                    "description": "The total number of organization packages in a package ecosystem in a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "private_packages_count": {
+                                    "description": "The total number of private packages in a package ecosystem in a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "public_packages_count": {
+                                    "description": "The total number of public packages in a package ecosystem in a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "published_packages_count": {
+                                    "description": "The total number of published packages in a package ecosystem in a GHES installation",
+                                    "type": "integer"
+                                  },
+                                  "user_packages_count": {
+                                    "description": "The total number of user packages in a package ecosystem in a GHES installation",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "registry_enabled": {
+                              "description": "Whether GitHub Packages is enabled globally in a GHES installation",
+                              "type": "boolean"
+                            },
+                            "registry_v2_enabled": {
+                              "description": "Whether a beta registry is enabled in a GHES installation",
+                              "type": "boolean"
+                            }
+                          },
+                          "type": "object"
                         },
                         "schema_version": {
                           "type": "string"
@@ -3155,6 +3259,279 @@
             "category": "actions",
             "enabledForGitHubApps": false,
             "githubCloudOnly": true,
+            "subcategory": "self-hosted-runners"
+          }
+        }
+      },
+      "/enterprises/{enterprise}/actions/runners/generate-jitconfig": {
+        "post": {
+          "deprecated": null,
+          "description": "Generates a configuration that can be passed to the runner application at startup.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-cloud@latest//rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-enterprise"
+          },
+          "operationId": "actions/generate-runner-jitconfig-for-enterprise",
+          "parameters": [
+            {
+              "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+              "in": "path",
+              "name": "enterprise",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "style": "simple"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "labels": [
+                        "self-hosted",
+                        "X64",
+                        "macOS",
+                        "no-gpu"
+                      ],
+                      "name": "New runner",
+                      "runner_group_id": 1,
+                      "work_folder": "_work"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "description": "The names of the custom labels to add to the runner. **Minimum items**: 1. **Maximum items**: 100.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "name": {
+                      "description": "The name of the new runner.",
+                      "type": "string"
+                    },
+                    "runner_group_id": {
+                      "description": "The ID of the runner group to register the runner to.",
+                      "type": "integer"
+                    },
+                    "work_folder": {
+                      "default": "_work",
+                      "description": "The working directory to be used for job execution, relative to the runner install directory.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "runner_group_id",
+                    "labels"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "encoded_jit_config": "abc123",
+                        "runner": {
+                          "busy": false,
+                          "id": 23,
+                          "labels": [
+                            {
+                              "id": 5,
+                              "name": "self-hosted",
+                              "type": "read-only"
+                            },
+                            {
+                              "id": 7,
+                              "name": "X64",
+                              "type": "read-only"
+                            },
+                            {
+                              "id": 20,
+                              "name": "macOS",
+                              "type": "read-only"
+                            },
+                            {
+                              "id": 21,
+                              "name": "no-gpu",
+                              "type": "custom"
+                            }
+                          ],
+                          "name": "New runner",
+                          "os": "unknown",
+                          "status": "offline"
+                        }
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "encoded_jit_config": {
+                        "description": "The base64 encoded runner configuration.",
+                        "type": "string"
+                      },
+                      "runner": {
+                        "description": "A self hosted runner",
+                        "properties": {
+                          "busy": {
+                            "type": "boolean"
+                          },
+                          "id": {
+                            "description": "The id of the runner.",
+                            "example": 5,
+                            "type": "integer"
+                          },
+                          "labels": {
+                            "items": {
+                              "description": "A label for a self hosted runner",
+                              "properties": {
+                                "id": {
+                                  "description": "Unique identifier of the label.",
+                                  "type": "integer"
+                                },
+                                "name": {
+                                  "description": "Name of the label.",
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "description": "The type of label. Read-only labels are applied automatically when the runner is configured.",
+                                  "enum": [
+                                    "read-only",
+                                    "custom"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "name"
+                              ],
+                              "title": "Self hosted runner label",
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "name": {
+                            "description": "The name of the runner.",
+                            "example": "iMac",
+                            "type": "string"
+                          },
+                          "os": {
+                            "description": "The Operating System of the runner.",
+                            "example": "macos",
+                            "type": "string"
+                          },
+                          "runner_group_id": {
+                            "description": "The id of the runner group.",
+                            "example": 1,
+                            "type": "integer"
+                          },
+                          "status": {
+                            "description": "The status of the runner.",
+                            "example": "online",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "os",
+                          "status",
+                          "busy",
+                          "labels"
+                        ],
+                        "title": "Self hosted runners",
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "runner",
+                      "encoded_jit_config"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Basic Error",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "title": "Basic Error",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Resource not found"
+            },
+            "422": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "description": "Validation Error Simple",
+                    "properties": {
+                      "documentation_url": {
+                        "type": "string"
+                      },
+                      "errors": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "message",
+                      "documentation_url"
+                    ],
+                    "title": "Validation Error Simple",
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Validation failed, or the endpoint has been spammed."
+            }
+          },
+          "summary": "Create configuration for a just-in-time runner for an Enterprise",
+          "tags": [
+            "actions"
+          ],
+          "x-github": {
+            "category": "actions",
+            "enabledForGitHubApps": true,
+            "githubCloudOnly": false,
             "subcategory": "self-hosted-runners"
           }
         }

@@ -1850,6 +1850,103 @@
         }
       }
     },
+    "/enterprises/{enterprise}/actions/runners/generate-jitconfig": {
+      "post": {
+        "summary": "Create configuration for a just-in-time runner for an Enterprise",
+        "description": "Generates a configuration that can be passed to the runner application at startup.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/generate-runner-jitconfig-for-enterprise",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-enterprise"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "runner_group_id",
+                  "labels"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the new runner."
+                  },
+                  "runner_group_id": {
+                    "type": "integer",
+                    "description": "The ID of the runner group to register the runner to."
+                  },
+                  "labels": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The names of the custom labels to add to the runner. **Minimum items**: 1. **Maximum items**: 100."
+                  },
+                  "work_folder": {
+                    "type": "string",
+                    "description": "The working directory to be used for job execution, relative to the runner install directory.",
+                    "default": "_work"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "New runner",
+                    "runner_group_id": 1,
+                    "labels": [
+                      "self-hosted",
+                      "X64",
+                      "macOS",
+                      "no-gpu"
+                    ],
+                    "work_folder": "_work"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/actions_runner_jitconfig"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed_simple"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
     "/enterprises/{enterprise}/actions/runners/registration-token": {
       "post": {
         "summary": "Create a registration token for an enterprise",
@@ -16232,7 +16329,7 @@
     },
     "merge-group-checks-requested": {
       "post": {
-        "summary": "This event occurs when there is activity relating to a merge group in a merge queue. For more information, see \"[Managing a merge queue](https://docs.github.com/enterprise-cloud@latest//repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Merge queues\" repository permission.\n\n**Note**: The pull request merge queue feature is currently in public beta and subject to change.",
+        "summary": "This event occurs when there is activity relating to a merge group in a merge queue. For more information, see \"[Managing a merge queue](https://docs.github.com/enterprise-cloud@latest//repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Merge queues\" repository permission.",
         "description": "Status checks were requested for a merge group. This happens when a merge group is created or added to by the merge queue because a pull request was queued.\n\nWhen you receive this event, you should perform checks on the head SHA and report status back using check runs or commit statuses.",
         "operationId": "merge-group/checks-requested",
         "tags": [
@@ -29445,7 +29542,7 @@
       },
       "repo": {
         "name": "repo",
-        "description": "The name of the repository. The name is not case sensitive.",
+        "description": "The name of the repository without the `.git` extension. The name is not case sensitive.",
         "in": "path",
         "required": true,
         "schema": {
@@ -29681,6 +29778,12 @@
                   "type": "string"
                 }
               }
+            },
+            "actions_stats": {
+              "$ref": "#/components/schemas/server-statistics-actions"
+            },
+            "packages_stats": {
+              "$ref": "#/components/schemas/server-statistics-packages"
             }
           }
         }
@@ -33447,6 +33550,104 @@
           }
         }
       },
+      "server-statistics-actions": {
+        "type": "object",
+        "description": "Actions metrics that are included in the Server Statistics payload/export from GHES",
+        "properties": {
+          "number_of_repos_using_actions": {
+            "description": "The total number of repositories in a GHES installation that have Actions enabled",
+            "type": "integer"
+          },
+          "percentage_of_repos_using_actions": {
+            "description": "The percentage of repositories in a GHES installation that have Actions enabled",
+            "type": "string"
+          }
+        }
+      },
+      "server-statistics-packages": {
+        "type": "object",
+        "description": "Packages metrics that are included in the Server Statistics payload/export from GHES",
+        "properties": {
+          "registry_enabled": {
+            "description": "Whether GitHub Packages is enabled globally in a GHES installation",
+            "type": "boolean"
+          },
+          "registry_v2_enabled": {
+            "description": "Whether a beta registry is enabled in a GHES installation",
+            "type": "boolean"
+          },
+          "ecosystems": {
+            "description": "The details of the package ecosystems that are enabled in a GHES installation",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "The name of the package ecosystem",
+                  "type": "string",
+                  "enum": [
+                    "npm",
+                    "maven",
+                    "docker",
+                    "nuget",
+                    "rubygems",
+                    "containers"
+                  ]
+                },
+                "enabled": {
+                  "description": "Shows if a package system is enabled, disabled, or read-only in a GHES installation",
+                  "type": "string",
+                  "enum": [
+                    "TRUE",
+                    "FALSE",
+                    "READONLY"
+                  ]
+                },
+                "published_packages_count": {
+                  "description": "The total number of published packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "private_packages_count": {
+                  "description": "The total number of private packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "public_packages_count": {
+                  "description": "The total number of public packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "internal_packages_count": {
+                  "description": "The total number of internal packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "user_packages_count": {
+                  "description": "The total number of user packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "organization_packages_count": {
+                  "description": "The total number of organization packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "daily_download_count": {
+                  "description": "The total number of packages in an ecosystem that have been downloaded in the 24 hours prior to `collection_date` for a GHES installation",
+                  "type": "integer"
+                },
+                "daily_update_count": {
+                  "description": "The total number of packages in an ecosystem that have been updated in the 24 hours prior to `collection_date` for a GHES installation",
+                  "type": "integer"
+                },
+                "daily_delete_count": {
+                  "description": "The total number of packages in an ecosystem that have been deleted in the 24 hours prior to `collection_date` for a GHES installation",
+                  "type": "integer"
+                },
+                "daily_create_count": {
+                  "description": "The total number of packages in an ecosystem that have been created in the 24 hours prior to `collection_date` for a GHES installation",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
       "selected-actions-url": {
         "type": "string",
         "description": "The API URL to use to get or set the actions and reusable workflows that are allowed to run, when `allowed_actions` is set to `selected`."
@@ -35574,8 +35775,8 @@
         "value": {
           "server_id": "ea6088f3-f095-4bf2-8d7f-c573819e8768",
           "collection_date": "2021-12-14T23:59:59Z",
-          "schema_version": "20220111",
-          "ghes_version": "3.5.0",
+          "schema_version": "20230306",
+          "ghes_version": "3.9.0",
           "host_name": "github.example.com",
           "github_connect": {
             "features_enabled": [
@@ -35643,6 +35844,12 @@
           "dormant_users": {
             "total_dormant_users": 5,
             "dormancy_threshold": "90 days"
+          },
+          "actions_stats": {
+            "$ref": "server-statistics-actions.yaml"
+          },
+          "packages_stats": {
+            "$ref": "server-statistics-packages.yaml"
           }
         }
       },
@@ -37958,6 +38165,40 @@
           ]
         }
       },
+      "runner-jitconfig": {
+        "value": {
+          "runner": {
+            "id": 23,
+            "name": "New runner",
+            "os": "unknown",
+            "status": "offline",
+            "busy": false,
+            "labels": [
+              {
+                "id": 5,
+                "name": "self-hosted",
+                "type": "read-only"
+              },
+              {
+                "id": 7,
+                "name": "X64",
+                "type": "read-only"
+              },
+              {
+                "id": 20,
+                "name": "macOS",
+                "type": "read-only"
+              },
+              {
+                "id": 21,
+                "name": "no-gpu",
+                "type": "custom"
+              }
+            ]
+          },
+          "encoded_jit_config": "abc123"
+        }
+      },
       "runner-labels": {
         "value": {
           "total_count": 4,
@@ -38017,6 +38258,54 @@
       }
     },
     "responses": {
+      "actions_runner_jitconfig": {
+        "description": "Response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "runner",
+                "encoded_jit_config"
+              ],
+              "properties": {
+                "runner": {
+                  "$ref": "#/components/schemas/runner"
+                },
+                "encoded_jit_config": {
+                  "type": "string",
+                  "description": "The base64 encoded runner configuration."
+                }
+              }
+            },
+            "examples": {
+              "default": {
+                "$ref": "#/components/examples/runner-jitconfig"
+              }
+            }
+          }
+        }
+      },
+      "not_found": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "validation_failed_simple": {
+        "description": "Validation failed, or the endpoint has been spammed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/validation-error-simple"
+            }
+          }
+        }
+      },
       "actions_runner_labels": {
         "description": "Response",
         "content": {
@@ -38043,26 +38332,6 @@
               "default": {
                 "$ref": "#/components/examples/runner-labels"
               }
-            }
-          }
-        }
-      },
-      "not_found": {
-        "description": "Resource not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/basic-error"
-            }
-          }
-        }
-      },
-      "validation_failed_simple": {
-        "description": "Validation failed, or the endpoint has been spammed.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/validation-error-simple"
             }
           }
         }
