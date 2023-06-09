@@ -1850,6 +1850,103 @@
         }
       }
     },
+    "/enterprises/{enterprise}/actions/runners/generate-jitconfig": {
+      "post": {
+        "summary": "Create configuration for a just-in-time runner for an Enterprise",
+        "description": "Generates a configuration that can be passed to the runner application at startup.\n\nYou must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/generate-runner-jitconfig-for-enterprise",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest//rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-enterprise"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/enterprise"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "runner_group_id",
+                  "labels"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the new runner."
+                  },
+                  "runner_group_id": {
+                    "type": "integer",
+                    "description": "The ID of the runner group to register the runner to."
+                  },
+                  "labels": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The names of the custom labels to add to the runner. **Minimum items**: 1. **Maximum items**: 100."
+                  },
+                  "work_folder": {
+                    "type": "string",
+                    "description": "The working directory to be used for job execution, relative to the runner install directory.",
+                    "default": "_work"
+                  }
+                }
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "name": "New runner",
+                    "runner_group_id": 1,
+                    "labels": [
+                      "self-hosted",
+                      "X64",
+                      "macOS",
+                      "no-gpu"
+                    ],
+                    "work_folder": "_work"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/actions_runner_jitconfig"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed_simple"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "self-hosted-runners"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
     "/enterprises/{enterprise}/actions/runners/registration-token": {
       "post": {
         "summary": "Create a registration token for an enterprise",
@@ -4150,114 +4247,6 @@
         }
       }
     },
-    "/orgs/{org}/actions/secrets/{secret_name}": {
-      "put": {
-        "summary": "Create or update an organization secret",
-        "description": "Creates or updates an organization secret with an encrypted value. Encrypt your secret using\n[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access\ntoken with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to\nuse this endpoint.\n\n#### Example encrypting a secret using Node.js\n\nEncrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.\n\n```\nconst sodium = require('libsodium-wrappers')\nconst secret = 'plain-text-secret' // replace with the secret you want to encrypt\nconst key = 'base64-encoded-public-key' // replace with the Base64 encoded public key\n\n//Check if libsodium is ready and then proceed.\nsodium.ready.then(() => {\n  // Convert Secret & Base64 key to Uint8Array.\n  let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)\n  let binsec = sodium.from_string(secret)\n\n  //Encrypt the secret using LibSodium\n  let encBytes = sodium.crypto_box_seal(binsec, binkey)\n\n  // Convert encrypted Uint8Array to Base64\n  let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)\n\n  console.log(output)\n});\n```\n\n#### Example encrypting a secret using Python\n\nEncrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.\n\n```\nfrom base64 import b64encode\nfrom nacl import encoding, public\n\ndef encrypt(public_key: str, secret_value: str) -> str:\n  \"\"\"Encrypt a Unicode string using the public key.\"\"\"\n  public_key = public.PublicKey(public_key.encode(\"utf-8\"), encoding.Base64Encoder())\n  sealed_box = public.SealedBox(public_key)\n  encrypted = sealed_box.encrypt(secret_value.encode(\"utf-8\"))\n  return b64encode(encrypted).decode(\"utf-8\")\n```\n\n#### Example encrypting a secret using C#\n\nEncrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.\n\n```\nvar secretValue = System.Text.Encoding.UTF8.GetBytes(\"mySecret\");\nvar publicKey = Convert.FromBase64String(\"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=\");\n\nvar sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);\n\nConsole.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));\n```\n\n#### Example encrypting a secret using Ruby\n\nEncrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.\n\n```ruby\nrequire \"rbnacl\"\nrequire \"base64\"\n\nkey = Base64.decode64(\"+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=\")\npublic_key = RbNaCl::PublicKey.new(key)\n\nbox = RbNaCl::Boxes::Sealed.from_public_key(public_key)\nencrypted_secret = box.encrypt(\"my_secret\")\n\n# Print the base64 encoded secret\nputs Base64.strict_encode64(encrypted_secret)\n```",
-        "tags": [
-          "actions"
-        ],
-        "operationId": "actions/create-or-update-org-secret",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#create-or-update-an-organization-secret"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/org"
-          },
-          {
-            "$ref": "#/components/parameters/secret-name"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "encrypted_value": {
-                    "type": "string",
-                    "description": "Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#get-an-organization-public-key) endpoint.",
-                    "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$"
-                  },
-                  "key_id": {
-                    "type": "string",
-                    "description": "ID of the key you used to encrypt the secret."
-                  },
-                  "visibility": {
-                    "type": "string",
-                    "description": "Which type of organization repositories have access to the organization secret. `selected` means only the repositories specified by `selected_repository_ids` can access the secret.",
-                    "enum": [
-                      "all",
-                      "private",
-                      "selected"
-                    ]
-                  },
-                  "selected_repository_ids": {
-                    "type": "array",
-                    "description": "An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints.",
-                    "items": {
-                      "type": "integer"
-                    }
-                  }
-                },
-                "required": [
-                  "visibility"
-                ]
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "encrypted_value": "c2VjcmV0",
-                    "key_id": "012345678912345678",
-                    "visibility": "selected",
-                    "selected_repository_ids": [
-                      1296269,
-                      1296280
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Response when creating a secret",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/empty-object"
-                },
-                "examples": {
-                  "default": {
-                    "value": null
-                  }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "Response when updating a secret"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "actions",
-          "subcategory": "secrets"
-        },
-        "x-octokit": {
-          "diff": {
-            "api.github.com": {
-              "type": "changed"
-            }
-          }
-        }
-      }
-    },
     "/orgs/{org}/announcement": {
       "get": {
         "summary": "Get announcement banner for organization",
@@ -5158,114 +5147,6 @@
           "diff": {
             "api.github.com": {
               "type": "added"
-            }
-          }
-        }
-      }
-    },
-    "/orgs/{org}/dependabot/secrets/{secret_name}": {
-      "put": {
-        "summary": "Create or update an organization secret",
-        "description": "Creates or updates an organization secret with an encrypted value. Encrypt your secret using\n[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access\ntoken with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization\npermission to use this endpoint.\n\n#### Example encrypting a secret using Node.js\n\nEncrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.\n\n```\nconst sodium = require('libsodium-wrappers')\nconst secret = 'plain-text-secret' // replace with the secret you want to encrypt\nconst key = 'base64-encoded-public-key' // replace with the Base64 encoded public key\n\n//Check if libsodium is ready and then proceed.\nsodium.ready.then(() => {\n  // Convert Secret & Base64 key to Uint8Array.\n  let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)\n  let binsec = sodium.from_string(secret)\n\n  //Encrypt the secret using LibSodium\n  let encBytes = sodium.crypto_box_seal(binsec, binkey)\n\n  // Convert encrypted Uint8Array to Base64\n  let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)\n\n  console.log(output)\n});\n```\n\n#### Example encrypting a secret using Python\n\nEncrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.\n\n```\nfrom base64 import b64encode\nfrom nacl import encoding, public\n\ndef encrypt(public_key: str, secret_value: str) -> str:\n  \"\"\"Encrypt a Unicode string using the public key.\"\"\"\n  public_key = public.PublicKey(public_key.encode(\"utf-8\"), encoding.Base64Encoder())\n  sealed_box = public.SealedBox(public_key)\n  encrypted = sealed_box.encrypt(secret_value.encode(\"utf-8\"))\n  return b64encode(encrypted).decode(\"utf-8\")\n```\n\n#### Example encrypting a secret using C#\n\nEncrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.\n\n```\nvar secretValue = System.Text.Encoding.UTF8.GetBytes(\"mySecret\");\nvar publicKey = Convert.FromBase64String(\"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=\");\n\nvar sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);\n\nConsole.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));\n```\n\n#### Example encrypting a secret using Ruby\n\nEncrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.\n\n```ruby\nrequire \"rbnacl\"\nrequire \"base64\"\n\nkey = Base64.decode64(\"+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=\")\npublic_key = RbNaCl::PublicKey.new(key)\n\nbox = RbNaCl::Boxes::Sealed.from_public_key(public_key)\nencrypted_secret = box.encrypt(\"my_secret\")\n\n# Print the base64 encoded secret\nputs Base64.strict_encode64(encrypted_secret)\n```",
-        "tags": [
-          "dependabot"
-        ],
-        "operationId": "dependabot/create-or-update-org-secret",
-        "externalDocs": {
-          "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-cloud@latest//rest/reference/dependabot#create-or-update-an-organization-secret"
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/org"
-          },
-          {
-            "$ref": "#/components/parameters/secret-name"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "encrypted_value": {
-                    "type": "string",
-                    "description": "Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/enterprise-cloud@latest//rest/reference/dependabot#get-an-organization-public-key) endpoint.",
-                    "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$"
-                  },
-                  "key_id": {
-                    "type": "string",
-                    "description": "ID of the key you used to encrypt the secret."
-                  },
-                  "visibility": {
-                    "type": "string",
-                    "description": "Which type of organization repositories have access to the organization secret. `selected` means only the repositories specified by `selected_repository_ids` can access the secret.",
-                    "enum": [
-                      "all",
-                      "private",
-                      "selected"
-                    ]
-                  },
-                  "selected_repository_ids": {
-                    "type": "array",
-                    "description": "An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/dependabot#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/dependabot#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/dependabot#remove-selected-repository-from-an-organization-secret) endpoints.",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "required": [
-                  "visibility"
-                ]
-              },
-              "examples": {
-                "default": {
-                  "value": {
-                    "encrypted_value": "c2VjcmV0",
-                    "key_id": "012345678912345678",
-                    "visibility": "selected",
-                    "selected_repository_ids": [
-                      "1296269",
-                      "1296280"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Response when creating a secret",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/empty-object"
-                },
-                "examples": {
-                  "default": {
-                    "value": null
-                  }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "Response when updating a secret"
-          }
-        },
-        "x-github": {
-          "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
-          "category": "dependabot",
-          "subcategory": "secrets"
-        },
-        "x-octokit": {
-          "diff": {
-            "api.github.com": {
-              "type": "changed"
             }
           }
         }
@@ -6345,6 +6226,43 @@
                       "private",
                       "internal"
                     ]
+                  },
+                  "security_and_analysis": {
+                    "type": "object",
+                    "description": "Specify which security and analysis features to enable or disable for the repository.\n\nTo use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-cloud@latest//organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n\nFor example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:\n`{ \"security_and_analysis\": {\"advanced_security\": { \"status\": \"enabled\" } } }`.\n\nYou can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
+                    "nullable": true,
+                    "properties": {
+                      "advanced_security": {
+                        "type": "object",
+                        "description": "Use the `status` property to enable or disable GitHub Advanced Security for this repository. For more information, see \"[About GitHub Advanced Security](/github/getting-started-with-github/learning-about-github/about-github-advanced-security).\"",
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "description": "Can be `enabled` or `disabled`."
+                          }
+                        }
+                      },
+                      "secret_scanning": {
+                        "type": "object",
+                        "description": "Use the `status` property to enable or disable secret scanning for this repository. For more information, see \"[About secret scanning](/code-security/secret-security/about-secret-scanning).\"",
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "description": "Can be `enabled` or `disabled`."
+                          }
+                        }
+                      },
+                      "secret_scanning_push_protection": {
+                        "type": "object",
+                        "description": "Use the `status` property to enable or disable secret scanning push protection for this repository. For more information, see \"[Protecting pushes with secret scanning](/code-security/secret-scanning/protecting-pushes-with-secret-scanning).\"",
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "description": "Can be `enabled` or `disabled`."
+                          }
+                        }
+                      }
+                    }
                   },
                   "has_issues": {
                     "type": "boolean",
@@ -16411,7 +16329,7 @@
     },
     "merge-group-checks-requested": {
       "post": {
-        "summary": "This event occurs when there is activity relating to a merge group in a merge queue. For more information, see \"[Managing a merge queue](https://docs.github.com/enterprise-cloud@latest//repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Merge queues\" repository permission.\n\n**Note**: The pull request merge queue feature is currently in public beta and subject to change.",
+        "summary": "This event occurs when there is activity relating to a merge group in a merge queue. For more information, see \"[Managing a merge queue](https://docs.github.com/enterprise-cloud@latest//repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Merge queues\" repository permission.",
         "description": "Status checks were requested for a merge group. This happens when a merge group is created or added to by the merge queue because a pull request was queued.\n\nWhen you receive this event, you should perform checks on the head SHA and report status back using check runs or commit statuses.",
         "operationId": "merge-group/checks-requested",
         "tags": [
@@ -29577,15 +29495,6 @@
           "type": "integer"
         }
       },
-      "secret-name": {
-        "name": "secret_name",
-        "description": "The name of the secret.",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
       "audit-log-phrase": {
         "name": "phrase",
         "description": "A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-cloud@latest//github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log).",
@@ -29633,7 +29542,7 @@
       },
       "repo": {
         "name": "repo",
-        "description": "The name of the repository. The name is not case sensitive.",
+        "description": "The name of the repository without the `.git` extension. The name is not case sensitive.",
         "in": "path",
         "required": true,
         "schema": {
@@ -29869,6 +29778,12 @@
                   "type": "string"
                 }
               }
+            },
+            "actions_stats": {
+              "$ref": "#/components/schemas/server-statistics-actions"
+            },
+            "packages_stats": {
+              "$ref": "#/components/schemas/server-statistics-packages"
             }
           }
         }
@@ -31395,13 +31310,6 @@
           "trees_url",
           "url"
         ]
-      },
-      "empty-object": {
-        "title": "Empty Object",
-        "description": "An object without any properties.",
-        "type": "object",
-        "properties": {},
-        "additionalProperties": false
       },
       "credential-authorization": {
         "title": "Credential Authorization",
@@ -33642,6 +33550,104 @@
           }
         }
       },
+      "server-statistics-actions": {
+        "type": "object",
+        "description": "Actions metrics that are included in the Server Statistics payload/export from GHES",
+        "properties": {
+          "number_of_repos_using_actions": {
+            "description": "The total number of repositories in a GHES installation that have Actions enabled",
+            "type": "integer"
+          },
+          "percentage_of_repos_using_actions": {
+            "description": "The percentage of repositories in a GHES installation that have Actions enabled",
+            "type": "string"
+          }
+        }
+      },
+      "server-statistics-packages": {
+        "type": "object",
+        "description": "Packages metrics that are included in the Server Statistics payload/export from GHES",
+        "properties": {
+          "registry_enabled": {
+            "description": "Whether GitHub Packages is enabled globally in a GHES installation",
+            "type": "boolean"
+          },
+          "registry_v2_enabled": {
+            "description": "Whether a beta registry is enabled in a GHES installation",
+            "type": "boolean"
+          },
+          "ecosystems": {
+            "description": "The details of the package ecosystems that are enabled in a GHES installation",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "The name of the package ecosystem",
+                  "type": "string",
+                  "enum": [
+                    "npm",
+                    "maven",
+                    "docker",
+                    "nuget",
+                    "rubygems",
+                    "containers"
+                  ]
+                },
+                "enabled": {
+                  "description": "Shows if a package system is enabled, disabled, or read-only in a GHES installation",
+                  "type": "string",
+                  "enum": [
+                    "TRUE",
+                    "FALSE",
+                    "READONLY"
+                  ]
+                },
+                "published_packages_count": {
+                  "description": "The total number of published packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "private_packages_count": {
+                  "description": "The total number of private packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "public_packages_count": {
+                  "description": "The total number of public packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "internal_packages_count": {
+                  "description": "The total number of internal packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "user_packages_count": {
+                  "description": "The total number of user packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "organization_packages_count": {
+                  "description": "The total number of organization packages in a package ecosystem in a GHES installation",
+                  "type": "integer"
+                },
+                "daily_download_count": {
+                  "description": "The total number of packages in an ecosystem that have been downloaded in the 24 hours prior to `collection_date` for a GHES installation",
+                  "type": "integer"
+                },
+                "daily_update_count": {
+                  "description": "The total number of packages in an ecosystem that have been updated in the 24 hours prior to `collection_date` for a GHES installation",
+                  "type": "integer"
+                },
+                "daily_delete_count": {
+                  "description": "The total number of packages in an ecosystem that have been deleted in the 24 hours prior to `collection_date` for a GHES installation",
+                  "type": "integer"
+                },
+                "daily_create_count": {
+                  "description": "The total number of packages in an ecosystem that have been created in the 24 hours prior to `collection_date` for a GHES installation",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
       "selected-actions-url": {
         "type": "string",
         "description": "The API URL to use to get or set the actions and reusable workflows that are allowed to run, when `allowed_actions` is set to `selected`."
@@ -35769,8 +35775,8 @@
         "value": {
           "server_id": "ea6088f3-f095-4bf2-8d7f-c573819e8768",
           "collection_date": "2021-12-14T23:59:59Z",
-          "schema_version": "20220111",
-          "ghes_version": "3.5.0",
+          "schema_version": "20230306",
+          "ghes_version": "3.9.0",
           "host_name": "github.example.com",
           "github_connect": {
             "features_enabled": [
@@ -35838,6 +35844,12 @@
           "dormant_users": {
             "total_dormant_users": 5,
             "dormancy_threshold": "90 days"
+          },
+          "actions_stats": {
+            "$ref": "server-statistics-actions.yaml"
+          },
+          "packages_stats": {
+            "$ref": "server-statistics-packages.yaml"
           }
         }
       },
@@ -38153,6 +38165,40 @@
           ]
         }
       },
+      "runner-jitconfig": {
+        "value": {
+          "runner": {
+            "id": 23,
+            "name": "New runner",
+            "os": "unknown",
+            "status": "offline",
+            "busy": false,
+            "labels": [
+              {
+                "id": 5,
+                "name": "self-hosted",
+                "type": "read-only"
+              },
+              {
+                "id": 7,
+                "name": "X64",
+                "type": "read-only"
+              },
+              {
+                "id": 20,
+                "name": "macOS",
+                "type": "read-only"
+              },
+              {
+                "id": 21,
+                "name": "no-gpu",
+                "type": "custom"
+              }
+            ]
+          },
+          "encoded_jit_config": "abc123"
+        }
+      },
       "runner-labels": {
         "value": {
           "total_count": 4,
@@ -38212,6 +38258,54 @@
       }
     },
     "responses": {
+      "actions_runner_jitconfig": {
+        "description": "Response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "runner",
+                "encoded_jit_config"
+              ],
+              "properties": {
+                "runner": {
+                  "$ref": "#/components/schemas/runner"
+                },
+                "encoded_jit_config": {
+                  "type": "string",
+                  "description": "The base64 encoded runner configuration."
+                }
+              }
+            },
+            "examples": {
+              "default": {
+                "$ref": "#/components/examples/runner-jitconfig"
+              }
+            }
+          }
+        }
+      },
+      "not_found": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "validation_failed_simple": {
+        "description": "Validation failed, or the endpoint has been spammed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/validation-error-simple"
+            }
+          }
+        }
+      },
       "actions_runner_labels": {
         "description": "Response",
         "content": {
@@ -38238,26 +38332,6 @@
               "default": {
                 "$ref": "#/components/examples/runner-labels"
               }
-            }
-          }
-        }
-      },
-      "not_found": {
-        "description": "Resource not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/basic-error"
-            }
-          }
-        }
-      },
-      "validation_failed_simple": {
-        "description": "Validation failed, or the endpoint has been spammed.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/validation-error-simple"
             }
           }
         }

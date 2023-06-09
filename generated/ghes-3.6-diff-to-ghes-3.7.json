@@ -1168,7 +1168,7 @@
       },
       "patch": {
         "summary": "Update an organization",
-        "description": "**Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).\n\nEnables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.",
+        "description": "**Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).\n\nEnables an authenticated organization owner with the `admin:org` scope or the `repo` scope to update the organization's profile and member privileges.",
         "tags": [
           "orgs"
         ],
@@ -2279,7 +2279,7 @@
     "/orgs/{org}/repos": {
       "get": {
         "summary": "List organization repositories",
-        "description": "Lists repositories for the specified organization.",
+        "description": "Lists repositories for the specified organization.\n\n**Note:** In order to see the `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.6/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"",
         "tags": [
           "repos"
         ],
@@ -2934,6 +2934,43 @@
                       "private",
                       "internal"
                     ]
+                  },
+                  "security_and_analysis": {
+                    "type": "object",
+                    "description": "Specify which security and analysis features to enable or disable for the repository.\n\nTo use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.6/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n\nFor example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:\n`{ \"security_and_analysis\": {\"advanced_security\": { \"status\": \"enabled\" } } }`.\n\nYou can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.",
+                    "nullable": true,
+                    "properties": {
+                      "advanced_security": {
+                        "type": "object",
+                        "description": "Use the `status` property to enable or disable GitHub Advanced Security for this repository. For more information, see \"[About GitHub Advanced Security](/github/getting-started-with-github/learning-about-github/about-github-advanced-security).\"",
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "description": "Can be `enabled` or `disabled`."
+                          }
+                        }
+                      },
+                      "secret_scanning": {
+                        "type": "object",
+                        "description": "Use the `status` property to enable or disable secret scanning for this repository. For more information, see \"[About secret scanning](/code-security/secret-security/about-secret-scanning).\"",
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "description": "Can be `enabled` or `disabled`."
+                          }
+                        }
+                      },
+                      "secret_scanning_push_protection": {
+                        "type": "object",
+                        "description": "Use the `status` property to enable or disable secret scanning push protection for this repository. For more information, see \"[Protecting pushes with secret scanning](/code-security/secret-scanning/protecting-pushes-with-secret-scanning).\"",
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "description": "Can be `enabled` or `disabled`."
+                          }
+                        }
+                      }
+                    }
                   },
                   "has_issues": {
                     "type": "boolean",
@@ -5096,6 +5133,9 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
           "403": {
             "$ref": "#/components/responses/forbidden"
           },
@@ -5131,7 +5171,7 @@
     "/repos/{owner}/{repo}/issues/events": {
       "get": {
         "summary": "List issue events for a repository",
-        "description": "",
+        "description": "Lists events for a repository.",
         "tags": [
           "issues"
         ],
@@ -5200,7 +5240,7 @@
     "/repos/{owner}/{repo}/issues/events/{event_id}": {
       "get": {
         "summary": "Get an issue event",
-        "description": "",
+        "description": "Gets a single event by the event id.",
         "tags": [
           "issues"
         ],
@@ -8642,7 +8682,7 @@
       },
       "repo": {
         "name": "repo",
-        "description": "The name of the repository. The name is not case sensitive.",
+        "description": "The name of the repository without the `.git` extension. The name is not case sensitive.",
         "in": "path",
         "required": true,
         "schema": {
@@ -11744,6 +11784,9 @@
           "web_commit_signoff_required": {
             "type": "boolean",
             "example": false
+          },
+          "security_and_analysis": {
+            "$ref": "#/components/schemas/security-and-analysis"
           }
         },
         "required": [
@@ -15599,6 +15642,48 @@
           "name"
         ]
       },
+      "security-and-analysis": {
+        "nullable": true,
+        "type": "object",
+        "properties": {
+          "advanced_security": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "enabled",
+                  "disabled"
+                ]
+              }
+            }
+          },
+          "secret_scanning": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "enabled",
+                  "disabled"
+                ]
+              }
+            }
+          },
+          "secret_scanning_push_protection": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "enabled",
+                  "disabled"
+                ]
+              }
+            }
+          }
+        }
+      },
       "alert-number": {
         "type": "integer",
         "description": "The security alert number.",
@@ -16900,48 +16985,6 @@
           "name",
           "html_url"
         ]
-      },
-      "security-and-analysis": {
-        "nullable": true,
-        "type": "object",
-        "properties": {
-          "advanced_security": {
-            "type": "object",
-            "properties": {
-              "status": {
-                "type": "string",
-                "enum": [
-                  "enabled",
-                  "disabled"
-                ]
-              }
-            }
-          },
-          "secret_scanning": {
-            "type": "object",
-            "properties": {
-              "status": {
-                "type": "string",
-                "enum": [
-                  "enabled",
-                  "disabled"
-                ]
-              }
-            }
-          },
-          "secret_scanning_push_protection": {
-            "type": "object",
-            "properties": {
-              "status": {
-                "type": "string",
-                "enum": [
-                  "enabled",
-                  "disabled"
-                ]
-              }
-            }
-          }
-        }
       },
       "referenced-workflow": {
         "title": "Referenced workflow",
