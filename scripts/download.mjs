@@ -1,8 +1,8 @@
-const { get } = require("https");
-const fs = require("fs");
+import { get } from "https";
+import fs from "fs";
 
-const { Octokit } = require("@octokit/core");
-const { getCurrentVersions } = require("github-enterprise-server-versions");
+import { Octokit } from "@octokit/core";
+import { getCurrentVersions } from "github-enterprise-server-versions";
 
 run().then(() => console.log("done"), console.error);
 
