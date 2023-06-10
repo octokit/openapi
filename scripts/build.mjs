@@ -1,15 +1,21 @@
-const { createWriteStream, readdirSync, writeFileSync, rmSync } = require("fs");
-const { basename, resolve } = require("path");
+import {
+  createWriteStream,
+  readdirSync,
+  writeFileSync,
+  rmSync,
+  readFileSync,
+} from "fs";
+import { basename, resolve } from "path";
 
-const prettier = require("prettier");
-const execa = require("execa");
-const sortKeys = require("sort-keys");
-const equal = require("deep-equal");
-const _ = require("lodash");
-const { getCurrentVersions } = require("github-enterprise-server-versions");
-const mapObj = require("map-obj");
+import prettier from "prettier";
+import { execaCommand } from "execa";
+import sortKeys from "sort-keys";
+import equal from "deep-equal";
+import _ from "lodash";
+import { getCurrentVersions } from "github-enterprise-server-versions";
+import mapObj, { mapObjectSkip } from "map-obj";
 
-const overrides = require("./overrides");
+import overrides from "./overrides/index.mjs";
 
 if (!process.env.GITHUB_ACTIONS && !process.env.ANICCA_REPOSITORY_PATH) {
   throw new Error("Please set ANICCA_REPOSITORY_PATH");
@@ -25,7 +31,8 @@ async function run() {
   const changeFileNames = readdirSync("changes");
 
   const changes = changeFileNames.reduce((map, file) => {
-    const { route, ...change } = require(`../changes/${file}`);
+    const jsonFile = readFileSync(resolve(`./changes/${file}`), "utf8");
+    const { route, ...change } = JSON.parse(jsonFile);
     if (!map[route]) map[route] = [];
     map[route].push(change);
     return map;
@@ -40,7 +47,7 @@ async function run() {
   });
 
   for (const file of schemaFileNames) {
-    const schema = require(`../cache/${file}`);
+    const schema = JSON.parse(readFileSync(resolve(`./cache/${file}`), "utf8"));
 
     // apply overrides to the unaltered schemas from GitHub
     overrides(file, schema);
@@ -95,7 +102,7 @@ async function run() {
       ? `${process.env.GITHUB_WORKSPACE}/anicca`
       : process.env.ANICCA_REPOSITORY_PATH;
 
-    const command = execa.command(cmd, {
+    const command = execaCommand(cmd, {
       cwd: aniccaCwd,
     });
     command.stderr.pipe(process.stderr);
@@ -104,7 +111,7 @@ async function run() {
 
     console.log(`${diffPath} written`);
 
-    const json = require(`../${diffPath}`);
+    const json = JSON.parse(readFileSync(resolve(`./${diffPath}`), "utf8"));
 
     json.paths = {
       changed: json.paths.changed
@@ -239,7 +246,7 @@ function filenameToVersion(filename) {
 
 function removeUnchangedKeys(key, value) {
   if (value === null) {
-    return mapObj.mapObjectSkip;
+    return mapObjectSkip;
   }
 
   // we don't care about description changes
@@ -248,7 +255,7 @@ function removeUnchangedKeys(key, value) {
     typeof value === "object" &&
     equal(Object.keys(value).sort(), ["from", "to"])
   ) {
-    return mapObj.mapObjectSkip;
+    return mapObjectSkip;
   }
 
   // we also don't care about operation summary changes
@@ -257,7 +264,7 @@ function removeUnchangedKeys(key, value) {
     typeof value === "object" &&
     equal(Object.keys(value).sort(), ["from", "to"])
   ) {
-    return mapObj.mapObjectSkip;
+    return mapObjectSkip;
   }
 
   if (equal(Object.keys(value).sort(), ["added", "changed", "removed"])) {
@@ -265,11 +272,11 @@ function removeUnchangedKeys(key, value) {
   }
 
   if (equal(value, { added: [], changed: {}, removed: [] })) {
-    return mapObj.mapObjectSkip;
+    return mapObjectSkip;
   }
 
   if (equal(value, { added: [], removed: [] })) {
-    return mapObj.mapObjectSkip;
+    return mapObjectSkip;
   }
 
   if (
@@ -291,7 +298,7 @@ function removeUnchangedKeys(key, value) {
         operations_removed: [],
       })
     ) {
-      return mapObj.mapObjectSkip;
+      return mapObjectSkip;
     }
   }
 
@@ -300,7 +307,7 @@ function removeUnchangedKeys(key, value) {
 
 function removeNullValues(key, value) {
   if (value === null) {
-    return mapObj.mapObjectSkip;
+    return mapObjectSkip;
   }
 
   return [key, value];
@@ -316,7 +323,7 @@ function simplifyRemovedArrays(key, value) {
 
 function removeEmptyObjects(key, value) {
   if (equal(value, {})) {
-    return mapObj.mapObjectSkip;
+    return mapObjectSkip;
   }
 
   return [key, value];
@@ -324,7 +331,7 @@ function removeEmptyObjects(key, value) {
 
 function removeDeepEmptyObjects(key, value) {
   if (isEmptyDeep(value)) {
-    return mapObj.mapObjectSkip;
+    return mapObjectSkip;
   }
 
   return [key, value];
@@ -416,8 +423,8 @@ function addRemovedOperations(
 }
 
 function addDiffExtensions(diffJson, fromPath, toPath) {
-  const fromJson = require(`../${fromPath}`);
-  const toJson = require(`../${toPath}`);
+  const fromJson = JSON.parse(readFileSync(`./${fromPath}`, "utf-8"));
+  const toJson = JSON.parse(readFileSync(`./${toPath}`, "utf-8"));
 
   const { added, removed, changed } = diffJson.paths;
   const from = filenameToVersion(fromPath);
@@ -433,7 +440,7 @@ function addDiffExtensions(diffJson, fromPath, toPath) {
 }
 
 function createDiffVersion(path, latestGhesVersion) {
-  const schema = require(`../${path}`);
+  const schema = JSON.parse(readFileSync(`./${path}`, "utf-8"));
   const newPaths = {};
   let refs = new Set();
 
