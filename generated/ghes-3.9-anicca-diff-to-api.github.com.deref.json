@@ -23642,6 +23642,156 @@
           }
         }
       },
+      "/manage/v1/config/nodes": {
+        "get": {
+          "deprecated": null,
+          "description": "Get all node metadata for existing nodes in the current cluster. For more information, see \"[About clustering](https://docs.github.com/enterprise-server@3.9/admin/enterprise-management/configuring-clustering/about-clustering).\"",
+          "externalDocs": {
+            "description": "API method documentation",
+            "url": "https://docs.github.com/enterprise-server@3.9/rest/enterprise-admin/manage-ghes#get-config-nodes"
+          },
+          "operationId": "enterprise-admin/get-config-nodes",
+          "parameters": [
+            {
+              "allowReserved": null,
+              "description": "The UUID which identifies a node.",
+              "in": "query",
+              "name": "uuid",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The cluster roles from the cluster configuration file.",
+              "in": "query",
+              "name": "cluster_roles",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "default": {
+                      "value": {
+                        "nodes": [
+                          {
+                            "cluster_roles": [
+                              "ConsulServer",
+                              "ElasticsearchServer",
+                              "GitServer",
+                              "StorageServer"
+                            ],
+                            "hostname": "data1",
+                            "uuid": "1b6cf518-f97c-11ed-8544-061d81f7eedb"
+                          },
+                          {
+                            "cluster_roles": [
+                              "ElasticsearchServer",
+                              "StorageServer",
+                              "PagesServer"
+                            ],
+                            "hostname": "data2",
+                            "uuid": "228406d4-f97c-11ed-ab01-062281bbcf03"
+                          }
+                        ],
+                        "topology": "Cluster"
+                      }
+                    }
+                  },
+                  "schema": {
+                    "properties": {
+                      "nodes": {
+                        "items": {
+                          "properties": {
+                            "cluster_roles": {
+                              "items": {
+                                "enum": [
+                                  "Blank",
+                                  "ActionsServer",
+                                  "ConsulServer",
+                                  "ElasticsearchServer",
+                                  "GitServer",
+                                  "JobServer",
+                                  "LaunchServer",
+                                  "MemcacheServer",
+                                  "MetricsServer",
+                                  "MssqlServer",
+                                  "MysqlServer",
+                                  "PagesServer",
+                                  "RedisServer",
+                                  "StorageServer",
+                                  "WebServer"
+                                ],
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "hostname": {
+                              "type": "string"
+                            },
+                            "uuid": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "topology": {
+                        "enum": [
+                          "SingleNode",
+                          "Ha",
+                          "Cluster"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              },
+              "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          },
+          "servers": [
+            {
+              "url": "{protocol}://{hostname}",
+              "variables": {
+                "hostname": {
+                  "default": "HOSTNAME",
+                  "description": "Self-hosted Enterprise Server hostname"
+                },
+                "protocol": {
+                  "default": "http",
+                  "description": "Self-hosted Enterprise Server protocol"
+                }
+              }
+            }
+          ],
+          "summary": "Get all GHES node metadata for all nodes",
+          "tags": [
+            "enterprise-admin"
+          ],
+          "x-github": {
+            "category": "enterprise-admin",
+            "enabledForGitHubApps": false,
+            "githubCloudOnly": false,
+            "subcategory": "manage-ghes"
+          }
+        }
+      },
       "/manage/v1/replication/status": {
         "get": {
           "deprecated": null,
@@ -23651,6 +23801,30 @@
             "url": "https://docs.github.com/enterprise-server@3.9/rest/enterprise-admin/manage-ghes#get-replication-status"
           },
           "operationId": "enterprise-admin/get-replication-status",
+          "parameters": [
+            {
+              "allowReserved": null,
+              "description": "The UUID which identifies a node.",
+              "in": "query",
+              "name": "uuid",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The cluster roles from the cluster configuration file.",
+              "in": "query",
+              "name": "cluster_roles",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
           "responses": {
             "200": {
               "content": {
@@ -23720,7 +23894,6 @@
                         "items": {
                           "properties": {
                             "hostname": {
-                              "format": "hostname",
                               "type": "string"
                             },
                             "services": {
@@ -23775,6 +23948,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -23807,12 +23983,36 @@
       "/manage/v1/version": {
         "get": {
           "deprecated": null,
-          "description": "Gets all of the currently installed GitHub Enterprise Server release version on all available nodes. For more information, see \"[GitHub Enterprise Server releases](https://docs.github.com/enterprise-server@3.9/admin/all-releases).\"",
+          "description": "Gets the GitHub Enterprise Server release versions that are currently installed on all available nodes. For more information, see \"[GitHub Enterprise Server releases](https://docs.github.com/enterprise-server@3.9/admin/all-releases).\"",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-server@3.9/rest/enterprise-admin/manage-ghes#get-version"
           },
           "operationId": "enterprise-admin/get-version",
+          "parameters": [
+            {
+              "allowReserved": null,
+              "description": "The UUID which identifies a node.",
+              "in": "query",
+              "name": "uuid",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            },
+            {
+              "allowReserved": null,
+              "description": "The cluster roles from the cluster configuration file.",
+              "in": "query",
+              "name": "cluster_roles",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "style": "form"
+            }
+          ],
           "responses": {
             "200": {
               "content": {
@@ -23875,6 +24075,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -23892,7 +24095,7 @@
               }
             }
           ],
-          "summary": "Get all GHES release version for all nodes",
+          "summary": "Get all GHES release versions for all nodes",
           "tags": [
             "enterprise-admin"
           ],
@@ -23938,23 +24141,18 @@
                         "id": 8030,
                         "name": "Security Engineer",
                         "organization": {
-                          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
-                          "events_url": "https://api.github.com/users/github/events{/privacy}",
-                          "followers_url": "https://api.github.com/users/github/followers",
-                          "following_url": "https://api.github.com/users/github/following{/other_user}",
-                          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
-                          "html_url": "https://github.com/github",
-                          "id": 9919,
+                          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                          "description": "A great organization",
+                          "events_url": "https://api.github.com/orgs/github/events",
+                          "hooks_url": "https://api.github.com/orgs/github/hooks",
+                          "id": 1,
+                          "issues_url": "https://api.github.com/orgs/github/issues",
                           "login": "github",
-                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
-                          "organizations_url": "https://api.github.com/users/github/orgs",
-                          "received_events_url": "https://api.github.com/users/github/received_events",
-                          "repos_url": "https://api.github.com/users/github/repos",
-                          "site_admin": false,
-                          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
-                          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
-                          "type": "Organization",
-                          "url": "https://api.github.com/users/github"
+                          "members_url": "https://api.github.com/orgs/github/members{/member}",
+                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+                          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+                          "repos_url": "https://api.github.com/orgs/github/repos",
+                          "url": "https://api.github.com/orgs/github"
                         },
                         "permissions": [
                           "delete_alerts_code_scanning"
@@ -27493,7 +27691,7 @@
         },
         "post": {
           "deprecated": null,
-          "description": "Creates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint, the authenticated user must be an administrator for the organization and must use an personal access token (classic) with `admin:org` scope or a fine-grained personal access token with the `organization_custom_roles:write` organization permission.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-server@3.9/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+          "description": "Creates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint, the authenticated user must be an administrator for the organization and must use a personal access token (classic) with `admin:org` scope or a fine-grained personal access token with the `organization_custom_roles:write` organization permission.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-server@3.9/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
           "externalDocs": {
             "description": "API method documentation",
             "url": "https://docs.github.com/enterprise-server@3.9/rest/reference/orgs/custom-roles#create-a-custom-repository-role"
@@ -27579,23 +27777,18 @@
                         "id": 8030,
                         "name": "Security Engineer",
                         "organization": {
-                          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
-                          "events_url": "https://api.github.com/users/github/events{/privacy}",
-                          "followers_url": "https://api.github.com/users/github/followers",
-                          "following_url": "https://api.github.com/users/github/following{/other_user}",
-                          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
-                          "html_url": "https://github.com/github",
-                          "id": 9919,
+                          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                          "description": "A great organization",
+                          "events_url": "https://api.github.com/orgs/github/events",
+                          "hooks_url": "https://api.github.com/orgs/github/hooks",
+                          "id": 1,
+                          "issues_url": "https://api.github.com/orgs/github/issues",
                           "login": "github",
-                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
-                          "organizations_url": "https://api.github.com/users/github/orgs",
-                          "received_events_url": "https://api.github.com/users/github/received_events",
-                          "repos_url": "https://api.github.com/users/github/repos",
-                          "site_admin": false,
-                          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
-                          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
-                          "type": "Organization",
-                          "url": "https://api.github.com/users/github"
+                          "members_url": "https://api.github.com/orgs/github/members{/member}",
+                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+                          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+                          "repos_url": "https://api.github.com/orgs/github/repos",
+                          "url": "https://api.github.com/orgs/github"
                         },
                         "permissions": [
                           "delete_alerts_code_scanning"
@@ -27979,23 +28172,18 @@
                         "id": 8030,
                         "name": "Security Engineer",
                         "organization": {
-                          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
-                          "events_url": "https://api.github.com/users/github/events{/privacy}",
-                          "followers_url": "https://api.github.com/users/github/followers",
-                          "following_url": "https://api.github.com/users/github/following{/other_user}",
-                          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
-                          "html_url": "https://github.com/github",
-                          "id": 9919,
+                          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                          "description": "A great organization",
+                          "events_url": "https://api.github.com/orgs/github/events",
+                          "hooks_url": "https://api.github.com/orgs/github/hooks",
+                          "id": 1,
+                          "issues_url": "https://api.github.com/orgs/github/issues",
                           "login": "github",
-                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
-                          "organizations_url": "https://api.github.com/users/github/orgs",
-                          "received_events_url": "https://api.github.com/users/github/received_events",
-                          "repos_url": "https://api.github.com/users/github/repos",
-                          "site_admin": false,
-                          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
-                          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
-                          "type": "Organization",
-                          "url": "https://api.github.com/users/github"
+                          "members_url": "https://api.github.com/orgs/github/members{/member}",
+                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+                          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+                          "repos_url": "https://api.github.com/orgs/github/repos",
+                          "url": "https://api.github.com/orgs/github"
                         },
                         "permissions": [
                           "delete_alerts_code_scanning"
@@ -28313,23 +28501,18 @@
                         "id": 8030,
                         "name": "Security Engineer",
                         "organization": {
-                          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
-                          "events_url": "https://api.github.com/users/github/events{/privacy}",
-                          "followers_url": "https://api.github.com/users/github/followers",
-                          "following_url": "https://api.github.com/users/github/following{/other_user}",
-                          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
-                          "html_url": "https://github.com/github",
-                          "id": 9919,
+                          "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+                          "description": "A great organization",
+                          "events_url": "https://api.github.com/orgs/github/events",
+                          "hooks_url": "https://api.github.com/orgs/github/hooks",
+                          "id": 1,
+                          "issues_url": "https://api.github.com/orgs/github/issues",
                           "login": "github",
-                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
-                          "organizations_url": "https://api.github.com/users/github/orgs",
-                          "received_events_url": "https://api.github.com/users/github/received_events",
-                          "repos_url": "https://api.github.com/users/github/repos",
-                          "site_admin": false,
-                          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
-                          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
-                          "type": "Organization",
-                          "url": "https://api.github.com/users/github"
+                          "members_url": "https://api.github.com/orgs/github/members{/member}",
+                          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+                          "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+                          "repos_url": "https://api.github.com/orgs/github/repos",
+                          "url": "https://api.github.com/orgs/github"
                         },
                         "permissions": [
                           "delete_alerts_code_scanning"
@@ -37499,6 +37682,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -37540,6 +37726,9 @@
           "responses": {
             "202": {
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -37640,6 +37829,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -37764,6 +37956,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -38376,6 +38571,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -38441,6 +38639,9 @@
           "responses": {
             "204": {
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -38544,6 +38745,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -38618,6 +38822,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -38719,6 +38926,9 @@
                 }
               },
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -38795,6 +39005,9 @@
           "responses": {
             "202": {
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -38859,6 +39072,9 @@
           "responses": {
             "202": {
               "description": "Response"
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "servers": [
@@ -41194,26 +41410,6 @@
       "/marketplace_listing/stubbed/plans/{plan_id}/accounts": [
         "get"
       ],
-      "/organizations/{org}/personal-access-token-requests": [
-        "get",
-        "post"
-      ],
-      "/organizations/{org}/personal-access-token-requests/{pat_request_id}": [
-        "post"
-      ],
-      "/organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories": [
-        "get"
-      ],
-      "/organizations/{org}/personal-access-tokens": [
-        "get",
-        "post"
-      ],
-      "/organizations/{org}/personal-access-tokens/{pat_id}": [
-        "post"
-      ],
-      "/organizations/{org}/personal-access-tokens/{pat_id}/repositories": [
-        "get"
-      ],
       "/orgs/{org}/actions/runners/generate-jitconfig": [
         "post"
       ],
@@ -41280,6 +41476,26 @@
       ],
       "/orgs/{org}/members/{username}/codespaces/{codespace_name}/stop": [
         "post"
+      ],
+      "/orgs/{org}/personal-access-token-requests": [
+        "get",
+        "post"
+      ],
+      "/orgs/{org}/personal-access-token-requests/{pat_request_id}": [
+        "post"
+      ],
+      "/orgs/{org}/personal-access-token-requests/{pat_request_id}/repositories": [
+        "get"
+      ],
+      "/orgs/{org}/personal-access-tokens": [
+        "get",
+        "post"
+      ],
+      "/orgs/{org}/personal-access-tokens/{pat_id}": [
+        "post"
+      ],
+      "/orgs/{org}/personal-access-tokens/{pat_id}/repositories": [
+        "get"
       ],
       "/orgs/{org}/rulesets": [
         "get",

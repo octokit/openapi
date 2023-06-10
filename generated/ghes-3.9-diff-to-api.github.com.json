@@ -50,6 +50,10 @@
       "description": "Endpoints to manage Codespaces using the REST API."
     },
     {
+      "name": "copilot",
+      "description": "Endpoints to manage Copilot using the REST API."
+    },
+    {
       "name": "emojis",
       "description": "List emojis available to use on GitHub."
     },
@@ -6676,6 +6680,76 @@
         }
       }
     },
+    "/manage/v1/config/nodes": {
+      "get": {
+        "summary": "Get all GHES node metadata for all nodes",
+        "description": "Get all node metadata for existing nodes in the current cluster. For more information, see \"[About clustering](https://docs.github.com/enterprise-server@3.9/admin/enterprise-management/configuring-clustering/about-clustering).\"",
+        "operationId": "enterprise-admin/get-config-nodes",
+        "tags": [
+          "enterprise-admin"
+        ],
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.9/rest/enterprise-admin/manage-ghes#get-config-nodes"
+        },
+        "servers": [
+          {
+            "url": "{protocol}://{hostname}",
+            "variables": {
+              "hostname": {
+                "default": "HOSTNAME",
+                "description": "Self-hosted Enterprise Server hostname"
+              },
+              "protocol": {
+                "default": "http",
+                "description": "Self-hosted Enterprise Server protocol"
+              }
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/uuid"
+          },
+          {
+            "$ref": "#/components/parameters/cluster-roles"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ghes-config-nodes"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/ghes-config-nodes"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": false,
+          "category": "enterprise-admin",
+          "subcategory": "manage-ghes"
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "added"
+            }
+          }
+        }
+      }
+    },
     "/manage/v1/replication/status": {
       "get": {
         "summary": "Get the status of services running on all replica nodes",
@@ -6703,21 +6777,32 @@
             }
           }
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/uuid"
+          },
+          {
+            "$ref": "#/components/parameters/cluster-roles"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/replication-status"
+                  "$ref": "#/components/schemas/ghes-replication-status"
                 },
                 "examples": {
                   "default": {
-                    "$ref": "#/components/examples/replication-status"
+                    "$ref": "#/components/examples/ghes-replication-status"
                   }
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "x-github": {
@@ -6737,8 +6822,8 @@
     },
     "/manage/v1/version": {
       "get": {
-        "summary": "Get all GHES release version for all nodes",
-        "description": "Gets all of the currently installed GitHub Enterprise Server release version on all available nodes. For more information, see \"[GitHub Enterprise Server releases](https://docs.github.com/enterprise-server@3.9/admin/all-releases).\"",
+        "summary": "Get all GHES release versions for all nodes",
+        "description": "Gets the GitHub Enterprise Server release versions that are currently installed on all available nodes. For more information, see \"[GitHub Enterprise Server releases](https://docs.github.com/enterprise-server@3.9/admin/all-releases).\"",
         "operationId": "enterprise-admin/get-version",
         "tags": [
           "enterprise-admin"
@@ -6762,6 +6847,14 @@
             }
           }
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/uuid"
+          },
+          {
+            "$ref": "#/components/parameters/cluster-roles"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Response",
@@ -6777,6 +6870,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "x-github": {
@@ -8426,7 +8522,7 @@
       },
       "post": {
         "summary": "Create a custom repository role",
-        "description": "Creates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint, the authenticated user must be an administrator for the organization and must use an personal access token (classic) with `admin:org` scope or a fine-grained personal access token with the `organization_custom_roles:write` organization permission.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-server@3.9/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
+        "description": "Creates a custom repository role that can be used by all repositories owned by the organization.\n\nTo use this endpoint, the authenticated user must be an administrator for the organization and must use a personal access token (classic) with `admin:org` scope or a fine-grained personal access token with the `organization_custom_roles:write` organization permission.\n\nFor more information on custom repository roles, see \"[About custom repository roles](https://docs.github.com/enterprise-server@3.9/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-repository-roles).\"",
         "tags": [
           "orgs"
         ],
@@ -13550,8 +13646,8 @@
               }
             }
           },
-          "404": {
-            "$ref": "#/components/responses/not_found"
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "x-github": {
@@ -15044,6 +15140,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "x-github": {
@@ -15091,6 +15190,9 @@
         "responses": {
           "202": {
             "description": "Response"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "x-github": {
@@ -15150,6 +15252,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "x-github": {
@@ -15207,6 +15312,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "requestBody": {
@@ -15292,6 +15400,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "x-github": {
@@ -15337,6 +15448,9 @@
         "responses": {
           "204": {
             "description": "Response"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "requestBody": {
@@ -15425,6 +15539,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "x-github": {
@@ -15485,6 +15602,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "requestBody": {
@@ -15571,6 +15691,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "requestBody": {
@@ -15644,6 +15767,9 @@
         "responses": {
           "202": {
             "description": "Response"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "requestBody": {
@@ -15726,6 +15852,9 @@
         "responses": {
           "202": {
             "description": "Response"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "requestBody": {
@@ -40296,6 +40425,24 @@
           ]
         }
       },
+      "uuid": {
+        "name": "uuid",
+        "description": "The UUID which identifies a node.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "cluster-roles": {
+        "name": "cluster_roles",
+        "description": "The cluster roles from the cluster configuration file.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
       "visible-to-repository": {
         "name": "visible_to_repository",
         "description": "Only return runner groups that are allowed to be used by this repository.",
@@ -42341,11 +42488,11 @@
           "repositories"
         ]
       },
-      "replication-status": {
+      "ghes-config-nodes": {
         "type": "object",
         "properties": {
-          "status": {
-            "$ref": "#/components/schemas/replication-status-indicator"
+          "topology": {
+            "$ref": "#/components/schemas/ghes-cluster-topology"
           },
           "nodes": {
             "type": "array",
@@ -42353,11 +42500,38 @@
               "type": "object",
               "properties": {
                 "hostname": {
-                  "type": "string",
-                  "format": "hostname"
+                  "type": "string"
+                },
+                "uuid": {
+                  "type": "string"
+                },
+                "cluster_roles": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ghes-cluster-roles"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ghes-replication-status": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ghes-replication-status-indicator"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "hostname": {
+                  "type": "string"
                 },
                 "status": {
-                  "$ref": "#/components/schemas/replication-status-indicator"
+                  "$ref": "#/components/schemas/ghes-replication-status-indicator"
                 },
                 "services": {
                   "type": "array",
@@ -42365,7 +42539,7 @@
                     "type": "object",
                     "properties": {
                       "status": {
-                        "$ref": "#/components/schemas/replication-status-indicator"
+                        "$ref": "#/components/schemas/ghes-replication-status-indicator"
                       },
                       "name": {
                         "type": "string"
@@ -44937,6 +45111,9 @@
                 "$ref": "#/components/schemas/rate-limit"
               },
               "search": {
+                "$ref": "#/components/schemas/rate-limit"
+              },
+              "code_search": {
                 "$ref": "#/components/schemas/rate-limit"
               },
               "source_import": {
@@ -50624,7 +50801,35 @@
           "last_pushed_date"
         ]
       },
-      "replication-status-indicator": {
+      "ghes-cluster-topology": {
+        "type": "string",
+        "enum": [
+          "SingleNode",
+          "Ha",
+          "Cluster"
+        ]
+      },
+      "ghes-cluster-roles": {
+        "type": "string",
+        "enum": [
+          "Blank",
+          "ActionsServer",
+          "ConsulServer",
+          "ElasticsearchServer",
+          "GitServer",
+          "JobServer",
+          "LaunchServer",
+          "MemcacheServer",
+          "MetricsServer",
+          "MssqlServer",
+          "MysqlServer",
+          "PagesServer",
+          "RedisServer",
+          "StorageServer",
+          "WebServer"
+        ]
+      },
+      "ghes-replication-status-indicator": {
         "type": "string",
         "enum": [
           "UNKNOWN",
@@ -55213,7 +55418,33 @@
           ]
         }
       },
-      "replication-status": {
+      "ghes-config-nodes": {
+        "value": {
+          "topology": "Cluster",
+          "nodes": [
+            {
+              "hostname": "data1",
+              "uuid": "1b6cf518-f97c-11ed-8544-061d81f7eedb",
+              "cluster_roles": [
+                "ConsulServer",
+                "ElasticsearchServer",
+                "GitServer",
+                "StorageServer"
+              ]
+            },
+            {
+              "hostname": "data2",
+              "uuid": "228406d4-f97c-11ed-ab01-062281bbcf03",
+              "cluster_roles": [
+                "ElasticsearchServer",
+                "StorageServer",
+                "PagesServer"
+              ]
+            }
+          ]
+        }
+      },
+      "ghes-replication-status": {
         "value": {
           "status": "OK",
           "nodes": [
@@ -55321,23 +55552,17 @@
           ],
           "organization": {
             "login": "github",
-            "id": 9919,
-            "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
-            "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
-            "gravatar_id": "",
-            "url": "https://api.github.com/users/github",
-            "html_url": "https://github.com/github",
-            "followers_url": "https://api.github.com/users/github/followers",
-            "following_url": "https://api.github.com/users/github/following{/other_user}",
-            "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
-            "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/github/subscriptions",
-            "organizations_url": "https://api.github.com/users/github/orgs",
-            "repos_url": "https://api.github.com/users/github/repos",
-            "events_url": "https://api.github.com/users/github/events{/privacy}",
-            "received_events_url": "https://api.github.com/users/github/received_events",
-            "type": "Organization",
-            "site_admin": false
+            "id": 1,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjE=",
+            "url": "https://api.github.com/orgs/github",
+            "repos_url": "https://api.github.com/orgs/github/repos",
+            "events_url": "https://api.github.com/orgs/github/events",
+            "hooks_url": "https://api.github.com/orgs/github/hooks",
+            "issues_url": "https://api.github.com/orgs/github/issues",
+            "members_url": "https://api.github.com/orgs/github/members{/member}",
+            "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+            "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+            "description": "A great organization"
           },
           "created_at": "2022-07-04T22:19:11Z",
           "updated_at": "2022-07-04T22:20:11Z"
