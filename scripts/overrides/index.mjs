@@ -1,6 +1,9 @@
-const SUPPORTED_GHES_OPERATIONS = [3.5, 3.6, 3.7, 3.8, 3.9];
+import { readFileSync } from "fs";
+import { resolve, join, dirname } from "path";
+import { fileURLToPath } from "url";
 
-module.exports = overrides;
+const SUPPORTED_GHES_OPERATIONS = [3.5, 3.6, 3.7, 3.8, 3.9];
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function isDeferenced(filename) {
   return /deref/.test(filename);
@@ -35,7 +38,9 @@ function addOperation(schema, path, httpMethod, overridePath) {
     schema.paths[path] = {};
   }
 
-  schema.paths[path][httpMethod] = require(overridePath);
+  schema.paths[path][httpMethod] = JSON.parse(
+    readFileSync(resolve(join(__dirname, overridePath)), "utf8")
+  );
 }
 
 // Replaces a given operation using JSON data stored in a file.
@@ -50,10 +55,12 @@ function replaceOperation(schema, path, httpMethod, overridePath) {
     throw `HTTP method ${httpMethod} not found for path ${path} in schema`;
   }
 
-  schema.paths[path][httpMethod] = require(overridePath);
+  schema.paths[path][httpMethod] = JSON.parse(
+    readFileSync(resolve(join(__dirname, overridePath)), "utf8")
+  );
 }
 
-function overrides(file, schema) {
+export default function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
   const isAE = file.startsWith("github.ae");
   const isDotcom = file.startsWith("api.github.com");
