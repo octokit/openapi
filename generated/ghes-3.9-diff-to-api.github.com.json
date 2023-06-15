@@ -12052,6 +12052,95 @@
         }
       }
     },
+    "/repos/{owner}/{repo}/code-scanning/default-setup": {
+      "patch": {
+        "summary": "Update a code scanning default setup configuration",
+        "description": "Updates a code scanning default setup configuration.\nYou must use an access token with the `repo` scope to use this endpoint with private repos or the `public_repo`\nscope for public repos. GitHub Apps must have the `repo` write permission to use this endpoint.",
+        "tags": [
+          "code-scanning"
+        ],
+        "operationId": "code-scanning/update-default-setup",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.9/rest/code-scanning#update-a-code-scanning-default-setup-configuration"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/code-scanning-default-setup-update"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/code-scanning-default-setup-update"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/empty-object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/code-scanning-default-setup-update-response"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/code-scanning-default-setup-update-response"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/code_scanning_forbidden_read"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "409": {
+            "$ref": "#/components/responses/code_scanning_conflict"
+          },
+          "503": {
+            "$ref": "#/components/responses/service_unavailable"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "code-scanning",
+          "subcategory": null
+        },
+        "x-octokit": {
+          "diff": {
+            "api.github.com": {
+              "type": "changed"
+            }
+          }
+        }
+      }
+    },
     "/repos/{owner}/{repo}/code-scanning/sarifs": {
       "post": {
         "summary": "Upload an analysis as SARIF data",
@@ -19313,7 +19402,7 @@
     },
     "deploy-key-deleted": {
       "post": {
-        "summary": "This event occurs when there is activity relating to deploy keys. For more information, see \"[Managing deploy keys](https://docs.github.com/enterprise-server@3.9/developers/overview/managing-deploy-keys).\" For information about the APIs to manage deploy keys, see [the GraphQL documentation](https://docs.github.com/enterprise-server@3.9/graphql/reference/objects#deploykey) or \"[Deploy keys](https://docs.github.com/enterprise-server@3.9/rest/deploy-keys)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Deployments\" repository permission.",
+        "summary": "This event occurs when there is activity relating to deploy keys. For more information, see \"[Managing deploy keys](https://docs.github.com/enterprise-server@3.9/developers/overview/managing-deploy-keys).\" For information about the APIs to manage deploy keys, see [the GraphQL API documentation](https://docs.github.com/enterprise-server@3.9/graphql/reference/objects#deploykey) or \"[Deploy keys](https://docs.github.com/enterprise-server@3.9/rest/deploy-keys)\" in the REST API documentation.\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Deployments\" repository permission.",
         "description": "A deploy key was deleted.",
         "operationId": "deploy-key/deleted",
         "externalDocs": {
@@ -46554,6 +46643,52 @@
           "apps"
         ]
       },
+      "code-scanning-default-setup-update": {
+        "description": "Configuration for code scanning default setup.",
+        "type": "object",
+        "properties": {
+          "state": {
+            "description": "Whether code scanning default setup has been configured or not.",
+            "type": "string",
+            "enum": [
+              "configured",
+              "not-configured"
+            ]
+          },
+          "query_suite": {
+            "description": "CodeQL query suite to be used.",
+            "type": "string",
+            "enum": [
+              "default",
+              "extended"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "empty-object": {
+        "title": "Empty Object",
+        "description": "An object without any properties.",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "code-scanning-default-setup-update-response": {
+        "description": "You can use `run_url` to track the status of the run. This includes a property status and conclusion.\nYou should not rely on this always being an actions workflow run object.",
+        "type": "object",
+        "properties": {
+          "run_id": {
+            "description": "ID of the corresponding run.",
+            "type": "integer"
+          },
+          "run_url": {
+            "description": "URL of the corresponding run.",
+            "type": "string"
+          }
+        }
+      },
       "code-scanning-analysis-commit-sha": {
         "description": "The SHA of the commit to which the analysis you are uploading relates.",
         "type": "string",
@@ -57710,6 +57845,17 @@
           "protection_url": "https://api.github.com/repos/octocat/hello-world/branches/master/protection"
         }
       },
+      "code-scanning-default-setup-update": {
+        "value": {
+          "state": "configured"
+        }
+      },
+      "code-scanning-default-setup-update-response": {
+        "value": {
+          "run_id": 42,
+          "run_url": "https://api.github.com/repos/octoorg/octocat/actions/runs/42"
+        }
+      },
       "code-scanning-sarif-upload": {
         "summary": "Default response",
         "value": {
@@ -60230,6 +60376,16 @@
       },
       "moved_permanently": {
         "description": "Moved permanently",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "code_scanning_conflict": {
+        "description": "Response if there is already a validation run in progress with a different default setup configuration",
         "content": {
           "application/json": {
             "schema": {
