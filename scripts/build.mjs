@@ -7,7 +7,7 @@ import {
 } from "fs";
 import { basename, resolve } from "path";
 
-import prettier from "prettier";
+import * as prettier from "prettier";
 import { execaCommand } from "execa";
 import sortKeys from "sort-keys";
 import equal from "deep-equal";
