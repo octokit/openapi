@@ -39,7 +39,7 @@ function addOperation(schema, path, httpMethod, overridePath) {
   }
 
   schema.paths[path][httpMethod] = JSON.parse(
-    readFileSync(resolve(join(__dirname, overridePath)), "utf8")
+    readFileSync(resolve(join(__dirname, overridePath)), "utf8"),
   );
 }
 
@@ -56,7 +56,7 @@ function replaceOperation(schema, path, httpMethod, overridePath) {
   }
 
   schema.paths[path][httpMethod] = JSON.parse(
-    readFileSync(resolve(join(__dirname, overridePath)), "utf8")
+    readFileSync(resolve(join(__dirname, overridePath)), "utf8"),
   );
 }
 
@@ -88,13 +88,13 @@ export default function overrides(file, schema) {
 
       if (requestBodySchema.anyOf) {
         requestBodySchema.anyOf = requestBodySchema.anyOf.filter(
-          (item) => !item.type || item.type === "object"
+          (item) => !item.type || item.type === "object",
         );
       }
 
       if (requestBodySchema.oneOf) {
         requestBodySchema.oneOf = requestBodySchema.oneOf.filter(
-          (item) => !item.type || item.type === "object"
+          (item) => !item.type || item.type === "object",
         );
       }
     }
@@ -104,7 +104,7 @@ export default function overrides(file, schema) {
     schema,
     "/repos/{owner}/{repo}/compare/{basehead}",
     "get",
-    "repos/compare-commits-with-basehead"
+    "repos/compare-commits-with-basehead",
   );
 
   if (isDeferenced(file)) {
@@ -115,32 +115,32 @@ export default function overrides(file, schema) {
       schema,
       "/gists/{gist_id}",
       "patch",
-      "./gists-update.deref.json"
+      "./gists-update.deref.json",
     );
     replaceOperation(
       schema,
       "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers",
       "post",
-      "./pulls-request-reviewers.deref.json"
+      "./pulls-request-reviewers.deref.json",
     );
     replaceOperation(
       schema,
       "/repos/{owner}/{repo}/check-runs",
       "post",
-      "./checks-create.deref.json"
+      "./checks-create.deref.json",
     );
     addOperation(
       schema,
       "/repos/{owner}/{repo}/compare/{base}...{head}",
       "get",
-      "./repos-compare-commits.deref.json"
+      "./repos-compare-commits.deref.json",
     );
   } else {
     addOperation(
       schema,
       "/repos/{owner}/{repo}/compare/{base}...{head}",
       "get",
-      "./repos-compare-commits.json"
+      "./repos-compare-commits.json",
     );
     // The following 3 endpoints have bad usage of `anyOf` in the request body schema.
     // See https://github.com/octokit/types.ts/issues/534
@@ -149,19 +149,19 @@ export default function overrides(file, schema) {
       schema,
       "/gists/{gist_id}",
       "patch",
-      "./gists-update.json"
+      "./gists-update.json",
     );
     replaceOperation(
       schema,
       "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers",
       "post",
-      "./pulls-request-reviewers.json"
+      "./pulls-request-reviewers.json",
     );
     replaceOperation(
       schema,
       "/repos/{owner}/{repo}/check-runs",
       "post",
-      "./checks-create.json"
+      "./checks-create.json",
     );
   }
 
@@ -172,14 +172,14 @@ export default function overrides(file, schema) {
       schema,
       "/repos/{owner}/{repo}/issues/{issue_number}/assignees",
       "delete",
-      "./issues-remove-assignees.deref.json"
+      "./issues-remove-assignees.deref.json",
     );
   } else {
     replaceOperation(
       schema,
       "/repos/{owner}/{repo}/issues/{issue_number}/assignees",
       "delete",
-      "./issues-remove-assignees.json"
+      "./issues-remove-assignees.json",
     );
   }
 
@@ -192,14 +192,14 @@ export default function overrides(file, schema) {
         schema,
         "/repos/{owner}/{repo}/code-scanning/alerts",
         "get",
-        "./code-scanning-list-alerts-for-repo.deref.json"
+        "./code-scanning-list-alerts-for-repo.deref.json",
       );
     } else {
       replaceOperation(
         schema,
         "/repos/{owner}/{repo}/code-scanning/alerts",
         "get",
-        "./code-scanning-list-alerts-for-repo.json"
+        "./code-scanning-list-alerts-for-repo.json",
       );
     }
   }
@@ -214,14 +214,14 @@ export default function overrides(file, schema) {
         schema,
         "/orgs/{org}/dependabot/secrets/{secret_name}",
         "put",
-        "./dependabot-create-or-update-org-secret.deref.json"
+        "./dependabot-create-or-update-org-secret.deref.json",
       );
     } else {
       replaceOperation(
         schema,
         "/orgs/{org}/dependabot/secrets/{secret_name}",
         "put",
-        "./dependabot-create-or-update-org-secret.json"
+        "./dependabot-create-or-update-org-secret.json",
       );
     }
 
@@ -230,14 +230,14 @@ export default function overrides(file, schema) {
         schema,
         "/orgs/{org}/actions/secrets/{secret_name}",
         "put",
-        "./actions-create-or-update-org-secret.deref.json"
+        "./actions-create-or-update-org-secret.deref.json",
       );
     } else {
       replaceOperation(
         schema,
         "/orgs/{org}/actions/secrets/{secret_name}",
         "put",
-        "./actions-create-or-update-org-secret.json"
+        "./actions-create-or-update-org-secret.json",
       );
     }
   }

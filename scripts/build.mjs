@@ -87,11 +87,11 @@ async function run() {
     const toPath = `generated/${file}`;
     const diffPath = `generated/${toAniccaDiffFilename(
       file,
-      latestGhesVersion
+      latestGhesVersion,
     )}`;
 
     const cmd = `cargo run --bin cli diff ${resolve(fromPath)} ${resolve(
-      toPath
+      toPath,
     )} --format json`;
 
     console.log("$ %s", cmd);
@@ -119,8 +119,8 @@ async function run() {
             Object.entries(json.paths.changed).map(
               ([path, { operations_changed }]) => {
                 return [path, operations_changed];
-              }
-            )
+              },
+            ),
           )
         : {},
       added: json.paths.added ? Object.fromEntries(json.paths.added) : {},
@@ -129,7 +129,7 @@ async function run() {
             json.paths.removed.map(([path, methods]) => [
               path,
               Object.keys(methods),
-            ])
+            ]),
           )
         : {},
     };
@@ -145,7 +145,7 @@ async function run() {
         removeUnchangedKeys,
         {
           deep: true,
-        }
+        },
       );
     }
 
@@ -164,7 +164,7 @@ async function run() {
     addDiffExtensions(
       sortedJson,
       fromPath.replace(".deref", ""),
-      toPath.replace(".deref", "")
+      toPath.replace(".deref", ""),
     );
 
     // add diff files
@@ -177,7 +177,7 @@ async function run() {
   for (const name of schemaFileNames) {
     schemasCode += `["${name.replace(
       ".json",
-      ""
+      "",
     )}"]: require("./generated/${name}"),`;
   }
 
@@ -193,8 +193,8 @@ async function run() {
     `,
       {
         parser: "babel",
-      }
-    )
+      },
+    ),
   );
 }
 
@@ -236,7 +236,7 @@ function toDiffFilename(path, latestGhesVersion) {
 
   return filename.replace(
     /\.json/,
-    `-diff-to-${fromFilename.replace(".deref", "")}`
+    `-diff-to-${fromFilename.replace(".deref", "")}`,
   );
 }
 
@@ -288,7 +288,7 @@ function removeUnchangedKeys(key, value) {
   ) {
     value.operations_changed = mapObj(
       value.operations_changed,
-      removeEmptyObjects
+      removeEmptyObjects,
     );
 
     if (
@@ -367,7 +367,7 @@ function addRemovedOperations(
   toVersion,
   schema,
   diffSchema,
-  diff = {}
+  diff = {},
 ) {
   for (const [path, methods] of Object.entries(diff)) {
     for (const method of methods) {
@@ -388,7 +388,7 @@ function addRemovedOperations(
       if (toVersion.startsWith("ghes-")) {
         toVersionOutput = `GitHub Enterprise Server ${toVersion.replace(
           "ghes-",
-          ""
+          "",
         )}`;
       } else if (toVersion.indexOf("github.ae") >= 0) {
         toVersionOutput = `GitHub AE`;
@@ -495,7 +495,7 @@ function findRefs(obj) {
 
       return [key, value];
     },
-    { deep: true }
+    { deep: true },
   );
 
   return newRefs;

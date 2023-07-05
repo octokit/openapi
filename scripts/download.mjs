@@ -42,22 +42,22 @@ async function run() {
     });
     getDescriptionsOptions.ref = ref;
     console.log(
-      `Open pull requests found by @github-openapi-bot: ${mostRecentPr.html_url}.\nLoading descriptions from "${ref}" branch`
+      `Open pull requests found by @github-openapi-bot: ${mostRecentPr.html_url}.\nLoading descriptions from "${ref}" branch`,
     );
   } else {
     console.log(
-      "No open pull requests found by @github-openapi-bot. Loading descriptions from default branch"
+      "No open pull requests found by @github-openapi-bot. Loading descriptions from default branch",
     );
   }
 
   const { data } = await octokit.request(
     "GET /repos/{owner}/{repo}/contents/{path}",
-    getDescriptionsOptions
+    getDescriptionsOptions,
   );
 
   if (!Array.isArray(data)) {
     throw new Error(
-      "https://github.com/github/rest-api-description/tree/main/descriptions is not a directory"
+      "https://github.com/github/rest-api-description/tree/main/descriptions is not a directory",
     );
   }
 
@@ -79,7 +79,7 @@ async function run() {
     await download(name, `${ref}/descriptions/${name}/${name}.json`);
     await download(
       `${name}.deref`,
-      `${ref}/descriptions/${name}/dereferenced/${name}.deref.json`
+      `${ref}/descriptions/${name}/dereferenced/${name}.deref.json`,
     );
   }
 }
@@ -101,7 +101,7 @@ async function download(name, remotePath) {
             if (error) return reject(error);
             console.log("%s written", path);
             resolve();
-          })
+          }),
         )
         .on("error", (error) => reject(error.message));
     });
