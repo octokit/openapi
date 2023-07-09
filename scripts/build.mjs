@@ -183,7 +183,7 @@ async function run() {
 
   writeFileSync(
     "index.js",
-    prettier.format(
+    await prettier.format(
       `
       module.exports = {
         schemas: {
