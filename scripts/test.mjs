@@ -5,7 +5,7 @@ console.log("Verifying folders: %j", VERIFY_FOLDERS);
 const files = VERIFY_FOLDERS.map((folder) =>
   readdirSync(folder)
     .filter((file) => file.endsWith(".json"))
-    .map((file) => `${folder}/${file}`)
+    .map((file) => `${folder}/${file}`),
 ).flat();
 
 const errors = [];
