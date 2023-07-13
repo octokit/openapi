@@ -2165,7 +2165,7 @@
         "operationId": "dependabot/list-selected-repos-for-org-secret",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.8/rest/reference/dependabot#list-selected-repositories-for-an-organization-secret"
+          "url": "https://docs.github.com/enterprise-server@3.8/rest/dependabot/secrets#list-selected-repositories-for-an-organization-secret"
         },
         "parameters": [
           {
@@ -4495,6 +4495,7 @@
           }
         },
         "x-github": {
+          "triggersNotification": true,
           "githubCloudOnly": false,
           "enabledForGitHubApps": false,
           "category": "activity",
@@ -4519,7 +4520,7 @@
         "operationId": "pulls/create-review-comment",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.8/rest/reference/pulls#create-a-review-comment-for-a-pull-request"
+          "url": "https://docs.github.com/enterprise-server@3.8/rest/pulls/comments#create-a-review-comment-for-a-pull-request"
         },
         "parameters": [
           {
@@ -4845,7 +4846,7 @@
         "operationId": "search/code",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.8/rest/reference/search#search-code"
+          "url": "https://docs.github.com/enterprise-server@3.8/rest/search/search#search-code"
         },
         "parameters": [
           {
@@ -4963,7 +4964,7 @@
         "operationId": "search/commits",
         "externalDocs": {
           "description": "API method documentation",
-          "url": "https://docs.github.com/enterprise-server@3.8/rest/reference/search#search-commits"
+          "url": "https://docs.github.com/enterprise-server@3.8/rest/search/search#search-commits"
         },
         "parameters": [
           {
@@ -4987,7 +4988,23 @@
                 "committer-date"
               ]
             }
-          },
+          }
+        }
+      }
+    },
+    "/teams/{team_id}/repos": {
+      "get": {
+        "summary": "List team repositories (Legacy)",
+        "description": "**Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/enterprise-server@3.8/rest/reference/teams#list-team-repositories) endpoint.",
+        "tags": [
+          "teams"
+        ],
+        "operationId": "teams/list-repos-legacy",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-server@3.8/rest/reference/teams/#list-team-repositories-legacy"
+        },
+        "parameters": [
           {
             "$ref": "#/components/parameters/order"
           },
@@ -27311,6 +27328,41 @@
             "schema": {
               "type": "string"
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "team",
+          "supported-webhook-types": [
+            "organization",
+            "business",
+            "app"
+          ]
+        }
+      }
+    },
+    "team-edited": {
+      "post": {
+        "summary": "This event occurs when there is activity relating to teams in an organization.\nFor more information, see \"[About teams](https://docs.github.com/enterprise-server@3.8/organizations/organizing-members-into-teams/about-teams).\"\n\nTo subscribe to this event, a GitHub App must have at least read-level access for the \"Members\" organization permission.",
+        "description": "The name, description, or visibility of a team was changed.",
+        "operationId": "team/edited",
+        "externalDocs": {
+          "url": "https://docs.github.com/enterprise-server@3.8/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#team"
+        },
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "example": "GitHub-Hookshot/123abc",
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "X-Github-Hook-Installation-Target-Type",
@@ -28485,6 +28537,3487 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "X-Github-Hook-Id",
+            "in": "header",
+            "example": 12312312,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Event",
+            "in": "header",
+            "example": "issues",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Id",
+            "in": "header",
+            "example": 123123,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Github-Hook-Installation-Target-Type",
+            "in": "header",
+            "example": "repository",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Delivery",
+            "in": "header",
+            "example": "0b989ba4-242f-11e5-81e1-c7b6966d2516",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Hub-Signature-256",
+            "in": "header",
+            "example": "sha256=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Enterprise-Version",
+            "in": "header",
+            "example": "3.1.9",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-GitHub-Enterprise-Host",
+            "in": "header",
+            "example": "ghes.github.com",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhook-workflow-run-requested"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "category": "webhooks",
+          "subcategory": "workflow-run",
+          "supported-webhook-types": [
+            "business",
+            "repository",
+            "organization",
+            "app"
+          ]
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "per-page": {
+        "name": "per_page",
+        "description": "The number of results per page (max 100).",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 30
+        }
+      },
+      "page": {
+        "name": "page",
+        "description": "Page number of the results to fetch.",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "username": {
+        "name": "username",
+        "description": "The handle for the GitHub user account.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "since": {
+        "name": "since",
+        "description": "Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "installation-id": {
+        "name": "installation_id",
+        "description": "The unique identifier of the installation.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "examples": {
+          "default": {
+            "value": 1
+          }
+        }
+      },
+      "client-id": {
+        "name": "client_id",
+        "in": "path",
+        "required": true,
+        "description": "The client ID of the GitHub app.",
+        "schema": {
+          "type": "string"
+        },
+        "examples": {
+          "default": {
+            "value": "Iv1.8a61f9b3a7aba766"
+          }
+        }
+      },
+      "oauth-client-id": {
+        "name": "client_id",
+        "in": "path",
+        "required": true,
+        "description": "The client ID of the OAuth app.",
+        "schema": {
+          "type": "string"
+        },
+        "examples": {
+          "default": {
+            "value": "abcde12345fghij67890"
+          }
+        }
+      },
+      "authorization-id": {
+        "name": "authorization_id",
+        "description": "The unique identifier of the authorization.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "enterprise": {
+        "name": "enterprise",
+        "description": "The slug version of the enterprise name. You can also substitute this value with the enterprise id.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "enterprise-security-product": {
+        "name": "security_product",
+        "in": "path",
+        "description": "The security feature to enable or disable.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "advanced_security",
+            "secret_scanning",
+            "secret_scanning_push_protection"
+          ]
+        }
+      },
+      "enterprise-security-product-enablement": {
+        "name": "enablement",
+        "in": "path",
+        "description": "The action to take.\n\n`enable_all` means to enable the specified security feature for all repositories in the enterprise.\n`disable_all` means to disable the specified security feature for all repositories in the enterprise.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "enable_all",
+            "disable_all"
+          ]
+        }
+      },
+      "all": {
+        "name": "all",
+        "description": "If `true`, show notifications marked as read.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "participating": {
+        "name": "participating",
+        "description": "If `true`, only shows notifications in which the user is directly participating or mentioned.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "before": {
+        "name": "before",
+        "description": "Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "thread-id": {
+        "name": "thread_id",
+        "description": "The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/enterprise-server@3.8/rest/reference/activity#list-notifications-for-the-authenticated-user)).",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "org": {
+        "name": "org",
+        "description": "The organization name. The name is not case sensitive.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "runner-group-id": {
+        "name": "runner_group_id",
+        "description": "Unique identifier of the self-hosted runner group.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "secret-name": {
+        "name": "secret_name",
+        "description": "The name of the secret.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "variable-name": {
+        "name": "name",
+        "description": "The name of the variable.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "migration-id": {
+        "name": "migration_id",
+        "description": "The unique identifier of the migration.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "team-slug": {
+        "name": "team_slug",
+        "description": "The slug of the team name.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "security-product": {
+        "name": "security_product",
+        "in": "path",
+        "description": "The security feature to enable or disable.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "dependency_graph",
+            "dependabot_alerts",
+            "dependabot_security_updates",
+            "advanced_security",
+            "secret_scanning",
+            "secret_scanning_push_protection"
+          ]
+        }
+      },
+      "org-security-product-enablement": {
+        "name": "enablement",
+        "in": "path",
+        "description": "The action to take.\n\n`enable_all` means to enable the specified security feature for all repositories in the organization.\n`disable_all` means to disable the specified security feature for all repositories in the organization.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "enable_all",
+            "disable_all"
+          ]
+        }
+      },
+      "owner": {
+        "name": "owner",
+        "description": "The account owner of the repository. The name is not case sensitive.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "repo": {
+        "name": "repo",
+        "description": "The name of the repository without the `.git` extension. The name is not case sensitive.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "job-id": {
+        "name": "job_id",
+        "description": "The unique identifier of the job.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "actor": {
+        "name": "actor",
+        "description": "Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "workflow-run-branch": {
+        "name": "branch",
+        "description": "Returns workflow runs associated with a branch. Use the name of the branch of the `push`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "event": {
+        "name": "event",
+        "description": "Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see \"[Events that trigger workflows](https://docs.github.com/enterprise-server@3.8/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows).\"",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "workflow-run-status": {
+        "name": "status",
+        "description": "Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "action_required",
+            "cancelled",
+            "failure",
+            "neutral",
+            "skipped",
+            "stale",
+            "success",
+            "timed_out",
+            "in_progress",
+            "queued",
+            "requested",
+            "waiting",
+            "pending"
+          ]
+        }
+      },
+      "created": {
+        "name": "created",
+        "description": "Returns workflow runs created within the given date-time range. For more information on the syntax, see \"[Understanding the search syntax](https://docs.github.com/enterprise-server@3.8/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates).\"",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "exclude-pull-requests": {
+        "name": "exclude_pull_requests",
+        "description": "If `true` pull requests are omitted from the response (empty array).",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "workflow-run-check-suite-id": {
+        "name": "check_suite_id",
+        "description": "Returns workflow runs with the `check_suite_id` that you specify.",
+        "in": "query",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "workflow-run-head-sha": {
+        "name": "head_sha",
+        "description": "Only returns workflow runs that are associated with the specified `head_sha`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "run-id": {
+        "name": "run_id",
+        "description": "The unique identifier of the workflow run.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "attempt-number": {
+        "name": "attempt_number",
+        "description": "The attempt number of the workflow run.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "workflow-id": {
+        "name": "workflow_id",
+        "in": "path",
+        "description": "The ID of the workflow. You can also pass the workflow file name as a string.",
+        "required": true,
+        "schema": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "branch": {
+        "name": "branch",
+        "description": "The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/enterprise-server@3.8/graphql).",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "x-multi-segment": true
+      },
+      "check-suite-id": {
+        "name": "check_suite_id",
+        "description": "The unique identifier of the check suite.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "commit-ref": {
+        "name": "ref",
+        "description": "The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see \"[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)\" in the Git documentation.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "x-multi-segment": true
+      },
+      "check-name": {
+        "name": "check_name",
+        "description": "Returns check runs with the specified `name`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "invitation-id": {
+        "name": "invitation_id",
+        "description": "The unique identifier of the invitation.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "pull-number": {
+        "name": "pull_number",
+        "description": "The number that identifies the pull request.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "since-repo": {
+        "name": "since",
+        "description": "A repository ID. Only return repositories with an ID greater than this ID.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "order": {
+        "name": "order",
+        "description": "Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "desc",
+            "asc"
+          ],
+          "default": "desc"
+        }
+      },
+      "team-id": {
+        "name": "team_id",
+        "description": "The unique identifier of the team.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "schemas": {
+      "authorization": {
+        "title": "Authorization",
+        "description": "The authorization for an OAuth app, GitHub App, or a Personal Access Token.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "scopes": {
+            "description": "A list of scopes that this authorization is in.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "token": {
+            "type": "string"
+          },
+          "token_last_eight": {
+            "type": "string",
+            "nullable": true
+          },
+          "hashed_token": {
+            "type": "string",
+            "nullable": true
+          },
+          "app": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "client_id",
+              "name",
+              "url"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "note_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fingerprint": {
+            "type": "string",
+            "nullable": true
+          },
+          "user": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "installation": {
+            "$ref": "#/components/schemas/nullable-scoped-installation"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "app",
+          "id",
+          "note",
+          "note_url",
+          "scopes",
+          "token",
+          "hashed_token",
+          "token_last_eight",
+          "fingerprint",
+          "url",
+          "created_at",
+          "updated_at",
+          "expires_at"
+        ]
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Installation",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the installation.",
+            "type": "integer",
+            "example": 1
+          },
+          "account": {
+            "nullable": true,
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/simple-user"
+              },
+              {
+                "$ref": "#/components/schemas/enterprise"
+              }
+            ]
+          },
+          "repository_selection": {
+            "description": "Describe whether all repositories have been selected or there's a selection involved",
+            "type": "string",
+            "enum": [
+              "all",
+              "selected"
+            ]
+          },
+          "access_tokens_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/installations/1/access_tokens"
+          },
+          "repositories_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/installation/repositories"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/organizations/github/settings/installations/1"
+          },
+          "app_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "target_id": {
+            "description": "The ID of the user or organization this token is being scoped to.",
+            "type": "integer"
+          },
+          "target_type": {
+            "type": "string",
+            "example": "Organization"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/app-permissions"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "single_file_name": {
+            "type": "string",
+            "example": "config.yaml",
+            "nullable": true
+          },
+          "has_multiple_single_files": {
+            "type": "boolean",
+            "example": true
+          },
+          "single_file_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "config.yml",
+              ".github/issue_TEMPLATE.md"
+            ]
+          },
+          "app_slug": {
+            "type": "string",
+            "example": "github-actions"
+          },
+          "suspended_by": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "suspended_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "contact_email": {
+            "type": "string",
+            "example": "\"test_13f1e99741e3e004@d7e1eb0bc0a1ba12.com\"",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "app_id",
+          "app_slug",
+          "target_id",
+          "target_type",
+          "single_file_name",
+          "repository_selection",
+          "access_tokens_url",
+          "html_url",
+          "repositories_url",
+          "events",
+          "account",
+          "permissions",
+          "created_at",
+          "updated_at",
+          "suspended_by",
+          "suspended_at"
+        ]
+      },
+      "app-permissions": {
+        "title": "App Permissions",
+        "type": "object",
+        "description": "The permissions granted to the user access token.",
+        "properties": {
+          "actions": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "administration": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for repository creation, deletion, settings, teams, and collaborators creation.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "checks": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for checks on code.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "contents": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "deployments": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for deployments and deployment statuses.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "environments": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for managing repository environments.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "issues": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for issues and related comments, assignees, labels, and milestones.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "metadata": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to search repositories, list collaborators, and access repository metadata.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "packages": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for packages published to GitHub Packages.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "pages": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to retrieve Pages statuses, configuration, and builds, as well as create new builds.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "pull_requests": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for pull requests and related comments, assignees, labels, milestones, and merges.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "repository_hooks": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage the post-receive hooks for a repository.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "repository_projects": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage repository projects, columns, and cards.",
+            "enum": [
+              "read",
+              "write",
+              "admin"
+            ]
+          },
+          "secret_scanning_alerts": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage secret scanning alerts.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "secrets": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage repository secrets.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "security_events": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage security events like code scanning alerts.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "single_file": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage just a single file.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "statuses": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for commit statuses.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "vulnerability_alerts": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage Dependabot alerts.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "workflows": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to update GitHub Actions workflow files.",
+            "enum": [
+              "write"
+            ]
+          },
+          "members": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for organization teams and members.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_administration": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage access to an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_announcement_banners": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage announcement banners for an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_hooks": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage the post-receive hooks for an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_personal_access_tokens": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing and managing fine-grained personal access token requests to an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_personal_access_token_requests": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing and managing fine-grained personal access tokens that have been approved by an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_plan": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for viewing an organization's plan.",
+            "enum": [
+              "read"
+            ]
+          },
+          "organization_projects": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage organization projects and projects beta (where available).",
+            "enum": [
+              "read",
+              "write",
+              "admin"
+            ]
+          },
+          "organization_packages": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for organization packages published to GitHub Packages.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_secrets": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage organization secrets.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_self_hosted_runners": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage GitHub Actions self-hosted runners available to an organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "organization_user_blocking": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to view and manage users blocked by the organization.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          },
+          "team_discussions": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to manage team discussions and related comments.",
+            "enum": [
+              "read",
+              "write"
+            ]
+          }
+        },
+        "example": {
+          "contents": "read",
+          "issues": "read",
+          "deployments": "write",
+          "single_file": "read"
+        }
+      },
+      "installation-token": {
+        "title": "Installation Token",
+        "description": "Authentication token for a GitHub App installed on a user or org.",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/app-permissions"
+          },
+          "repository_selection": {
+            "type": "string",
+            "enum": [
+              "all",
+              "selected"
+            ]
+          },
+          "repositories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/repository"
+            }
+          },
+          "single_file": {
+            "type": "string",
+            "example": "README.md"
+          },
+          "has_multiple_single_files": {
+            "type": "boolean",
+            "example": true
+          },
+          "single_file_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "config.yml",
+              ".github/issue_TEMPLATE.md"
+            ]
+          }
+        },
+        "required": [
+          "token",
+          "expires_at"
+        ]
+      },
+      "enterprise-security-analysis-settings": {
+        "title": "Enterprise Security Analysis Settings",
+        "type": "object",
+        "properties": {
+          "dependabot_alerts_enabled_for_new_repositories": {
+            "type": "boolean",
+            "example": false,
+            "description": "Whether Dependabot alerts are automatically enabled for new repositories and repositories transferred to this\nenterprise."
+          }
+        },
+        "required": [
+          "advanced_security_enabled_for_new_repositories",
+          "secret_scanning_enabled_for_new_repositories",
+          "secret_scanning_push_protection_enabled_for_new_repositories"
+        ]
+      },
+      "thread": {
+        "title": "Thread",
+        "description": "Thread",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          },
+          "subject": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "latest_comment_url": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "url",
+              "latest_comment_url",
+              "type"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "unread": {
+            "type": "boolean"
+          },
+          "updated_at": {
+            "type": "string"
+          },
+          "last_read_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string"
+          },
+          "subscription_url": {
+            "type": "string",
+            "example": "https://api.github.com/notifications/threads/2/subscription"
+          }
+        },
+        "required": [
+          "id",
+          "unread",
+          "reason",
+          "updated_at",
+          "last_read_at",
+          "subject",
+          "repository",
+          "url",
+          "subscription_url"
+        ]
+      },
+      "organization-custom-repository-role": {
+        "title": "Organization Custom Repository Role",
+        "description": "Custom repository roles created by organization administrators",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the custom role.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "The name of the custom role.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "minimal-repository": {
+        "title": "Minimal Repository",
+        "description": "Minimal Repository",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1296269
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+          },
+          "name": {
+            "type": "string",
+            "example": "Hello-World"
+          },
+          "full_name": {
+            "type": "string",
+            "example": "octocat/Hello-World"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "private": {
+            "type": "boolean"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World"
+          },
+          "description": {
+            "type": "string",
+            "example": "This your first repo!",
+            "nullable": true
+          },
+          "fork": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World"
+          },
+          "archive_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+          },
+          "assignees_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
+          },
+          "blobs_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
+          },
+          "branches_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
+          },
+          "collaborators_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
+          },
+          "comments_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
+          },
+          "commits_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
+          },
+          "compare_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
+          },
+          "contents_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
+          },
+          "contributors_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/contributors"
+          },
+          "deployments_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/deployments"
+          },
+          "downloads_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/downloads"
+          },
+          "events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/events"
+          },
+          "forks_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/forks"
+          },
+          "git_commits_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
+          },
+          "git_refs_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
+          },
+          "git_tags_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
+          },
+          "git_url": {
+            "type": "string"
+          },
+          "issue_comment_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
+          },
+          "issue_events_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
+          },
+          "issues_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
+          },
+          "keys_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
+          },
+          "labels_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+          },
+          "languages_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/languages"
+          },
+          "merges_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/merges"
+          },
+          "milestones_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
+          },
+          "notifications_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
+          },
+          "pulls_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
+          },
+          "releases_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
+          },
+          "ssh_url": {
+            "type": "string"
+          },
+          "stargazers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/stargazers"
+          },
+          "statuses_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
+          },
+          "subscribers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/subscribers"
+          },
+          "subscription_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/subscription"
+          },
+          "tags_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/tags"
+          },
+          "teams_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/teams"
+          },
+          "trees_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}"
+          },
+          "clone_url": {
+            "type": "string"
+          },
+          "mirror_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "hooks_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/hooks"
+          },
+          "svn_url": {
+            "type": "string"
+          },
+          "homepage": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "forks_count": {
+            "type": "integer"
+          },
+          "stargazers_count": {
+            "type": "integer"
+          },
+          "watchers_count": {
+            "type": "integer"
+          },
+          "size": {
+            "description": "The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.",
+            "type": "integer"
+          },
+          "default_branch": {
+            "type": "string"
+          },
+          "open_issues_count": {
+            "type": "integer"
+          },
+          "is_template": {
+            "type": "boolean"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "has_issues": {
+            "type": "boolean"
+          },
+          "has_projects": {
+            "type": "boolean"
+          },
+          "has_wiki": {
+            "type": "boolean"
+          },
+          "has_pages": {
+            "type": "boolean"
+          },
+          "has_downloads": {
+            "type": "boolean"
+          },
+          "has_discussions": {
+            "type": "boolean"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "visibility": {
+            "type": "string"
+          },
+          "pushed_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:06:43Z",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:01:12Z",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-01-26T19:14:43Z",
+            "nullable": true
+          },
+          "permissions": {
+            "type": "object",
+            "properties": {
+              "admin": {
+                "type": "boolean"
+              },
+              "maintain": {
+                "type": "boolean"
+              },
+              "push": {
+                "type": "boolean"
+              },
+              "triage": {
+                "type": "boolean"
+              },
+              "pull": {
+                "type": "boolean"
+              }
+            }
+          },
+          "role_name": {
+            "type": "string",
+            "example": "admin"
+          },
+          "temp_clone_token": {
+            "type": "string"
+          },
+          "delete_branch_on_merge": {
+            "type": "boolean"
+          },
+          "subscribers_count": {
+            "type": "integer"
+          },
+          "network_count": {
+            "type": "integer"
+          },
+          "code_of_conduct": {
+            "$ref": "#/components/schemas/code-of-conduct"
+          },
+          "license": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "spdx_id": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "node_id": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "forks": {
+            "type": "integer",
+            "example": 0
+          },
+          "open_issues": {
+            "type": "integer",
+            "example": 0
+          },
+          "watchers": {
+            "type": "integer",
+            "example": 0
+          },
+          "allow_forking": {
+            "type": "boolean"
+          },
+          "web_commit_signoff_required": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "archive_url",
+          "assignees_url",
+          "blobs_url",
+          "branches_url",
+          "collaborators_url",
+          "comments_url",
+          "commits_url",
+          "compare_url",
+          "contents_url",
+          "contributors_url",
+          "deployments_url",
+          "description",
+          "downloads_url",
+          "events_url",
+          "fork",
+          "forks_url",
+          "full_name",
+          "git_commits_url",
+          "git_refs_url",
+          "git_tags_url",
+          "hooks_url",
+          "html_url",
+          "id",
+          "node_id",
+          "issue_comment_url",
+          "issue_events_url",
+          "issues_url",
+          "keys_url",
+          "labels_url",
+          "languages_url",
+          "merges_url",
+          "milestones_url",
+          "name",
+          "notifications_url",
+          "owner",
+          "private",
+          "pulls_url",
+          "releases_url",
+          "stargazers_url",
+          "statuses_url",
+          "subscribers_url",
+          "subscription_url",
+          "tags_url",
+          "teams_url",
+          "trees_url",
+          "url"
+        ]
+      },
+      "job": {
+        "title": "Job",
+        "description": "Information of a job execution in a workflow run",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The id of the job.",
+            "example": 21,
+            "type": "integer"
+          },
+          "run_id": {
+            "description": "The id of the associated workflow run.",
+            "example": 5,
+            "type": "integer"
+          },
+          "run_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5"
+          },
+          "run_attempt": {
+            "type": "integer",
+            "description": "Attempt number of the associated workflow run, 1 for first attempt and higher if the workflow was re-run.",
+            "example": 1
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDg6Q2hlY2tSdW40"
+          },
+          "head_sha": {
+            "description": "The SHA of the commit that is being run.",
+            "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/jobs/21"
+          },
+          "html_url": {
+            "type": "string",
+            "example": "https://github.com/github/hello-world/runs/4",
+            "nullable": true
+          },
+          "status": {
+            "description": "The phase of the lifecycle that the job is currently in.",
+            "example": "queued",
+            "type": "string",
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed"
+            ]
+          },
+          "conclusion": {
+            "description": "The outcome of the job.",
+            "example": "success",
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "success",
+              "failure",
+              "neutral",
+              "cancelled",
+              "skipped",
+              "timed_out",
+              "action_required"
+            ]
+          },
+          "started_at": {
+            "description": "The time that the job started, in ISO 8601 format.",
+            "example": "2019-08-08T08:00:00-07:00",
+            "format": "date-time",
+            "type": "string"
+          },
+          "completed_at": {
+            "description": "The time that the job finished, in ISO 8601 format.",
+            "example": "2019-08-08T08:00:00-07:00",
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "description": "The name of the job.",
+            "example": "test-coverage",
+            "type": "string"
+          },
+          "steps": {
+            "description": "Steps in this job.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "status",
+                "conclusion",
+                "number"
+              ],
+              "properties": {
+                "status": {
+                  "description": "The phase of the lifecycle that the job is currently in.",
+                  "example": "queued",
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "in_progress",
+                    "completed"
+                  ]
+                },
+                "conclusion": {
+                  "description": "The outcome of the job.",
+                  "example": "success",
+                  "type": "string",
+                  "nullable": true
+                },
+                "name": {
+                  "description": "The name of the job.",
+                  "example": "test-coverage",
+                  "type": "string"
+                },
+                "number": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "started_at": {
+                  "description": "The time that the step started, in ISO 8601 format.",
+                  "example": "2019-08-08T08:00:00-07:00",
+                  "format": "date-time",
+                  "type": "string",
+                  "nullable": true
+                },
+                "completed_at": {
+                  "description": "The time that the job finished, in ISO 8601 format.",
+                  "example": "2019-08-08T08:00:00-07:00",
+                  "format": "date-time",
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "check_run_url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/check-runs/4"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Labels for the workflow job. Specified by the \"runs_on\" attribute in the action's workflow file.",
+            "example": [
+              "self-hosted",
+              "foo",
+              "bar"
+            ]
+          },
+          "runner_id": {
+            "type": "integer",
+            "nullable": true,
+            "example": 1,
+            "description": "The ID of the runner to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.)"
+          },
+          "runner_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "my runner",
+            "description": "The name of the runner to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.)"
+          },
+          "runner_group_id": {
+            "type": "integer",
+            "nullable": true,
+            "example": 2,
+            "description": "The ID of the runner group to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.)"
+          },
+          "runner_group_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "my runner group",
+            "description": "The name of the runner group to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.)"
+          },
+          "workflow_name": {
+            "type": "string",
+            "description": "The name of the workflow.",
+            "nullable": true,
+            "example": "Build"
+          },
+          "head_branch": {
+            "type": "string",
+            "description": "The name of the current branch.",
+            "nullable": true,
+            "example": "main"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "run_id",
+          "run_url",
+          "head_sha",
+          "workflow_name",
+          "head_branch",
+          "name",
+          "url",
+          "html_url",
+          "status",
+          "conclusion",
+          "started_at",
+          "completed_at",
+          "check_run_url",
+          "labels",
+          "runner_id",
+          "runner_name",
+          "runner_group_id",
+          "runner_group_name"
+        ]
+      },
+      "workflow-run": {
+        "title": "Workflow Run",
+        "description": "An invocation of a workflow",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The ID of the workflow run.",
+            "example": 5
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the workflow run.",
+            "nullable": true,
+            "example": "Build"
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDEwOkNoZWNrU3VpdGU1"
+          },
+          "check_suite_id": {
+            "type": "integer",
+            "description": "The ID of the associated check suite.",
+            "example": 42
+          },
+          "check_suite_node_id": {
+            "type": "string",
+            "description": "The node ID of the associated check suite.",
+            "example": "MDEwOkNoZWNrU3VpdGU0Mg=="
+          },
+          "head_branch": {
+            "type": "string",
+            "nullable": true,
+            "example": "master"
+          },
+          "head_sha": {
+            "description": "The SHA of the head commit that points to the version of the workflow being run.",
+            "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
+            "type": "string"
+          },
+          "path": {
+            "description": "The full path of the workflow",
+            "example": "octocat/octo-repo/.github/workflows/ci.yml@main",
+            "type": "string"
+          },
+          "run_number": {
+            "type": "integer",
+            "description": "The auto incrementing run number for the workflow run.",
+            "example": 106
+          },
+          "run_attempt": {
+            "type": "integer",
+            "description": "Attempt number of the run, 1 for first attempt and higher if the workflow was re-run.",
+            "example": 1
+          },
+          "referenced_workflows": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/referenced-workflow"
+            }
+          },
+          "event": {
+            "type": "string",
+            "example": "push"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "example": "completed"
+          },
+          "conclusion": {
+            "type": "string",
+            "nullable": true,
+            "example": "neutral"
+          },
+          "workflow_id": {
+            "type": "integer",
+            "description": "The ID of the parent workflow.",
+            "example": 5
+          },
+          "url": {
+            "type": "string",
+            "description": "The URL to the workflow run.",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5"
+          },
+          "html_url": {
+            "type": "string",
+            "example": "https://github.com/github/hello-world/suites/4"
+          },
+          "pull_requests": {
+            "description": "Pull requests that are open with a `head_sha` or `head_branch` that matches the workflow run. The returned pull requests do not necessarily indicate pull requests that triggered the run.",
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/pull-request-minimal"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "triggering_actor": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "run_started_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start time of the latest run. Resets on re-run."
+          },
+          "jobs_url": {
+            "description": "The URL to the jobs for the workflow run.",
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5/jobs"
+          },
+          "logs_url": {
+            "description": "The URL to download the logs for the workflow run.",
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5/logs"
+          },
+          "check_suite_url": {
+            "description": "The URL to the associated check suite.",
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/check-suites/12"
+          },
+          "artifacts_url": {
+            "description": "The URL to the artifacts for the workflow run.",
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5/rerun/artifacts"
+          },
+          "cancel_url": {
+            "description": "The URL to cancel the workflow run.",
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5/cancel"
+          },
+          "rerun_url": {
+            "description": "The URL to rerun the workflow run.",
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5/rerun"
+          },
+          "previous_attempt_url": {
+            "nullable": true,
+            "description": "The URL to the previous attempted run of this workflow, if one exists.",
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/runs/5/attempts/3"
+          },
+          "workflow_url": {
+            "description": "The URL to the workflow.",
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/actions/workflows/main.yaml"
+          },
+          "head_commit": {
+            "$ref": "#/components/schemas/nullable-simple-commit"
+          },
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          },
+          "head_repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          },
+          "head_repository_id": {
+            "type": "integer",
+            "example": 5
+          },
+          "display_title": {
+            "type": "string",
+            "example": "Simple Workflow",
+            "description": "The event-specific title associated with the run or the run-name if set, or the value of `run-name` if it is set in the workflow."
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "head_branch",
+          "run_number",
+          "display_title",
+          "event",
+          "status",
+          "conclusion",
+          "head_sha",
+          "path",
+          "workflow_id",
+          "url",
+          "html_url",
+          "created_at",
+          "updated_at",
+          "head_commit",
+          "head_repository",
+          "repository",
+          "jobs_url",
+          "logs_url",
+          "check_suite_url",
+          "cancel_url",
+          "rerun_url",
+          "artifacts_url",
+          "workflow_url",
+          "pull_requests"
+        ]
+      },
+      "team": {
+        "title": "Team",
+        "description": "Groups of organization members that gives permissions on specified repositories.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "node_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "privacy": {
+            "type": "string"
+          },
+          "permission": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "object",
+            "properties": {
+              "pull": {
+                "type": "boolean"
+              },
+              "triage": {
+                "type": "boolean"
+              },
+              "push": {
+                "type": "boolean"
+              },
+              "maintain": {
+                "type": "boolean"
+              },
+              "admin": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "pull",
+              "triage",
+              "push",
+              "maintain",
+              "admin"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/orgs/rails/teams/core"
+          },
+          "members_url": {
+            "type": "string"
+          },
+          "repositories_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "parent": {
+            "$ref": "#/components/schemas/nullable-team-simple"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "url",
+          "members_url",
+          "name",
+          "description",
+          "permission",
+          "html_url",
+          "repositories_url",
+          "slug",
+          "parent"
+        ]
+      },
+      "check-suite": {
+        "title": "CheckSuite",
+        "description": "A suite of checks performed on the code of a given code change",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 5
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDEwOkNoZWNrU3VpdGU1"
+          },
+          "head_branch": {
+            "type": "string",
+            "example": "master",
+            "nullable": true
+          },
+          "head_sha": {
+            "description": "The SHA of the head commit that is being checked.",
+            "example": "009b8a3a9ccbb128af87f9b1c0f4c62e8a304f6d",
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "completed",
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed"
+            ],
+            "nullable": true
+          },
+          "conclusion": {
+            "type": "string",
+            "example": "neutral",
+            "enum": [
+              "success",
+              "failure",
+              "neutral",
+              "cancelled",
+              "skipped",
+              "timed_out",
+              "action_required",
+              "startup_failure",
+              "stale",
+              null
+            ],
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "example": "https://api.github.com/repos/github/hello-world/check-suites/5",
+            "nullable": true
+          },
+          "before": {
+            "type": "string",
+            "example": "146e867f55c26428e5f9fade55a9bbf5e95a7912",
+            "nullable": true
+          },
+          "after": {
+            "type": "string",
+            "example": "d6fde92930d4715a2b49857d24b940956b26d2d3",
+            "nullable": true
+          },
+          "pull_requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/pull-request-minimal"
+            },
+            "nullable": true
+          },
+          "app": {
+            "$ref": "#/components/schemas/nullable-integration"
+          },
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "head_commit": {
+            "$ref": "#/components/schemas/simple-commit"
+          },
+          "latest_check_runs_count": {
+            "type": "integer"
+          },
+          "check_runs_url": {
+            "type": "string"
+          },
+          "rerequestable": {
+            "type": "boolean"
+          },
+          "runs_rerequestable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "head_branch",
+          "status",
+          "conclusion",
+          "head_sha",
+          "url",
+          "before",
+          "after",
+          "created_at",
+          "updated_at",
+          "app",
+          "head_commit",
+          "repository",
+          "latest_check_runs_count",
+          "check_runs_url",
+          "pull_requests"
+        ]
+      },
+      "check-suite-preference": {
+        "title": "Check Suite Preference",
+        "description": "Check suite configuration preferences for a repository.",
+        "type": "object",
+        "required": [
+          "preferences",
+          "repository"
+        ],
+        "properties": {
+          "preferences": {
+            "type": "object",
+            "properties": {
+              "auto_trigger_checks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "app_id": {
+                      "type": "integer"
+                    },
+                    "setting": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "app_id",
+                    "setting"
+                  ]
+                }
+              }
+            }
+          },
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          }
+        }
+      },
+      "repository-invitation": {
+        "title": "Repository Invitation",
+        "description": "Repository invitations let you manage who you collaborate with.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier of the repository invitation.",
+            "example": 42,
+            "type": "integer"
+          },
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          },
+          "invitee": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "inviter": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "permissions": {
+            "description": "The permission associated with the invitation.",
+            "example": "read",
+            "type": "string",
+            "enum": [
+              "read",
+              "write",
+              "admin",
+              "triage",
+              "maintain"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2016-06-13T14:52:50-05:00"
+          },
+          "expired": {
+            "description": "Whether or not the invitation has expired",
+            "type": "boolean"
+          },
+          "url": {
+            "description": "URL for the repository invitation",
+            "example": "https://api.github.com/user/repository-invitations/1",
+            "type": "string"
+          },
+          "html_url": {
+            "type": "string",
+            "example": "https://github.com/octocat/Hello-World/invitations"
+          },
+          "node_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "permissions",
+          "inviter",
+          "invitee",
+          "repository",
+          "url",
+          "html_url",
+          "created_at"
+        ]
+      },
+      "combined-commit-status": {
+        "title": "Combined Commit Status",
+        "description": "Combined Commit Status",
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string"
+          },
+          "statuses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/simple-commit-status"
+            }
+          },
+          "sha": {
+            "type": "string"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          },
+          "commit_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "state",
+          "sha",
+          "total_count",
+          "statuses",
+          "repository",
+          "commit_url",
+          "url"
+        ]
+      },
+      "pull-request-review-comment": {
+        "title": "Pull Request Review Comment",
+        "description": "Pull Request Review Comments are comments on a portion of the Pull Request's diff.",
+        "type": "object",
+        "properties": {
+          "url": {
+            "description": "URL for the pull request review comment",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/comments/1",
+            "type": "string"
+          },
+          "pull_request_review_id": {
+            "description": "The ID of the pull request review to which the comment belongs.",
+            "example": 42,
+            "type": "integer",
+            "nullable": true
+          },
+          "id": {
+            "description": "The ID of the pull request review comment.",
+            "example": 1,
+            "type": "integer"
+          },
+          "node_id": {
+            "description": "The node ID of the pull request review comment.",
+            "type": "string",
+            "example": "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDEw"
+          },
+          "diff_hunk": {
+            "description": "The diff of the line that the comment refers to.",
+            "type": "string",
+            "example": "@@ -16,33 +16,40 @@ public class Connection : IConnection..."
+          },
+          "path": {
+            "description": "The relative path of the file to which the comment applies.",
+            "example": "config/database.yaml",
+            "type": "string"
+          },
+          "position": {
+            "description": "The line index in the diff to which the comment applies. This field is deprecated; use `line` instead.",
+            "example": 1,
+            "type": "integer"
+          },
+          "original_position": {
+            "description": "The index of the original line in the diff to which the comment applies. This field is deprecated; use `original_line` instead.",
+            "example": 4,
+            "type": "integer"
+          },
+          "commit_id": {
+            "description": "The SHA of the commit to which the comment applies.",
+            "example": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
+            "type": "string"
+          },
+          "original_commit_id": {
+            "description": "The SHA of the original commit to which the comment applies.",
+            "example": "9c48853fa3dc5c1c3d6f1f1cd1f2743e72652840",
+            "type": "string"
+          },
+          "in_reply_to_id": {
+            "description": "The comment ID to reply to.",
+            "example": 8,
+            "type": "integer"
+          },
+          "user": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "body": {
+            "description": "The text of the comment.",
+            "example": "We should probably include a check for null values here.",
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-04-14T16:00:49Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2011-04-14T16:00:49Z"
+          },
+          "html_url": {
+            "description": "HTML URL for the pull request review comment.",
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World/pull/1#discussion-diff-1"
+          },
+          "pull_request_url": {
+            "description": "URL for the pull request that the review comment belongs to.",
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1"
+          },
+          "author_association": {
+            "$ref": "#/components/schemas/author-association"
+          },
+          "_links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.github.com/repos/octocat/Hello-World/pulls/comments/1"
+                  }
+                },
+                "required": [
+                  "href"
+                ]
+              },
+              "html": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://github.com/octocat/Hello-World/pull/1#discussion-diff-1"
+                  }
+                },
+                "required": [
+                  "href"
+                ]
+              },
+              "pull_request": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.github.com/repos/octocat/Hello-World/pulls/1"
+                  }
+                },
+                "required": [
+                  "href"
+                ]
+              }
+            },
+            "required": [
+              "self",
+              "html",
+              "pull_request"
+            ]
+          },
+          "start_line": {
+            "type": "integer",
+            "description": "The first line of the range for a multi-line comment.",
+            "example": 2,
+            "nullable": true
+          },
+          "original_start_line": {
+            "type": "integer",
+            "description": "The first line of the range for a multi-line comment.",
+            "example": 2,
+            "nullable": true
+          },
+          "start_side": {
+            "type": "string",
+            "description": "The side of the first line of the range for a multi-line comment.",
+            "enum": [
+              "LEFT",
+              "RIGHT"
+            ],
+            "default": "RIGHT",
+            "nullable": true
+          },
+          "line": {
+            "description": "The line of the blob to which the comment applies. The last line of the range for a multi-line comment",
+            "example": 2,
+            "type": "integer"
+          },
+          "original_line": {
+            "description": "The line of the blob to which the comment applies. The last line of the range for a multi-line comment",
+            "example": 2,
+            "type": "integer"
+          },
+          "side": {
+            "description": "The side of the diff to which the comment applies. The side of the last line of the range for a multi-line comment",
+            "enum": [
+              "LEFT",
+              "RIGHT"
+            ],
+            "default": "RIGHT",
+            "type": "string"
+          },
+          "subject_type": {
+            "description": "The level at which the comment is targeted, can be a diff line or a file.",
+            "type": "string",
+            "enum": [
+              "line",
+              "file"
+            ]
+          },
+          "reactions": {
+            "$ref": "#/components/schemas/reaction-rollup"
+          },
+          "body_html": {
+            "type": "string",
+            "example": "\"<p>comment body</p>\""
+          },
+          "body_text": {
+            "type": "string",
+            "example": "\"comment body\""
+          }
+        },
+        "required": [
+          "url",
+          "id",
+          "node_id",
+          "pull_request_review_id",
+          "diff_hunk",
+          "path",
+          "commit_id",
+          "original_commit_id",
+          "user",
+          "body",
+          "created_at",
+          "updated_at",
+          "html_url",
+          "pull_request_url",
+          "author_association",
+          "_links"
+        ]
+      },
+      "code-search-result-item": {
+        "title": "Code Search Result Item",
+        "description": "Code Search Result Item",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "sha": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "git_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          },
+          "score": {
+            "type": "number"
+          },
+          "file_size": {
+            "type": "integer"
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_modified_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "line_numbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "73..77",
+              "77..78"
+            ]
+          },
+          "text_matches": {
+            "$ref": "#/components/schemas/search-result-text-matches"
+          }
+        },
+        "required": [
+          "score",
+          "name",
+          "path",
+          "sha",
+          "git_url",
+          "html_url",
+          "url",
+          "repository"
+        ]
+      },
+      "commit-search-result-item": {
+        "title": "Commit Search Result Item",
+        "description": "Commit Search Result Item",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "sha": {
+            "type": "string"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "comments_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "commit": {
+            "type": "object",
+            "properties": {
+              "author": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "name",
+                  "email",
+                  "date"
+                ]
+              },
+              "committer": {
+                "$ref": "#/components/schemas/nullable-git-user"
+              },
+              "comment_count": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string"
+              },
+              "tree": {
+                "type": "object",
+                "properties": {
+                  "sha": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sha",
+                  "url"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "verification": {
+                "$ref": "#/components/schemas/verification"
+              }
+            },
+            "required": [
+              "author",
+              "committer",
+              "comment_count",
+              "message",
+              "tree",
+              "url"
+            ]
+          },
+          "author": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "committer": {
+            "$ref": "#/components/schemas/nullable-git-user"
+          },
+          "parents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "html_url": {
+                  "type": "string"
+                },
+                "sha": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "repository": {
+            "$ref": "#/components/schemas/minimal-repository"
+          },
+          "score": {
+            "type": "number"
+          },
+          "node_id": {
+            "type": "string"
+          },
+          "text_matches": {
+            "$ref": "#/components/schemas/search-result-text-matches"
+          }
+        },
+        "required": [
+          "sha",
+          "node_id",
+          "url",
+          "html_url",
+          "author",
+          "committer",
+          "parents",
+          "comments_url",
+          "commit",
+          "repository",
+          "score"
+        ]
+      },
+      "nullable-simple-user": {
+        "title": "Simple User",
+        "description": "A GitHub user.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "email": {
+            "nullable": true,
+            "type": "string"
+          },
+          "login": {
+            "type": "string",
+            "example": "octocat"
+          },
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDQ6VXNlcjE="
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/images/error/octocat_happy.gif"
+          },
+          "gravatar_id": {
+            "type": "string",
+            "example": "41d064eb2195891e12d0413f63227ea7",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat"
+          },
+          "followers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/followers"
+          },
+          "following_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/following{/other_user}"
+          },
+          "gists_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+          },
+          "starred_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+          },
+          "subscriptions_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/subscriptions"
+          },
+          "organizations_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/orgs"
+          },
+          "repos_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/repos"
+          },
+          "events_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/events{/privacy}"
+          },
+          "received_events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/received_events"
+          },
+          "type": {
+            "type": "string",
+            "example": "User"
+          },
+          "site_admin": {
+            "type": "boolean"
+          },
+          "starred_at": {
+            "type": "string",
+            "example": "\"2020-07-09T00:17:55Z\""
+          }
+        },
+        "required": [
+          "avatar_url",
+          "events_url",
+          "followers_url",
+          "following_url",
+          "gists_url",
+          "gravatar_id",
+          "html_url",
+          "id",
+          "node_id",
+          "login",
+          "organizations_url",
+          "received_events_url",
+          "repos_url",
+          "site_admin",
+          "starred_url",
+          "subscriptions_url",
+          "type",
+          "url"
+        ],
+        "nullable": true
+      },
+      "nullable-scoped-installation": {
+        "title": "Scoped Installation",
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "$ref": "#/components/schemas/app-permissions"
+          },
+          "repository_selection": {
+            "description": "Describe whether all repositories have been selected or there's a selection involved",
+            "type": "string",
+            "enum": [
+              "all",
+              "selected"
+            ]
+          },
+          "single_file_name": {
+            "type": "string",
+            "example": "config.yaml",
+            "nullable": true
+          },
+          "has_multiple_single_files": {
+            "type": "boolean",
+            "example": true
+          },
+          "single_file_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "config.yml",
+              ".github/issue_TEMPLATE.md"
+            ]
+          },
+          "repositories_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/repos"
+          },
+          "account": {
+            "$ref": "#/components/schemas/simple-user"
+          }
+        },
+        "required": [
+          "permissions",
+          "repository_selection",
+          "single_file_name",
+          "repositories_url",
+          "account"
+        ],
+        "nullable": true
+      },
+      "simple-user": {
+        "title": "Simple User",
+        "description": "A GitHub user.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "email": {
+            "nullable": true,
+            "type": "string"
+          },
+          "login": {
+            "type": "string",
+            "example": "octocat"
+          },
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDQ6VXNlcjE="
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/images/error/octocat_happy.gif"
+          },
+          "gravatar_id": {
+            "type": "string",
+            "example": "41d064eb2195891e12d0413f63227ea7",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat"
+          },
+          "followers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/followers"
+          },
+          "following_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/following{/other_user}"
+          },
+          "gists_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/gists{/gist_id}"
+          },
+          "starred_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}"
+          },
+          "subscriptions_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/subscriptions"
+          },
+          "organizations_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/orgs"
+          },
+          "repos_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/repos"
+          },
+          "events_url": {
+            "type": "string",
+            "example": "https://api.github.com/users/octocat/events{/privacy}"
+          },
+          "received_events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/users/octocat/received_events"
+          },
+          "type": {
+            "type": "string",
+            "example": "User"
+          },
+          "site_admin": {
+            "type": "boolean"
+          },
+          "starred_at": {
+            "type": "string",
+            "example": "\"2020-07-09T00:17:55Z\""
+          }
+        },
+        "required": [
+          "avatar_url",
+          "events_url",
+          "followers_url",
+          "following_url",
+          "gists_url",
+          "gravatar_id",
+          "html_url",
+          "id",
+          "node_id",
+          "login",
+          "organizations_url",
+          "received_events_url",
+          "repos_url",
+          "site_admin",
+          "starred_url",
+          "subscriptions_url",
+          "type",
+          "url"
+        ]
+      },
+      "enterprise": {
+        "title": "Enterprise",
+        "description": "An enterprise on GitHub.",
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "A short description of the enterprise.",
+            "type": "string",
+            "nullable": true
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/enterprises/octo-business"
+          },
+          "website_url": {
+            "description": "The enterprise's website URL.",
+            "type": "string",
+            "nullable": true,
+            "format": "uri"
+          },
+          "id": {
+            "description": "Unique identifier of the enterprise",
+            "example": 42,
+            "type": "integer"
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+          },
+          "name": {
+            "description": "The name of the enterprise.",
+            "type": "string",
+            "example": "Octo Business"
+          },
+          "slug": {
+            "description": "The slug url identifier for the enterprise.",
+            "type": "string",
+            "example": "octo-business"
+          },
+          "created_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "example": "2019-01-26T19:01:12Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "example": "2019-01-26T19:14:43Z"
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "name",
+          "slug",
+          "html_url",
+          "created_at",
+          "updated_at",
+          "avatar_url"
+        ]
+      },
+      "basic-error": {
+        "title": "Basic Error",
+        "description": "Basic Error",
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "documentation_url": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "repository": {
+        "title": "Repository",
+        "description": "A repository on GitHub.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier of the repository",
+            "example": 42,
+            "type": "integer"
+          },
+          "node_id": {
+            "type": "string",
+            "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5"
+          },
+          "name": {
+            "description": "The name of the repository.",
+            "type": "string",
+            "example": "Team Environment"
+          },
+          "full_name": {
+            "type": "string",
+            "example": "octocat/Hello-World"
+          },
+          "license": {
+            "$ref": "#/components/schemas/nullable-license-simple"
+          },
+          "organization": {
+            "$ref": "#/components/schemas/nullable-simple-user"
+          },
+          "forks": {
+            "type": "integer"
+          },
+          "permissions": {
+            "type": "object",
+            "properties": {
+              "admin": {
+                "type": "boolean"
+              },
+              "pull": {
+                "type": "boolean"
+              },
+              "triage": {
+                "type": "boolean"
+              },
+              "push": {
+                "type": "boolean"
+              },
+              "maintain": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "admin",
+              "pull",
+              "push"
+            ]
+          },
+          "owner": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "private": {
+            "description": "Whether the repository is private or public.",
+            "default": false,
+            "type": "boolean"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://github.com/octocat/Hello-World"
+          },
+          "description": {
+            "type": "string",
+            "example": "This your first repo!",
+            "nullable": true
+          },
+          "fork": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.github.com/repos/octocat/Hello-World"
+          },
+          "archive_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}"
+          },
+          "assignees_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/assignees{/user}"
+          },
+          "blobs_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}"
+          },
+          "branches_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/branches{/branch}"
+          },
+          "collaborators_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}"
+          },
+          "comments_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/comments{/number}"
+          },
+          "commits_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/commits{/sha}"
+          },
+          "compare_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}"
+          },
+          "contents_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/contents/{+path}"
+          },
+          "contributors_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/contributors"
+          },
+          "deployments_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/deployments"
+          },
+          "downloads_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/downloads"
+          },
+          "events_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/events"
+          },
+          "forks_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/forks"
+          },
+          "git_commits_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"
+          },
+          "git_refs_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"
+          },
+          "git_tags_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"
+          },
+          "git_url": {
+            "type": "string",
+            "example": "git:github.com/octocat/Hello-World.git"
+          },
+          "issue_comment_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}"
+          },
+          "issue_events_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}"
+          },
+          "issues_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/issues{/number}"
+          },
+          "keys_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}"
+          },
+          "labels_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}"
+          },
+          "languages_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/languages"
+          },
+          "merges_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/merges"
+          },
+          "milestones_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/milestones{/number}"
+          },
+          "notifications_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}"
+          },
+          "pulls_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/pulls{/number}"
+          },
+          "releases_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/releases{/id}"
+          },
+          "ssh_url": {
+            "type": "string",
+            "example": "git@github.com:octocat/Hello-World.git"
+          },
+          "stargazers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/stargazers"
+          },
+          "statuses_url": {
+            "type": "string",
+            "example": "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"
+          },
+          "subscribers_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/subscribers"
+          },
+          "subscription_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://api.github.com/repos/octocat/Hello-World/subscription"
           },
           {
             "name": "X-Github-Hook-Id",
