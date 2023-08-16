@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { resolve, join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-const SUPPORTED_GHES_OPERATIONS = [3.5, 3.6, 3.7, 3.8, 3.9];
+const SUPPORTED_GHES_OPERATIONS = ["3.5", "3.6", "3.7", "3.8", "3.9"];
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function isDeferenced(filename) {
@@ -64,9 +64,7 @@ export default function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
   const isAE = file.startsWith("github.ae");
   const isDotcom = file.startsWith("api.github.com");
-  const ghesVersion = isGHES
-    ? Number(file.match(/(?<=^ghes-)\d\.\d/)[0])
-    : null;
+  const ghesVersion = isGHES ? file.match(/(?<=^ghes-)\d\.\d/)[0] : null;
 
   if (isGHES && SUPPORTED_GHES_OPERATIONS.indexOf(ghesVersion) == -1) {
     throw (
