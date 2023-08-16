@@ -64,9 +64,7 @@ export default function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
   const isAE = file.startsWith("github.ae");
   const isDotcom = file.startsWith("api.github.com");
-  const ghesVersion = isGHES
-    ? file.match(/(?<=^ghes-)\d\.\d/)[0]
-    : null;
+  const ghesVersion = isGHES ? file.match(/(?<=^ghes-)\d\.\d/)[0] : null;
 
   if (isGHES && SUPPORTED_GHES_OPERATIONS.indexOf(ghesVersion) == -1) {
     throw (
