@@ -79,3 +79,13 @@ Besides publishing a new version to npm, semantic-release also creates a git tag
 on GitHub, generates changelogs from the commit messages and puts them into the release notes.
 
 If the pull request looks good but does not follow the commit conventions, use the <kbd>Squash & merge</kbd> button.
+
+## Troubleshooting
+
+### When I clone the repository, files in `cached/` and `generated/` are empty
+
+These folders are versioned using [Git Large File Storage](https://git-lfs.com/). Not having `git lfs` installed on your local machine could be the reason of this issue.
+You can download `Git LFS` and find the install steps here: [https://git-lfs.com/](https://git-lfs.com/)
+
+If you would like to configure your local machine to show diffs for the files under LFS there's [this hack](https://github.com/git-lfs/git-lfs/issues/440#issuecomment-500871343):
+`git config diff.lfs.textconv cat`
