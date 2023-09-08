@@ -111,8 +111,8 @@ export default function overrides(file, schema) {
       schema,
       "/app/installations",
       "get",
-      "./get-app-installations.deref.json"
-    )
+      "./get-app-installations.deref.json",
+    );
 
     // The following 3 endpoints have bad usage of `anyOf` in the request body schema.
     // See https://github.com/octokit/types.ts/issues/534
@@ -147,8 +147,8 @@ export default function overrides(file, schema) {
       schema,
       "/app/installations",
       "get",
-      "./get-app-installations.json"
-    )
+      "./get-app-installations.json",
+    );
 
     addOperation(
       schema,
