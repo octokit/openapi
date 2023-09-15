@@ -106,7 +106,8 @@ export default function overrides(file, schema) {
   );
 
   if (isDeferenced(file)) {
-    // The /app/installations/ endpoint have bad usage of `anyof` in the response body schema
+    // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
+    // See https://github.com/octokit/openapi-types.ts/issues/305
     replaceOperation(
       schema,
       "/app/installations",
@@ -142,7 +143,8 @@ export default function overrides(file, schema) {
       "./repos-compare-commits.deref.json",
     );
   } else {
-    // The /app/installations/ endpoint have bad usage of `anyof` in the response body schema
+    // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
+    // See https://github.com/octokit/openapi-types.ts/issues/305
     replaceOperation(
       schema,
       "/app/installations",
