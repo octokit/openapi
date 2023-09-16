@@ -17,9 +17,9 @@ import mapObj, { mapObjectSkip } from "map-obj";
 
 import overrides from "./overrides/index.mjs";
 
-if (!process.env.GITHUB_ACTIONS && !process.env.ANICCA_REPOSITORY_PATH) {
+/*if (!process.env.GITHUB_ACTIONS && !process.env.ANICCA_REPOSITORY_PATH) {
   throw new Error("Please set ANICCA_REPOSITORY_PATH");
-}
+}*/
 
 run();
 
