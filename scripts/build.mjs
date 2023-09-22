@@ -17,9 +17,9 @@ import mapObj, { mapObjectSkip } from "map-obj";
 
 import overrides from "./overrides/index.mjs";
 
-if (!process.env.GITHUB_ACTIONS && !process.env.ANICCA_REPOSITORY_PATH) {
+/*if (!process.env.GITHUB_ACTIONS && !process.env.ANICCA_REPOSITORY_PATH) {
   throw new Error("Please set ANICCA_REPOSITORY_PATH");
-}
+}*/
 
 run();
 
@@ -78,8 +78,8 @@ async function run() {
     console.log(`generated/${file} written`);
   }
 
-  // generate diff files
-  for (const file of schemaFileNames) {
+  // generate diff files - this is currently disabled because anicca is no longer maintained
+  /*for (const file of schemaFileNames) {
     if (!file.endsWith("deref.json")) continue;
     if (file.startsWith("api.github.com")) continue;
 
@@ -170,7 +170,7 @@ async function run() {
     // add diff files
     createDiffVersion(toPath, latestGhesVersion);
     createDiffVersion(toPath.replace(".deref", ""), latestGhesVersion);
-  }
+  }*/
 
   let schemasCode = "";
 
