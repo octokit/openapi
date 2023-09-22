@@ -106,6 +106,15 @@ export default function overrides(file, schema) {
   );
 
   if (isDeferenced(file)) {
+    // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
+    // See https://github.com/octokit/openapi-types.ts/issues/305
+    replaceOperation(
+      schema,
+      "/app/installations",
+      "get",
+      "./get-app-installations.deref.json",
+    );
+
     // The following 3 endpoints have bad usage of `anyOf` in the request body schema.
     // See https://github.com/octokit/types.ts/issues/534
     // See https://github.com/drwpow/openapi-typescript/issues/1020
@@ -134,6 +143,15 @@ export default function overrides(file, schema) {
       "./repos-compare-commits.deref.json",
     );
   } else {
+    // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
+    // See https://github.com/octokit/openapi-types.ts/issues/305
+    replaceOperation(
+      schema,
+      "/app/installations",
+      "get",
+      "./get-app-installations.json",
+    );
+
     addOperation(
       schema,
       "/repos/{owner}/{repo}/compare/{base}...{head}",
