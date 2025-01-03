@@ -9,6 +9,8 @@ const SUPPORTED_GHES_OPERATIONS = [
   "3.11",
   "3.12",
   "3.13",
+  "3.14",
+  "3.15",
 ];
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
