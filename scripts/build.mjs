@@ -172,22 +172,45 @@ async function run() {
     createDiffVersion(toPath.replace(".deref", ""), latestGhesVersion);
   }*/
 
-  let schemasCode = "";
+  let schemasCode = {
+    esm: "",
+    cjs: "",
+  };
+  let schemasImports = "";
 
   for (const name of schemaFileNames) {
-    schemasCode += `["${name.replace(
+    const importName = name.replace("api.github.com", "dotcom").replace(".json", "").replace("-", "_").replace(".deref", "_DEREF").replace(".", "").toUpperCase();
+    schemasImports += `import ${importName} from "./generated/${name}" with { type: "json"}\n`;
+    schemasCode.esm += `["${name.replace(
+      ".json",
+      "",
+    )}"]: ${importName},`;
+    schemasCode.cjs += `["${name.replace(
       ".json",
       "",
     )}"]: require("./generated/${name}"),`;
   }
 
   writeFileSync(
-    "index.js",
+    "index.mjs",
+    await prettier.format(
+      `${schemasImports}\n
+      export const schemas = {
+          ${schemasCode.esm}
+        }
+    `,
+      {
+        parser: "babel",
+      },
+    ),
+  );
+  writeFileSync(
+    "index.cjs",
     await prettier.format(
       `
       module.exports = {
         schemas: {
-          ${schemasCode}
+          ${schemasCode.cjs}
         }
       }
     `,
