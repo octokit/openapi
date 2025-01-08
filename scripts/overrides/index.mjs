@@ -162,6 +162,9 @@ export default function overrides(file, schema) {
       "get",
       "./repos-compare-commits.deref.json",
     );
+    if (isDotcom || isGHES && ghesVersion < 3.14) {
+      addOperation(schema, "/orgs/{org}/organization-fine-grained-permissions", "get", "./list-organization-fine-grained-permissions.deref.json");
+    }
   } else {
     // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
     // See https://github.com/octokit/openapi-types.ts/issues/305
@@ -199,6 +202,9 @@ export default function overrides(file, schema) {
       "post",
       "./checks-create.json",
     );
+    if (isDotcom || isGHES && ghesVersion < 3.14) {
+      addOperation(schema, "/orgs/{org}/organization-fine-grained-permissions", "get", "./list-organization-fine-grained-permissions.json");
+    }
   }
 
   // Mark `assignees` parameter - and in fact, the whole request body - as required for the
