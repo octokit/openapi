@@ -1,0 +1,157 @@
+{
+  "summary": "List organization fine-grained permissions for an organization",
+  "description": "Lists the fine-grained permissions that can be used in custom organization roles for an organization. For more information, see \"[Managing people's access to your organization with roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/about-custom-organization-roles).\"\n\nTo list the fine-grained permissions that can be used in custom repository roles for an organization, see \"[List repository fine-grained permissions for an organization](https://docs.github.com/rest/orgs/organization-roles#list-repository-fine-grained-permissions-for-an-organization).\"\n\nTo use this endpoint, the authenticated user must be one of:\n\n- An administrator for the organization.\n- A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
+  "tags": ["orgs"],
+  "operationId": "orgs/list-organization-fine-grained-permissions",
+  "externalDocs": {
+    "description": "API method documentation",
+    "url": "https://docs.github.com/rest/orgs/organization-roles#list-organization-fine-grained-permissions-for-an-organization"
+  },
+  "parameters": [
+    {
+      "name": "org",
+      "description": "The organization name. The name is not case sensitive.",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "title": "Organization Fine-Grained Permission",
+              "description": "A fine-grained permission that protects organization resources.",
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": ["name", "description"]
+            }
+          },
+          "examples": {
+            "default": {
+              "value": [
+                {
+                  "name": "read_organization_custom_org_role",
+                  "description": "View organization roles"
+                },
+                {
+                  "name": "write_organization_custom_org_role",
+                  "description": "Manage custom organization roles"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "404": {
+      "description": "Resource not found",
+      "content": {
+        "application/json": {
+          "schema": {
+            "title": "Basic Error",
+            "description": "Basic Error",
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "documentation_url": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "422": {
+      "description": "Validation failed, or the endpoint has been spammed.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "title": "Validation Error",
+            "description": "Validation Error",
+            "type": "object",
+            "required": ["message", "documentation_url"],
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "documentation_url": {
+                "type": "string"
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "resource": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "index": {
+                      "type": "integer"
+                    },
+                    "value": {
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-github": {
+    "githubCloudOnly": false,
+    "enabledForGitHubApps": true,
+    "category": "orgs",
+    "subcategory": "organization-roles"
+  }
+}

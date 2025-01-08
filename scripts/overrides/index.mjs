@@ -73,6 +73,7 @@ export default function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
   const isAE = file.startsWith("github.ae");
   const isDotcom = file.startsWith("api.github.com");
+  const isGHEC = file.startsWith("ghec");
   const ghesVersion = isGHES ? file.match(/(?<=^ghes-)\d+\.\d+/)[0] : null;
 
   if (isGHES && SUPPORTED_GHES_OPERATIONS.indexOf(ghesVersion) == -1) {
@@ -113,6 +114,16 @@ export default function overrides(file, schema) {
     "get",
     "repos/compare-commits-with-basehead",
   );
+  // The operation ID for the "List accepted assignments for an assignment" API has been changed due to a typo.
+  // Remove for the next major version bump.
+  if (isDotcom || isGHEC) {
+    rewriteOperationId(
+      schema,
+      "/assignments/{assignment_id}/accepted_assignments",
+      "get",
+      "classroom/list-accepted-assigments-for-an-assignment",
+    );
+  }
 
   if (isDeferenced(file)) {
     // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
@@ -151,6 +162,14 @@ export default function overrides(file, schema) {
       "get",
       "./repos-compare-commits.deref.json",
     );
+    if (isDotcom || (isGHES && ghesVersion < 3.14)) {
+      addOperation(
+        schema,
+        "/orgs/{org}/organization-fine-grained-permissions",
+        "get",
+        "./list-organization-fine-grained-permissions.deref.json",
+      );
+    }
   } else {
     // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
     // See https://github.com/octokit/openapi-types.ts/issues/305
@@ -188,6 +207,14 @@ export default function overrides(file, schema) {
       "post",
       "./checks-create.json",
     );
+    if (isDotcom || (isGHES && ghesVersion < 3.14)) {
+      addOperation(
+        schema,
+        "/orgs/{org}/organization-fine-grained-permissions",
+        "get",
+        "./list-organization-fine-grained-permissions.json",
+      );
+    }
   }
 
   // Mark `assignees` parameter - and in fact, the whole request body - as required for the
