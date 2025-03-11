@@ -2,16 +2,7 @@ import { readFileSync } from "fs";
 import { resolve, join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-const SUPPORTED_GHES_OPERATIONS = [
-  "3.8",
-  "3.9",
-  "3.10",
-  "3.11",
-  "3.12",
-  "3.13",
-  "3.14",
-  "3.15",
-];
+const SUPPORTED_GHES_OPERATIONS = ["3.12", "3.13", "3.14", "3.15", "3.16"];
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function isDeferenced(filename) {
