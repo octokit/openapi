@@ -12,5 +12,7 @@ module.exports = {
     ["ghes-3.15"]: require("./generated/ghes-3.15.json"),
     ["ghes-3.16.deref"]: require("./generated/ghes-3.16.deref.json"),
     ["ghes-3.16"]: require("./generated/ghes-3.16.json"),
+    ["ghes-3.17.deref"]: require("./generated/ghes-3.17.deref.json"),
+    ["ghes-3.17"]: require("./generated/ghes-3.17.json"),
   },
 };
