@@ -52,6 +52,13 @@ async function run() {
     // apply overrides to the unaltered schemas from GitHub
     overrides(file, schema);
 
+    // temporary fix for bulk-list endpoint being POST instead of GET
+    if (schema.paths["/orgs/{org}/attestations/bulk-list"] && schema.paths["/orgs/{org}/attestations/bulk-list"].post) {
+      schema.paths["/orgs/{org}/attestations/bulk-list"] = {
+        get: { ...schema.paths["/orgs/{org}/attestations/bulk-list"].post }
+      };
+    }
+
     for (const [path, methods] of Object.entries(schema.paths)) {
       for (const [method, operation] of Object.entries(methods)) {
         const route = `${method.toUpperCase()} ${path}`;
