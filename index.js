@@ -14,5 +14,7 @@ module.exports = {
     ["ghes-3.17"]: require("./generated/ghes-3.17.json"),
     ["ghes-3.18.deref"]: require("./generated/ghes-3.18.deref.json"),
     ["ghes-3.18"]: require("./generated/ghes-3.18.json"),
+    ["ghes-3.19.deref"]: require("./generated/ghes-3.19.deref.json"),
+    ["ghes-3.19"]: require("./generated/ghes-3.19.json"),
   },
 };
