@@ -16,14 +16,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 2
 
       - name: Determine whether to skip
         id: changed
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -vE '^(cache/|generated/)' || true)
-          if [ -z "$CHANGED" ]; then
+          # Base and head commits provided directly by GitHub for PRs
+          BASE_SHA=${{ github.event.pull_request.base.sha }}
+          HEAD_SHA=${{ github.event.pull_request.head.sha }}
+
+          # For pushes (not PRs), fall back to simple HEAD~1 diff
+          if [ -z "$BASE_SHA" ]; then
+            BASE_SHA=HEAD~1
+          fi
+
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" \
+            | grep -vE '^(cache/|generated/)' \
+            > changed.txt || true
+
+          if [ ! -s changed.txt ]; then
             echo "skip=true" >> $GITHUB_OUTPUT
           else
             echo "skip=false" >> $GITHUB_OUTPUT
