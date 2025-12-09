@@ -1,4 +1,4 @@
-"on":
+on:
   push:
     branches:
       - main
@@ -6,31 +6,46 @@
       - cache/**
       - generated/**
   pull_request:
-    types:
-      - opened
-      - synchronize
-    paths-ignore:
-      - cache/**
-      - generated/**
+    types: [opened, synchronize]
+
 name: Dry-run the update process
+
 jobs:
   update_dry_run:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Determine whether to skip
+        id: changed
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -vE '^(cache/|generated/)' || true)
+          if [ -z "$CHANGED" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Skip job
+        if: steps.changed.outputs.skip == 'true'
+        run: |
+          echo "Only cache/ or generated/ changed — skipping job."
+        # This step succeeds but the *job stops here* because remaining steps have conditions.
+
       - uses: actions/setup-node@v6
+        if: steps.changed.outputs.skip == 'false'
         with:
           cache: npm
           node-version: lts/*
+
       - run: npm ci
+        if: steps.changed.outputs.skip == 'false'
+
       - run: npm run download
-      # - uses: actions/checkout@v4
-      #   with:
-      #     repository: xuorig/anicca
-      #     path: anicca
-      # - uses: actions-rs/toolchain@88dc2356392166efad76775c878094f4e83ff746
-      #   with:
-      #     toolchain: stable
-      # - run: cargo build
-      #   working-directory: anicca
+        if: steps.changed.outputs.skip == 'false'
+
       - run: npm run build
+        if: steps.changed.outputs.skip == 'false'
