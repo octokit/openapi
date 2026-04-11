@@ -67,6 +67,67 @@ function replaceOperation(schema, path, httpMethod, overridePath) {
   );
 }
 
+// Converts an `anyOf` with a `{type: "null"}` entry into the non-null entry
+// plus `nullable: true`, which is the OpenAPI 3.0 way to express nullability.
+function anyOfToNullable(obj) {
+  if (!obj.anyOf) return;
+  const nonNull = obj.anyOf.filter((e) => e.type !== "null");
+  if (nonNull.length === 1) {
+    // Single non-null entry: flatten into the parent object
+    const entry = nonNull[0];
+    for (const key of Object.keys(obj)) delete obj[key];
+    Object.assign(obj, entry, { nullable: true });
+  }
+}
+
+// Patches the `/app/installations` GET endpoint to fix `anyOf` usage in the
+// response schema. The upstream spec uses `anyOf` for `account` (SimpleUser |
+// Enterprise) where `allOf` is correct, and `anyOf` for `suspended_by` (null |
+// SimpleUser) that should be a nullable object.
+// See https://github.com/octokit/openapi-types.ts/issues/305
+function patchAppInstallationsAnyOf(schema, dereferenced) {
+  const path = "/app/installations";
+  if (!schema.paths[path]?.get) {
+    throw `GET ${path} not found in schema`;
+  }
+
+  if (dereferenced) {
+    // In the dereferenced schema the properties live inline in the response items
+    const items =
+      schema.paths[path].get.responses["200"].content["application/json"].schema
+        .items;
+
+    // account: anyOf [SimpleUser, Enterprise] → allOf + nullable
+    const account = items.properties.account;
+    if (account.anyOf) {
+      account.allOf = account.anyOf;
+      delete account.anyOf;
+      // upstream uses type: ["null", "object"]; replace with nullable: true
+      delete account.type;
+      account.nullable = true;
+    }
+
+    // suspended_by: anyOf [{type: null}, SimpleUser] → SimpleUser + nullable
+    anyOfToNullable(items.properties.suspended_by);
+  } else {
+    // In the referenced schema the properties live on the `installation` component
+    const installation = schema.components?.schemas?.installation;
+    if (installation) {
+      // account: anyOf [$ref SimpleUser, $ref Enterprise] → allOf + nullable
+      const account = installation.properties.account;
+      if (account.anyOf) {
+        account.allOf = account.anyOf;
+        delete account.anyOf;
+        delete account.type;
+        account.nullable = true;
+      }
+
+      // suspended_by: anyOf [{type: null}, $ref SimpleUser] → $ref + nullable
+      anyOfToNullable(installation.properties.suspended_by);
+    }
+  }
+}
+
 export default function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
   const isAE = file.startsWith("github.ae");
@@ -92,6 +153,8 @@ export default function overrides(file, schema) {
       const requestBodySchema =
         operation.requestBody.content["application/json"].schema;
 
+      if (!requestBodySchema) continue;
+
       if (requestBodySchema.anyOf) {
         requestBodySchema.anyOf = requestBodySchema.anyOf.filter(
           (item) => !item.type || item.type === "object",
@@ -113,16 +176,11 @@ export default function overrides(file, schema) {
     "repos/compare-commits-with-basehead",
   );
 
-  if (isDeferenced(file)) {
-    // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
-    // See https://github.com/octokit/openapi-types.ts/issues/305
-    replaceOperation(
-      schema,
-      "/app/installations",
-      "get",
-      "./get-app-installations.deref.json",
-    );
+  // The `/app/installations/` endpoint has bad usage of `anyOf` in the response body schema
+  // See https://github.com/octokit/openapi-types.ts/issues/305
+  patchAppInstallationsAnyOf(schema, isDeferenced(file));
 
+  if (isDeferenced(file)) {
     // The following 3 endpoints have bad usage of `anyOf` in the request body schema.
     // See https://github.com/octokit/types.ts/issues/534
     // See https://github.com/drwpow/openapi-typescript/issues/1020
@@ -159,15 +217,6 @@ export default function overrides(file, schema) {
       );
     }
   } else {
-    // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
-    // See https://github.com/octokit/openapi-types.ts/issues/305
-    replaceOperation(
-      schema,
-      "/app/installations",
-      "get",
-      "./get-app-installations.json",
-    );
-
     addOperation(
       schema,
       "/repos/{owner}/{repo}/compare/{base}...{head}",
