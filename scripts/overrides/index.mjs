@@ -67,6 +67,38 @@ function replaceOperation(schema, path, httpMethod, overridePath) {
   );
 }
 
+// Patches the `/app/installations` GET endpoint to fix `anyOf` usage in the
+// response schema. The upstream spec uses `anyOf` for `account` where `allOf`
+// is correct. See https://github.com/octokit/openapi-types.ts/issues/305
+function patchAppInstallationsAnyOf(schema, dereferenced) {
+  const path = "/app/installations";
+  if (!schema.paths[path]?.get) {
+    throw `GET ${path} not found in schema`;
+  }
+
+  if (dereferenced) {
+    // In the dereferenced schema the anyOf lives inline in the response items
+    const items =
+      schema.paths[path].get.responses["200"].content["application/json"].schema
+        .items;
+    const account = items.properties.account;
+    if (account.anyOf) {
+      account.allOf = account.anyOf;
+      delete account.anyOf;
+    }
+  } else {
+    // In the referenced schema the anyOf lives on the `installation` component
+    const installation = schema.components?.schemas?.installation;
+    if (installation) {
+      const account = installation.properties.account;
+      if (account.anyOf) {
+        account.allOf = account.anyOf;
+        delete account.anyOf;
+      }
+    }
+  }
+}
+
 export default function overrides(file, schema) {
   const isGHES = file.startsWith("ghes-");
   const isAE = file.startsWith("github.ae");
@@ -92,6 +124,8 @@ export default function overrides(file, schema) {
       const requestBodySchema =
         operation.requestBody.content["application/json"].schema;
 
+      if (!requestBodySchema) continue;
+
       if (requestBodySchema.anyOf) {
         requestBodySchema.anyOf = requestBodySchema.anyOf.filter(
           (item) => !item.type || item.type === "object",
@@ -113,16 +147,11 @@ export default function overrides(file, schema) {
     "repos/compare-commits-with-basehead",
   );
 
-  if (isDeferenced(file)) {
-    // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
-    // See https://github.com/octokit/openapi-types.ts/issues/305
-    replaceOperation(
-      schema,
-      "/app/installations",
-      "get",
-      "./get-app-installations.deref.json",
-    );
+  // The `/app/installations/` endpoint has bad usage of `anyOf` in the response body schema
+  // See https://github.com/octokit/openapi-types.ts/issues/305
+  patchAppInstallationsAnyOf(schema, isDeferenced(file));
 
+  if (isDeferenced(file)) {
     // The following 3 endpoints have bad usage of `anyOf` in the request body schema.
     // See https://github.com/octokit/types.ts/issues/534
     // See https://github.com/drwpow/openapi-typescript/issues/1020
@@ -159,15 +188,6 @@ export default function overrides(file, schema) {
       );
     }
   } else {
-    // The `/app/installations/` endpoint has bad usage of `anyof` in the response body schema
-    // See https://github.com/octokit/openapi-types.ts/issues/305
-    replaceOperation(
-      schema,
-      "/app/installations",
-      "get",
-      "./get-app-installations.json",
-    );
-
     addOperation(
       schema,
       "/repos/{owner}/{repo}/compare/{base}...{head}",
