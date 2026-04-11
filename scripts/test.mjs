@@ -1,4 +1,9 @@
 import { readdirSync, readFileSync } from "fs";
+import { execFileSync } from "child_process";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const VERIFY_FOLDERS = ["cache", "changes", "generated"];
 
 console.log("Verifying folders: %j", VERIFY_FOLDERS);
@@ -24,4 +29,14 @@ if (errors.length > 0) {
   process.exit(1);
 } else {
   console.log("✅ No errors found");
+}
+
+// Run override-specific assertions against generated schemas
+console.log("\nRunning override assertions...");
+try {
+  execFileSync("node", [resolve(__dirname, "overrides/test-overrides.mjs")], {
+    stdio: "inherit",
+  });
+} catch {
+  process.exit(1);
 }
