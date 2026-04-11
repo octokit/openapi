@@ -117,10 +117,7 @@ if (derefPerms) {
   }
   // Verify permission enum pattern (read, write, or both)
   for (const [key, val] of Object.entries(derefPerms)) {
-    assert(
-      val.type === "string",
-      `permissions.${key} must be type:string`,
-    );
+    assert(val.type === "string", `permissions.${key} must be type:string`);
     assert(
       Array.isArray(val.enum) &&
         (val.enum.includes("read") || val.enum.includes("write")),
@@ -142,10 +139,7 @@ if (installation) {
   assert(Array.isArray(refAccount.allOf), "account must have allOf array");
   assert(refAccount.nullable === true, "account must be nullable");
   assert(!refAccount.type, "account must not have type");
-  assert(
-    refAccount.allOf.length === 2,
-    "account.allOf must have 2 entries",
-  );
+  assert(refAccount.allOf.length === 2, "account.allOf must have 2 entries");
 
   // suspended_by: must not have anyOf
   const refSb = installation.properties.suspended_by;
@@ -188,8 +182,7 @@ for (const file of generatedFiles) {
   const isDereferenced = file.includes(".deref.");
 
   if (isDereferenced) {
-    const items =
-      op.responses["200"].content["application/json"].schema.items;
+    const items = op.responses["200"].content["application/json"].schema.items;
     assert(
       !items.properties.account.anyOf,
       `[${file}] account must not have anyOf`,
