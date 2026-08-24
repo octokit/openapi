@@ -92,6 +92,7 @@ export default function overrides(file, schema) {
       const requestBodySchema =
         operation.requestBody.content["application/json"].schema;
 
+      if (!requestBodySchema) continue;
       if (requestBodySchema.anyOf) {
         requestBodySchema.anyOf = requestBodySchema.anyOf.filter(
           (item) => !item.type || item.type === "object",
