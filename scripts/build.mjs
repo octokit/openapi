@@ -54,6 +54,18 @@ async function run() {
 
     for (const [path, methods] of Object.entries(schema.paths)) {
       for (const [method, operation] of Object.entries(methods)) {
+        if (
+          operation.requestBody &&
+          !Object.values(operation.requestBody.content ?? {}).some(
+            (mediaType) => mediaType?.schema,
+          )
+        ) {
+          console.log(
+            `Removing requestBody without schema: ${method.toUpperCase()} ${path}`,
+          );
+          delete operation.requestBody;
+        }
+
         const route = `${method.toUpperCase()} ${path}`;
         operation["x-octokit"] = {};
 
