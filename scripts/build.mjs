@@ -24,7 +24,7 @@ import overrides from "./overrides/index.mjs";
 run();
 
 async function run() {
-  const ghesVersions = await getCurrentVersions();
+  const ghesVersions = ["3.17", "3.18", "3.19"];
   const latestGhesVersion = ghesVersions.reverse()[0];
 
   const schemaFileNames = readdirSync("cache");
