@@ -29568,7 +29568,7 @@
     "/orgs/{org}/teams/{team_slug}/members": {
       "get": {
         "summary": "List team members",
-        "description": "Team members will include the members of child teams.\n\nEach member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`). These fields let you read a member's role and direct/inherited status without additional requests.\n\nTo list members in a team, the team must be visible to the authenticated user.",
+        "description": "Team members will include the members of child teams.\n\nEach member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`). These fields let you read a member's role and direct/inherited status without additional requests.\n\nTo list members in a team, the team must be visible to the authenticated user.\n\n> [!NOTE]\n> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/members`.",
         "tags": [
           "teams"
         ],
@@ -48933,6 +48933,10 @@
                     "description": "The name of the issue type to associate with this issue. _NOTE: Only users with push access can set the type for new issues. The type is silently dropped otherwise._",
                     "nullable": true,
                     "example": "Epic"
+                  },
+                  "parent_issue_id": {
+                    "type": "integer",
+                    "description": "The id of the parent issue to add this issue to as a sub-issue. _NOTE: Only users with triage access to both the parent issue's repository and this repository can set the parent issue._"
                   }
                 },
                 "required": [
@@ -52118,6 +52122,10 @@
                   "description": {
                     "type": "string",
                     "description": "A short description of the label. Must be 100 characters or fewer."
+                  },
+                  "archived": {
+                    "type": "boolean",
+                    "description": "Whether to archive or unarchive the label. Archived labels cannot be added to issues or pull requests. For more information, see \"[Archiving labels](https://docs.github.com/enterprise-server@3.18/issues/organizing-your-work-with-labels/managing-labels).\""
                   }
                 }
               },
@@ -63570,7 +63578,7 @@
     "/user": {
       "get": {
         "summary": "Get the authenticated user",
-        "description": "OAuth app tokens and personal access tokens (classic) need the `user` scope in order for the response to include private profile information.",
+        "description": "OAuth app tokens and personal access tokens (classic) need the `read:user` scope, or the broader `user` scope, for this endpoint to return the private user response. The private user response includes additional fields such as `private_gists`, `total_private_repos`, `owned_private_repos`, `disk_usage`, `collaborators`, and `two_factor_authentication`. Tokens without these scopes receive the public user response.\n\nThe private and public user response types are unrelated to the [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles) setting. A token without scopes still authenticates as the token's owner, so values subject to private profile visibility, such as `followers` and `following`, may differ from an unauthenticated response.",
         "tags": [
           "users"
         ],
@@ -67915,7 +67923,7 @@
     "/users/{username}": {
       "get": {
         "summary": "Get a user",
-        "description": "Provides publicly available information about someone with a GitHub account.\n\nThe `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.18/rest/guides/getting-started-with-the-rest-api#authentication).\n\nThe Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/enterprise-server@3.18/rest/users/emails).",
+        "description": "Provides publicly available information about someone with a GitHub account.\n\nIf the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), the `followers` and `following` values are `0` unless the request is authenticated as that user. A request authenticated as the specified user returns the actual values even if the token has no OAuth scopes.\n\nThe `events_url` value is a URI template. Replace `{/privacy}` with `/public` to retrieve only public events. Omit it to retrieve public events and, when authenticated as the user, private events. For more information, see \"[List events for the authenticated user](https://docs.github.com/enterprise-server@3.18/rest/activity/events#list-events-for-the-authenticated-user).\"\n\nThe `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.18/rest/guides/getting-started-with-the-rest-api#authentication).\n\nThe Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/enterprise-server@3.18/rest/users/emails).",
         "tags": [
           "users"
         ],
@@ -68189,7 +68197,7 @@
     "/users/{username}/followers": {
       "get": {
         "summary": "List followers of a user",
-        "description": "Lists the people following the specified user.",
+        "description": "Lists the people following the specified user.\n\nIf the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.",
         "tags": [
           "users"
         ],
@@ -68246,7 +68254,7 @@
     "/users/{username}/following": {
       "get": {
         "summary": "List the people a user follows",
-        "description": "Lists the people who the specified user follows.",
+        "description": "Lists the people who the specified user follows.\n\nIf the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.",
         "tags": [
           "users"
         ],
@@ -69512,7 +69520,7 @@
     "/users/{username}/starred": {
       "get": {
         "summary": "List repositories starred by a user",
-        "description": "Lists repositories a user has starred.\n\nThis endpoint supports the following custom media types. For more information, see \"[Media types](https://docs.github.com/enterprise-server@3.18/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).\"\n\n- **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.",
+        "description": "Lists repositories a user has starred.\n\nIf the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns starred repositories visible to the token even if the token has no OAuth scopes.\n\nThis endpoint supports the following custom media types. For more information, see \"[Media types](https://docs.github.com/enterprise-server@3.18/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).\"\n\n- **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.",
         "tags": [
           "activity"
         ],
@@ -103928,7 +103936,8 @@
           "default_value": {
             "oneOf": [
               {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               },
               {
                 "type": "array",
@@ -109046,21 +109055,25 @@
           },
           "company": {
             "type": "string",
-            "example": "GitHub"
+            "example": "GitHub",
+            "nullable": true
           },
           "blog": {
             "type": "string",
             "format": "uri",
-            "example": "https://github.com/blog"
+            "example": "https://github.com/blog",
+            "nullable": true
           },
           "location": {
             "type": "string",
-            "example": "San Francisco"
+            "example": "San Francisco",
+            "nullable": true
           },
           "email": {
             "type": "string",
             "format": "email",
-            "example": "octocat@github.com"
+            "example": "octocat@github.com",
+            "nullable": true
           },
           "twitter_username": {
             "type": "string",
@@ -112669,7 +112682,8 @@
           "value": {
             "oneOf": [
               {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               },
               {
                 "type": "array",
@@ -114403,6 +114417,24 @@
           "enabled"
         ]
       },
+      "repository-rule-params-proof-of-presence": {
+        "title": "ProofOfPresence",
+        "description": "Require a fresh authentication before a pull request can be merged.",
+        "type": "object",
+        "properties": {
+          "required_authentication_level": {
+            "type": "string",
+            "description": "The level of authentication required before a pull request can be merged.",
+            "enum": [
+              "reauth",
+              "mfa"
+            ]
+          }
+        },
+        "required": [
+          "required_authentication_level"
+        ]
+      },
       "repository-rule-params-reviewer": {
         "title": "Reviewer",
         "description": "A required reviewing team",
@@ -115869,21 +115901,25 @@
           },
           "company": {
             "type": "string",
-            "example": "GitHub"
+            "example": "GitHub",
+            "nullable": true
           },
           "blog": {
             "type": "string",
             "format": "uri",
-            "example": "https://github.com/blog"
+            "example": "https://github.com/blog",
+            "nullable": true
           },
           "location": {
             "type": "string",
-            "example": "San Francisco"
+            "example": "San Francisco",
+            "nullable": true
           },
           "email": {
             "type": "string",
             "format": "email",
-            "example": "octocat@github.com"
+            "example": "octocat@github.com",
+            "nullable": true
           },
           "twitter_username": {
             "type": "string",
@@ -127439,6 +127475,165 @@
           "performed_via_github_app"
         ]
       },
+      "issue-reference": {
+        "title": "Issue Reference",
+        "description": "A minimal reference to an issue linked from a timeline event (e.g. sub-issue, parent-issue, or dependency events).",
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "number": {
+            "type": "integer",
+            "description": "The number of the referenced issue."
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the referenced issue."
+          },
+          "state": {
+            "type": "string",
+            "description": "The state of the referenced issue."
+          },
+          "state_reason": {
+            "type": "string",
+            "description": "The reason for the referenced issue's state.",
+            "nullable": true
+          },
+          "repository": {
+            "$ref": "#/components/schemas/simple-repository"
+          },
+          "issue_type": {
+            "title": "Issue Type",
+            "description": "The type of the referenced issue.",
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The unique identifier of the issue type."
+              },
+              "node_id": {
+                "type": "string",
+                "description": "The node identifier of the issue type."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the issue type."
+              },
+              "color": {
+                "type": "string",
+                "description": "The color of the issue type.",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "node_id",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "number",
+          "title",
+          "state",
+          "repository",
+          "issue_type"
+        ]
+      },
+      "timeline-connected-event": {
+        "title": "Timeline Connected Event",
+        "description": "Timeline Connected Event",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "node_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "event": {
+            "type": "string"
+          },
+          "commit_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "commit_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "performed_via_github_app": {
+            "$ref": "#/components/schemas/nullable-integration"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "url",
+          "actor",
+          "event",
+          "commit_id",
+          "commit_url",
+          "created_at",
+          "performed_via_github_app"
+        ]
+      },
+      "timeline-disconnected-event": {
+        "title": "Timeline Disconnected Event",
+        "description": "Timeline Disconnected Event",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "node_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/simple-user"
+          },
+          "event": {
+            "type": "string"
+          },
+          "commit_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "commit_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "performed_via_github_app": {
+            "$ref": "#/components/schemas/nullable-integration"
+          }
+        },
+        "required": [
+          "id",
+          "node_id",
+          "url",
+          "actor",
+          "event",
+          "commit_id",
+          "commit_url",
+          "created_at",
+          "performed_via_github_app"
+        ]
+      },
       "timeline-issue-events": {
         "title": "Timeline Event",
         "description": "Timeline Event",
@@ -127542,6 +127737,12 @@
           },
           {
             "$ref": "#/components/schemas/blocking-removed-issue-event"
+          },
+          {
+            "$ref": "#/components/schemas/timeline-connected-event"
+          },
+          {
+            "$ref": "#/components/schemas/timeline-disconnected-event"
           }
         ]
       },
@@ -190708,7 +190909,7 @@
             "$ref": "#/components/schemas/simple-installation"
           },
           "number": {
-            "type": "integer"
+            "$ref": "#/components/schemas/webhooks_number"
           },
           "organization": {
             "$ref": "#/components/schemas/organization-simple-webhooks"
@@ -193725,7 +193926,7 @@
             "$ref": "#/components/schemas/simple-installation"
           },
           "number": {
-            "type": "integer"
+            "$ref": "#/components/schemas/webhooks_number"
           },
           "organization": {
             "$ref": "#/components/schemas/organization-simple-webhooks"
@@ -196817,6 +197018,9 @@
           "enterprise": {
             "$ref": "#/components/schemas/enterprise-webhooks"
           },
+          "installation": {
+            "$ref": "#/components/schemas/simple-installation"
+          },
           "milestone": {
             "$ref": "#/components/schemas/milestone"
           },
@@ -196840,7 +197044,8 @@
           "action",
           "number",
           "pull_request",
-          "repository"
+          "repository",
+          "sender"
         ]
       },
       "webhook-pull-request-edited": {
@@ -196941,7 +197146,8 @@
           "changes",
           "number",
           "pull_request",
-          "repository"
+          "repository",
+          "sender"
         ]
       },
       "webhook-pull-request-labeled": {
@@ -202996,6 +203202,9 @@
           "enterprise": {
             "$ref": "#/components/schemas/enterprise-webhooks"
           },
+          "installation": {
+            "$ref": "#/components/schemas/simple-installation"
+          },
           "milestone": {
             "$ref": "#/components/schemas/milestone"
           },
@@ -203019,7 +203228,8 @@
           "action",
           "number",
           "pull_request",
-          "repository"
+          "repository",
+          "sender"
         ]
       },
       "webhook-pull-request-opened": {
@@ -245745,7 +245955,8 @@
           "action",
           "number",
           "pull_request",
-          "repository"
+          "repository",
+          "sender"
         ]
       },
       "webhook-pull-request-unlabeled": {
