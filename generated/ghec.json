@@ -59044,6 +59044,54 @@
         "x-octokit": {}
       }
     },
+    "/repos/{owner}/{repo}/actions/jobs/{job_id}/steps/{step_number}/logs": {
+      "get": {
+        "summary": "Download step logs for a workflow run job",
+        "description": "Gets a redirect URL to download a plain text file of logs for a specific step of a workflow job. This link expires after\n1 minute. Look for `Location:` in the response header to find the URL for the download.\n\nThis endpoint is intended for selective retrieval of one step. To download complete job logs, use the\n[job logs endpoint](https://docs.github.com/enterprise-cloud@latest/rest/actions/workflow-jobs#download-job-logs-for-a-workflow-run).\n\nAnyone with read access to the repository can use this endpoint.\n\nIf the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.",
+        "tags": [
+          "actions"
+        ],
+        "operationId": "actions/download-step-logs-for-workflow-run-job",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest/rest/actions/workflow-jobs#download-step-logs-for-a-workflow-run-job"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/job-id"
+          },
+          {
+            "$ref": "#/components/parameters/step-number"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Response",
+            "headers": {
+              "Location": {
+                "example": "https://pipelines.actions.githubusercontent.com/ab1f3cCFPB34Nd6imvFxpGZH5hNlDp2wijMwl2gDoO0bcrrlJj/_apis/pipelines/1/jobs/19/steps/1/signedlogcontent?urlExpires=2020-01-22T22%3A44%3A54.1389777Z&urlSigningMethod=HMACV1&urlSignature=2TUDfIg4fm36OJmfPy6km5QD5DLCOkBVzvhWZM8B%2BUY%3D",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "actions",
+          "subcategory": "workflow-jobs"
+        },
+        "x-octokit": {}
+      }
+    },
     "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
       "get": {
         "summary": "Get the customization template for an OIDC subject claim for a repository",
@@ -144790,6 +144838,15 @@
             "enum": [
               "read",
               "write"
+            ]
+          },
+          "organization_external_properties_for_repos": {
+            "type": "string",
+            "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
+            "enum": [
+              "read",
+              "write",
+              "admin"
             ]
           },
           "organization_announcement_banners": {
@@ -378442,6 +378499,16 @@
         "schema": {
           "type": "integer",
           "format": "int64"
+        }
+      },
+      "step-number": {
+        "name": "step_number",
+        "description": "The zero-based position number of the step in the job.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "actor": {
