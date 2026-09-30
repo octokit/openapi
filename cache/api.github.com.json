@@ -35071,7 +35071,7 @@
       },
       "post": {
         "summary": "Register an app installation for external custom properties",
-        "description": "Registers a GitHub App installation so it can read and write external custom properties for an organization, and assigns it a display name.\n\nAn app installation can only be registered once, and its display name can't be changed afterward. Calling with an app installation that has already been registered returns a `422` response with an `already_exists` error code.\n\nUninstalling the GitHub App unregisters it, and removes the external custom properties it created.\n\nTo use this endpoint, the authenticated caller must have the `organization_external_properties_for_repos:admin` permission.",
+        "description": "Registers a GitHub App installation so it can read and write external custom properties for an organization, and assigns it a display name.\n\nThe display name must be 1 to 15 characters and contain only letters and numbers. Capitalization is preserved as entered.\n\nAn app installation can only be registered once, and its display name can't be changed afterward. Calling with an app installation that has already been registered returns a `422` response with an `already_exists` error code for `installation_id`. If the display name is already in use by another app installation in the organization, the response is `422` with an `already_exists` error code for `display_name`. An invalid display name also returns `422`.\n\nThe app installation being registered must have write or admin permission for organization external custom properties for repositories. If it doesn't, the response is `422`. This is the permission of the installation being registered, which isn't necessarily the caller.\n\nUninstalling the GitHub App unregisters it, and removes the external custom properties it created.\n\nTo use this endpoint, the authenticated caller must have the `organization_external_properties_for_repos:admin` permission.",
         "tags": [
           "orgs"
         ],
@@ -35098,7 +35098,7 @@
                   },
                   "display_name": {
                     "type": "string",
-                    "description": "The display name for this app installation's external custom properties in the organization. This can't be changed after the app installation is registered.",
+                    "description": "The display name for this app installation's external custom properties in the organization. Must be 1 to 15 characters and contain only letters and numbers. Capitalization is preserved as entered. This can't be changed after the app installation is registered.",
                     "minLength": 1,
                     "maxLength": 15,
                     "pattern": "^[a-zA-Z0-9]+$"
@@ -84751,7 +84751,7 @@
     "/user/installations/{installation_id}/repositories/{repository_id}": {
       "put": {
         "summary": "Add a repository to an app installation",
-        "description": "Add a single repository to an installation. The authenticated user must have admin access to the repository.\n\nThis endpoint only works for PATs (classic) with the `repo` scope.",
+        "description": "Add a single repository to an installation. The authenticated user must have admin access to the repository.",
         "tags": [
           "apps"
         ],
@@ -84784,14 +84784,14 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
+          "enabledForGitHubApps": true,
           "category": "apps",
           "subcategory": "installations"
         }
       },
       "delete": {
         "summary": "Remove a repository from an app installation",
-        "description": "Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`.\n\nThis endpoint only works for PATs (classic) with the `repo` scope.",
+        "description": "Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`.\n\nTo use a PAT (classic) with this endpoint, the `repo` scope is required",
         "tags": [
           "apps"
         ],
@@ -84827,7 +84827,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
+          "enabledForGitHubApps": true,
           "category": "apps",
           "subcategory": "installations"
         }
@@ -87053,7 +87053,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
+          "enabledForGitHubApps": true,
           "category": "repos",
           "subcategory": "repos"
         },

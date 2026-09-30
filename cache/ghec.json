@@ -15213,7 +15213,7 @@
     "/enterprises/{enterprise}/credentials": {
       "get": {
         "summary": "List enterprise token inventory",
-        "description": "Lists an enterprise's credential inventory: both credentials currently authorized to access the enterprise and credentials owned by enterprise members that have no current enterprise authorization. Covers personal access tokens (classic and fine-grained), OAuth App and GitHub App user tokens, SSH keys, GitHub App installations, and federated credentials, assembled on demand from the canonical sources. Results are paginated with an opaque cursor via the `Link` header; there is no total count.\n\nYou must be an enterprise owner (or hold a role with the \"View enterprise credentials\" permission) to use this endpoint.\n\nOAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.",
+        "description": "> [!WARNING]\n> **Closing down notice:** This operation is closing down and will be removed on October 2, 2026. Please migrate to the asynchronous export: use \"[Create an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#create-an-enterprise-token-inventory-export)\", which accepts the same filters in its request body, to start a CSV export, then \"[Get an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#get-an-enterprise-token-inventory-export)\" to download it. For more information, see the [changelog](https://github.blog/changelog/2026-09-21-github-enterprise-adds-credential-inventory-exports/).\n\nLists an enterprise's credential inventory: both credentials currently authorized to access the enterprise and credentials owned by enterprise members that have no current enterprise authorization. Covers personal access tokens (classic and fine-grained), OAuth App and GitHub App user tokens, SSH keys, GitHub App installations, and federated credentials, assembled on demand from the canonical sources. Results are paginated with an opaque cursor via the `Link` header; there is no total count.\n\nYou must be an enterprise owner (or hold a role with the \"View enterprise credentials\" permission) to use this endpoint.\n\nOAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.",
         "tags": [
           "enterprise-admin"
         ],
@@ -15360,8 +15360,11 @@
           "githubCloudOnly": true,
           "enabledForGitHubApps": true,
           "category": "enterprise-admin",
-          "subcategory": "token-inventory"
-        }
+          "subcategory": "token-inventory",
+          "deprecationDate": "2026-09-29",
+          "removalDate": "2026-10-02"
+        },
+        "deprecated": true
       }
     },
     "/enterprises/{enterprise}/credentials/exports": {
@@ -15564,7 +15567,7 @@
     "/enterprises/{enterprise}/credentials/{inventory_id}": {
       "get": {
         "summary": "Get an enterprise token inventory item",
-        "description": "Returns a single credential from the enterprise token inventory. Use the opaque `inventory_id` returned by the list endpoint for the same enterprise.\n\nYou must be an enterprise owner (or hold a role with the \"View enterprise credentials\" permission) to use this endpoint.\n\nOAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.",
+        "description": "> [!WARNING]\n> **Closing down notice:** This operation is closing down and will be removed on October 2, 2026. Please migrate to the asynchronous export: use \"[Create an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#create-an-enterprise-token-inventory-export)\" to start a CSV export, optionally scoped with filters such as `owner` or `application`, then \"[Get an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#get-an-enterprise-token-inventory-export)\" to download it. For more information, see the [changelog](https://github.blog/changelog/2026-09-21-github-enterprise-adds-credential-inventory-exports/).\n\nReturns a single credential from the enterprise token inventory. Use the opaque `inventory_id` returned by the list endpoint for the same enterprise.\n\nYou must be an enterprise owner (or hold a role with the \"View enterprise credentials\" permission) to use this endpoint.\n\nOAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.",
         "tags": [
           "enterprise-admin"
         ],
@@ -15611,8 +15614,11 @@
           "githubCloudOnly": true,
           "enabledForGitHubApps": true,
           "category": "enterprise-admin",
-          "subcategory": "token-inventory"
-        }
+          "subcategory": "token-inventory",
+          "deprecationDate": "2026-09-29",
+          "removalDate": "2026-10-02"
+        },
+        "deprecated": true
       }
     },
     "/enterprises/{enterprise}/dependabot/alerts": {
@@ -51303,6 +51309,388 @@
           "enabledForGitHubApps": true,
           "category": "projects",
           "subcategory": "items"
+        }
+      }
+    },
+    "/orgs/{org}/properties/installations": {
+      "get": {
+        "summary": "Get registered app installations for external custom properties",
+        "description": "Gets the registered GitHub App installations used to read and write external custom properties for an organization.\n\nA GitHub App installation token will only be able to see its own registration info, whereas an authenticated user will be able to see all registrations for the organization.\n\nTo use this endpoint, the authenticated caller must have the `organization_external_properties_for_repos:admin` permission.",
+        "tags": [
+          "orgs"
+        ],
+        "operationId": "orgs/external-properties-for-repos-get-organization-app-installations",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest/rest/orgs/custom-properties#get-registered-app-installations-for-external-custom-properties"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/organization-external-property-installation"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": [
+                      {
+                        "$ref": "#/components/examples/organization-external-property-installation"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "orgs",
+          "subcategory": "custom-properties"
+        }
+      },
+      "post": {
+        "summary": "Register an app installation for external custom properties",
+        "description": "Registers a GitHub App installation so it can read and write external custom properties for an organization, and assigns it a display name.\n\nThe display name must be 1 to 15 characters and contain only letters and numbers. Capitalization is preserved as entered.\n\nAn app installation can only be registered once, and its display name can't be changed afterward. Calling with an app installation that has already been registered returns a `422` response with an `already_exists` error code for `installation_id`. If the display name is already in use by another app installation in the organization, the response is `422` with an `already_exists` error code for `display_name`. An invalid display name also returns `422`.\n\nThe app installation being registered must have write or admin permission for organization external custom properties for repositories. If it doesn't, the response is `422`. This is the permission of the installation being registered, which isn't necessarily the caller.\n\nUninstalling the GitHub App unregisters it, and removes the external custom properties it created.\n\nTo use this endpoint, the authenticated caller must have the `organization_external_properties_for_repos:admin` permission.",
+        "tags": [
+          "orgs"
+        ],
+        "operationId": "orgs/external-properties-for-repos-register-organization-app-installation",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest/rest/orgs/custom-properties#register-an-app-installation-for-external-custom-properties"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "installation_id": {
+                    "type": "integer",
+                    "description": "The unique identifier of the GitHub App installation to register for managing external custom properties. When authenticating as a GitHub App installation, this defaults to the authenticated installation and can be omitted. It is required for all other callers (users and fine-grained personal access tokens)."
+                  },
+                  "display_name": {
+                    "type": "string",
+                    "description": "The display name for this app installation's external custom properties in the organization. Must be 1 to 15 characters and contain only letters and numbers. Capitalization is preserved as entered. This can't be changed after the app installation is registered.",
+                    "minLength": 1,
+                    "maxLength": 15,
+                    "pattern": "^[a-zA-Z0-9]+$"
+                  }
+                },
+                "required": [
+                  "display_name"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "installation_id": 67890,
+                    "display_name": "Acme"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/organization-external-property-installation"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/organization-external-property-installation"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "orgs",
+          "subcategory": "custom-properties"
+        }
+      }
+    },
+    "/orgs/{org}/properties/installations/schema": {
+      "get": {
+        "summary": "Get all external custom properties for a GitHub App installation in an organization",
+        "description": "Gets all external custom properties defined for the authenticated GitHub App installation on an organization.\n\nTo use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:read` permission.",
+        "tags": [
+          "orgs"
+        ],
+        "operationId": "orgs/external-properties-for-repos-get-organization-definitions",
+        "externalDocs": {
+          "description": "REST API endpoint documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest/rest/orgs/custom-properties#get-all-external-custom-properties-for-a-github-app-installation-in-an-organization"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/external-property"
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/external-properties"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "orgs",
+          "subcategory": "custom-properties"
+        }
+      }
+    },
+    "/orgs/{org}/properties/installations/values": {
+      "patch": {
+        "summary": "Create or update external custom property values for organization repositories",
+        "description": "Create new or update existing external custom property values for repositories in a batch that belong to an organization.\nEach target repository will have its external custom property values updated to match the values provided in the request.\n\nA maximum of 30 repositories can be updated in a single request.\n\nUsing a value of `null` for an external custom property will remove or 'unset' the property value from the repository.\n\nTo use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.",
+        "tags": [
+          "orgs"
+        ],
+        "operationId": "orgs/external-properties-for-repos-create-or-update-organization-values",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest/rest/orgs/custom-properties#create-or-update-external-custom-property-values-for-organization-repositories"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "repository_names": {
+                    "type": "array",
+                    "description": "The names of repositories that the external custom property values will be applied to.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "maxItems": 30
+                  },
+                  "properties": {
+                    "type": "array",
+                    "description": "List of external custom property names and associated values to apply to the repositories.",
+                    "items": {
+                      "$ref": "#/components/schemas/custom-property-value"
+                    }
+                  }
+                },
+                "required": [
+                  "repository_names",
+                  "properties"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/org-repo-update-custom-property-values"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content when external custom property values are successfully created or updated"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "orgs",
+          "subcategory": "custom-properties"
+        }
+      }
+    },
+    "/orgs/{org}/properties/installations/values/{property_name}": {
+      "patch": {
+        "summary": "Create or update external custom property values for a property across organization repositories",
+        "description": "Create new or update existing external custom property values for a single named property across repositories that belong to an organization.\n\nUp to 100 repository values can be updated in a single request. Repositories not included in the request are left unchanged.\n\nUsing a value of `null` for a repository will remove or 'unset' the property value for that repository. A request that only contains `null` values for a property that does not yet exist is a no-op.\n\nTo use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.",
+        "tags": [
+          "orgs"
+        ],
+        "operationId": "orgs/external-properties-for-repos-create-or-update-values-for-organization-property",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest/rest/orgs/custom-properties#create-or-update-external-custom-property-values-for-a-property-across-organization-repositories"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/external-property-name"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "repository_values": {
+                    "type": "array",
+                    "description": "The names of repositories and the values that the named external custom property will be set to.",
+                    "items": {
+                      "$ref": "#/components/schemas/repository-external-property-payload"
+                    },
+                    "minItems": 1,
+                    "maxItems": 100
+                  }
+                },
+                "required": [
+                  "repository_values"
+                ]
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/org-repo-update-external-property-values"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/no_content"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "orgs",
+          "subcategory": "custom-properties"
+        }
+      },
+      "delete": {
+        "summary": "Remove all external custom property values for a property across all organization repositories",
+        "description": "Removes all external custom property values for a specified property name across all repositories that belong to an organization.\n\nTo use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.",
+        "tags": [
+          "orgs"
+        ],
+        "operationId": "orgs/external-properties-for-repos-delete-organization-values",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest/rest/orgs/custom-properties#remove-all-external-custom-property-values-for-a-property-across-all-organization-repositories"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org"
+          },
+          {
+            "$ref": "#/components/parameters/external-property-name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/no_content"
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed"
+          }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "orgs",
+          "subcategory": "custom-properties"
         }
       }
     },
@@ -104428,7 +104816,7 @@
     "/user/installations/{installation_id}/repositories/{repository_id}": {
       "put": {
         "summary": "Add a repository to an app installation",
-        "description": "Add a single repository to an installation. The authenticated user must have admin access to the repository.\n\nThis endpoint only works for PATs (classic) with the `repo` scope.",
+        "description": "Add a single repository to an installation. The authenticated user must have admin access to the repository.",
         "tags": [
           "apps"
         ],
@@ -104461,14 +104849,14 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
+          "enabledForGitHubApps": true,
           "category": "apps",
           "subcategory": "installations"
         }
       },
       "delete": {
         "summary": "Remove a repository from an app installation",
-        "description": "Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`.\n\nThis endpoint only works for PATs (classic) with the `repo` scope.",
+        "description": "Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`.\n\nTo use a PAT (classic) with this endpoint, the `repo` scope is required",
         "tags": [
           "apps"
         ],
@@ -104504,7 +104892,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
+          "enabledForGitHubApps": true,
           "category": "apps",
           "subcategory": "installations"
         }
@@ -106730,7 +107118,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": false,
+          "enabledForGitHubApps": true,
           "category": "repos",
           "subcategory": "repos"
         },
@@ -165323,6 +165711,68 @@
           "sort_by",
           "group_by",
           "vertical_group_by"
+        ]
+      },
+      "organization-external-property-installation": {
+        "title": "Organization External Custom Property Installation",
+        "description": "A GitHub App installation that has been registered to read and write an organization's external custom properties, together with the display name assigned to it.",
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "description": "The display name assigned to the app installation's external custom properties in the organization."
+          },
+          "installation": {
+            "type": "object",
+            "description": "The GitHub App installation that was registered.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The unique identifier of the GitHub App installation."
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "display_name",
+          "installation"
+        ]
+      },
+      "external-property": {
+        "title": "External Property",
+        "description": "External custom property defined for a GitHub App installation",
+        "type": "object",
+        "properties": {
+          "property_name": {
+            "type": "string",
+            "description": "The name of the external property"
+          }
+        },
+        "required": [
+          "property_name"
+        ]
+      },
+      "repository-external-property-payload": {
+        "title": "Repository External Custom Property Value Payload",
+        "description": "Repository name and associated external custom property value",
+        "type": "object",
+        "properties": {
+          "repository_name": {
+            "type": "string",
+            "description": "The name of the repository"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true,
+            "description": "The value assigned to the repository. Set to `null` to unset the value for this repository."
+          }
+        },
+        "required": [
+          "repository_name",
+          "value"
         ]
       },
       "org-repo-custom-property-values": {
@@ -351476,26 +351926,21 @@
           ]
         }
       },
-      "org-repo-custom-property-values": {
+      "organization-external-property-installation": {
+        "value": {
+          "display_name": "Acme",
+          "installation": {
+            "id": 1
+          }
+        }
+      },
+      "external-properties": {
         "value": [
           {
-            "repository_id": 1296269,
-            "repository_name": "Hello-World",
-            "repository_full_name": "octocat/Hello-World",
-            "properties": [
-              {
-                "property_name": "environment",
-                "value": "production"
-              },
-              {
-                "property_name": "service",
-                "value": "web"
-              },
-              {
-                "property_name": "team",
-                "value": "octocat"
-              }
-            ]
+            "property_name": "environment"
+          },
+          {
+            "property_name": "business_unit"
           }
         ]
       },
@@ -351520,6 +351965,43 @@
             }
           ]
         }
+      },
+      "org-repo-update-external-property-values": {
+        "value": {
+          "repository_values": [
+            {
+              "repository_name": "Hello-World",
+              "value": "production"
+            },
+            {
+              "repository_name": "octo-repo",
+              "value": null
+            }
+          ]
+        }
+      },
+      "org-repo-custom-property-values": {
+        "value": [
+          {
+            "repository_id": 1296269,
+            "repository_name": "Hello-World",
+            "repository_full_name": "octocat/Hello-World",
+            "properties": [
+              {
+                "property_name": "environment",
+                "value": "production"
+              },
+              {
+                "property_name": "service",
+                "value": "web"
+              },
+              {
+                "property_name": "team",
+                "value": "octocat"
+              }
+            ]
+          }
+        ]
       },
       "full-repository": {
         "value": {
@@ -375874,6 +376356,15 @@
         "required": true,
         "schema": {
           "type": "integer"
+        }
+      },
+      "external-property-name": {
+        "name": "property_name",
+        "description": "The name of the external custom property",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       },
       "ruleset-targets": {
