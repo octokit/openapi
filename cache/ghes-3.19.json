@@ -5552,6 +5552,32 @@
                               "repository_locked"
                             ]
                           }
+                        },
+                        "terminal_failure": {
+                          "type": "object",
+                          "nullable": true,
+                          "description": "Why the destination reached a terminal failure, as reported by the destination. `null` when the destination is unreachable or has not failed.",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "description": "Stable, machine-readable failure category, such as `repository_policy` or `organization_settings`. New values may be added; clients should treat unrecognized values as an unknown cause."
+                            },
+                            "summary": {
+                              "type": "string",
+                              "description": "Human-readable explanation of the failure category."
+                            },
+                            "occurred_at": {
+                              "type": "string",
+                              "format": "date-time",
+                              "nullable": true,
+                              "description": "When the failure occurred. `null` when no time was recorded."
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "summary",
+                            "occurred_at"
+                          ]
                         }
                       },
                       "required": [
@@ -5559,7 +5585,8 @@
                         "last_updated",
                         "target_unavailable",
                         "repository_summaries",
-                        "repository_progress"
+                        "repository_progress",
+                        "terminal_failure"
                       ]
                     },
                     "combined_state": {
@@ -5605,6 +5632,32 @@
                               "display_status"
                             ]
                           }
+                        },
+                        "terminal_failure": {
+                          "type": "object",
+                          "nullable": true,
+                          "description": "Why the migration failed, for display to operators. Populated only when `status` is `failed`; `null` otherwise, including when the migration was terminated by a user.",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "description": "Stable, machine-readable failure category, such as `repository_policy` or `organization_settings`. New values may be added; clients should treat unrecognized values as an unknown cause."
+                            },
+                            "summary": {
+                              "type": "string",
+                              "description": "Human-readable explanation of the failure category."
+                            },
+                            "occurred_at": {
+                              "type": "string",
+                              "format": "date-time",
+                              "nullable": true,
+                              "description": "When the failure occurred. `null` when no time was recorded."
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "summary",
+                            "occurred_at"
+                          ]
                         }
                       },
                       "required": [
@@ -5612,7 +5665,8 @@
                         "display_message",
                         "ready_for_cutover",
                         "cutover_blockers",
-                        "repositories"
+                        "repositories",
+                        "terminal_failure"
                       ]
                     },
                     "messages": {
@@ -57218,6 +57272,9 @@
                 }
               }
             }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
           },
           "404": {
             "$ref": "#/components/responses/not_found"
