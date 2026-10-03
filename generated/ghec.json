@@ -92886,6 +92886,114 @@
         "x-octokit": {}
       }
     },
+    "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers/rerequest": {
+      "post": {
+        "summary": "Rerequest reviewers for a pull request",
+        "description": "Rerequests reviews for a pull request from a given set of users and/or teams.\nThis endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see \"[Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)\" and \"[Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api).\"",
+        "tags": [
+          "pulls"
+        ],
+        "operationId": "pulls/rerequest-reviewers",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/enterprise-cloud@latest/rest/pulls/review-requests#rerequest-reviewers-for-a-pull-request"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/owner"
+          },
+          {
+            "$ref": "#/components/parameters/repo"
+          },
+          {
+            "$ref": "#/components/parameters/pull-number"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reviewers": {
+                    "type": "array",
+                    "description": "An array of user `login`s whose reviews will be rerequested.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "team_reviewers": {
+                    "type": "array",
+                    "description": "An array of team `slug`s whose reviews will be rerequested.",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "anyOf": [
+                  {
+                    "required": [
+                      "reviewers"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "team_reviewers"
+                    ]
+                  }
+                ]
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "reviewers": [
+                      "octocat",
+                      "hubot",
+                      "other_user"
+                    ],
+                    "team_reviewers": [
+                      "justice-league"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/pull-request-simple"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/pull-request-review-request"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "422": {
+            "description": "Unprocessable Entity if user is not a collaborator"
+          }
+        },
+        "x-github": {
+          "triggersNotification": true,
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "category": "pulls",
+          "subcategory": "review-requests"
+        },
+        "x-octokit": {}
+      }
+    },
     "/repos/{owner}/{repo}/pulls/{pull_number}/reviews": {
       "get": {
         "summary": "List reviews for a pull request",
