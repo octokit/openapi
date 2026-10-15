@@ -17601,6 +17601,13 @@
                               "write"
                             ]
                           },
+                          "organization_copilot_requests": {
+                            "type": "string",
+                            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                            "enum": [
+                              "read"
+                            ]
+                          },
                           "organization_external_properties_for_repos": {
                             "type": "string",
                             "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -18613,6 +18620,13 @@
                             "write"
                           ]
                         },
+                        "organization_copilot_requests": {
+                          "type": "string",
+                          "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                          "enum": [
+                            "read"
+                          ]
+                        },
                         "organization_external_properties_for_repos": {
                           "type": "string",
                           "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -19494,6 +19508,13 @@
                           "write"
                         ]
                       },
+                      "organization_copilot_requests": {
+                        "type": "string",
+                        "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                        "enum": [
+                          "read"
+                        ]
+                      },
                       "organization_external_properties_for_repos": {
                         "type": "string",
                         "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -19988,6 +20009,13 @@
                           "enum": [
                             "read",
                             "write"
+                          ]
+                        },
+                        "organization_copilot_requests": {
+                          "type": "string",
+                          "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                          "enum": [
+                            "read"
                           ]
                         },
                         "organization_external_properties_for_repos": {
@@ -22163,6 +22191,13 @@
                                 "write"
                               ]
                             },
+                            "organization_copilot_requests": {
+                              "type": "string",
+                              "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                              "enum": [
+                                "read"
+                              ]
+                            },
                             "organization_external_properties_for_repos": {
                               "type": "string",
                               "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -23226,6 +23261,13 @@
                                 "write"
                               ]
                             },
+                            "organization_copilot_requests": {
+                              "type": "string",
+                              "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                              "enum": [
+                                "read"
+                              ]
+                            },
                             "organization_external_properties_for_repos": {
                               "type": "string",
                               "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -24207,6 +24249,13 @@
                           "write"
                         ]
                       },
+                      "organization_copilot_requests": {
+                        "type": "string",
+                        "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                        "enum": [
+                          "read"
+                        ]
+                      },
                       "organization_external_properties_for_repos": {
                         "type": "string",
                         "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -24895,6 +24944,13 @@
                               "enum": [
                                 "read",
                                 "write"
+                              ]
+                            },
+                            "organization_copilot_requests": {
+                              "type": "string",
+                              "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                              "enum": [
+                                "read"
                               ]
                             },
                             "organization_external_properties_for_repos": {
@@ -30574,7 +30630,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Bad Request because security product settings conflict, are unsupported by your plan, or required products are not enabled in the configuration.",
             "content": {
               "application/json": {
                 "schema": {
@@ -30679,6 +30735,36 @@
                     },
                     "status": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because of unavailable security products, invalid feature dependencies, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Validation Error Simple",
+                  "description": "Validation Error Simple",
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "documentation_url"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -32178,6 +32264,32 @@
           "304": {
             "description": "Not modified"
           },
+          "400": {
+            "description": "Bad Request because of a global configuration, incompatible parameters, or invalid enforcement changes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -32231,7 +32343,7 @@
             }
           },
           "409": {
-            "description": "Conflict",
+            "description": "Conflict because security configuration work is already in progress.",
             "content": {
               "application/json": {
                 "schema": {
@@ -32250,6 +32362,36 @@
                     },
                     "status": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because the configuration is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Validation Error Simple",
+                  "description": "Validation Error Simple",
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "documentation_url"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -32581,7 +32723,7 @@
             }
           },
           "409": {
-            "description": "Conflict",
+            "description": "Conflict because security configuration work is already in progress.",
             "content": {
               "application/json": {
                 "schema": {
@@ -32600,6 +32742,36 @@
                     },
                     "status": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because the request does not match the request schema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Validation Error Simple",
+                  "description": "Validation Error Simple",
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "documentation_url"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -33099,6 +33271,36 @@
                     },
                     "status": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because a public default is not supported in the current environment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Validation Error Simple",
+                  "description": "Validation Error Simple",
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "documentation_url"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -33712,6 +33914,32 @@
                         }
                       }
                     ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request because of unsupported attachment statuses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
                   }
                 }
               }
@@ -126808,6 +127036,114 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request because security product settings conflict, are unsupported by your plan, or required products are not enabled in the configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because of unavailable security products, invalid feature dependencies, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Validation Error Simple",
+                  "description": "Validation Error Simple",
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "documentation_url"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -128645,6 +128981,140 @@
           },
           "204": {
             "description": "Response when no new updates are made"
+          },
+          "400": {
+            "description": "Bad Request because of a global configuration, incompatible parameters, or an attempt to update attributes of an enterprise-owned configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict because security configuration work is already in progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because of invalid enforcement values, unavailable security products, an attempt to change enterprise-enforced enforcement, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Validation Error Simple",
+                  "description": "Validation Error Simple",
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "documentation_url"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -129599,6 +130069,36 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation failed because a public default is not supported in the current environment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Validation Error Simple",
+                  "description": "Validation Error Simple",
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "documentation_url"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -130212,6 +130712,32 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request because of unsupported attachment statuses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Basic Error",
+                  "description": "Basic Error",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -130258,6 +130784,36 @@
                     },
                     "status": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because `removed` and `detached` are requested together.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Validation Error Simple",
+                  "description": "Validation Error Simple",
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "documentation_url"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -168414,6 +168970,13 @@
                             "write"
                           ]
                         },
+                        "organization_copilot_requests": {
+                          "type": "string",
+                          "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                          "enum": [
+                            "read"
+                          ]
+                        },
                         "organization_external_properties_for_repos": {
                           "type": "string",
                           "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -169439,6 +170002,13 @@
                                 "enum": [
                                   "read",
                                   "write"
+                                ]
+                              },
+                              "organization_copilot_requests": {
+                                "type": "string",
+                                "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                                "enum": [
+                                  "read"
                                 ]
                               },
                               "organization_external_properties_for_repos": {
@@ -242822,6 +243392,16 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "include_metadata",
+            "description": "When set to `true`, the response will include additional metadata for pull request and required status check rule evaluation.\nResults are capped at 50 entries.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -242937,6 +243517,192 @@
                           "rule_type": {
                             "type": "string",
                             "description": "The type of rule."
+                          },
+                          "metadata": {
+                            "type": "object",
+                            "nullable": true,
+                            "oneOf": [
+                              {
+                                "title": "Pull request rule suite metadata",
+                                "description": "Metadata for a pull request rule evaluation result.",
+                                "type": "object",
+                                "properties": {
+                                  "pull_request": {
+                                    "type": "object",
+                                    "description": "The pull request associated with the rule evaluation.",
+                                    "properties": {
+                                      "id": {
+                                        "type": "integer",
+                                        "description": "The unique identifier of the pull request."
+                                      },
+                                      "number": {
+                                        "type": "integer",
+                                        "description": "The number of the pull request."
+                                      },
+                                      "user": {
+                                        "type": "object",
+                                        "description": "The user who created the pull request.",
+                                        "properties": {
+                                          "id": {
+                                            "type": "integer",
+                                            "description": "The unique identifier of the user."
+                                          },
+                                          "login": {
+                                            "type": "string",
+                                            "description": "The handle for the GitHub user account."
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "description": "The type of the user."
+                                          }
+                                        }
+                                      },
+                                      "reviews": {
+                                        "type": "array",
+                                        "description": "The reviews associated with the pull request.",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "integer",
+                                              "description": "The unique identifier of the review."
+                                            },
+                                            "user": {
+                                              "type": "object",
+                                              "description": "The user who submitted the review.",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "integer",
+                                                  "description": "The unique identifier of the user."
+                                                },
+                                                "login": {
+                                                  "type": "string",
+                                                  "description": "The handle for the GitHub user account."
+                                                },
+                                                "type": {
+                                                  "type": "string",
+                                                  "description": "The type of the user."
+                                                }
+                                              }
+                                            },
+                                            "state": {
+                                              "type": "string",
+                                              "description": "The state of the review."
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "proof_of_presence": {
+                                        "type": "object",
+                                        "nullable": true,
+                                        "description": "The proof of presence evaluation for the pull request. Null if proof of presence was not evaluated.",
+                                        "properties": {
+                                          "state": {
+                                            "type": "string",
+                                            "description": "The state of the proof of presence evaluation."
+                                          },
+                                          "code": {
+                                            "type": "string",
+                                            "description": "A code describing the reason for the proof of presence state."
+                                          },
+                                          "base_sha": {
+                                            "type": "string",
+                                            "description": "The base commit SHA the proof of presence evaluation applies to. Empty if unavailable."
+                                          },
+                                          "head_sha": {
+                                            "type": "string",
+                                            "description": "The head commit SHA the proof of presence evaluation applies to. Empty if unavailable."
+                                          },
+                                          "required_level": {
+                                            "type": "string",
+                                            "description": "The authentication level required by the rule. Empty if unavailable."
+                                          },
+                                          "verified_level": {
+                                            "type": "string",
+                                            "description": "The authentication level that was verified. Empty if proof of presence has not been completed."
+                                          },
+                                          "verified_at": {
+                                            "type": "string",
+                                            "description": "The time proof of presence was verified, in ISO 8601 format. Empty if proof of presence has not been completed."
+                                          },
+                                          "verifier": {
+                                            "type": "object",
+                                            "nullable": true,
+                                            "description": "The user who provided proof of presence. Null if no proof of presence was recorded.",
+                                            "properties": {
+                                              "id": {
+                                                "type": "integer",
+                                                "description": "The unique identifier of the user."
+                                              },
+                                              "login": {
+                                                "type": "string",
+                                                "description": "The handle for the GitHub user account."
+                                              },
+                                              "type": {
+                                                "type": "string",
+                                                "description": "The type of the user."
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "title": "Required status checks rule suite metadata",
+                                "description": "Metadata for a required status checks rule evaluation result.",
+                                "type": "object",
+                                "properties": {
+                                  "checks": {
+                                    "type": "array",
+                                    "description": "The status checks associated with the rule evaluation.",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "id": {
+                                          "type": "integer",
+                                          "description": "The unique identifier of the status check."
+                                        },
+                                        "context": {
+                                          "type": "string",
+                                          "description": "The context name of the status check."
+                                        },
+                                        "state": {
+                                          "type": "string",
+                                          "description": "The state of the status check."
+                                        },
+                                        "type": {
+                                          "type": "string",
+                                          "description": "The type of the status check."
+                                        },
+                                        "app": {
+                                          "type": "object",
+                                          "nullable": true,
+                                          "description": "The GitHub App associated with the status check.",
+                                          "properties": {
+                                            "id": {
+                                              "type": "integer",
+                                              "description": "The unique identifier of the GitHub App."
+                                            },
+                                            "slug": {
+                                              "type": "string",
+                                              "description": "The slug of the GitHub App."
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "description": "The name of the GitHub App."
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ],
+                            "description": "Additional metadata about the rule evaluation."
                           },
                           "details": {
                             "type": "string",
@@ -431317,6 +432083,13 @@
                           "enum": [
                             "read",
                             "write"
+                          ]
+                        },
+                        "organization_copilot_requests": {
+                          "type": "string",
+                          "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                          "enum": [
+                            "read"
                           ]
                         },
                         "organization_external_properties_for_repos": {
@@ -642086,6 +642859,16 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "include_metadata",
+            "description": "When set to `true`, the response will include additional metadata for pull request and required status check rule evaluation.\nResults are capped at 50 entries.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -642201,6 +642984,192 @@
                           "rule_type": {
                             "type": "string",
                             "description": "The type of rule."
+                          },
+                          "metadata": {
+                            "type": "object",
+                            "nullable": true,
+                            "oneOf": [
+                              {
+                                "title": "Pull request rule suite metadata",
+                                "description": "Metadata for a pull request rule evaluation result.",
+                                "type": "object",
+                                "properties": {
+                                  "pull_request": {
+                                    "type": "object",
+                                    "description": "The pull request associated with the rule evaluation.",
+                                    "properties": {
+                                      "id": {
+                                        "type": "integer",
+                                        "description": "The unique identifier of the pull request."
+                                      },
+                                      "number": {
+                                        "type": "integer",
+                                        "description": "The number of the pull request."
+                                      },
+                                      "user": {
+                                        "type": "object",
+                                        "description": "The user who created the pull request.",
+                                        "properties": {
+                                          "id": {
+                                            "type": "integer",
+                                            "description": "The unique identifier of the user."
+                                          },
+                                          "login": {
+                                            "type": "string",
+                                            "description": "The handle for the GitHub user account."
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "description": "The type of the user."
+                                          }
+                                        }
+                                      },
+                                      "reviews": {
+                                        "type": "array",
+                                        "description": "The reviews associated with the pull request.",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "integer",
+                                              "description": "The unique identifier of the review."
+                                            },
+                                            "user": {
+                                              "type": "object",
+                                              "description": "The user who submitted the review.",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "integer",
+                                                  "description": "The unique identifier of the user."
+                                                },
+                                                "login": {
+                                                  "type": "string",
+                                                  "description": "The handle for the GitHub user account."
+                                                },
+                                                "type": {
+                                                  "type": "string",
+                                                  "description": "The type of the user."
+                                                }
+                                              }
+                                            },
+                                            "state": {
+                                              "type": "string",
+                                              "description": "The state of the review."
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "proof_of_presence": {
+                                        "type": "object",
+                                        "nullable": true,
+                                        "description": "The proof of presence evaluation for the pull request. Null if proof of presence was not evaluated.",
+                                        "properties": {
+                                          "state": {
+                                            "type": "string",
+                                            "description": "The state of the proof of presence evaluation."
+                                          },
+                                          "code": {
+                                            "type": "string",
+                                            "description": "A code describing the reason for the proof of presence state."
+                                          },
+                                          "base_sha": {
+                                            "type": "string",
+                                            "description": "The base commit SHA the proof of presence evaluation applies to. Empty if unavailable."
+                                          },
+                                          "head_sha": {
+                                            "type": "string",
+                                            "description": "The head commit SHA the proof of presence evaluation applies to. Empty if unavailable."
+                                          },
+                                          "required_level": {
+                                            "type": "string",
+                                            "description": "The authentication level required by the rule. Empty if unavailable."
+                                          },
+                                          "verified_level": {
+                                            "type": "string",
+                                            "description": "The authentication level that was verified. Empty if proof of presence has not been completed."
+                                          },
+                                          "verified_at": {
+                                            "type": "string",
+                                            "description": "The time proof of presence was verified, in ISO 8601 format. Empty if proof of presence has not been completed."
+                                          },
+                                          "verifier": {
+                                            "type": "object",
+                                            "nullable": true,
+                                            "description": "The user who provided proof of presence. Null if no proof of presence was recorded.",
+                                            "properties": {
+                                              "id": {
+                                                "type": "integer",
+                                                "description": "The unique identifier of the user."
+                                              },
+                                              "login": {
+                                                "type": "string",
+                                                "description": "The handle for the GitHub user account."
+                                              },
+                                              "type": {
+                                                "type": "string",
+                                                "description": "The type of the user."
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "title": "Required status checks rule suite metadata",
+                                "description": "Metadata for a required status checks rule evaluation result.",
+                                "type": "object",
+                                "properties": {
+                                  "checks": {
+                                    "type": "array",
+                                    "description": "The status checks associated with the rule evaluation.",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "id": {
+                                          "type": "integer",
+                                          "description": "The unique identifier of the status check."
+                                        },
+                                        "context": {
+                                          "type": "string",
+                                          "description": "The context name of the status check."
+                                        },
+                                        "state": {
+                                          "type": "string",
+                                          "description": "The state of the status check."
+                                        },
+                                        "type": {
+                                          "type": "string",
+                                          "description": "The type of the status check."
+                                        },
+                                        "app": {
+                                          "type": "object",
+                                          "nullable": true,
+                                          "description": "The GitHub App associated with the status check.",
+                                          "properties": {
+                                            "id": {
+                                              "type": "integer",
+                                              "description": "The unique identifier of the GitHub App."
+                                            },
+                                            "slug": {
+                                              "type": "string",
+                                              "description": "The slug of the GitHub App."
+                                            },
+                                            "name": {
+                                              "type": "string",
+                                              "description": "The name of the GitHub App."
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ],
+                            "description": "Additional metadata about the rule evaluation."
                           },
                           "details": {
                             "type": "string",
@@ -723796,6 +724765,13 @@
                                 "enum": [
                                   "read",
                                   "write"
+                                ]
+                              },
+                              "organization_copilot_requests": {
+                                "type": "string",
+                                "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                                "enum": [
+                                  "read"
                                 ]
                               },
                               "organization_external_properties_for_repos": {
@@ -812163,6 +813139,13 @@
                           "enum": [
                             "read",
                             "write"
+                          ]
+                        },
+                        "organization_copilot_requests": {
+                          "type": "string",
+                          "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                          "enum": [
+                            "read"
                           ]
                         },
                         "organization_external_properties_for_repos": {
@@ -1018257,6 +1019240,13 @@
                               "write"
                             ]
                           },
+                          "organization_copilot_requests": {
+                            "type": "string",
+                            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                            "enum": [
+                              "read"
+                            ]
+                          },
                           "organization_external_properties_for_repos": {
                             "type": "string",
                             "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -1020914,6 +1021904,13 @@
                               "write"
                             ]
                           },
+                          "organization_copilot_requests": {
+                            "type": "string",
+                            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                            "enum": [
+                              "read"
+                            ]
+                          },
                           "organization_external_properties_for_repos": {
                             "type": "string",
                             "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -1023478,6 +1024475,13 @@
                               "write"
                             ]
                           },
+                          "organization_copilot_requests": {
+                            "type": "string",
+                            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                            "enum": [
+                              "read"
+                            ]
+                          },
                           "organization_external_properties_for_repos": {
                             "type": "string",
                             "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -1026040,6 +1027044,13 @@
                             "enum": [
                               "read",
                               "write"
+                            ]
+                          },
+                          "organization_copilot_requests": {
+                            "type": "string",
+                            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                            "enum": [
+                              "read"
                             ]
                           },
                           "organization_external_properties_for_repos": {
@@ -1028736,6 +1029747,13 @@
                             "enum": [
                               "read",
                               "write"
+                            ]
+                          },
+                          "organization_copilot_requests": {
+                            "type": "string",
+                            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                            "enum": [
+                              "read"
                             ]
                           },
                           "organization_external_properties_for_repos": {
@@ -1031439,6 +1032457,13 @@
                             "enum": [
                               "read",
                               "write"
+                            ]
+                          },
+                          "organization_copilot_requests": {
+                            "type": "string",
+                            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                            "enum": [
+                              "read"
                             ]
                           },
                           "organization_external_properties_for_repos": {
@@ -1035804,6 +1036829,13 @@
                             "enum": [
                               "read",
                               "write"
+                            ]
+                          },
+                          "organization_copilot_requests": {
+                            "type": "string",
+                            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+                            "enum": [
+                              "read"
                             ]
                           },
                           "organization_external_properties_for_repos": {
