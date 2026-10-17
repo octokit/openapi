@@ -6746,7 +6746,7 @@
     "/enterprises/{enterprise}/actions/cache/usage": {
       "get": {
         "summary": "Get GitHub Actions cache usage for an enterprise",
-        "description": "Gets the total GitHub Actions cache usage for an enterprise.\nThe data fetched using this API is refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.\n\nOAuth tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.",
+        "description": "Gets the total GitHub Actions cache usage for an enterprise.\nThe data fetched using this API is refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.\n\nOAuth tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.\n\n> [!NOTE]\n> The \"Enterprise administration\" fine-grained permission is not available to callers. To use this API, you must use an OAuth app token or a personal access token (classic).",
         "operationId": "actions/get-actions-cache-usage-for-enterprise",
         "tags": [
           "actions"
@@ -6794,7 +6794,7 @@
     "/enterprises/{enterprise}/actions/cache/usage-policy": {
       "get": {
         "summary": "Get GitHub Actions cache usage policy for an enterprise",
-        "description": "Gets the GitHub Actions cache usage policy for an enterprise.\n\nOAuth tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.",
+        "description": "Gets the GitHub Actions cache usage policy for an enterprise.\n\nOAuth tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.\n\n> [!NOTE]\n> The \"Enterprise administration\" fine-grained permission is not available to callers. To use this API, you must use an OAuth app token or a personal access token (classic).",
         "tags": [
           "actions"
         ],
@@ -6840,7 +6840,7 @@
       },
       "patch": {
         "summary": "Set GitHub Actions cache usage policy for an enterprise",
-        "description": "Sets the GitHub Actions cache usage policy for an enterprise.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.",
+        "description": "Sets the GitHub Actions cache usage policy for an enterprise.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.\n\n> [!NOTE]\n> The \"Enterprise administration\" fine-grained permission is not available to callers. To use this API, you must use an OAuth app token or a personal access token (classic).",
         "tags": [
           "actions"
         ],
@@ -10939,13 +10939,35 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/bad_request"
+            "description": "Bad Request because security product settings conflict, are unsupported by your plan, or required products are not enabled in the configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              },
+              "application/scim+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/scim-error"
+                }
+              }
+            }
           },
           "403": {
             "$ref": "#/components/responses/forbidden"
           },
           "404": {
             "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because of unavailable security products, invalid feature dependencies, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -11278,6 +11300,16 @@
           "304": {
             "$ref": "#/components/responses/not_modified"
           },
+          "400": {
+            "description": "Bad Request because of a global configuration, incompatible parameters, or invalid enforcement changes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
           "403": {
             "$ref": "#/components/responses/forbidden"
           },
@@ -11285,7 +11317,24 @@
             "$ref": "#/components/responses/not_found"
           },
           "409": {
-            "$ref": "#/components/responses/conflict"
+            "description": "Conflict because security configuration work is already in progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because of unavailable security products or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -11404,7 +11453,24 @@
             "$ref": "#/components/responses/not_found"
           },
           "409": {
-            "$ref": "#/components/responses/conflict"
+            "description": "Conflict because security configuration work is already in progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because the request does not match the request schema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -11507,6 +11573,16 @@
           },
           "404": {
             "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because a public default is not supported in the current environment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -11587,6 +11663,16 @@
                       }
                     ]
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request because of unsupported attachment statuses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
                 }
               }
             }
@@ -12648,7 +12734,7 @@
     "/enterprises/{enterprise}/settings/billing/advanced-security": {
       "get": {
         "summary": "Get GitHub Advanced Security active committers for an enterprise",
-        "description": "Gets the GitHub Advanced Security active committers for an enterprise per repository. The authenticated user must be an enterprise admin or billing manager.\n\nEach distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of active_users for each repository.\n\nThe total number of repositories with committer information is tracked by the `total_count` field.",
+        "description": "Gets the GitHub Advanced Security active committers for an enterprise per repository. The authenticated user must be an enterprise admin or billing manager.\n\nEach distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of active_users for each repository.\n\nThe total number of repositories with committer information is tracked by the `total_count` field.\n\n> [!NOTE]\n> The \"Enterprise administration\" fine-grained permission is not available to callers. To use this API, you must use an OAuth app token or a personal access token (classic).",
         "tags": [
           "billing"
         ],
@@ -21864,6 +21950,32 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request because security product settings conflict, are unsupported by your plan, or required products are not enabled in the configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because of unavailable security products, invalid feature dependencies, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -22332,6 +22444,42 @@
           },
           "204": {
             "description": "Response when no new updates are made"
+          },
+          "400": {
+            "description": "Bad Request because of a global configuration, incompatible parameters, or an attempt to update attributes of an enterprise-owned configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "409": {
+            "description": "Conflict because security configuration work is already in progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because of invalid enforcement values, unavailable security products, an attempt to change enterprise-enforced enforcement, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -22458,8 +22606,34 @@
           "202": {
             "$ref": "#/components/responses/accepted"
           },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
           "403": {
             "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "409": {
+            "description": "Conflict because security configuration work is already in progress for the\norganization, security configuration changes are blocked for the organization,\nor another organization in the same enterprise is applying security configurations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because the body does not match the request schema, `scope`\nis `selected` but `selected_repository_ids` is missing or empty, or a non-empty\n`selected_repository_ids` array is provided for another scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -22562,6 +22736,16 @@
           },
           "404": {
             "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because a public default is not supported in the current environment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -22646,11 +22830,31 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request because of unsupported attachment statuses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
           "403": {
             "$ref": "#/components/responses/forbidden"
           },
           "404": {
             "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because `removed` and `detached` are requested together.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -28431,7 +28635,7 @@
       },
       "post": {
         "summary": "Create a private registry for an organization",
-        "description": "\nCreates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see \"[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api).\"\nFor OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
+        "description": "\nCreates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see \"[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api).\"\nFor OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.\nFor anonymous registries (`anonymous`), the `username`, `encrypted_value`, and `key_id` fields must be omitted.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
         "tags": [
           "private-registries"
         ],
@@ -28514,7 +28718,7 @@
                     }
                   },
                   "auth_type": {
-                    "description": "The authentication type for the private registry. Defaults to `token` if not specified. Use `oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp` for OIDC authentication.",
+                    "description": "The authentication type for the private registry. Defaults to `token` if not specified. Use `oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp` for OIDC authentication. Use `anonymous` for registries that do not require authentication; `username`, `encrypted_value`, and `key_id` must be omitted.",
                     "type": "string",
                     "enum": [
                       "token",
@@ -28523,7 +28727,8 @@
                       "oidc_aws",
                       "oidc_jfrog",
                       "oidc_cloudsmith",
-                      "oidc_gcp"
+                      "oidc_gcp",
+                      "anonymous"
                     ]
                   },
                   "tenant_id": {
@@ -28811,7 +29016,7 @@
       },
       "patch": {
         "summary": "Update a private registry for an organization",
-        "description": "\nUpdates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see \"[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api).\"\nFor OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
+        "description": "\nUpdates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see \"[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api).\"\nFor OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.\nFor anonymous registries (`anonymous`), the `username`, `encrypted_value`, and `key_id` fields must be omitted, and `auth_type` cannot be changed to or from `anonymous`.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
         "tags": [
           "private-registries"
         ],
@@ -28906,7 +29111,8 @@
                       "oidc_aws",
                       "oidc_jfrog",
                       "oidc_cloudsmith",
-                      "oidc_gcp"
+                      "oidc_gcp",
+                      "anonymous"
                     ]
                   },
                   "tenant_id": {
@@ -32383,7 +32589,7 @@
     "/rate_limit": {
       "get": {
         "summary": "Get rate limit status for the authenticated user",
-        "description": "> [!NOTE]\n> Accessing this endpoint does not count against your REST API rate limit.\n\nSome categories of endpoints have custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the API response categorizes your rate limit. Under `resources`, you'll see objects relating to different categories:\n* The `core` object provides your rate limit status for all non-search-related resources in the REST API.\n* The `search` object provides your rate limit status for the REST API for searching (excluding code searches). For more information, see \"[Search](https://docs.github.com/enterprise-server@3.19/rest/search/search).\"\n* The `code_search` object provides your rate limit status for the REST API for searching code. For more information, see \"[Search code](https://docs.github.com/enterprise-server@3.19/rest/search/search#search-code).\"\n* The `graphql` object provides your rate limit status for the GraphQL API. For more information, see \"[Resource limitations](https://docs.github.com/enterprise-server@3.19/graphql/overview/resource-limitations#rate-limit).\"\n* The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see \"[Creating a GitHub App from a manifest](https://docs.github.com/enterprise-server@3.19/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration).\"\n* The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see \"[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph).\"\n* The `dependency_sbom` object provides your rate limit status for requesting SBOMs from the dependency graph. For more information, see \"[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph).\"\n* The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see \"[Self-hosted runners](https://docs.github.com/enterprise-server@3.19/rest/actions/self-hosted-runners).\"\n* The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see \"[API Versions](https://docs.github.com/enterprise-server@3.19/rest/about-the-rest-api/api-versions).\"\n\n> [!NOTE]\n> The `rate` object is closing down. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.",
+        "description": "> [!NOTE]\n> Accessing this endpoint does not count against your REST API rate limit.\n\nRate limit status reflects the applicable limits for the requester and resource category, not the hostname used for the request. Requests authenticated as a user share the user's rate limit across credentials. Requests without authentication use the requesting IP address. API requests routed through either an API hostname or a web hostname can count against the same applicable limit.\n\nSome categories of endpoints have custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the API response categorizes your rate limit. Under `resources`, you'll see objects relating to different categories:\n* The `core` object provides your rate limit status for all non-search-related resources in the REST API.\n* The `search` object provides your rate limit status for the REST API for searching (excluding code searches). For more information, see \"[Search](https://docs.github.com/enterprise-server@3.19/rest/search/search).\"\n* The `code_search` object provides your rate limit status for the REST API for searching code. For more information, see \"[Search code](https://docs.github.com/enterprise-server@3.19/rest/search/search#search-code).\"\n* The `graphql` object provides your rate limit status for the GraphQL API. For more information, see \"[Resource limitations](https://docs.github.com/enterprise-server@3.19/graphql/overview/resource-limitations#rate-limit).\"\n* The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see \"[Creating a GitHub App from a manifest](https://docs.github.com/enterprise-server@3.19/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration).\"\n* The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see \"[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph).\"\n* The `dependency_sbom` object provides your rate limit status for requesting SBOMs from the dependency graph. For more information, see \"[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph).\"\n* The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see \"[Self-hosted runners](https://docs.github.com/enterprise-server@3.19/rest/actions/self-hosted-runners).\"\n* The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see \"[API Versions](https://docs.github.com/enterprise-server@3.19/rest/about-the-rest-api/api-versions).\"\n\n> [!NOTE]\n> The `rate` object is closing down. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.",
         "tags": [
           "rate-limit"
         ],
@@ -102623,6 +102829,13 @@
               "write"
             ]
           },
+          "organization_copilot_requests": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+            "enum": [
+              "read"
+            ]
+          },
           "organization_external_properties_for_repos": {
             "type": "string",
             "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -117418,7 +117631,8 @@
               "oidc_aws",
               "oidc_jfrog",
               "oidc_cloudsmith",
-              "oidc_gcp"
+              "oidc_gcp",
+              "anonymous"
             ],
             "type": "string"
           },
@@ -117564,7 +117778,8 @@
               "oidc_aws",
               "oidc_jfrog",
               "oidc_cloudsmith",
-              "oidc_gcp"
+              "oidc_gcp",
+              "anonymous"
             ],
             "type": "string"
           },
@@ -119545,7 +119760,7 @@
               },
               "required_reviewers": {
                 "type": "array",
-                "description": "> [!NOTE]\n> `required_reviewers` is in beta and subject to change.\n\nA collection of reviewers and associated file patterns. Each reviewer has a list of file patterns which determine the files that reviewer is required to review.",
+                "description": "A collection of reviewers and associated file patterns. Each reviewer has a list of file patterns which determine the files that reviewer is required to review.",
                 "items": {
                   "$ref": "#/components/schemas/repository-rule-params-required-reviewer-configuration"
                 }
@@ -120002,7 +120217,7 @@
       },
       "repository-rule-copilot-code-review": {
         "title": "copilot_code_review",
-        "description": "Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.",
+        "description": "Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and AI credits.",
         "type": "object",
         "required": [
           "type"
@@ -120486,131 +120701,6 @@
                 "bypass"
               ],
               "description": "The result of the rule evaluations for rules with the `active` and `evaluate` enforcement statuses, demonstrating whether rules would pass or fail if all rules in the rule suite were `active`."
-            }
-          }
-        }
-      },
-      "rule-suite-pull-request": {
-        "title": "Pull request rule suite metadata",
-        "description": "Metadata for a pull request rule evaluation result.",
-        "type": "object",
-        "properties": {
-          "pull_request": {
-            "type": "object",
-            "description": "The pull request associated with the rule evaluation.",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "description": "The unique identifier of the pull request."
-              },
-              "number": {
-                "type": "integer",
-                "description": "The number of the pull request."
-              },
-              "user": {
-                "type": "object",
-                "description": "The user who created the pull request.",
-                "properties": {
-                  "id": {
-                    "type": "integer",
-                    "description": "The unique identifier of the user."
-                  },
-                  "login": {
-                    "type": "string",
-                    "description": "The handle for the GitHub user account."
-                  },
-                  "type": {
-                    "type": "string",
-                    "description": "The type of the user."
-                  }
-                }
-              },
-              "reviews": {
-                "type": "array",
-                "description": "The reviews associated with the pull request.",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "The unique identifier of the review."
-                    },
-                    "user": {
-                      "type": "object",
-                      "description": "The user who submitted the review.",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "The unique identifier of the user."
-                        },
-                        "login": {
-                          "type": "string",
-                          "description": "The handle for the GitHub user account."
-                        },
-                        "type": {
-                          "type": "string",
-                          "description": "The type of the user."
-                        }
-                      }
-                    },
-                    "state": {
-                      "type": "string",
-                      "description": "The state of the review."
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "rule-suite-required-status-checks": {
-        "title": "Required status checks rule suite metadata",
-        "description": "Metadata for a required status checks rule evaluation result.",
-        "type": "object",
-        "properties": {
-          "checks": {
-            "type": "array",
-            "description": "The status checks associated with the rule evaluation.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "integer",
-                  "description": "The unique identifier of the status check."
-                },
-                "context": {
-                  "type": "string",
-                  "description": "The context name of the status check."
-                },
-                "state": {
-                  "type": "string",
-                  "description": "The state of the status check."
-                },
-                "type": {
-                  "type": "string",
-                  "description": "The type of the status check."
-                },
-                "app": {
-                  "type": "object",
-                  "nullable": true,
-                  "description": "The GitHub App associated with the status check.",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "The unique identifier of the GitHub App."
-                    },
-                    "slug": {
-                      "type": "string",
-                      "description": "The slug of the GitHub App."
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the GitHub App."
-                    }
-                  }
-                }
-              }
             }
           }
         }
@@ -121956,7 +122046,7 @@
       },
       "rate-limit-overview": {
         "title": "Rate Limit Overview",
-        "description": "Rate Limit Overview",
+        "description": "Rate limit status for the applicable requester and resource category. Requests\nauthenticated as a user share the user's rate limit across credentials. Requests\nwithout authentication use the requesting IP address. API requests routed through\neither an API hostname or a web hostname can count against the same applicable limit.",
         "type": "object",
         "properties": {
           "resources": {
