@@ -27380,6 +27380,15 @@
             "$ref": "#/components/parameters/all"
           },
           {
+            "name": "is_done",
+            "description": "Whether to return only done notifications (`true`) or exclude them (`false`). When omitted, notifications are not filtered by done status. Use `all=true&is_done=true` for done notifications or `all=true&is_done=false` for both read and unread inbox notifications. If `all` is omitted or `false`, `is_done=true` returns no notifications.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
             "$ref": "#/components/parameters/participating"
           },
           {
@@ -42835,7 +42844,7 @@
     "/orgs/{org}/copilot/coding-agent/permissions": {
       "get": {
         "summary": "Get Copilot cloud agent permissions for an organization",
-        "description": "> [!NOTE]\n> This endpoint is in public preview and is subject to change.\n\nGets information about which repositories in an organization have been enabled\nor disabled for the Copilot cloud agent.\n\nOrganization owners can configure whether Copilot cloud agent is enabled for\nall repositories, selected repositories, or no repositories owned by organization.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
+        "description": "> [!NOTE]\n> This endpoint is in public preview and is subject to change.\n\nGets information about which repositories in an organization have been enabled\nor disabled for the Copilot cloud agent.\n\nOrganization owners and members with a custom organization role that includes\neither the `View organization Copilot cloud agent settings` or `Manage organization\nCopilot cloud agent settings` permission can use this endpoint to view whether\nCopilot cloud agent is enabled for all repositories, selected repositories, or\nno repositories owned by the organization.\n\nOAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint.",
         "tags": [
           "copilot"
         ],
@@ -42997,7 +43006,7 @@
     "/orgs/{org}/copilot/coding-agent/permissions/repositories": {
       "get": {
         "summary": "List repositories enabled for Copilot cloud agent in an organization",
-        "description": "> [!NOTE]\n> This endpoint is in public preview and is subject to change.\n\nLists the selected repositories that are enabled for Copilot cloud agent in an organization.\n\nOrganization owners can use this endpoint when the coding agent repository policy\nis set to `selected` to see which repositories have been enabled.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
+        "description": "> [!NOTE]\n> This endpoint is in public preview and is subject to change.\n\nLists the selected repositories that are enabled for Copilot cloud agent in an organization.\n\nOrganization owners and members with a custom organization role that includes\neither the `View organization Copilot cloud agent settings` or `Manage organization\nCopilot cloud agent settings` permission can use this endpoint when the coding agent\nrepository policy is set to `selected` to see which repositories have been enabled.\n\nOAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint.",
         "tags": [
           "copilot"
         ],
@@ -57197,7 +57206,7 @@
                 "properties": {
                   "permission": {
                     "type": "string",
-                    "description": "The permission to grant the team on this repository. We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository."
+                    "description": "The permission to grant the team on this repository. We accept the following permissions to be set: `pull`, `triage`, `moderate`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository."
                   }
                 }
               },
@@ -71921,7 +71930,7 @@
               "enum": [
                 "pull",
                 "triage",
-                "triage_plus",
+                "moderate",
                 "push",
                 "maintain",
                 "admin"
@@ -72040,7 +72049,7 @@
                 "properties": {
                   "permission": {
                     "type": "string",
-                    "description": "The permission to grant the collaborator. **Only valid on organization-owned repositories.** We accept the following permissions to be set: `pull`, `triage`, `triage_plus`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any.",
+                    "description": "The permission to grant the collaborator. **Only valid on organization-owned repositories.** We accept the following permissions to be set: `pull`, `triage`, `moderate`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any.",
                     "default": "push"
                   }
                 }
@@ -81015,12 +81024,13 @@
                 "properties": {
                   "permissions": {
                     "type": "string",
-                    "description": "The permissions that the associated user will have on the repository. Valid values are `read`, `write`, `maintain`, `triage`, and `admin`.",
+                    "description": "The permissions that the associated user will have on the repository. Valid values are `read`, `write`, `maintain`, `triage`, `moderate`, and `admin`.",
                     "enum": [
                       "read",
                       "write",
                       "maintain",
                       "triage",
+                      "moderate",
                       "admin"
                     ]
                   }
@@ -87863,6 +87873,15 @@
           },
           {
             "$ref": "#/components/parameters/all"
+          },
+          {
+            "name": "is_done",
+            "description": "Whether to return only done notifications (`true`) or exclude them (`false`). When omitted, notifications are not filtered by done status. Use `all=true&is_done=true` for done notifications or `all=true&is_done=false` for both read and unread inbox notifications. If `all` is omitted or `false`, `is_done=true` returns no notifications.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
           },
           {
             "$ref": "#/components/parameters/participating"
@@ -100638,6 +100657,7 @@
                     "description": "The permission to grant the team on this repository. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.",
                     "enum": [
                       "pull",
+                      "moderate",
                       "push",
                       "admin"
                     ]
@@ -167249,7 +167269,7 @@
               "write",
               "admin",
               "triage",
-              "triage_plus",
+              "moderate",
               "maintain"
             ]
           },
@@ -366624,6 +366644,37 @@
           }
         }
       },
+      "requires_authentication": {
+        "description": "Requires authentication",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "service_unavailable": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
       "bad_request": {
         "description": "Bad Request",
         "content": {
@@ -366667,16 +366718,6 @@
       "not_modified": {
         "description": "Not modified"
       },
-      "requires_authentication": {
-        "description": "Requires authentication",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/basic-error"
-            }
-          }
-        }
-      },
       "forbidden": {
         "description": "Forbidden",
         "content": {
@@ -366716,27 +366757,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/basic-error"
-            }
-          }
-        }
-      },
-      "service_unavailable": {
-        "description": "Service unavailable",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string"
-                },
-                "message": {
-                  "type": "string"
-                },
-                "documentation_url": {
-                  "type": "string"
-                }
-              }
             }
           }
         }
