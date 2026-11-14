@@ -1209,7 +1209,7 @@
                 "default": {
                   "value": {
                     "name": "DevTools Hook Env",
-                    "image_url": "https://my_file_server/path/to/devtools_env.tar.gz"
+                    "image_url": "https://fileserver.example.com/path/to/devtools_env.tar.gz"
                   }
                 }
               }
@@ -1367,7 +1367,7 @@
                 "default": {
                   "value": {
                     "name": "DevTools Hook Env",
-                    "image_url": "https://my_file_server/path/to/devtools_env.tar.gz"
+                    "image_url": "https://fileserver.example.com/path/to/devtools_env.tar.gz"
                   }
                 }
               }
@@ -4066,7 +4066,7 @@
                       "public_repo"
                     ],
                     "note": "optional note",
-                    "note_url": "http://optional/note/url",
+                    "note_url": "https://example.com/optional/note/url",
                     "client_id": "abcde12345fghij67890",
                     "client_secret": "3ef4ad510c59ad37bac6bb4f80047fb3aee3cc7f"
                   }
@@ -4195,7 +4195,7 @@
                       "public_repo"
                     ],
                     "note": "optional note",
-                    "note_url": "http://optional/note/url"
+                    "note_url": "https://example.com/optional/note/url"
                   }
                 }
               }
@@ -4346,7 +4346,7 @@
                       "public_repo"
                     ],
                     "note": "optional note",
-                    "note_url": "http://optional/note/url"
+                    "note_url": "https://example.com/optional/note/url"
                   }
                 }
               }
@@ -6746,7 +6746,7 @@
     "/enterprises/{enterprise}/actions/cache/usage": {
       "get": {
         "summary": "Get GitHub Actions cache usage for an enterprise",
-        "description": "Gets the total GitHub Actions cache usage for an enterprise.\nThe data fetched using this API is refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.\n\nOAuth tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.",
+        "description": "Gets the total GitHub Actions cache usage for an enterprise.\nThe data fetched using this API is refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.\n\nOAuth tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.\n\n> [!NOTE]\n> The \"Enterprise administration\" fine-grained permission is not available to callers. To use this API, you must use an OAuth app token or a personal access token (classic).",
         "operationId": "actions/get-actions-cache-usage-for-enterprise",
         "tags": [
           "actions"
@@ -6794,7 +6794,7 @@
     "/enterprises/{enterprise}/actions/cache/usage-policy": {
       "get": {
         "summary": "Get GitHub Actions cache usage policy for an enterprise",
-        "description": "Gets the GitHub Actions cache usage policy for an enterprise.\n\nOAuth tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.",
+        "description": "Gets the GitHub Actions cache usage policy for an enterprise.\n\nOAuth tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.\n\n> [!NOTE]\n> The \"Enterprise administration\" fine-grained permission is not available to callers. To use this API, you must use an OAuth app token or a personal access token (classic).",
         "tags": [
           "actions"
         ],
@@ -6840,7 +6840,7 @@
       },
       "patch": {
         "summary": "Set GitHub Actions cache usage policy for an enterprise",
-        "description": "Sets the GitHub Actions cache usage policy for an enterprise.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.",
+        "description": "Sets the GitHub Actions cache usage policy for an enterprise.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.\n\n> [!NOTE]\n> The \"Enterprise administration\" fine-grained permission is not available to callers. To use this API, you must use an OAuth app token or a personal access token (classic).",
         "tags": [
           "actions"
         ],
@@ -7868,7 +7868,7 @@
                     "type": "string"
                   },
                   "visibility": {
-                    "description": "Visibility of a runner group. You can select all organizations or select individual organization.",
+                    "description": "Visibility of a runner group. You can select all organizations or select individual organizations.",
                     "type": "string",
                     "enum": [
                       "selected",
@@ -10939,13 +10939,35 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/bad_request"
+            "description": "Bad Request because security product settings conflict, are unsupported by your plan, or required products are not enabled in the configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              },
+              "application/scim+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/scim-error"
+                }
+              }
+            }
           },
           "403": {
             "$ref": "#/components/responses/forbidden"
           },
           "404": {
             "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because of unavailable security products, invalid feature dependencies, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -11145,23 +11167,6 @@
                       "not_set"
                     ]
                   },
-                  "code_scanning_default_setup_options": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/code-scanning-default-setup-options"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "allow_advanced": {
-                            "nullable": true,
-                            "type": "boolean",
-                            "description": "Whether to allow repos which use advanced setup"
-                          }
-                        }
-                      }
-                    ]
-                  },
                   "code_scanning_delegated_alert_dismissal": {
                     "type": "string",
                     "description": "The enablement status of code scanning delegated alert dismissal",
@@ -11243,6 +11248,23 @@
                       "enforced",
                       "unenforced"
                     ]
+                  },
+                  "code_scanning_default_setup_options": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/code-scanning-default-setup-options"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "allow_advanced": {
+                            "nullable": true,
+                            "type": "boolean",
+                            "description": "Whether to allow repos which use advanced setup"
+                          }
+                        }
+                      }
+                    ]
                   }
                 }
               },
@@ -11278,6 +11300,16 @@
           "304": {
             "$ref": "#/components/responses/not_modified"
           },
+          "400": {
+            "description": "Bad Request because of a global configuration, incompatible parameters, or invalid enforcement changes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
           "403": {
             "$ref": "#/components/responses/forbidden"
           },
@@ -11285,7 +11317,24 @@
             "$ref": "#/components/responses/not_found"
           },
           "409": {
-            "$ref": "#/components/responses/conflict"
+            "description": "Conflict because security configuration work is already in progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because of unavailable security products or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -11404,7 +11453,24 @@
             "$ref": "#/components/responses/not_found"
           },
           "409": {
-            "$ref": "#/components/responses/conflict"
+            "description": "Conflict because security configuration work is already in progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because the request does not match the request schema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -11507,6 +11573,16 @@
           },
           "404": {
             "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because a public default is not supported in the current environment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -11555,13 +11631,13 @@
           },
           {
             "name": "status",
-            "description": "A comma-separated list of statuses. If specified, only repositories with these attachment statuses will be returned.\n\nCan be: `all`, `attached`, `attaching`, `removed`, `enforced`, `failed`, `updating`, `removed_by_enterprise`",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
               "default": "all"
-            }
+            },
+            "description": "A comma-separated list of statuses. If specified, only repositories with these attachment statuses will be returned.\n\nCan be: `all`, `attached`, `attaching`, `removed`, `enforced`, `failed`, `updating`, `removed_by_enterprise`"
           }
         ],
         "responses": {
@@ -11587,6 +11663,16 @@
                       }
                     ]
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request because of unsupported attachment statuses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
                 }
               }
             }
@@ -11928,7 +12014,7 @@
                     "type": "array",
                     "description": "The array of custom properties to create or update.",
                     "items": {
-                      "$ref": "#/components/schemas/custom-property"
+                      "$ref": "#/components/schemas/custom-property-batch-item-payload"
                     },
                     "minItems": 1,
                     "maxItems": 100
@@ -12648,7 +12734,7 @@
     "/enterprises/{enterprise}/settings/billing/advanced-security": {
       "get": {
         "summary": "Get GitHub Advanced Security active committers for an enterprise",
-        "description": "Gets the GitHub Advanced Security active committers for an enterprise per repository. The authenticated user must be an enterprise admin or billing manager.\n\nEach distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of active_users for each repository.\n\nThe total number of repositories with committer information is tracked by the `total_count` field.",
+        "description": "Gets the GitHub Advanced Security active committers for an enterprise per repository. The authenticated user must be an enterprise admin or billing manager.\n\nEach distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of active_users for each repository.\n\nThe total number of repositories with committer information is tracked by the `total_count` field.\n\n> [!NOTE]\n> The \"Enterprise administration\" fine-grained permission is not available to callers. To use this API, you must use an OAuth app token or a personal access token (classic).",
         "tags": [
           "billing"
         ],
@@ -14265,6 +14351,9 @@
           },
           "403": {
             "$ref": "#/components/responses/forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/validation_failed_simple"
           }
         },
         "x-github": {
@@ -16291,6 +16380,15 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/all"
+          },
+          {
+            "name": "is_done",
+            "description": "Whether to return only done notifications (`true`) or exclude them (`false`). When omitted, notifications are not filtered by done status. Use `all=true&is_done=true` for done notifications or `all=true&is_done=false` for both read and unread inbox notifications. If `all` is omitted or `false`, `is_done=true` returns no notifications.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
           },
           {
             "$ref": "#/components/parameters/participating"
@@ -21864,6 +21962,32 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request because security product settings conflict, are unsupported by your plan, or required products are not enabled in the configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because of unavailable security products, invalid feature dependencies, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -22161,23 +22285,6 @@
                       "not_set"
                     ]
                   },
-                  "code_scanning_default_setup_options": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/code-scanning-default-setup-options"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "allow_advanced": {
-                            "nullable": true,
-                            "type": "boolean",
-                            "description": "Whether to allow repos which use advanced setup"
-                          }
-                        }
-                      }
-                    ]
-                  },
                   "code_scanning_delegated_alert_dismissal": {
                     "type": "string",
                     "description": "The enablement status of code scanning delegated alert dismissal",
@@ -22298,6 +22405,23 @@
                       "enforced",
                       "unenforced"
                     ]
+                  },
+                  "code_scanning_default_setup_options": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/code-scanning-default-setup-options"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "allow_advanced": {
+                            "nullable": true,
+                            "type": "boolean",
+                            "description": "Whether to allow repos which use advanced setup"
+                          }
+                        }
+                      }
+                    ]
                   }
                 }
               },
@@ -22332,6 +22456,42 @@
           },
           "204": {
             "description": "Response when no new updates are made"
+          },
+          "400": {
+            "description": "Bad Request because of a global configuration, incompatible parameters, or an attempt to update attributes of an enterprise-owned configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "409": {
+            "description": "Conflict because security configuration work is already in progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because of invalid enforcement values, unavailable security products, an attempt to change enterprise-enforced enforcement, or an invalid configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -22458,8 +22618,34 @@
           "202": {
             "$ref": "#/components/responses/accepted"
           },
+          "400": {
+            "$ref": "#/components/responses/bad_request"
+          },
           "403": {
             "$ref": "#/components/responses/forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/not_found"
+          },
+          "409": {
+            "description": "Conflict because security configuration work is already in progress for the\norganization, security configuration changes are blocked for the organization,\nor another organization in the same enterprise is applying security configurations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed because the body does not match the request schema, `scope`\nis `selected` but `selected_repository_ids` is missing or empty, or a non-empty\n`selected_repository_ids` array is provided for another scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -22562,6 +22748,16 @@
           },
           "404": {
             "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because a public default is not supported in the current environment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -22610,13 +22806,13 @@
           },
           {
             "name": "status",
-            "description": "A comma-separated list of statuses. If specified, only repositories with these attachment statuses will be returned.\n\nCan be: `all`, `attached`, `attaching`, `detached`, `removed`, `enforced`, `failed`, `updating`, `removed_by_enterprise`",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
               "default": "all"
-            }
+            },
+            "description": "A comma-separated list of statuses. If specified, only repositories with these attachment statuses will be returned.\n\nCan be: `all`, `attached`, `attaching`, `detached`, `removed`, `enforced`, `failed`, `updating`, `removed_by_enterprise`"
           }
         ],
         "responses": {
@@ -22646,11 +22842,31 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request because of unsupported attachment statuses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/basic-error"
+                }
+              }
+            }
+          },
           "403": {
             "$ref": "#/components/responses/forbidden"
           },
           "404": {
             "$ref": "#/components/responses/not_found"
+          },
+          "422": {
+            "description": "Validation failed because `removed` and `detached` are requested together.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation-error-simple"
+                }
+              }
+            }
           }
         },
         "x-github": {
@@ -28431,7 +28647,7 @@
       },
       "post": {
         "summary": "Create a private registry for an organization",
-        "description": "\nCreates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see \"[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api).\"\nFor OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
+        "description": "\nCreates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see \"[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api).\"\nFor OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.\nFor anonymous registries (`anonymous`), the `username`, `encrypted_value`, and `key_id` fields must be omitted.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
         "tags": [
           "private-registries"
         ],
@@ -28514,7 +28730,7 @@
                     }
                   },
                   "auth_type": {
-                    "description": "The authentication type for the private registry. Defaults to `token` if not specified. Use `oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp` for OIDC authentication.",
+                    "description": "The authentication type for the private registry. Defaults to `token` if not specified. Use `oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp` for OIDC authentication. Use `anonymous` for registries that do not require authentication; `username`, `encrypted_value`, and `key_id` must be omitted.",
                     "type": "string",
                     "enum": [
                       "token",
@@ -28523,7 +28739,8 @@
                       "oidc_aws",
                       "oidc_jfrog",
                       "oidc_cloudsmith",
-                      "oidc_gcp"
+                      "oidc_gcp",
+                      "anonymous"
                     ]
                   },
                   "tenant_id": {
@@ -28811,7 +29028,7 @@
       },
       "patch": {
         "summary": "Update a private registry for an organization",
-        "description": "\nUpdates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see \"[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api).\"\nFor OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
+        "description": "\nUpdates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see \"[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api).\"\nFor OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.\nFor anonymous registries (`anonymous`), the `username`, `encrypted_value`, and `key_id` fields must be omitted, and `auth_type` cannot be changed to or from `anonymous`.\n\nOAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.",
         "tags": [
           "private-registries"
         ],
@@ -28906,7 +29123,8 @@
                       "oidc_aws",
                       "oidc_jfrog",
                       "oidc_cloudsmith",
-                      "oidc_gcp"
+                      "oidc_gcp",
+                      "anonymous"
                     ]
                   },
                   "tenant_id": {
@@ -29131,7 +29349,7 @@
                     "type": "array",
                     "description": "The array of custom properties to create or update.",
                     "items": {
-                      "$ref": "#/components/schemas/custom-property"
+                      "$ref": "#/components/schemas/custom-property-batch-item-payload"
                     },
                     "minItems": 1,
                     "maxItems": 100
@@ -29902,7 +30120,7 @@
                   },
                   "use_squash_pr_title_as_default": {
                     "type": "boolean",
-                    "description": "Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property is closing down. Please use `squash_merge_commit_title` instead.",
+                    "description": "Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property is closing down. Please use `squash_merge_commit_title` instead.**",
                     "default": false,
                     "deprecated": true
                   },
@@ -32137,7 +32355,7 @@
             }
           },
           "204": {
-            "description": "Response if team has permission for the repository. This is the response when the repository media type hasn't been provded in the Accept header."
+            "description": "Response if team has permission for the repository. This is the response when the repository media type hasn't been provided in the Accept header."
           },
           "404": {
             "description": "Not Found if team does not have permission for the repository"
@@ -32185,7 +32403,7 @@
                 "properties": {
                   "permission": {
                     "type": "string",
-                    "description": "The permission to grant the team on this repository. We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository."
+                    "description": "The permission to grant the team on this repository. We accept the following permissions to be set: `pull`, `triage`, `moderate`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository."
                   }
                 }
               },
@@ -32383,7 +32601,7 @@
     "/rate_limit": {
       "get": {
         "summary": "Get rate limit status for the authenticated user",
-        "description": "> [!NOTE]\n> Accessing this endpoint does not count against your REST API rate limit.\n\nSome categories of endpoints have custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the API response categorizes your rate limit. Under `resources`, you'll see objects relating to different categories:\n* The `core` object provides your rate limit status for all non-search-related resources in the REST API.\n* The `search` object provides your rate limit status for the REST API for searching (excluding code searches). For more information, see \"[Search](https://docs.github.com/enterprise-server@3.19/rest/search/search).\"\n* The `code_search` object provides your rate limit status for the REST API for searching code. For more information, see \"[Search code](https://docs.github.com/enterprise-server@3.19/rest/search/search#search-code).\"\n* The `graphql` object provides your rate limit status for the GraphQL API. For more information, see \"[Resource limitations](https://docs.github.com/enterprise-server@3.19/graphql/overview/resource-limitations#rate-limit).\"\n* The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see \"[Creating a GitHub App from a manifest](https://docs.github.com/enterprise-server@3.19/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration).\"\n* The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see \"[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph).\"\n* The `dependency_sbom` object provides your rate limit status for requesting SBOMs from the dependency graph. For more information, see \"[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph).\"\n* The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see \"[Self-hosted runners](https://docs.github.com/enterprise-server@3.19/rest/actions/self-hosted-runners).\"\n* The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see \"[API Versions](https://docs.github.com/enterprise-server@3.19/rest/about-the-rest-api/api-versions).\"\n\n> [!NOTE]\n> The `rate` object is closing down. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.",
+        "description": "> [!NOTE]\n> Accessing this endpoint does not count against your REST API rate limit.\n\nRate limit status reflects the applicable limits for the requester and resource category, not the hostname used for the request. Requests authenticated as a user share the user's rate limit across credentials. Requests without authentication use the requesting IP address. API requests routed through either an API hostname or a web hostname can count against the same applicable limit.\n\nSome categories of endpoints have custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the API response categorizes your rate limit. Under `resources`, you'll see objects relating to different categories:\n* The `core` object provides your rate limit status for all non-search-related resources in the REST API.\n* The `search` object provides your rate limit status for the REST API for searching (excluding code searches). For more information, see \"[Search](https://docs.github.com/enterprise-server@3.19/rest/search/search).\"\n* The `code_search` object provides your rate limit status for the REST API for searching code. For more information, see \"[Search code](https://docs.github.com/enterprise-server@3.19/rest/search/search#search-code).\"\n* The `graphql` object provides your rate limit status for the GraphQL API. For more information, see \"[Resource limitations](https://docs.github.com/enterprise-server@3.19/graphql/overview/resource-limitations#rate-limit).\"\n* The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see \"[Creating a GitHub App from a manifest](https://docs.github.com/enterprise-server@3.19/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration).\"\n* The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see \"[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph).\"\n* The `dependency_sbom` object provides your rate limit status for requesting SBOMs from the dependency graph. For more information, see \"[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph).\"\n* The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see \"[Self-hosted runners](https://docs.github.com/enterprise-server@3.19/rest/actions/self-hosted-runners).\"\n* The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see \"[API Versions](https://docs.github.com/enterprise-server@3.19/rest/about-the-rest-api/api-versions).\"\n\n> [!NOTE]\n> The `rate` object is closing down. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.",
         "tags": [
           "rate-limit"
         ],
@@ -32439,7 +32657,7 @@
     "/repos/{owner}/{repo}": {
       "get": {
         "summary": "Get a repository",
-        "description": "The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.\n\n> [!NOTE]\n> - In order to see the `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n> - To view merge-related settings, you must have the `contents:read` and `contents:write` permissions.",
+        "description": "The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.\n\nWhen present and non-empty, `temp_clone_token` is a temporary credential for read-only Git access to this repository. It expires five minutes after generation and cannot be used to push changes. Treat this value as sensitive and avoid recording it in logs.\n\n> [!NOTE]\n> - In order to see the `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see \"[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).\"\n> - To view merge-related settings, you must have the `contents:read` and `contents:write` permissions.",
         "tags": [
           "repos"
         ],
@@ -32663,7 +32881,7 @@
                   },
                   "use_squash_pr_title_as_default": {
                     "type": "boolean",
-                    "description": "Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property is closing down. Please use `squash_merge_commit_title` instead.",
+                    "description": "Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property is closing down. Please use `squash_merge_commit_title` instead.**",
                     "default": false,
                     "deprecated": true
                   },
@@ -35302,6 +35520,9 @@
                 "$ref": "#/components/headers/link"
               }
             }
+          },
+          "304": {
+            "$ref": "#/components/responses/not_modified"
           }
         },
         "x-github": {
@@ -43373,7 +43594,7 @@
               "enum": [
                 "pull",
                 "triage",
-                "triage_plus",
+                "moderate",
                 "push",
                 "maintain",
                 "admin"
@@ -51588,12 +51809,13 @@
                 "properties": {
                   "permissions": {
                     "type": "string",
-                    "description": "The permissions that the associated user will have on the repository. Valid values are `read`, `write`, `maintain`, `triage`, and `admin`.",
+                    "description": "The permissions that the associated user will have on the repository. Valid values are `read`, `write`, `maintain`, `triage`, `moderate`, and `admin`.",
                     "enum": [
                       "read",
                       "write",
                       "maintain",
                       "triage",
+                      "moderate",
                       "admin"
                     ]
                   }
@@ -51752,7 +51974,7 @@
           },
           {
             "name": "issue_field_values",
-            "description": "A comma-separated list of issue field filters in `field_slug:value` format.\nOnly issues matching all specified field values are returned.\nRequires issue fields to be enabled for the repository. Issue fields are\nnot available for user-owned repositories, and field availability for\norganization-owned public repositories depends on the organization's\nvisibility settings. For example, `priority:Urgent,severity:High` filters\nissues where the `priority` field is `Urgent` AND the `severity` field is\n`High`.",
+            "description": "A comma-separated list of issue field filters in `field_slug:value` format.\nOnly issues matching all specified field values are returned.\nRequires issue fields to be enabled for the repository. Supports both\nuser-owned and organization-owned repositories. Field availability depends\non the owner's issue field visibility settings and the caller's access.\nFor example, `priority:Urgent,severity:High` filters\nissues where the `priority` field is `Urgent` AND the `severity` field is\n`High`.",
             "in": "query",
             "required": false,
             "schema": {
@@ -51929,7 +52151,7 @@
                   },
                   "issue_field_values": {
                     "type": "array",
-                    "description": "An array of issue field values to set on this issue. Each field value must include the field ID and the value to set. Issue fields are only available for organization-owned repositories with the feature enabled. Field values are silently dropped otherwise.",
+                    "description": "An array of issue field values to set on this issue. Each field value must include the field ID and the value to set. Issue fields must be enabled for the repository owner. Field values are silently dropped otherwise.",
                     "items": {
                       "type": "object",
                       "properties": {
@@ -52790,7 +53012,7 @@
                   },
                   "duplicate_issue_id": {
                     "type": "integer",
-                    "description": "The ID of the issue to mark as the canonical duplicate when `state_reason` is `duplicate`. The issue must exist and be accessible to the authenticated user. Ignored when `state_reason` is not `duplicate`."
+                    "description": "The ID of the issue that this issue duplicates, used when marking this issue as a duplicate with `status: Duplicate` or `state_reason: duplicate`. The issue must exist and be accessible to the authenticated user."
                   },
                   "milestone": {
                     "oneOf": [
@@ -56380,6 +56602,15 @@
             "$ref": "#/components/parameters/all"
           },
           {
+            "name": "is_done",
+            "description": "Whether to return only done notifications (`true`) or exclude them (`false`). When omitted, notifications are not filtered by done status. Use `all=true&is_done=true` for done notifications or `all=true&is_done=false` for both read and unread inbox notifications. If `all` is omitted or `false`, `is_done=true` returns no notifications.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
             "$ref": "#/components/parameters/participating"
           },
           {
@@ -57119,7 +57350,7 @@
               "examples": {
                 "default": {
                   "value": {
-                    "artifact_url": "https://downloadcontent/",
+                    "artifact_url": "https://example.com/",
                     "environment": "github-pages",
                     "pages_build_version": "4fd754f7e594640989b406850d0bc8f06a121251",
                     "oidc_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlV2R1h4SUhlY0JFc1JCdEttemUxUEhfUERiVSIsImtpZCI6IjUyRjE5N0M0ODFERTcwMTEyQzQ0MUI0QTlCMzdCNTNDN0ZDRjBEQjUifQ.eyJqdGkiOiJhMWIwNGNjNy0zNzZiLTQ1N2QtOTMzNS05NTY5YmVjZDExYTIiLCJzdWIiOiJyZXBvOnBhcGVyLXNwYS9taW55aTplbnZpcm9ubWVudDpQcm9kdWN0aW9uIiwiYXVkIjoiaHR0cHM6Ly9naXRodWIuY29tL3BhcGVyLXNwYSIsInJlZiI6InJlZnMvaGVhZHMvbWFpbiIsInNoYSI6ImEyODU1MWJmODdiZDk3NTFiMzdiMmM0YjM3M2MxZjU3NjFmYWM2MjYiLCJyZXBvc2l0b3J5IjoicGFwZXItc3BhL21pbnlpIiwicmVwb3NpdG9yeV9vd25lciI6InBhcGVyLXNwYSIsInJ1bl9pZCI6IjE1NDY0NTkzNjQiLCJydW5fbnVtYmVyIjoiMzQiLCJydW5fYXR0ZW1wdCI6IjYiLCJhY3RvciI6IllpTXlzdHkiLCJ3b3JrZmxvdyI6IkNJIiwiaGVhZF9yZWYiOiIiLCJiYXNlX3JlZiI6IiIsImV2ZW50X25hbWUiOiJwdXNoIiwicmVmX3R5cGUiOiJicmFuY2giLCJlbnZpcm9ubWVudCI6IlByb2R1Y3Rpb24iLCJqb2Jfd29ya2Zsb3dfcmVmIjoicGFwZXItc3BhL21pbnlpLy5naXRodWIvd29ya2Zsb3dzL2JsYW5rLnltbEByZWZzL2hlYWRzL21haW4iLCJpc3MiOiJodHRwczovL3Rva2VuLmFjdGlvbnMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwibmJmIjoxNjM5MDAwODU2LCJleHAiOjE2MzkwMDE3NTYsImlhdCI6MTYzOTAwMTQ1Nn0.VP8WictbQECKozE2SgvKb2FqJ9hisWsoMkYRTqfBrQfZTCXi5IcFEdgDMB2X7a99C2DeUuTvHh9RMKXLL2a0zg3-Sd7YrO7a2ll2kNlnvyIypcN6AeIc7BxHsTTnZN9Ud_xmEsTrSRGOEKmzCFkULQ6N4zlVD0sidypmXlMemmWEcv_ZHqhioEI_VMp5vwXQurketWH7qX4oDgG4okyYtPrv5RQHbfQcVo9izaPJ_jnsDd0CBA0QOx9InjPidtIkMYQLyUgJy33HLJy86EFNUnAf8UhBQuQi5mAsEpEzBBuKpG3PDiPtYCHOk64JZkZGd5mR888a5sbHRiaF8hm8YA"
@@ -61371,7 +61602,7 @@
     "/repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}": {
       "delete": {
         "summary": "Delete a release reaction",
-        "description": "> [!NOTE]\n> You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/releases/:release_id/reactions/:reaction_id`.\n\nDelete a reaction to a [release](https://docs.github.com/enterprise-server@3.19/rest/releases/releases#get-a-release).",
+        "description": "> [!NOTE]\n> You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/releases/:release_id/reactions/:reaction_id`.\n\nDelete a reaction to a [release](https://docs.github.com/enterprise-server@3.19/rest/releases/releases#get-a-release).",
         "tags": [
           "reactions"
         ],
@@ -66582,7 +66813,7 @@
             "description": "Response"
           },
           "404": {
-            "description": "Not Found if team synchronization is setup"
+            "description": "Not Found if team synchronization is set up"
           }
         },
         "x-github": {
@@ -66926,6 +67157,7 @@
                     "description": "The permission to grant the team on this repository. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.",
                     "enum": [
                       "pull",
+                      "moderate",
                       "push",
                       "admin"
                     ]
@@ -67076,7 +67308,7 @@
     "/user": {
       "get": {
         "summary": "Get the authenticated user",
-        "description": "OAuth app tokens and personal access tokens (classic) need the `read:user` scope, or the broader `user` scope, for this endpoint to return the private user response. The private user response includes additional fields such as `private_gists`, `total_private_repos`, `owned_private_repos`, `disk_usage`, `collaborators`, and `two_factor_authentication`. Tokens without these scopes receive the public user response.\n\nThe private and public user response types are unrelated to the [private profile](https://docs.github.com/enterprise-server@3.19/account-and-profile/concepts/personal-profile#private-profiles) setting. A token without scopes still authenticates as the token's owner, so values subject to private profile visibility, such as `followers` and `following`, may differ from an unauthenticated response.",
+        "description": "OAuth app tokens and personal access tokens (classic) need the `read:user` scope, or the broader `user` scope, for this endpoint to return the private user response. The private user response includes additional fields such as `private_gists`, `total_private_repos`, `owned_private_repos`, `disk_usage`, `collaborators`, and `two_factor_authentication`. Tokens without these scopes receive the public user response.\n\nThe private and public user response types are unrelated to the [private profile](https://docs.github.com/enterprise-server@3.19/account-and-profile/concepts/personal-profile#private-profiles) setting. A token without scopes still authenticates as the token's owner, so values subject to private profile visibility, such as `followers` and `following`, may differ from an unauthenticated response.\n\nFor enterprise-managed users, if their email is unverified, this endpoint will return a placeholder email in the format `email+shortcode@domain.com` instead of their actual email. This placeholder email [may cause issues with some third-party apps](https://github.blog/changelog/2024-08-01-enterprise-managed-user-accounts-now-require-email-verification/). Once the user has [verified their email address](https://docs.github.com/enterprise-server@3.19/account-and-profile/how-tos/email-preferences/verifying-your-email-address), the endpoint will return their real email.",
         "tags": [
           "users"
         ],
@@ -67294,7 +67526,7 @@
     "/user/emails": {
       "get": {
         "summary": "List email addresses for the authenticated user",
-        "description": "Lists all of your email addresses, and specifies which one is visible\nto the public.\n\nOAuth app tokens and personal access tokens (classic) need the `user:email` scope to use this endpoint.",
+        "description": "Lists all of your email addresses, and specifies which one is visible\nto the public.\n\nOAuth app tokens and personal access tokens (classic) need the `user:email` scope to use this endpoint.\n\nFor enterprise-managed users, if their email is unverified, this endpoint will return a placeholder email in the format `email+shortcode@domain.com` instead of their actual email. This placeholder email [may cause issues with some third-party apps](https://github.blog/changelog/2024-08-01-enterprise-managed-user-accounts-now-require-email-verification/). Once the user has [verified their email address](https://docs.github.com/enterprise-server@3.19/account-and-profile/how-tos/email-preferences/verifying-your-email-address), the endpoint will return their real email.",
         "tags": [
           "users"
         ],
@@ -102623,6 +102855,13 @@
               "write"
             ]
           },
+          "organization_copilot_requests": {
+            "type": "string",
+            "description": "The level of permission to grant the access token to make Copilot requests billed to the organization where the app is installed. This property is in public preview and is subject to change.",
+            "enum": [
+              "read"
+            ]
+          },
           "organization_external_properties_for_repos": {
             "type": "string",
             "description": "The level of permission to grant the access token for managing external custom properties for repositories in an organization.",
@@ -104701,6 +104940,7 @@
             "example": true
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string"
           },
           "allow_squash_merge": {
@@ -108375,6 +108615,88 @@
             ],
             "example": "org_actors",
             "description": "Who can edit the values of the property"
+          },
+          "regex": {
+            "type": "string",
+            "nullable": true,
+            "description": "A regular expression (RE2 syntax) that values of the property must match.\nOnly present for properties with a `value_type` of `string` that define a regular expression.",
+            "example": "^[a-z0-9-]+$"
+          }
+        },
+        "required": [
+          "property_name",
+          "value_type"
+        ]
+      },
+      "custom-property-batch-item-payload": {
+        "title": "Custom Property Batch Item Payload",
+        "description": "Payload for a single custom property definition when creating or updating custom properties in a batch",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "property_name": {
+            "type": "string",
+            "description": "The name of the property"
+          },
+          "value_type": {
+            "type": "string",
+            "example": "single_select",
+            "enum": [
+              "string",
+              "single_select",
+              "multi_select",
+              "true_false"
+            ],
+            "description": "The type of the value for the property"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether the property is required."
+          },
+          "default_value": {
+            "oneOf": [
+              {
+                "type": "string",
+                "nullable": true
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "nullable": true,
+            "description": "Default value of the property"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Short description of the property"
+          },
+          "allowed_values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "An ordered list of the allowed values of the property.\nThe property can have up to 200 allowed values."
+          },
+          "values_editable_by": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "org_actors",
+              "org_and_repo_actors"
+            ],
+            "example": "org_actors",
+            "description": "Who can edit the values of the property"
+          },
+          "regex": {
+            "type": "string",
+            "nullable": true,
+            "description": "A regular expression (RE2 syntax) that values of the property must match.\nOnly supported for properties with a `value_type` of `string`.",
+            "example": "^[a-z0-9-]+$"
           }
         },
         "required": [
@@ -108440,6 +108762,12 @@
             ],
             "example": "org_actors",
             "description": "Who can edit the values of the property"
+          },
+          "regex": {
+            "type": "string",
+            "nullable": true,
+            "description": "A regular expression (RE2 syntax) that values of the property must match.\nOnly supported for properties with a `value_type` of `string`.",
+            "example": "^[a-z0-9-]+$"
           }
         },
         "required": [
@@ -108803,8 +109131,8 @@
         ]
       },
       "nullable-secret-scanning-first-detected-location": {
-        "description": "Details on the location where the token was initially detected. This can be a commit, wiki commit, issue, discussion, pull request.\n",
-        "oneOf": [
+        "description": "Details on the location where the token was initially detected. This can be a commit, wiki commit, issue, discussion, or pull request.\n",
+        "anyOf": [
           {
             "$ref": "#/components/schemas/secret-scanning-location-commit"
           },
@@ -113699,6 +114027,7 @@
             "example": "admin"
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string"
           },
           "delete_branch_on_merge": {
@@ -115929,6 +116258,7 @@
             "example": "admin"
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string"
           },
           "delete_branch_on_merge": {
@@ -116587,6 +116917,7 @@
             "enum": [
               "read",
               "triage",
+              "moderate",
               "write",
               "maintain",
               "admin"
@@ -117418,7 +117749,8 @@
               "oidc_aws",
               "oidc_jfrog",
               "oidc_cloudsmith",
-              "oidc_gcp"
+              "oidc_gcp",
+              "anonymous"
             ],
             "type": "string"
           },
@@ -117564,7 +117896,8 @@
               "oidc_aws",
               "oidc_jfrog",
               "oidc_cloudsmith",
-              "oidc_gcp"
+              "oidc_gcp",
+              "anonymous"
             ],
             "type": "string"
           },
@@ -118136,6 +118469,7 @@
             "example": true
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string"
           },
           "allow_squash_merge": {
@@ -118729,6 +119063,7 @@
             "$ref": "#/components/schemas/nullable-repository"
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string",
             "nullable": true
           },
@@ -119545,7 +119880,7 @@
               },
               "required_reviewers": {
                 "type": "array",
-                "description": "> [!NOTE]\n> `required_reviewers` is in beta and subject to change.\n\nA collection of reviewers and associated file patterns. Each reviewer has a list of file patterns which determine the files that reviewer is required to review.",
+                "description": "A collection of reviewers and associated file patterns. Each reviewer has a list of file patterns which determine the files that reviewer is required to review.",
                 "items": {
                   "$ref": "#/components/schemas/repository-rule-params-required-reviewer-configuration"
                 }
@@ -120002,7 +120337,7 @@
       },
       "repository-rule-copilot-code-review": {
         "title": "copilot_code_review",
-        "description": "Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.",
+        "description": "Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and AI credits.",
         "type": "object",
         "required": [
           "type"
@@ -120486,131 +120821,6 @@
                 "bypass"
               ],
               "description": "The result of the rule evaluations for rules with the `active` and `evaluate` enforcement statuses, demonstrating whether rules would pass or fail if all rules in the rule suite were `active`."
-            }
-          }
-        }
-      },
-      "rule-suite-pull-request": {
-        "title": "Pull request rule suite metadata",
-        "description": "Metadata for a pull request rule evaluation result.",
-        "type": "object",
-        "properties": {
-          "pull_request": {
-            "type": "object",
-            "description": "The pull request associated with the rule evaluation.",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "description": "The unique identifier of the pull request."
-              },
-              "number": {
-                "type": "integer",
-                "description": "The number of the pull request."
-              },
-              "user": {
-                "type": "object",
-                "description": "The user who created the pull request.",
-                "properties": {
-                  "id": {
-                    "type": "integer",
-                    "description": "The unique identifier of the user."
-                  },
-                  "login": {
-                    "type": "string",
-                    "description": "The handle for the GitHub user account."
-                  },
-                  "type": {
-                    "type": "string",
-                    "description": "The type of the user."
-                  }
-                }
-              },
-              "reviews": {
-                "type": "array",
-                "description": "The reviews associated with the pull request.",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "The unique identifier of the review."
-                    },
-                    "user": {
-                      "type": "object",
-                      "description": "The user who submitted the review.",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "The unique identifier of the user."
-                        },
-                        "login": {
-                          "type": "string",
-                          "description": "The handle for the GitHub user account."
-                        },
-                        "type": {
-                          "type": "string",
-                          "description": "The type of the user."
-                        }
-                      }
-                    },
-                    "state": {
-                      "type": "string",
-                      "description": "The state of the review."
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "rule-suite-required-status-checks": {
-        "title": "Required status checks rule suite metadata",
-        "description": "Metadata for a required status checks rule evaluation result.",
-        "type": "object",
-        "properties": {
-          "checks": {
-            "type": "array",
-            "description": "The status checks associated with the rule evaluation.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "integer",
-                  "description": "The unique identifier of the status check."
-                },
-                "context": {
-                  "type": "string",
-                  "description": "The context name of the status check."
-                },
-                "state": {
-                  "type": "string",
-                  "description": "The state of the status check."
-                },
-                "type": {
-                  "type": "string",
-                  "description": "The type of the status check."
-                },
-                "app": {
-                  "type": "object",
-                  "nullable": true,
-                  "description": "The GitHub App associated with the status check.",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "The unique identifier of the GitHub App."
-                    },
-                    "slug": {
-                      "type": "string",
-                      "description": "The slug of the GitHub App."
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the GitHub App."
-                    }
-                  }
-                }
-              }
             }
           }
         }
@@ -121800,6 +122010,7 @@
             "example": true
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string"
           },
           "allow_squash_merge": {
@@ -121956,7 +122167,7 @@
       },
       "rate-limit-overview": {
         "title": "Rate Limit Overview",
-        "description": "Rate Limit Overview",
+        "description": "Rate limit status for the applicable requester and resource category. Requests\nauthenticated as a user share the user's rate limit across credentials. Requests\nwithout authentication use the requesting IP address. API requests routed through\neither an API hostname or a web hostname can count against the same applicable limit.",
         "type": "object",
         "properties": {
           "resources": {
@@ -125212,6 +125423,112 @@
           }
         }
       },
+      "pull-requests-on-alerts": {
+        "title": "Pull Requests on Alerts",
+        "description": "A pull request linked to a code scanning alert.",
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "description": "The number of the linked pull request."
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The ID of the linked pull request."
+          },
+          "repository": {
+            "$ref": "#/components/schemas/simple-repository"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the linked pull request."
+          },
+          "state": {
+            "type": "string",
+            "description": "The state of the referenced pull request.",
+            "enum": [
+              "open",
+              "closed",
+              "merged"
+            ]
+          },
+          "merged_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time the linked pull request was merged. Null if it has not been merged.",
+            "nullable": true
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL of the linked pull request on GitHub."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The REST API URL for the linked pull request."
+          },
+          "draft": {
+            "type": "boolean",
+            "description": "Whether the linked pull request is a draft."
+          }
+        },
+        "required": [
+          "number",
+          "id",
+          "repository",
+          "title",
+          "state",
+          "merged_at",
+          "html_url",
+          "url",
+          "draft"
+        ]
+      },
+      "code-scanning-alert-linked-issue": {
+        "description": "A GitHub issue linked to a code scanning alert. The issue may belong to a different repository.",
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "description": "The issue number."
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the issue."
+          },
+          "state": {
+            "type": "string",
+            "description": "The state of the issue."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The REST API URL of the issue."
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to view the issue on GitHub."
+          },
+          "repository": {
+            "$ref": "#/components/schemas/simple-repository"
+          },
+          "issue_type": {
+            "$ref": "#/components/schemas/issue-type"
+          }
+        },
+        "required": [
+          "number",
+          "title",
+          "state",
+          "url",
+          "html_url",
+          "repository",
+          "issue_type"
+        ]
+      },
       "code-scanning-alert-items": {
         "type": "object",
         "properties": {
@@ -125267,6 +125584,20 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/simple-user"
+            }
+          },
+          "linked_pull_requests": {
+            "description": "Pull requests linked to this alert.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/pull-requests-on-alerts"
+            }
+          },
+          "linked_issues": {
+            "description": "Issues linked to this alert.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/code-scanning-alert-linked-issue"
             }
           }
         },
@@ -125744,6 +126075,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/pull-request-simple"
+            }
+          },
+          "linked_issues": {
+            "description": "Issues linked to this alert.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/code-scanning-alert-linked-issue"
             }
           }
         },
@@ -129380,7 +129718,7 @@
               "write",
               "admin",
               "triage",
-              "triage_plus",
+              "moderate",
               "maintain"
             ]
           },
@@ -133308,7 +133646,7 @@
             "type": "string",
             "description": "The URI to the deployed GitHub Pages.",
             "format": "uri",
-            "example": "hello-world.github.io"
+            "example": "github.github.io"
           },
           "preview_url": {
             "type": "string",
@@ -134227,7 +134565,7 @@
             "example": "commit"
           },
           "details": {
-            "oneOf": [
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/secret-scanning-location-commit"
               },
@@ -136135,6 +136473,7 @@
             "$ref": "#/components/schemas/search-result-text-matches"
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string"
           },
           "allow_merge_commit": {
@@ -138011,6 +138350,7 @@
                 "type": "boolean"
               },
               "temp_clone_token": {
+                "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
                 "type": "string"
               },
               "allow_squash_merge": {
@@ -138074,6 +138414,7 @@
             }
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string"
           },
           "allow_squash_merge": {
@@ -141149,45 +141490,7 @@
           "labels": {
             "type": "array",
             "items": {
-              "title": "Label",
-              "type": "object",
-              "properties": {
-                "color": {
-                  "description": "6-character hex code, without the leading #, identifying the color",
-                  "type": "string"
-                },
-                "default": {
-                  "type": "boolean"
-                },
-                "description": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "id": {
-                  "type": "integer"
-                },
-                "name": {
-                  "description": "The name of the label.",
-                  "type": "string"
-                },
-                "node_id": {
-                  "type": "string"
-                },
-                "url": {
-                  "description": "URL for the label",
-                  "type": "string",
-                  "format": "uri"
-                }
-              },
-              "required": [
-                "id",
-                "node_id",
-                "url",
-                "name",
-                "color",
-                "default",
-                "description"
-              ]
+              "$ref": "#/components/schemas/webhooks_label"
             }
           },
           "labels_url": {
@@ -141935,6 +142238,35 @@
               "$ref": "#/components/schemas/issue-field-value"
             }
           },
+          "status": {
+            "title": "Planning status",
+            "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The stable identifier of the planning status.",
+                "example": 4
+              },
+              "name": {
+                "type": "string",
+                "description": "The display name of the planning status, which may change in the future.",
+                "example": "In progress"
+              },
+              "category": {
+                "type": "string",
+                "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                "example": "started"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "category"
+            ]
+          },
           "state": {
             "description": "State of the issue; either 'open' or 'closed'",
             "type": "string",
@@ -142535,45 +142867,7 @@
           "labels": {
             "type": "array",
             "items": {
-              "title": "Label",
-              "type": "object",
-              "properties": {
-                "color": {
-                  "description": "6-character hex code, without the leading #, identifying the color",
-                  "type": "string"
-                },
-                "default": {
-                  "type": "boolean"
-                },
-                "description": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "id": {
-                  "type": "integer"
-                },
-                "name": {
-                  "description": "The name of the label.",
-                  "type": "string"
-                },
-                "node_id": {
-                  "type": "string"
-                },
-                "url": {
-                  "description": "URL for the label",
-                  "type": "string",
-                  "format": "uri"
-                }
-              },
-              "required": [
-                "id",
-                "node_id",
-                "url",
-                "name",
-                "color",
-                "default",
-                "description"
-              ]
+              "$ref": "#/components/schemas/webhooks_label"
             }
           },
           "labels_url": {
@@ -143316,6 +143610,35 @@
             "items": {
               "$ref": "#/components/schemas/issue-field-value"
             }
+          },
+          "status": {
+            "title": "Planning status",
+            "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The stable identifier of the planning status.",
+                "example": 4
+              },
+              "name": {
+                "type": "string",
+                "description": "The display name of the planning status, which may change in the future.",
+                "example": "In progress"
+              },
+              "category": {
+                "type": "string",
+                "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                "example": "started"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "category"
+            ]
           },
           "state": {
             "description": "State of the issue; either 'open' or 'closed'",
@@ -144453,6 +144776,7 @@
                 "type": "boolean"
               },
               "temp_clone_token": {
+                "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
                 "type": "string"
               },
               "allow_squash_merge": {
@@ -144516,6 +144840,7 @@
             }
           },
           "temp_clone_token": {
+            "description": "When present and non-empty, a temporary credential for read-only Git access to this repository.\nIt expires five minutes after generation and cannot be used to push changes.\nTreat this value as sensitive and avoid recording it in logs.",
             "type": "string"
           },
           "allow_squash_merge": {
@@ -171902,45 +172227,7 @@
                   "labels": {
                     "type": "array",
                     "items": {
-                      "title": "Label",
-                      "type": "object",
-                      "properties": {
-                        "color": {
-                          "description": "6-character hex code, without the leading #, identifying the color",
-                          "type": "string"
-                        },
-                        "default": {
-                          "type": "boolean"
-                        },
-                        "description": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "id": {
-                          "type": "integer"
-                        },
-                        "name": {
-                          "description": "The name of the label.",
-                          "type": "string"
-                        },
-                        "node_id": {
-                          "type": "string"
-                        },
-                        "url": {
-                          "description": "URL for the label",
-                          "type": "string",
-                          "format": "uri"
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "node_id",
-                        "url",
-                        "name",
-                        "color",
-                        "default",
-                        "description"
-                      ]
+                      "$ref": "#/components/schemas/webhooks_label"
                     }
                   },
                   "labels_url": {
@@ -172689,6 +172976,35 @@
                       "$ref": "#/components/schemas/issue-field-value"
                     }
                   },
+                  "status": {
+                    "title": "Planning status",
+                    "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                    "type": "object",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The stable identifier of the planning status.",
+                        "example": 4
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The display name of the planning status, which may change in the future.",
+                        "example": "In progress"
+                      },
+                      "category": {
+                        "type": "string",
+                        "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                        "example": "started"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "category"
+                    ]
+                  },
                   "state": {
                     "description": "State of the issue; either 'open' or 'closed'",
                     "type": "string",
@@ -172894,7 +173210,12 @@
                     "type": "array",
                     "items": {
                       "type": "object",
-                      "nullable": true
+                      "nullable": true,
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/webhooks_label"
+                        }
+                      ]
                     }
                   },
                   "labels_url": {
@@ -174123,6 +174444,35 @@
                 "items": {
                   "$ref": "#/components/schemas/issue-field-value"
                 }
+              },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
               },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
@@ -175377,6 +175727,35 @@
                   "$ref": "#/components/schemas/issue-field-value"
                 }
               },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
+              },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
                 "type": "string",
@@ -175836,45 +176215,7 @@
               "labels": {
                 "type": "array",
                 "items": {
-                  "title": "Label",
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "description": "6-character hex code, without the leading #, identifying the color",
-                      "type": "string"
-                    },
-                    "default": {
-                      "type": "boolean"
-                    },
-                    "description": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "id": {
-                      "type": "integer"
-                    },
-                    "name": {
-                      "description": "The name of the label.",
-                      "type": "string"
-                    },
-                    "node_id": {
-                      "type": "string"
-                    },
-                    "url": {
-                      "description": "URL for the label",
-                      "type": "string",
-                      "format": "uri"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "node_id",
-                    "url",
-                    "name",
-                    "color",
-                    "default",
-                    "description"
-                  ]
+                  "$ref": "#/components/schemas/webhooks_label"
                 }
               },
               "labels_url": {
@@ -176622,6 +176963,35 @@
                 "items": {
                   "$ref": "#/components/schemas/issue-field-value"
                 }
+              },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
               },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
@@ -177878,6 +178248,35 @@
                 "items": {
                   "$ref": "#/components/schemas/issue-field-value"
                 }
+              },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
               },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
@@ -179144,6 +179543,35 @@
                   "$ref": "#/components/schemas/issue-field-value"
                 }
               },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
+              },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
                 "type": "string",
@@ -180373,6 +180801,35 @@
                   "$ref": "#/components/schemas/issue-field-value"
                 }
               },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
+              },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
                 "type": "string",
@@ -181579,6 +182036,35 @@
                     "items": {
                       "$ref": "#/components/schemas/issue-field-value"
                     }
+                  },
+                  "status": {
+                    "title": "Planning status",
+                    "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                    "type": "object",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The stable identifier of the planning status.",
+                        "example": 4
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The display name of the planning status, which may change in the future.",
+                        "example": "In progress"
+                      },
+                      "category": {
+                        "type": "string",
+                        "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                        "example": "started"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "category"
+                    ]
                   },
                   "state": {
                     "description": "State of the issue; either 'open' or 'closed'",
@@ -183394,6 +183880,35 @@
                   "$ref": "#/components/schemas/issue-field-value"
                 }
               },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
+              },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
                 "type": "string",
@@ -183914,6 +184429,21 @@
                   ],
                   "nullable": true,
                   "properties": {
+                    "archived_at": {
+                      "description": "Timestamp indicating when the label was archived, or `null` if it has not been archived.",
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "archived_by": {
+                      "description": "The user who archived the label, or `null` if it has not been archived.",
+                      "nullable": true,
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/simple-user"
+                        }
+                      ]
+                    },
                     "color": {
                       "description": "6-character hex code, without the leading #, identifying the color",
                       "type": "string"
@@ -184688,6 +185218,35 @@
                 "items": {
                   "$ref": "#/components/schemas/issue-field-value"
                 }
+              },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
               },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
@@ -185894,6 +186453,35 @@
                     "items": {
                       "$ref": "#/components/schemas/issue-field-value"
                     }
+                  },
+                  "status": {
+                    "title": "Planning status",
+                    "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                    "type": "object",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The stable identifier of the planning status.",
+                        "example": 4
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The display name of the planning status, which may change in the future.",
+                        "example": "In progress"
+                      },
+                      "category": {
+                        "type": "string",
+                        "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                        "example": "started"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "category"
+                    ]
                   },
                   "state": {
                     "description": "State of the issue; either 'open' or 'closed'",
@@ -187868,6 +188456,35 @@
                 "items": {
                   "$ref": "#/components/schemas/issue-field-value"
                 }
+              },
+              "status": {
+                "title": "Planning status",
+                "description": "The status of the issue, or `null` if it has none. Issue statuses are in preview and only available to accounts enrolled in the preview.",
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The stable identifier of the planning status.",
+                    "example": 4
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The display name of the planning status, which may change in the future.",
+                    "example": "In progress"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "A stable identifier for the category, such as `backlog`, `planned`, `started`, `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.",
+                    "example": "started"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "category"
+                ]
               },
               "state": {
                 "description": "State of the issue; either 'open' or 'closed'",
@@ -272321,7 +272938,7 @@
           {
             "id": 2,
             "name": "DevTools Hook Env",
-            "image_url": "https://my_file_server/path/to/devtools_env.tar.gz",
+            "image_url": "https://fileserver.example.com/path/to/devtools_env.tar.gz",
             "url": "https://github.example.com/api/v3/admin/pre-receive-environments/2",
             "html_url": "https://github.example.com/admin/pre-receive-environments/2",
             "default_environment": false,
@@ -272340,7 +272957,7 @@
         "value": {
           "id": 2,
           "name": "DevTools Hook Env",
-          "image_url": "https://my_file_server/path/to/devtools_env.tar.gz",
+          "image_url": "https://fileserver.example.com/path/to/devtools_env.tar.gz",
           "url": "https://github.example.com/api/v3/admin/pre-receive-environments/2",
           "html_url": "https://github.example.com/admin/pre-receive-environments/2",
           "default_environment": false,
@@ -272358,7 +272975,7 @@
         "value": {
           "id": 2,
           "name": "DevTools Hook Env",
-          "image_url": "https://my_file_server/path/to/devtools_env.tar.gz",
+          "image_url": "https://fileserver.example.com/path/to/devtools_env.tar.gz",
           "url": "https://github.example.com/api/v3/admin/pre-receive-environments/2",
           "html_url": "https://github.example.com/admin/pre-receive-environments/2",
           "default_environment": false,
@@ -272404,7 +273021,7 @@
             "environment": {
               "id": 2,
               "name": "DevTools Hook Env",
-              "image_url": "https://my_file_server/path/to/devtools_env.tar.gz",
+              "image_url": "https://fileserver.example.com/path/to/devtools_env.tar.gz",
               "url": "https://github.example.com/api/v3/admin/pre-receive-environments/2",
               "html_url": "https://github.example.com/admin/pre-receive-environments/2",
               "default_environment": false,
@@ -272436,7 +273053,7 @@
           "environment": {
             "id": 2,
             "name": "DevTools Hook Env",
-            "image_url": "https://my_file_server/path/to/devtools_env.tar.gz",
+            "image_url": "https://fileserver.example.com/path/to/devtools_env.tar.gz",
             "url": "https://github.example.com/api/v3/admin/pre-receive-environments/2",
             "html_url": "https://github.example.com/admin/pre-receive-environments/2",
             "default_environment": false,
@@ -272577,7 +273194,7 @@
             "client_id": "abcde12345fghij67890"
           },
           "note": "optional note",
-          "note_url": "http://optional/note/url",
+          "note_url": "https://example.com/optional/note/url",
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
           "expires_at": "2011-10-06T17:26:27Z",
@@ -273289,7 +273906,7 @@
             "client_id": "Iv1.8a61f9b3a7aba766"
           },
           "note": "optional note",
-          "note_url": "http://optional/note/url",
+          "note_url": "https://example.com/optional/note/url",
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
           "fingerprint": "jklmnop12345678",
@@ -273330,7 +273947,7 @@
             "client_id": "Iv1.8a61f9b3a7aba766"
           },
           "note": "optional note",
-          "note_url": "http://optional/note/url",
+          "note_url": "https://example.com/optional/note/url",
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
           "fingerprint": "jklmnop12345678",
@@ -273441,7 +274058,7 @@
             "client_id": "abcde12345fghij67890"
           },
           "note": "optional note",
-          "note_url": "http://optional/note/url",
+          "note_url": "https://example.com/optional/note/url",
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
           "expires_at": "2011-10-06T17:26:27Z",
@@ -273464,7 +274081,7 @@
             "client_id": "abcde12345fghij67890"
           },
           "note": "optional note",
-          "note_url": "http://optional/note/url",
+          "note_url": "https://example.com/optional/note/url",
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
           "expires_at": "2011-10-06T17:26:27Z",
@@ -273487,7 +274104,7 @@
             "client_id": "abcde12345fghij67890"
           },
           "note": "optional note",
-          "note_url": "http://optional/note/url",
+          "note_url": "https://example.com/optional/note/url",
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
           "expires_at": "2012-10-06T17:26:27Z",
@@ -273510,7 +274127,7 @@
             "client_id": "abcde12345fghij67890"
           },
           "note": "optional note",
-          "note_url": "http://optional/note/url",
+          "note_url": "https://example.com/optional/note/url",
           "updated_at": "2011-09-06T20:39:23Z",
           "created_at": "2011-09-06T17:26:27Z",
           "expires_at": "2011-10-06T17:26:27Z",
@@ -285518,7 +286135,7 @@
             },
             "author": {
               "gravatar_id": "",
-              "avatar_url": "https://secure.gravatar.com/avatar/7ad39074b0584bc555d0417ae3e7d974?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png",
+              "avatar_url": "https://example.com/example.png",
               "url": "https://api.github.com/users/octocat",
               "id": 583231,
               "login": "octocat",
@@ -285549,7 +286166,7 @@
             "url": "https://api.github.com/repos/octocat/Hello-World/commits/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
             "committer": {
               "gravatar_id": "",
-              "avatar_url": "https://secure.gravatar.com/avatar/7ad39074b0584bc555d0417ae3e7d974?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png",
+              "avatar_url": "https://example.com/example.png",
               "url": "https://api.github.com/users/octocat",
               "id": 583231,
               "login": "octocat",
@@ -296422,7 +297039,7 @@
                   "login": "jquery",
                   "id": 70142,
                   "node_id": "MDQ6VXNlcjcwMTQy",
-                  "avatar_url": "https://0.gravatar.com/avatar/6906f317a4733f4379b06c32229ef02f?d=https%3A%2F%2Fidenticons.github.com%2Ff426f04f2f9813718fb806b30e0093de.png",
+                  "avatar_url": "https://avatars.githubusercontent.com/u/70142?v=4",
                   "gravatar_id": "",
                   "url": "https://api.github.com/users/jquery",
                   "html_url": "https://github.com/jquery",
@@ -296647,7 +297264,7 @@
                 "login": "Nick3C",
                 "id": 90254,
                 "node_id": "MDQ6VXNlcjkwMjU0",
-                "avatar_url": "https://secure.gravatar.com/avatar/934442aadfe3b2f4630510de416c5718?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png",
+                "avatar_url": "https://avatars.githubusercontent.com/u/90254?v=4",
                 "gravatar_id": "",
                 "url": "https://api.github.com/users/Nick3C",
                 "html_url": "https://github.com/Nick3C",
@@ -296716,7 +297333,7 @@
               "updated_at": "2009-07-19T09:23:43Z",
               "closed_at": null,
               "pull_request": {
-                "url": "https://api/github.com/repos/octocat/Hello-World/pull/1347",
+                "url": "https://api.github.com/repos/octocat/Hello-World/pull/1347",
                 "html_url": "https://github.com/octocat/Hello-World/pull/1347",
                 "diff_url": "https://github.com/octocat/Hello-World/pull/1347.diff",
                 "patch_url": "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
@@ -296810,7 +297427,7 @@
                 "login": "dtrupenn",
                 "id": 872147,
                 "node_id": "MDQ6VXNlcjg3MjE0Nw==",
-                "avatar_url": "https://secure.gravatar.com/avatar/e7956084e75f239de85d3a31bc172ace?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png",
+                "avatar_url": "https://example.com/avatar/e7956084e75f239de85d3a31bc172ace",
                 "gravatar_id": "",
                 "url": "https://api.github.com/users/dtrupenn",
                 "received_events_url": "https://api.github.com/users/dtrupenn/received_events",
@@ -300413,7 +301030,7 @@
             ],
             "config": {
               "content_type": "json",
-              "url": "https://smee.io/****************",
+              "url": "https://example.com/",
               "insecure_ssl": "0"
             },
             "updated_at": "2019-05-15T15:20:49Z",
@@ -302749,6 +303366,37 @@
           }
         }
       },
+      "requires_authentication": {
+        "description": "Requires authentication",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/basic-error"
+            }
+          }
+        }
+      },
+      "service_unavailable": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
       "bad_request": {
         "description": "Bad Request",
         "content": {
@@ -302792,16 +303440,6 @@
       "not_modified": {
         "description": "Not modified"
       },
-      "requires_authentication": {
-        "description": "Requires authentication",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/basic-error"
-            }
-          }
-        }
-      },
       "forbidden": {
         "description": "Forbidden",
         "content": {
@@ -302828,27 +303466,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/basic-error"
-            }
-          }
-        }
-      },
-      "service_unavailable": {
-        "description": "Service unavailable",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string"
-                },
-                "message": {
-                  "type": "string"
-                },
-                "documentation_url": {
-                  "type": "string"
-                }
-              }
             }
           }
         }
